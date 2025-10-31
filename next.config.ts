@@ -8,6 +8,15 @@ const nextConfig: NextConfig = {
   // 禁用 Next.js 热重载，由 nodemon 处理重编译
   reactStrictMode: false,
   allowedDevOrigins: ['127.0.0.1'],
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'megacomputer.com.co',
+        pathname: '/wp-content/uploads/**',
+      },
+    ],
+  },
   webpack: (config, { dev, isServer }) => {
     if (dev) {
       // 禁用 webpack 的热模块替换
