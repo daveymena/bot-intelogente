@@ -139,7 +139,6 @@ export class ProductIntelligenceService {
             }
 
             // Buscar coincidencias específicas primero (incluyendo palabras del mensaje original)
-            const queryLower = query.toLowerCase()
             const specificMatches = [
                 { keywords: ['piano'], name: 'piano', searchIn: 'name' },
                 { keywords: ['macbook', 'mac', 'apple'], name: 'macbook', searchIn: 'name' },

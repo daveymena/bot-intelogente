@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES2017",
+    "outDir": ".",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "downlevelIteration": true
+  },
+  "include": ["server.ts", "src/**/*"],
+  "exclude": ["node_modules"]
+}

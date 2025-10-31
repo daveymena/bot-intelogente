@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "nodemon --exec \"npx tsx server.ts\" --watch server.ts --watch src --ext ts,tsx,js,jsx",
-    "build": "npx prisma generate && next build && npx tsc server.ts --outDir . --module commonjs --esModuleInterop --resolveJsonModule --skipLibCheck",
+    "build": "npx prisma generate && next build && npx tsc --project tsconfig.server.json",
     "start": "NODE_ENV=production node server.js",
     "start:prod": "bash scripts/start-production.sh",
     "lint": "next lint",
