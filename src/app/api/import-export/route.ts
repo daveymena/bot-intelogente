@@ -3,24 +3,36 @@ import { db } from '@/lib/db'
 import { z } from 'zod'
 
 const productImportSchema = z.object({
-  name: z.string(),
-  description: z.string().optional(),
-  price: z.string().transform((val) => parseFloat(val.replace(/[^0-9.-]/g, ''))),
-  currency: z.string().default('COP'),
-  category: z.enum(['PHYSICAL', 'DIGITAL', 'SERVICE']).transform((val) => {
+  name: z.string().min(1, 'El nombre es requerido'),
+  description: z.string().optional().default(''),
+  price: z.union([z.string(), z.number()]).transform((val) => {
+    if (typeof val === 'number') return val
+    return parseFloat(val.replace(/[^0-9.-]/g, ''))
+  }),
+  currency: z.string().optional().default('COP'),
+  category: z.union([
+    z.enum(['PHYSICAL', 'DIGITAL', 'SERVICE']),
+    z.string()
+  ]).transform((val) => {
     const normalized = val.toUpperCase()
     if (normalized.includes('FISIC') || normalized.includes('PHYSICAL')) return 'PHYSICAL'
     if (normalized.includes('DIGITAL') || normalized.includes('VIRTUAL')) return 'DIGITAL'
-    return 'SERVICE'
+    if (normalized.includes('SERVICE') || normalized.includes('SERVICIO')) return 'SERVICE'
+    return 'PHYSICAL' // Default
   }),
-  status: z.enum(['AVAILABLE', 'OUT_OF_STOCK', 'DISCONTINUED']).default('AVAILABLE'),
-  images: z.string().optional(),
-  tags: z.string().optional(),
-  autoResponse: z.string().optional(),
-  stock: z.string().transform((val) => {
+  status: z.union([
+    z.enum(['AVAILABLE', 'OUT_OF_STOCK', 'DISCONTINUED']),
+    z.string()
+  ]).optional().default('AVAILABLE'),
+  images: z.string().optional().default(''),
+  tags: z.string().optional().default(''),
+  autoResponse: z.string().optional().default(''),
+  stock: z.union([z.string(), z.number()]).optional().transform((val) => {
+    if (!val) return undefined
+    if (typeof val === 'number') return val
     const num = parseInt(val.replace(/[^0-9]/g, ''))
     return isNaN(num) ? undefined : num
-  }).optional()
+  })
 })
 
 export async function POST(request: NextRequest) {
