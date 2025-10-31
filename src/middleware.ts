@@ -8,6 +8,8 @@ const publicRoutes = [
   '/reset-password',
   '/verify-email',
   '/verification-pending',
+  '/catalogo',
+  '/tienda',
   '/api/auth/login',
   '/api/auth/register',
   '/api/auth/forgot-password',
@@ -15,7 +17,8 @@ const publicRoutes = [
   '/api/auth/verify-email',
   '/api/auth/resend-verification',
   '/api/auth/session',
-  '/api/health'
+  '/api/health',
+  '/api/products/public'
 ]
 
 // Routes that require subscription

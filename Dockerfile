@@ -21,11 +21,14 @@ RUN npx prisma generate
 # Build de Next.js
 RUN npm run build
 
+# Script de inicio que ejecuta migraciones
+RUN echo '#!/bin/sh\nnpx prisma db push --accept-data-loss\nexec npm start' > /app/start.sh && chmod +x /app/start.sh
+
 # Exponer puerto
 EXPOSE 3000
 
 # Variables de entorno para Puppeteer (ya incluidas en la imagen base)
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
-# Comando de inicio
-CMD ["npm", "start"]
+# Comando de inicio con migraciones automáticas
+CMD ["/app/start.sh"]
