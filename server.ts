@@ -6,7 +6,8 @@ import next from 'next';
 
 const dev = process.env.NODE_ENV !== 'production';
 const currentPort = 3000;
-const hostname = '127.0.0.1';
+// En producción, escuchar en todas las interfaces (0.0.0.0) para Docker/Easypanel
+const hostname = process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1';
 
 // Custom server with Socket.IO integration
 async function createCustomServer() {

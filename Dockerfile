@@ -39,6 +39,7 @@ COPY package*.json ./
 COPY prisma ./prisma/
 
 # Instalar dependencias (todas, incluyendo dev para el build)
+# Actualizado: 2025-10-31 - Incluye @tailwindcss/postcss
 RUN npm ci
 
 # Copiar el resto del código
