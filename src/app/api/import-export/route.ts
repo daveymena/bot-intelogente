@@ -44,40 +44,75 @@ export async function POST(request: NextRequest) {
     }
 
     const text = await file.text()
-    const lines = text.split('\n').filter(line => line.trim())
-    
-    if (lines.length < 2) {
-      return NextResponse.json(
-        { error: 'CSV file must contain at least a header and one data row' },
-        { status: 400 }
-      )
-    }
+    const products: any[] = []
+    const errors: any[] = []
+    let totalRows = 0
 
-    // Parse CSV (simple implementation)
-    const headers = lines[0].split(',').map(h => h.trim().toLowerCase())
-    const products = []
-    const errors = []
+    // Detectar formato del archivo
+    const isJSON = file.name.endsWith('.json')
 
-    for (let i = 1; i < lines.length; i++) {
+    if (isJSON) {
+      // Procesar JSON
       try {
-        const values = lines[i].split(',').map(v => v.trim())
-        const productData: any = { userId }
-        
-        headers.forEach((header, index) => {
-          if (values[index]) {
-            productData[header] = values[index]
-          }
-        })
+        const jsonData = JSON.parse(text)
+        const productsArray = Array.isArray(jsonData) ? jsonData : [jsonData]
+        totalRows = productsArray.length
 
-        const validatedProduct = productImportSchema.parse(productData)
-        products.push(validatedProduct)
+        for (let i = 0; i < productsArray.length; i++) {
+          try {
+            const productData = { ...productsArray[i], userId }
+            const validatedProduct = productImportSchema.parse(productData)
+            products.push(validatedProduct)
+          } catch (error) {
+            errors.push({
+              row: i + 1,
+              error: error instanceof z.ZodError 
+                ? error.issues.map((e: any) => e.message).join(', ')
+                : 'Invalid data format'
+            })
+          }
+        }
       } catch (error) {
-        errors.push({
-          row: i + 1,
-          error: error instanceof z.ZodError 
-            ? error.errors.map(e => e.message).join(', ')
-            : 'Invalid data format'
-        })
+        return NextResponse.json(
+          { error: 'Invalid JSON format' },
+          { status: 400 }
+        )
+      }
+    } else {
+      // Procesar CSV
+      const lines = text.split('\n').filter(line => line.trim())
+      
+      if (lines.length < 2) {
+        return NextResponse.json(
+          { error: 'CSV file must contain at least a header and one data row' },
+          { status: 400 }
+        )
+      }
+
+      totalRows = lines.length - 1
+      const headers = lines[0].split(',').map(h => h.trim().toLowerCase())
+
+      for (let i = 1; i < lines.length; i++) {
+        try {
+          const values = lines[i].split(',').map(v => v.trim().replace(/^"|"$/g, ''))
+          const productData: any = { userId }
+          
+          headers.forEach((header, index) => {
+            if (values[index]) {
+              productData[header] = values[index]
+            }
+          })
+
+          const validatedProduct = productImportSchema.parse(productData)
+          products.push(validatedProduct)
+        } catch (error) {
+          errors.push({
+            row: i + 1,
+            error: error instanceof z.ZodError 
+              ? error.issues.map((e: any) => e.message).join(', ')
+              : 'Invalid data format'
+          })
+        }
       }
     }
 
@@ -87,7 +122,7 @@ export async function POST(request: NextRequest) {
           error: 'Validation errors', 
           errors,
           imported: 0,
-          total: lines.length - 1
+          total: totalRows
         },
         { status: 400 }
       )
@@ -95,12 +130,20 @@ export async function POST(request: NextRequest) {
 
     // Import products to database
     const importResults = await Promise.allSettled(
-      products.map(product => 
+      products.map((product: any) => 
         db.product.create({
           data: {
-            ...product,
+            userId: product.userId,
+            name: product.name,
+            description: product.description,
+            price: product.price,
+            currency: product.currency,
+            category: product.category,
+            status: product.status,
             images: product.images || '[]',
-            tags: product.tags || '[]'
+            tags: product.tags || '[]',
+            autoResponse: product.autoResponse,
+            stock: product.stock
           }
         })
       )
@@ -115,7 +158,7 @@ export async function POST(request: NextRequest) {
       failed,
       total: products.length,
       errors: failed > 0 ? importResults
-        .filter((r, index) => r.status === 'rejected')
+        .filter(r => r.status === 'rejected')
         .map((r, index) => ({
           row: index + 2,
           error: r.status === 'rejected' ? r.reason.message : 'Unknown error'

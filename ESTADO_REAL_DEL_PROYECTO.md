@@ -46,6 +46,11 @@ El bot de WhatsApp está **100% operativo** con conexión REAL a WhatsApp usando
 - [x] Precios y stock
 - [x] Imágenes de productos
 - [x] Búsqueda y filtros
+- [x] **Importación masiva (JSON y CSV)**
+- [x] **Exportación (JSON y CSV)**
+- [x] **Drag & Drop de archivos**
+- [x] **Validación automática de datos**
+- [x] **Edición masiva en Excel**
 
 ### ✅ Dashboard
 - [x] Panel principal con estadísticas
