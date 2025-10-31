@@ -3,36 +3,44 @@ import { db } from '@/lib/db'
 import { z } from 'zod'
 
 const productImportSchema = z.object({
-  name: z.string().min(1, 'El nombre es requerido'),
-  description: z.string().optional().default(''),
+  name: z.string().min(1, 'El nombre es requerido').catch('Producto sin nombre'),
+  description: z.string().catch(''),
   price: z.union([z.string(), z.number()]).transform((val) => {
     if (typeof val === 'number') return val
-    return parseFloat(val.replace(/[^0-9.-]/g, ''))
-  }),
-  currency: z.string().optional().default('COP'),
+    if (typeof val === 'string') {
+      const parsed = parseFloat(val.replace(/[^0-9.-]/g, ''))
+      return isNaN(parsed) ? 0 : parsed
+    }
+    return 0
+  }).catch(0),
+  currency: z.string().catch('COP'),
   category: z.union([
     z.enum(['PHYSICAL', 'DIGITAL', 'SERVICE']),
     z.string()
   ]).transform((val) => {
-    const normalized = val.toUpperCase()
+    if (!val) return 'PHYSICAL'
+    const normalized = val.toString().toUpperCase()
     if (normalized.includes('FISIC') || normalized.includes('PHYSICAL')) return 'PHYSICAL'
     if (normalized.includes('DIGITAL') || normalized.includes('VIRTUAL')) return 'DIGITAL'
     if (normalized.includes('SERVICE') || normalized.includes('SERVICIO')) return 'SERVICE'
-    return 'PHYSICAL' // Default
-  }),
+    return 'PHYSICAL'
+  }).catch('PHYSICAL'),
   status: z.union([
     z.enum(['AVAILABLE', 'OUT_OF_STOCK', 'DISCONTINUED']),
     z.string()
-  ]).optional().default('AVAILABLE'),
-  images: z.string().optional().default(''),
-  tags: z.string().optional().default(''),
-  autoResponse: z.string().optional().default(''),
+  ]).catch('AVAILABLE'),
+  images: z.string().catch(''),
+  tags: z.string().catch(''),
+  autoResponse: z.string().catch(''),
   stock: z.union([z.string(), z.number()]).optional().transform((val) => {
     if (!val) return undefined
     if (typeof val === 'number') return val
-    const num = parseInt(val.replace(/[^0-9]/g, ''))
-    return isNaN(num) ? undefined : num
-  })
+    if (typeof val === 'string') {
+      const num = parseInt(val.replace(/[^0-9]/g, ''))
+      return isNaN(num) ? undefined : num
+    }
+    return undefined
+  }).catch(undefined)
 })
 
 export async function POST(request: NextRequest) {
@@ -72,9 +80,9 @@ export async function POST(request: NextRequest) {
 
         for (let i = 0; i < productsArray.length; i++) {
           try {
-            const productData = { ...productsArray[i], userId }
+            const productData = productsArray[i]
             const validatedProduct = productImportSchema.parse(productData)
-            products.push(validatedProduct)
+            products.push({ ...validatedProduct, userId })
           } catch (error) {
             errors.push({
               row: i + 1,
@@ -116,7 +124,7 @@ export async function POST(request: NextRequest) {
           })
 
           const validatedProduct = productImportSchema.parse(productData)
-          products.push(validatedProduct)
+          products.push({ ...validatedProduct, userId })
         } catch (error) {
           errors.push({
             row: i + 1,
