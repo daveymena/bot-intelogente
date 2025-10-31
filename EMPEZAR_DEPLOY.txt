@@ -1,0 +1,111 @@
+🚀 DESPLEGAR BOT EN 5 PASOS
+═══════════════════════════════════════════════════════════════
+
+✅ Tu bot está 100% listo para producción
+
+📋 OPCIÓN 1: RAILWAY (Recomendado - Más barato)
+────────────────────────────────────────────────
+
+1. Ve a https://railway.app
+2. Crea cuenta (gratis con $5 de crédito)
+3. Click "New Project" → "Deploy from GitHub"
+4. Selecciona este repositorio
+5. Agrega PostgreSQL desde el dashboard
+6. Configura variables de entorno (ver DEPLOY_RAILWAY.md)
+7. ¡Listo! Tu bot estará en línea en 5 minutos
+
+💰 Costo: $5-10/mes
+
+
+📋 OPCIÓN 2: RENDER (Más fácil)
+────────────────────────────────────────────────
+
+1. Ve a https://render.com
+2. Crea cuenta (gratis)
+3. Crea PostgreSQL Database
+4. Crea Web Service desde GitHub
+5. Configura variables de entorno (ver DEPLOY_RENDER.md)
+6. Agrega disco persistente para WhatsApp
+7. ¡Listo! Tu bot estará en línea en 10 minutos
+
+💰 Costo: $14/mes
+
+
+🔑 VARIABLES CRÍTICAS QUE NECESITAS
+────────────────────────────────────────────────
+
+En el hosting, configura estas variables:
+
+DATABASE_PROVIDER=postgresql
+DATABASE_URL=[La crea automáticamente el hosting]
+NEXTAUTH_SECRET=[Genera uno seguro]
+NEXTAUTH_URL=[URL de tu app]
+GROQ_API_KEY=[Tu key de Groq]
+OPENROUTER_API_KEY=[Tu key de OpenRouter]
+AI_PROVIDER=openrouter
+ADMIN_EMAIL=tu@email.com
+ADMIN_PASSWORD=tu-password-seguro
+WHATSAPP_PROVIDER=baileys
+
+
+📚 GUÍAS DETALLADAS
+────────────────────────────────────────────────
+
+- DEPLOY_RAILWAY.md  → Guía completa para Railway
+- DEPLOY_RENDER.md   → Guía completa para Render
+- LISTO_PARA_PRODUCCION.md → Resumen de cambios
+
+
+🧪 PROBAR ANTES DE SUBIR
+────────────────────────────────────────────────
+
+Ejecuta esto para verificar que todo esté bien:
+
+    npx tsx scripts/test-production-ready.ts
+
+
+📤 SUBIR A GITHUB
+────────────────────────────────────────────────
+
+Si aún no has subido el código:
+
+    git init
+    git add .
+    git commit -m "Bot listo para producción"
+    git branch -M main
+    git remote add origin https://github.com/tu-usuario/tu-repo.git
+    git push -u origin main
+
+
+✅ DESPUÉS DEL DEPLOY
+────────────────────────────────────────────────
+
+1. Abre la URL de tu app
+2. Inicia sesión con tu email/password de admin
+3. Ve a WhatsApp → Conectar
+4. Escanea el código QR
+5. ¡Tu bot está vendiendo 24/7!
+
+
+💡 RECOMENDACIONES
+────────────────────────────────────────────────
+
+✓ Usa Railway (más barato y mejor)
+✓ Configura OpenRouter como IA principal
+✓ Monitorea los logs regularmente
+✓ Haz backup de la base de datos
+✓ Prueba el bot antes de dar el número a clientes
+
+
+🐛 SI ALGO FALLA
+────────────────────────────────────────────────
+
+1. Revisa los logs en el dashboard del hosting
+2. Verifica que todas las variables estén configuradas
+3. Confirma que la base de datos esté conectada
+4. Lee la sección de troubleshooting en las guías
+
+
+═══════════════════════════════════════════════════════════════
+
+¡Éxito con tu bot! 🎉

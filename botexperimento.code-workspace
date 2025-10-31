@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"name": "botexperimento",
+			"path": "."
+		},
+		{
+			"name": "moto-ns-160-backup",
+			"path": "../../../../davey/smart-sales/moto-ns-160-backup"
+		},
+		{
+			"name": "fhotos-productos",
+			"path": "../../../../davey/smart-sales/fhotos-productos"
+		}
+	],
+	"settings": {
+	}
+}
