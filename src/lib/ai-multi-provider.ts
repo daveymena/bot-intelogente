@@ -70,6 +70,9 @@ export class AIMultiProvider {
           case 'openai':
             response = await this.tryOpenAI(messages, options)
             break
+          case 'ollama':
+            response = await this.tryOllama(messages, options)
+            break
           default:
             console.log(`[AI Multi-Provider] ⚠️ Provider desconocido: ${provider}`)
             continue
@@ -325,6 +328,71 @@ export class AIMultiProvider {
     }
   }
 
+  // 🦙 Ollama (IA Local en tu VPS)
+  private static async tryOllama(
+    messages: AIMessage[],
+    options: AICompletionOptions
+  ): Promise<AICompletionResponse> {
+    const ollamaUrl = process.env.OLLAMA_URL || 'http://ollama:11434'
+    const model = options.model || process.env.OLLAMA_MODEL || 'llama3.2'
+
+    if (!process.env.OLLAMA_URL && !process.env.OLLAMA_MODEL) {
+      throw new Error('Ollama no configurado (falta OLLAMA_URL o OLLAMA_MODEL)')
+    }
+
+    const timeout = parseInt(process.env.OLLAMA_TIMEOUT || '30000')
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), timeout)
+
+    try {
+      const response = await fetch(`${ollamaUrl}/api/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model,
+          messages,
+          stream: false,
+          options: {
+            temperature: options.temperature || 0.7,
+            num_predict: options.max_tokens || 400
+          }
+        }),
+        signal: controller.signal
+      })
+
+      clearTimeout(timeoutId)
+
+      if (!response.ok) {
+        const error = await response.text()
+        throw new Error(`Ollama error: ${error || response.statusText}`)
+      }
+
+      const data = await response.json()
+      const content = data.message?.content
+
+      if (!content) {
+        throw new Error('Ollama no devolvió contenido')
+      }
+
+      return {
+        content,
+        provider: 'ollama',
+        model,
+        success: true
+      }
+    } catch (error: any) {
+      clearTimeout(timeoutId)
+
+      if (error.name === 'AbortError') {
+        throw new Error('Ollama timeout')
+      }
+
+      throw error
+    }
+  }
+
   // 🧪 Probar conectividad de todos los providers
   static async testAllProviders(): Promise<Record<string, boolean>> {
     const results: Record<string, boolean> = {}
@@ -363,6 +431,18 @@ export class AIMultiProvider {
       } catch (error: any) {
         results.openai = false
         console.log('[Test] ❌ OpenAI falló:', error.message)
+      }
+    }
+    
+    // Probar Ollama (si está configurado)
+    if (process.env.OLLAMA_URL || process.env.OLLAMA_MODEL) {
+      try {
+        await this.tryOllama(testMessage, { max_tokens: 10 })
+        results.ollama = true
+        console.log('[Test] ✅ Ollama funcionando')
+      } catch (error: any) {
+        results.ollama = false
+        console.log('[Test] ❌ Ollama falló:', error.message)
       }
     }
     
