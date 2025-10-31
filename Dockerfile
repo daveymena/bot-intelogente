@@ -24,8 +24,8 @@ RUN npm run build
 # Crear directorio dist si no existe y dar permisos
 RUN mkdir -p /app/dist && chown -R pptruser:pptruser /app/dist
 
-# Script de inicio que ejecuta migraciones
-RUN echo '#!/bin/sh\nnpx prisma db push --accept-data-loss\nexec npm start' > /app/start.sh && chmod +x /app/start.sh && chown pptruser:pptruser /app/start.sh
+# Script de inicio que ejecuta migraciones y crea admin
+RUN echo '#!/bin/sh\nnpx prisma db push --accept-data-loss\nnpx tsx scripts/create-admin.ts\nexec npm start' > /app/start.sh && chmod +x /app/start.sh && chown pptruser:pptruser /app/start.sh
 
 # Exponer puerto
 EXPOSE 3000
