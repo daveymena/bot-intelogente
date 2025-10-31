@@ -181,7 +181,7 @@ export class SessionManager {
   static cleanup() {
     console.log('[SessionManager] 🧹 Limpiando intervalos...')
     
-    for (const [userId, interval] of this.reconnectIntervals.entries()) {
+    for (const [userId, interval] of Array.from(this.reconnectIntervals.entries())) {
       clearInterval(interval)
       console.log(`[SessionManager] Intervalo limpiado para: ${userId}`)
     }

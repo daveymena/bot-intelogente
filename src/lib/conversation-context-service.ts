@@ -89,7 +89,7 @@ export class ConversationContextService {
     const now = new Date().getTime()
     let cleaned = 0
 
-    for (const [key, context] of this.contexts.entries()) {
+    for (const [key, context] of Array.from(this.contexts.entries())) {
       const elapsed = now - context.lastMentionedAt.getTime()
       if (elapsed > this.CONTEXT_TIMEOUT) {
         this.contexts.delete(key)
