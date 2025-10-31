@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
-export default function PaymentFailurePage() {
+function PaymentFailureContent() {
   const searchParams = useSearchParams();
   const status = searchParams.get('status');
 
@@ -64,5 +65,17 @@ export default function PaymentFailurePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function PaymentFailurePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-100 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
+      </div>
+    }>
+      <PaymentFailureContent />
+    </Suspense>
   );
 }

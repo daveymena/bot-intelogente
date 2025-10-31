@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
-export default function PaymentPendingPage() {
+function PaymentPendingContent() {
   const searchParams = useSearchParams();
   const paymentId = searchParams.get('payment_id');
 
@@ -70,5 +71,17 @@ export default function PaymentPendingPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function PaymentPendingPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-amber-100 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
+      </div>
+    }>
+      <PaymentPendingContent />
+    </Suspense>
   );
 }
