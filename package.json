@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "nodemon --exec \"npx tsx server.ts\" --watch server.ts --watch src --ext ts,tsx,js,jsx",
-    "build": "npx prisma generate && next build && npx tsc --project tsconfig.server.json",
+    "build": "npx prisma generate && next build",
     "build:server": "npx tsc --project tsconfig.server.json",
     "start": "NODE_ENV=production node dist/server.js",
     "start:prod": "bash scripts/start-production.sh",
@@ -15,7 +15,7 @@
     "db:migrate:deploy": "prisma migrate deploy",
     "db:reset": "prisma migrate reset",
     "postinstall": "prisma generate",
-    "scrape:dropshipping": "npx tsx scripts/scrape-tienda-universal.ts",
+    "scrape:dropshipping": "npx tsx scripts/preparar-productos-dropshipping.ts",
     "import:dropshipping": "npx tsx scripts/import-dropshipping.ts",
     "dropship:update": "npm run scrape:dropshipping && npm run import:dropshipping"
   },
