@@ -66,6 +66,9 @@ export class ProductIntelligenceService {
         try {
             console.log(`🔍 [Product Intelligence] Buscando producto: "${query}"`)
 
+            // Normalizar query
+            const queryLower = query.toLowerCase()
+
             // Extraer palabras clave del mensaje
             const keywords = this.extractKeywords(query)
             console.log(`🔑 [Product Intelligence] Palabras clave: ${keywords.join(', ')}`)
