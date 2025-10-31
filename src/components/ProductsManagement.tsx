@@ -10,7 +10,10 @@ import {
   Eye,
   Package,
   DollarSign,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Upload,
+  Download,
+  FileJson
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -101,6 +104,8 @@ export default function ProductsManagement() {
 
   // Get user ID from session/auth
   const [userId, setUserId] = useState<string | null>(null)
+  const [importing, setImporting] = useState(false)
+  const [exporting, setExporting] = useState(false)
 
   useEffect(() => {
     // Get user from session
@@ -258,6 +263,75 @@ export default function ProductsManagement() {
     )
   }
 
+  // Importar productos
+  const handleImport = async (file: File) => {
+    if (!userId) {
+      toast.error('No se pudo obtener el ID del usuario')
+      return
+    }
+
+    setImporting(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('userId', userId)
+
+      const response = await fetch('/api/import-export', {
+        method: 'POST',
+        body: formData
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al importar')
+      }
+
+      toast.success(`✅ ${data.imported} productos importados correctamente`)
+      fetchProducts()
+    } catch (error: any) {
+      toast.error(error.message || 'Error al importar productos')
+    } finally {
+      setImporting(false)
+    }
+  }
+
+  const handleExport = async (format: 'json' | 'csv') => {
+    if (!userId) {
+      toast.error('No se pudo obtener el ID del usuario')
+      return
+    }
+
+    setExporting(true)
+    try {
+      const response = await fetch(`/api/import-export?format=${format}&userId=${userId}`)
+      
+      if (!response.ok) throw new Error('Error al exportar')
+
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `productos-${new Date().toISOString().split('T')[0]}.${format}`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+
+      toast.success(`✅ Productos exportados en formato ${format.toUpperCase()}`)
+    } catch (error) {
+      toast.error('Error al exportar productos')
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      handleImport(e.target.files[0])
+    }
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -266,20 +340,52 @@ export default function ProductsManagement() {
           <h3 className="text-lg font-medium text-gray-900">Gestión de Productos</h3>
           <p className="text-sm text-gray-500">Administra tu catálogo de productos</p>
         </div>
-        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-          <DialogTrigger asChild>
-            <Button 
-              className="bg-green-600 hover:bg-green-700"
-              onClick={() => {
-                setEditingProduct(null)
-                resetForm()
-              }}
+        <div className="flex gap-2">
+          {/* Botón Importar */}
+          <div className="relative">
+            <input
+              id="file-import"
+              type="file"
+              accept=".json,.csv"
+              onChange={handleFileInput}
+              className="hidden"
+              disabled={importing}
+            />
+            <Button
+              variant="outline"
+              onClick={() => document.getElementById('file-import')?.click()}
+              disabled={importing}
             >
-              <Plus className="w-4 h-4 mr-2" />
-              Nuevo Producto
+              <Upload className="w-4 h-4 mr-2" />
+              {importing ? 'Importando...' : 'Importar'}
             </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          </div>
+
+          {/* Botón Exportar */}
+          <Button
+            variant="outline"
+            onClick={() => handleExport('json')}
+            disabled={exporting}
+          >
+            <Download className="w-4 h-4 mr-2" />
+            {exporting ? 'Exportando...' : 'Exportar'}
+          </Button>
+
+          {/* Botón Nuevo Producto */}
+          <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+            <DialogTrigger asChild>
+              <Button 
+                className="bg-green-600 hover:bg-green-700"
+                onClick={() => {
+                  setEditingProduct(null)
+                  resetForm()
+                }}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Nuevo Producto
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 {editingProduct ? 'Editar Producto' : 'Crear Nuevo Producto'}
@@ -417,6 +523,7 @@ export default function ProductsManagement() {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       {/* Filters */}

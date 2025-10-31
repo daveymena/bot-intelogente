@@ -119,9 +119,9 @@ export class AuthService {
     // Generate email verification token
     const verificationToken = this.generateVerificationToken()
 
-    // Create user with 7-day trial (but not active until verified)
+    // Create user with 10-day trial (activates when email is verified)
     const trialEnds = new Date()
-    trialEnds.setDate(trialEnds.getDate() + 7)
+    trialEnds.setDate(trialEnds.getDate() + 10)
 
     const user = await db.user.create({
       data: {
@@ -132,6 +132,7 @@ export class AuthService {
         businessName: data.businessName,
         membershipType: 'TRIAL',
         trialEnds,
+        membershipEnds: trialEnds, // Same as trial for now
         isActive: false, // Inactive until email verified
         isEmailVerified: false,
         emailVerificationToken: verificationToken

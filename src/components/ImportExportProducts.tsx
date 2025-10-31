@@ -155,14 +155,22 @@ export function ImportExportProducts({ userId }: ImportExportProductsProps) {
                                 <p className="text-sm text-gray-600">Importando productos...</p>
                             </div>
                         ) : (
-                            <div className="space-y-2">
-                                <Upload className="h-12 w-12 text-gray-400 mx-auto" />
+                            <div className="space-y-3">
+                                <div className="flex justify-center gap-4">
+                                    <FileJson className="h-12 w-12 text-blue-500" />
+                                    <FileSpreadsheet className="h-12 w-12 text-green-500" />
+                                </div>
                                 <p className="text-sm font-medium">
                                     Arrastra tu archivo aquí o haz click para seleccionar
                                 </p>
-                                <p className="text-xs text-gray-500">
-                                    Formatos soportados: JSON, CSV
-                                </p>
+                                <div className="flex items-center justify-center gap-2">
+                                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                                        .JSON
+                                    </span>
+                                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                                        .CSV
+                                    </span>
+                                </div>
                             </div>
                         )}
                     </div>

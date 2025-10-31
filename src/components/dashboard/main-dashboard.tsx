@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/use-auth'
-import { 
-  Bot, 
-  MessageSquare, 
-  Package, 
-  Settings, 
-  BarChart3, 
+import {
+  Bot,
+  MessageSquare,
+  Package,
+  Settings,
+  BarChart3,
   Users,
   LogOut,
   Menu,
@@ -45,7 +45,7 @@ export function MainDashboard() {
         setSidebarCollapsed(false)
       }
     }
-    
+
     checkMobile()
     window.addEventListener('resize', checkMobile)
     return () => window.removeEventListener('resize', checkMobile)
@@ -61,9 +61,9 @@ export function MainDashboard() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Top Navigation */}
-      <nav className="bg-white border-b border-gray-200 fixed w-full z-30 top-0">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-green-50/20 to-emerald-50/30">
+      {/* Top Navigation - Suave y Profesional */}
+      <nav className="bg-white/95 backdrop-blur-sm border-b border-gray-200 fixed w-full z-30 top-0 shadow-sm">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Left side */}
@@ -76,15 +76,26 @@ export function MainDashboard() {
                     setSidebarCollapsed(!sidebarCollapsed)
                   }
                 }}
-                className="p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none transition-colors"
+                className="p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none transition-all duration-200"
               >
                 <Menu className="h-6 w-6" />
               </button>
-              <div className="ml-2 sm:ml-4 flex items-center">
-                <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
-                  <Bot className="w-5 h-5 text-white" />
+              <div className="ml-2 sm:ml-4 flex items-center gap-3">
+                <div className="relative">
+                  {/* Icono estilo WhatsApp */}
+                  <div className="w-10 h-10 bg-gradient-to-br from-[#25d366] to-[#128c7e] rounded-full flex items-center justify-center shadow-lg shadow-[#25d366]/30">
+                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                    </svg>
+                  </div>
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-[#25d366] rounded-full border-2 border-white animate-pulse"></div>
                 </div>
-                <span className="ml-2 text-lg sm:text-xl font-bold text-gray-900 hidden sm:block">Smart Sales Bot</span>
+                <div className="hidden sm:block">
+                  <span className="text-xl font-bold text-gray-900">
+                    Smart Sales Bot
+                  </span>
+                  <p className="text-xs text-gray-600">WhatsApp Business</p>
+                </div>
               </div>
             </div>
 
@@ -128,29 +139,29 @@ export function MainDashboard() {
         </div>
       </nav>
 
-      {/* Overlay para móvil */}
+      {/* Overlay para móvil - Suave */}
       {isMobile && sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-20 top-16"
+          className="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-20 top-16 transition-opacity duration-300"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar - Verde WhatsApp */}
       <aside
-        className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-white border-r border-gray-200 transition-all duration-300 z-30 shadow-lg ${
-          isMobile
-            ? sidebarOpen
-              ? 'translate-x-0 w-64'
-              : '-translate-x-full w-64'
-            : sidebarCollapsed
+        className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-gradient-to-b from-[#075e54] to-[#128c7e] border-r border-[#128c7e]/30 transition-all duration-300 z-30 shadow-lg ${isMobile
+          ? sidebarOpen
+            ? 'translate-x-0 w-64'
+            : '-translate-x-full w-64'
+          : sidebarCollapsed
             ? 'w-20'
             : 'w-64'
-        }`}
+          }`}
       >
-        <nav className="p-4 space-y-2">
+        <nav className="p-3 space-y-1">
           {menuItems.map((item) => {
             const Icon = item.icon
+            const isActive = activeTab === item.id
             return (
               <button
                 key={item.id}
@@ -158,40 +169,49 @@ export function MainDashboard() {
                   setActiveTab(item.id)
                   if (isMobile) setSidebarOpen(false)
                 }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-                  activeTab === item.id
-                    ? 'bg-green-50 text-green-600'
-                    : 'text-gray-700 hover:bg-gray-50'
-                } ${sidebarCollapsed && !isMobile ? 'justify-center' : ''}`}
+                className={`group w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 ${isActive
+                  ? 'bg-white/20 text-white shadow-lg backdrop-blur-sm border-l-4 border-white'
+                  : 'text-white/70 hover:bg-white/10 hover:text-white'
+                  } ${sidebarCollapsed && !isMobile ? 'justify-center' : ''}`}
                 title={sidebarCollapsed && !isMobile ? item.label : ''}
               >
-                <Icon className="h-5 w-5 flex-shrink-0" />
+                <Icon className={`h-5 w-5 flex-shrink-0 transition-all duration-200 ${isActive ? 'text-white' : 'text-white/70 group-hover:text-white group-hover:scale-110'
+                  }`} />
                 {(!sidebarCollapsed || isMobile) && (
-                  <span className="font-medium">{item.label}</span>
+                  <span className="font-medium text-sm">{item.label}</span>
+                )}
+                {isActive && (!sidebarCollapsed || isMobile) && (
+                  <div className="ml-auto">
+                    <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                  </div>
                 )}
               </button>
             )
           })}
         </nav>
+
+        {/* Decorative gradient at bottom */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#075e54] via-transparent to-transparent pointer-events-none"></div>
       </aside>
 
-      {/* Main Content */}
+      {/* Main Content - Suave y Profesional */}
       <main
-        className={`pt-16 transition-all duration-300 ${
-          isMobile
-            ? 'ml-0'
-            : sidebarCollapsed
+        className={`pt-16 transition-all duration-300 min-h-screen ${isMobile
+          ? 'ml-0'
+          : sidebarCollapsed
             ? 'ml-20'
             : 'ml-64'
-        }`}
+          }`}
       >
-        <div className="p-4 sm:p-6">
-          {activeTab === 'overview' && <OverviewTab />}
-          {activeTab === 'whatsapp' && <WhatsAppConnection />}
-          {activeTab === 'products' && <ProductsManagement />}
-          {activeTab === 'prompts' && <AIPromptsManagement />}
-          {activeTab === 'customers' && <CustomersTab />}
-          {activeTab === 'settings' && <SettingsTab />}
+        <div className="p-4 sm:p-6 lg:p-8">
+          <div className="max-w-7xl mx-auto">
+            {activeTab === 'overview' && <OverviewTab />}
+            {activeTab === 'whatsapp' && <WhatsAppConnection />}
+            {activeTab === 'products' && <ProductsManagement />}
+            {activeTab === 'prompts' && <AIPromptsManagement />}
+            {activeTab === 'customers' && <CustomersTab />}
+            {activeTab === 'settings' && <SettingsTab />}
+          </div>
         </div>
       </main>
     </div>
@@ -391,9 +411,8 @@ function CustomersTab() {
                   <button
                     key={conv.id}
                     onClick={() => viewConversation(conv.id)}
-                    className={`w-full p-4 text-left hover:bg-gray-50 transition-colors ${
-                      selectedConversation?.id === conv.id ? 'bg-green-50' : ''
-                    }`}
+                    className={`w-full p-4 text-left hover:bg-gray-50 transition-colors ${selectedConversation?.id === conv.id ? 'bg-green-50' : ''
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       <Avatar>
@@ -432,8 +451,8 @@ function CustomersTab() {
                   <div className="flex items-center gap-3 pb-4 border-b">
                     <Avatar className="h-12 w-12">
                       <AvatarFallback className="bg-green-600 text-white text-lg">
-                        {selectedConversation.customerName?.charAt(0) || 
-                         selectedConversation.customerPhone.charAt(0)}
+                        {selectedConversation.customerName?.charAt(0) ||
+                          selectedConversation.customerPhone.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
                     <div>
@@ -451,16 +470,14 @@ function CustomersTab() {
                         className={`flex ${msg.direction === 'OUTGOING' ? 'justify-end' : 'justify-start'}`}
                       >
                         <div
-                          className={`max-w-[70%] rounded-lg p-3 ${
-                            msg.direction === 'OUTGOING'
-                              ? 'bg-green-600 text-white'
-                              : 'bg-gray-100 text-gray-900'
-                          }`}
+                          className={`max-w-[70%] rounded-lg p-3 ${msg.direction === 'OUTGOING'
+                            ? 'bg-green-600 text-white'
+                            : 'bg-gray-100 text-gray-900'
+                            }`}
                         >
                           <p className="text-sm">{msg.content}</p>
-                          <p className={`text-xs mt-1 ${
-                            msg.direction === 'OUTGOING' ? 'text-green-100' : 'text-gray-500'
-                          }`}>
+                          <p className={`text-xs mt-1 ${msg.direction === 'OUTGOING' ? 'text-green-100' : 'text-gray-500'
+                            }`}>
                             {new Date(msg.createdAt).toLocaleString('es-ES')}
                           </p>
                         </div>
@@ -497,7 +514,18 @@ function SettingsTab() {
       const response = await fetch('/api/settings')
       const data = await response.json()
       if (data.success) {
-        setSettings(data.settings)
+        // Obtener datos del usuario desde la base de datos
+        const userResponse = await fetch('/api/auth/session')
+        const userData = await userResponse.json()
+
+        // Combinar settings del bot con datos del usuario
+        setSettings({
+          ...data.settings,
+          userName: userData.user?.name || '',
+          userPhone: userData.user?.phone || '',
+          userBusinessName: userData.user?.businessName || '',
+          userWhatsappNumber: userData.user?.whatsappNumber || ''
+        })
       }
     } catch (error) {
       console.error('Error fetching settings:', error)
@@ -509,17 +537,34 @@ function SettingsTab() {
   const handleSave = async () => {
     setSaving(true)
     try {
-      const response = await fetch('/api/settings', {
+      // Guardar configuración del bot
+      const settingsResponse = await fetch('/api/settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(settings)
       })
-      
-      const data = await response.json()
-      if (data.success) {
-        toast.success('Configuración guardada')
+
+      // Guardar perfil de usuario
+      const profileResponse = await fetch('/api/user/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: settings?.userName,
+          phone: settings?.userPhone,
+          businessName: settings?.userBusinessName,
+          whatsappNumber: settings?.userWhatsappNumber
+        })
+      })
+
+      const settingsData = await settingsResponse.json()
+      const profileData = await profileResponse.json()
+
+      if (settingsData.success && profileData.success) {
+        toast.success('✅ Configuración y perfil guardados correctamente')
+        // Recargar para actualizar el contexto de usuario
+        window.location.reload()
       } else {
-        toast.error('Error al guardar')
+        toast.error('Error al guardar algunos datos')
       }
     } catch (error) {
       console.error('Error saving settings:', error)
@@ -554,19 +599,56 @@ function SettingsTab() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium text-gray-700">Nombre</label>
-              <p className="mt-1 text-gray-900">{user?.name || 'No especificado'}</p>
+              <input
+                type="text"
+                value={settings?.userName || user?.name || ''}
+                onChange={(e) => setSettings({ ...settings, userName: e.target.value })}
+                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Tu nombre"
+              />
             </div>
             <div>
               <label className="text-sm font-medium text-gray-700">Email</label>
-              <p className="mt-1 text-gray-900">{user?.email}</p>
+              <input
+                type="email"
+                value={user?.email}
+                disabled
+                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed"
+                title="El email no se puede cambiar"
+              />
             </div>
             <div>
               <label className="text-sm font-medium text-gray-700">Teléfono</label>
-              <p className="mt-1 text-gray-900">{user?.phone || 'No especificado'}</p>
+              <input
+                type="tel"
+                value={settings?.userPhone || user?.phone || ''}
+                onChange={(e) => setSettings({ ...settings, userPhone: e.target.value })}
+                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="+57 300 000 0000"
+              />
             </div>
             <div>
-              <label className="text-sm font-medium text-gray-700">Negocio</label>
-              <p className="mt-1 text-gray-900">{user?.businessName || 'No especificado'}</p>
+              <label className="text-sm font-medium text-gray-700">Nombre del Negocio</label>
+              <input
+                type="text"
+                value={settings?.userBusinessName || user?.businessName || ''}
+                onChange={(e) => setSettings({ ...settings, userBusinessName: e.target.value })}
+                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Mi Negocio"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="text-sm font-medium text-gray-700">WhatsApp del Negocio</label>
+              <input
+                type="tel"
+                value={settings?.userWhatsappNumber || ''}
+                onChange={(e) => setSettings({ ...settings, userWhatsappNumber: e.target.value })}
+                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="+57 300 000 0000"
+              />
+              <p className="mt-1 text-xs text-gray-500">
+                Este es el número que usarás para conectar el bot de WhatsApp
+              </p>
             </div>
           </div>
         </CardContent>
@@ -646,7 +728,7 @@ function SettingsTab() {
             </div>
           </div>
 
-          <Button 
+          <Button
             onClick={handleSave}
             disabled={saving}
             className="w-full bg-green-600 hover:bg-green-700"
@@ -706,7 +788,7 @@ function SettingsTab() {
             </div>
           </div>
 
-          <Button 
+          <Button
             onClick={handleSave}
             disabled={saving}
             className="w-full bg-green-600 hover:bg-green-700"

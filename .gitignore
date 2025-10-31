@@ -60,3 +60,14 @@ dev.db
 dev.db-journal
 *.db
 *.db-journal
+
+# Debug images
+*.png
+!public/**/*.png
+
+# Batch files
+*.bat
+
+# Temporary documentation (keep only essential docs)
+COMPLETADO_*.txt
+probar-*.bat

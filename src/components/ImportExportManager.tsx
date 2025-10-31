@@ -55,8 +55,11 @@ export default function ImportExportManager() {
     const file = event.target.files?.[0]
     if (!file) return
 
-    if (!file.name.endsWith('.csv')) {
-      toast.error('Por favor, selecciona un archivo CSV')
+    const isCSV = file.name.endsWith('.csv')
+    const isJSON = file.name.endsWith('.json')
+    
+    if (!isCSV && !isJSON) {
+      toast.error('Por favor, selecciona un archivo CSV o JSON')
       return
     }
 

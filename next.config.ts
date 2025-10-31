@@ -15,6 +15,14 @@ const nextConfig: NextConfig = {
         hostname: 'megacomputer.com.co',
         pathname: '/wp-content/uploads/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+      },
     ],
   },
   webpack: (config, { dev, isServer }) => {

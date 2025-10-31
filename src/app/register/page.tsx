@@ -84,11 +84,11 @@ export default function RegisterPage() {
 
       if (response.ok) {
         if (data.requiresVerification) {
-          toast.success('¡Cuenta creada! Revisa tu correo para verificar tu cuenta.')
+          toast.success('¡Cuenta creada! Revisa tu correo para activar tus 10 días gratis.')
           // Redirect to a verification pending page
           router.push(`/verification-pending?email=${encodeURIComponent(formData.email)}`)
         } else {
-          toast.success('¡Cuenta creada exitosamente! Disfruta de 7 días gratis.')
+          toast.success('¡Cuenta creada exitosamente! Disfruta de 10 días gratis.')
           router.push('/dashboard')
         }
       } else {
@@ -115,16 +115,19 @@ export default function RegisterPage() {
         </div>
 
         {/* Trial Banner */}
-        <Card className="mb-6 border-green-200 bg-green-50">
+        <Card className="mb-6 border-green-200 bg-gradient-to-r from-green-50 to-emerald-50">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
-                <Zap className="w-5 h-5 text-white" />
+              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-lg">
+                <Zap className="w-6 h-6 text-white" />
               </div>
-              <div>
-                <h3 className="font-semibold text-green-900">🎉 7 Días GRATIS</h3>
-                <p className="text-sm text-green-700">
-                  Prueba todas las funciones sin compromiso. No se requiere tarjeta.
+              <div className="flex-1">
+                <h3 className="font-bold text-green-900 text-lg">🎁 10 Días GRATIS</h3>
+                <p className="text-sm text-green-700 font-medium">
+                  Se activa automáticamente al verificar tu email
+                </p>
+                <p className="text-xs text-green-600 mt-1">
+                  ✓ Sin tarjeta de crédito ✓ Acceso completo ✓ Sin compromiso
                 </p>
               </div>
             </div>

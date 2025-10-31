@@ -78,17 +78,26 @@ function VerificationPendingContent() {
                 <p className="font-semibold text-gray-900">{email}</p>
               </div>
 
-              <Alert>
-                <CheckCircle className="h-4 w-4" />
-                <AlertDescription>
-                  <strong>Pasos siguientes:</strong>
-                  <ol className="list-decimal list-inside mt-2 space-y-1 text-sm">
-                    <li>Revisa tu bandeja de entrada</li>
-                    <li>Haz clic en el enlace de verificación</li>
-                    <li>Inicia sesión en tu cuenta</li>
-                  </ol>
-                </AlertDescription>
-              </Alert>
+              {/* Trial Activation Info */}
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg border-2 border-green-200">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <CheckCircle className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-green-900 mb-2">🎁 ¡10 Días Gratis te esperan!</h3>
+                    <p className="text-sm text-green-700 mb-3">
+                      Al verificar tu email, se activarán automáticamente tus 10 días de prueba gratuita con acceso completo.
+                    </p>
+                    <ol className="list-decimal list-inside space-y-1 text-sm text-green-800">
+                      <li>Revisa tu bandeja de entrada</li>
+                      <li>Haz clic en el enlace de verificación</li>
+                      <li>¡Tu plan gratuito se activa automáticamente!</li>
+                      <li>Inicia sesión y empieza a usar el sistema</li>
+                    </ol>
+                  </div>
+                </div>
+              </div>
 
               {/* Resend Button */}
               <div className="space-y-2">

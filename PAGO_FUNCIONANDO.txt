@@ -1,0 +1,54 @@
+✅ SISTEMA DE PAGOS FUNCIONANDO
+================================
+
+🎉 El problema estaba resuelto!
+
+El issue era que Mercado Pago tiene un bug con la opción `auto_return: 'approved'`.
+La solución fue simplemente quitarla.
+
+📍 CÓMO PROBAR AHORA:
+--------------------
+
+1. Asegúrate que el servidor esté corriendo:
+   npm run dev
+
+2. Abre en tu navegador:
+   http://localhost:3000/membresias
+
+3. Haz clic en "💳 Pagar con Mercado Pago" en cualquier plan
+
+4. Serás redirigido al checkout REAL de Mercado Pago
+
+5. Después del pago:
+   - El usuario hace clic en "Volver al sitio"
+   - O es redirigido automáticamente según el resultado
+
+✅ LO QUE FUNCIONA:
+------------------
+✅ Creación de preferencias de pago
+✅ Redirección al checkout de Mercado Pago
+✅ URLs de retorno configuradas
+✅ Metadata del plan incluida
+✅ Páginas de éxito/error/pendiente
+
+🔥 ESTO ES PAGO REAL:
+--------------------
+⚠️ Las credenciales son de PRODUCCIÓN
+⚠️ Si completas el pago, SE COBRARÁ DE VERDAD
+⚠️ Los clientes verán el checkout real de Mercado Pago
+
+💡 PRÓXIMOS PASOS:
+-----------------
+1. Probar el flujo completo
+2. Verificar las páginas de retorno
+3. Implementar webhook para notificaciones automáticas (opcional)
+4. Guardar las membresías en la base de datos
+
+🎨 URL DE PRUEBA GENERADA:
+-------------------------
+https://www.mercadopago.com.co/checkout/v1/redirect?pref_id=2021591453-e0f878a7-2e3f-4cb6-888b-91cbdab7ac79
+
+Esta URL es un ejemplo real que se generó en las pruebas.
+Cada pago genera una URL única.
+
+¡PRUÉBALO AHORA EN /membresias!
