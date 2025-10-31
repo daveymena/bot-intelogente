@@ -1,8 +1,9 @@
 // server.ts - Next.js Standalone + Socket.IO
-import { setupSocket } from './src/lib/socket';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import next from 'next';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const dev = process.env.NODE_ENV !== 'production';
 const currentPort = 3000;
@@ -41,7 +42,13 @@ async function createCustomServer() {
       }
     });
 
-    setupSocket(io);
+    // Setup Socket.IO dynamically
+    try {
+      const socketModule = await import('./src/lib/socket.js');
+      socketModule.setupSocket(io);
+    } catch (error) {
+      console.error('Error loading socket module:', error);
+    }
 
     // Start the server
     server.listen(currentPort, hostname, async () => {
