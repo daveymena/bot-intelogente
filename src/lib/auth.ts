@@ -103,7 +103,7 @@ export class AuthService {
   }
 
   // Register new user
-  static async register(data: RegisterData): Promise<{ user: any; token: string; requiresVerification: boolean }> {
+  static async register(data: RegisterData): Promise<{ user: any; token: string; requiresVerification: boolean; userId: string }> {
     // Check if user already exists
     const existingUser = await db.user.findUnique({
       where: { email: data.email }
@@ -113,13 +113,15 @@ export class AuthService {
       throw new Error('User already exists')
     }
 
+    // Validar que tenga teléfono
+    if (!data.phone) {
+      throw new Error('Phone number is required')
+    }
+
     // Hash password
     const hashedPassword = await this.hashPassword(data.password)
 
-    // Generate email verification token
-    const verificationToken = this.generateVerificationToken()
-
-    // Create user with 10-day trial (activates when email is verified)
+    // Create user with 10-day trial (activates when phone is verified)
     const trialEnds = new Date()
     trialEnds.setDate(trialEnds.getDate() + 10)
 
@@ -133,9 +135,8 @@ export class AuthService {
         membershipType: 'TRIAL',
         trialEnds,
         membershipEnds: trialEnds, // Same as trial for now
-        isActive: false, // Inactive until email verified
-        isEmailVerified: false,
-        emailVerificationToken: verificationToken
+        isActive: false, // Inactive until phone verified
+        isPhoneVerified: false
       }
     })
 
@@ -206,18 +207,21 @@ export class AuthService {
       })
     }
 
-    // Send verification email
+    // Enviar código de verificación por WhatsApp
     try {
-      await EmailService.sendVerificationEmail(user.email, verificationToken, user.name || undefined)
+      const { WhatsAppVerificationService } = await import('./whatsapp-verification-service')
+      const code = WhatsAppVerificationService.generateCode()
+      await WhatsAppVerificationService.saveVerificationCode(user.id, code)
+      await WhatsAppVerificationService.sendVerificationCode(user.phone, code, user.name || undefined)
     } catch (error) {
-      console.error('Error sending verification email:', error)
-      // Don't fail registration if email fails
+      console.error('Error sending verification code:', error)
+      // Don't fail registration if WhatsApp fails
     }
 
     // Generate token (but user can't login until verified)
     const token = this.generateToken(user)
 
-    return { user, token, requiresVerification: true }
+    return { user, token, requiresVerification: true, userId: user.id }
   }
 
   // Verify email

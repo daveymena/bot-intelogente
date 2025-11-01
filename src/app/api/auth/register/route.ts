@@ -6,7 +6,7 @@ const registerSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
   name: z.string().optional(),
-  phone: z.string().optional(),
+  phone: z.string().min(10, 'Número de teléfono inválido'), // Ahora es obligatorio
   businessName: z.string().optional()
 })
 
@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const validatedData = registerSchema.parse(body)
 
-    const { user, token, requiresVerification } = await AuthService.register(validatedData)
+    const { user, token, requiresVerification, userId } = await AuthService.register(validatedData)
 
     // Remove password from response
     const { password, ...userWithoutPassword } = user
@@ -24,7 +24,8 @@ export async function POST(request: NextRequest) {
       success: true,
       user: userWithoutPassword,
       token,
-      requiresVerification
+      requiresVerification,
+      userId // Necesario para redirigir a verify-phone
     })
 
     // Set HTTP-only cookie
