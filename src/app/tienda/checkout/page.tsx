@@ -223,21 +223,86 @@ export default function Checkout() {
                   Método de Pago
                 </h2>
                 <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
-                  <div className="flex items-center space-x-2 p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+                  {/* MercadoPago */}
+                  <div className="flex items-center space-x-2 p-4 border-2 rounded-xl cursor-pointer hover:bg-blue-50 transition-colors">
                     <RadioGroupItem value="mercadopago" id="mercadopago" />
                     <Label htmlFor="mercadopago" className="flex-1 cursor-pointer">
                       <div className="flex items-center gap-3">
-                        <Image src="/mercadopago-logo.svg" alt="MercadoPago" width={100} height={30} />
-                        <span>Tarjetas, PSE, Efectivo</span>
+                        <span className="text-3xl">💰</span>
+                        <div>
+                          <p className="font-bold">Mercado Pago</p>
+                          <p className="text-sm text-gray-600">Tarjetas, PSE, Efectivo</p>
+                        </div>
                       </div>
                     </Label>
                   </div>
-                  <div className="flex items-center space-x-2 p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+
+                  {/* PayPal */}
+                  <div className="flex items-center space-x-2 p-4 border-2 rounded-xl cursor-pointer hover:bg-blue-50 transition-colors">
                     <RadioGroupItem value="paypal" id="paypal" />
                     <Label htmlFor="paypal" className="flex-1 cursor-pointer">
                       <div className="flex items-center gap-3">
-                        <Image src="/paypal-logo.svg" alt="PayPal" width={80} height={30} />
-                        <span>Pago internacional</span>
+                        <span className="text-3xl">🌐</span>
+                        <div>
+                          <p className="font-bold">PayPal</p>
+                          <p className="text-sm text-gray-600">Pago internacional seguro</p>
+                        </div>
+                      </div>
+                    </Label>
+                  </div>
+
+                  {/* Nequi */}
+                  <div className="flex items-center space-x-2 p-4 border-2 rounded-xl cursor-pointer hover:bg-green-50 transition-colors">
+                    <RadioGroupItem value="nequi" id="nequi" />
+                    <Label htmlFor="nequi" className="flex-1 cursor-pointer">
+                      <div className="flex items-center gap-3">
+                        <span className="text-3xl">💚</span>
+                        <div>
+                          <p className="font-bold">Nequi</p>
+                          <p className="text-sm text-gray-600">Transferencia instantánea</p>
+                        </div>
+                      </div>
+                    </Label>
+                  </div>
+
+                  {/* Daviplata */}
+                  <div className="flex items-center space-x-2 p-4 border-2 rounded-xl cursor-pointer hover:bg-red-50 transition-colors">
+                    <RadioGroupItem value="daviplata" id="daviplata" />
+                    <Label htmlFor="daviplata" className="flex-1 cursor-pointer">
+                      <div className="flex items-center gap-3">
+                        <span className="text-3xl">💙</span>
+                        <div>
+                          <p className="font-bold">Daviplata</p>
+                          <p className="text-sm text-gray-600">Transferencia instantánea</p>
+                        </div>
+                      </div>
+                    </Label>
+                  </div>
+
+                  {/* Transferencia Bancaria */}
+                  <div className="flex items-center space-x-2 p-4 border-2 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
+                    <RadioGroupItem value="bank" id="bank" />
+                    <Label htmlFor="bank" className="flex-1 cursor-pointer">
+                      <div className="flex items-center gap-3">
+                        <span className="text-3xl">🏦</span>
+                        <div>
+                          <p className="font-bold">Transferencia Bancaria</p>
+                          <p className="text-sm text-gray-600">Bancolombia - Ahorros</p>
+                        </div>
+                      </div>
+                    </Label>
+                  </div>
+
+                  {/* Efectivo */}
+                  <div className="flex items-center space-x-2 p-4 border-2 rounded-xl cursor-pointer hover:bg-yellow-50 transition-colors">
+                    <RadioGroupItem value="cash" id="cash" />
+                    <Label htmlFor="cash" className="flex-1 cursor-pointer">
+                      <div className="flex items-center gap-3">
+                        <span className="text-3xl">💵</span>
+                        <div>
+                          <p className="font-bold">Efectivo (Contra Entrega)</p>
+                          <p className="text-sm text-gray-600">Pago al recibir</p>
+                        </div>
                       </div>
                     </Label>
                   </div>
