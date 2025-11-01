@@ -114,29 +114,46 @@ export default function Checkout() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
+      {/* Top Bar */}
+      <div className="bg-black text-white text-center py-2 text-sm">
+        🎉 Envío GRATIS en compras superiores a $100.000 | 🎁 Regalos en productos seleccionados
+      </div>
+
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-white border-b sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 py-4">
-          <Link href="/tienda" className="flex items-center gap-2 text-gray-600 hover:text-gray-900">
-            <ChevronLeft className="h-5 w-5" />
-            <span>Volver a la tienda</span>
-          </Link>
+          <div className="flex items-center justify-between">
+            <Link href="/tienda" className="flex items-center gap-2 text-gray-600 hover:text-gray-900">
+              <ChevronLeft className="h-5 w-5" />
+              <span className="font-semibold">Volver a la tienda</span>
+            </Link>
+            <Link href="/tienda" className="flex items-center gap-2">
+              <div className="text-2xl font-black">
+                <span className="text-blue-600">SMART</span>
+                <span className="text-pink-500">JOYS</span>
+              </div>
+            </Link>
+            <div className="w-24"></div>
+          </div>
         </div>
       </header>
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">Finalizar Compra</h1>
+        <h1 className="text-4xl font-black mb-2 text-center">Finalizar Compra</h1>
+        <p className="text-center text-gray-600 mb-8">Completa tu información para recibir tu pedido</p>
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Form */}
           <div className="lg:col-span-2">
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Contact Info */}
-              <Card className="p-6">
-                <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  <Truck className="h-5 w-5" />
-                  Información de Contacto
+              <Card className="p-6 rounded-3xl border-2">
+                <h2 className="text-2xl font-black mb-6 flex items-center gap-3">
+                  <div className="bg-gradient-to-r from-blue-600 to-pink-500 p-3 rounded-full">
+                    <Truck className="h-6 w-6 text-white" />
+                  </div>
+                  Información de Envío
                 </h2>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
@@ -198,9 +215,11 @@ export default function Checkout() {
               </Card>
 
               {/* Payment Method */}
-              <Card className="p-6">
-                <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  <CreditCard className="h-5 w-5" />
+              <Card className="p-6 rounded-3xl border-2">
+                <h2 className="text-2xl font-black mb-6 flex items-center gap-3">
+                  <div className="bg-gradient-to-r from-green-600 to-emerald-500 p-3 rounded-full">
+                    <CreditCard className="h-6 w-6 text-white" />
+                  </div>
                   Método de Pago
                 </h2>
                 <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
@@ -228,17 +247,17 @@ export default function Checkout() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-lg"
+                className="w-full h-14 bg-gradient-to-r from-blue-600 to-pink-500 hover:from-blue-700 hover:to-pink-600 text-lg font-bold rounded-full"
               >
-                {loading ? 'Procesando...' : `Pagar ${formatPrice(getCartTotal())}`}
+                {loading ? '⏳ Procesando...' : `💳 Pagar ${formatPrice(getCartTotal())}`}
               </Button>
             </form>
           </div>
 
           {/* Order Summary */}
           <div>
-            <Card className="p-6 sticky top-4">
-              <h2 className="text-xl font-bold mb-4">Resumen del Pedido</h2>
+            <Card className="p-6 sticky top-24 rounded-3xl border-2 bg-gradient-to-br from-gray-50 to-white">
+              <h2 className="text-2xl font-black mb-6">📦 Resumen del Pedido</h2>
               <div className="space-y-4 mb-6">
                 {cart.map((item) => {
                   const images = getProductImages(item)
@@ -259,18 +278,20 @@ export default function Checkout() {
                 })}
               </div>
 
-              <div className="border-t pt-4 space-y-2">
-                <div className="flex justify-between">
-                  <span>Subtotal:</span>
-                  <span>{formatPrice(getCartTotal())}</span>
+              <div className="border-t-2 pt-4 space-y-3">
+                <div className="flex justify-between text-lg">
+                  <span className="font-semibold">Subtotal:</span>
+                  <span className="font-bold">{formatPrice(getCartTotal())}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span>Envío:</span>
-                  <span className="text-green-600">Gratis</span>
+                <div className="flex justify-between text-lg">
+                  <span className="font-semibold">Envío:</span>
+                  <span className="text-green-600 font-bold">¡GRATIS! 🎉</span>
                 </div>
-                <div className="flex justify-between text-xl font-bold border-t pt-2">
+                <div className="flex justify-between text-2xl font-black border-t-2 pt-4">
                   <span>Total:</span>
-                  <span className="text-blue-600">{formatPrice(getCartTotal())}</span>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-500">
+                    {formatPrice(getCartTotal())}
+                  </span>
                 </div>
               </div>
             </Card>

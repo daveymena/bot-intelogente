@@ -145,16 +145,26 @@ export default function TiendaProfesional() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
+      {/* Top Bar */}
+      <div className="bg-black text-white text-center py-2 text-sm">
+        🎉 Envío GRATIS en compras superiores a $100.000 | 🎁 Regalos en productos seleccionados
+      </div>
+
       {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-40">
+      <header className="bg-white border-b sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="text-2xl font-bold text-blue-600">
-              TecnoVariedades D&S
+          <div className="flex items-center justify-between mb-4">
+            <Link href="/" className="flex items-center gap-2">
+              <div className="text-3xl font-black">
+                <span className="text-blue-600">SMART</span>
+                <span className="text-pink-500">JOYS</span>
+              </div>
             </Link>
             
             <div className="flex items-center gap-4">
+              <Link href="/tienda" className="text-sm hover:text-blue-600">🏪 Tienda</Link>
+              <Link href="/catalogo" className="text-sm hover:text-blue-600">📋 Catálogo</Link>
               <Button variant="ghost" size="icon">
                 <Heart className="h-5 w-5" />
               </Button>
@@ -166,7 +176,7 @@ export default function TiendaProfesional() {
               >
                 <ShoppingCart className="h-5 w-5" />
                 {cart.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
                     {cart.length}
                   </span>
                 )}
@@ -175,85 +185,120 @@ export default function TiendaProfesional() {
           </div>
 
           {/* Search Bar */}
-          <div className="mt-4 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
             <Input
               type="text"
-              placeholder="Buscar productos..."
+              placeholder="¿Qué estás buscando?"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 w-full"
+              className="pl-12 h-12 rounded-full border-2 border-gray-200 focus:border-blue-500"
             />
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 py-6">
+      {/* Hero Banner */}
+      <div className="relative h-[400px] bg-gradient-to-r from-purple-600 via-pink-500 to-blue-500 overflow-hidden">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center text-white">
+            <h1 className="text-6xl font-black mb-4 animate-pulse">
+              NUEVOS AIRPODS 4
+            </h1>
+            <p className="text-xl mb-6">Experimenta sonido de calidad</p>
+            <Button size="lg" className="bg-white text-black hover:bg-gray-100 rounded-full px-8">
+              Comprar ahora
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Categories */}
-        <div className="flex gap-2 overflow-x-auto pb-4 mb-6">
+        <div className="flex gap-3 overflow-x-auto pb-4 mb-8 scrollbar-hide">
           {categories.map((cat) => (
             <Button
               key={cat.value}
               variant={selectedCategory === cat.value ? 'default' : 'outline'}
               onClick={() => setSelectedCategory(cat.value)}
-              className="whitespace-nowrap"
+              className={`whitespace-nowrap rounded-full px-6 ${
+                selectedCategory === cat.value 
+                  ? 'bg-gradient-to-r from-blue-600 to-pink-500 text-white' 
+                  : 'border-2'
+              }`}
             >
-              <span className="mr-2">{cat.icon}</span>
+              <span className="mr-2 text-lg">{cat.icon}</span>
               {cat.label}
             </Button>
           ))}
         </div>
 
+        {/* Section Title */}
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-black mb-2">DALE UN VISTAZO</h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-blue-600 to-pink-500 mx-auto"></div>
+        </div>
+
         {/* Products Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredProducts.map((product) => {
             const images = getProductImages(product)
             const mainImage = images[0] || '/placeholder.svg'
 
             return (
-              <Card key={product.id} className="group overflow-hidden hover:shadow-lg transition-all">
+              <Card key={product.id} className="group overflow-hidden hover:shadow-2xl transition-all border-2 hover:border-blue-500 rounded-2xl">
                 <Link href={`/tienda/${product.id}`}>
-                  <div className="relative aspect-square bg-gray-100">
+                  <div className="relative aspect-square bg-gradient-to-br from-gray-50 to-gray-100">
                     <Image
                       src={mainImage}
                       alt={product.name}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform"
+                      className="object-cover group-hover:scale-110 transition-transform duration-300 p-4"
                     />
-                    <Badge className="absolute top-2 right-2 bg-white text-black">
-                      {product.category === 'PHYSICAL' && '📦'}
-                      {product.category === 'DIGITAL' && '💾'}
-                      {product.category === 'SERVICE' && '🛠️'}
-                    </Badge>
+                    {/* Badges */}
+                    <div className="absolute top-3 left-3 flex flex-col gap-2">
+                      <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold">
+                        🎁 ¡Obsequio!
+                      </Badge>
+                      <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold">
+                        📦 Envío Gratis
+                      </Badge>
+                    </div>
                   </div>
                 </Link>
 
-                <div className="p-3">
+                <div className="p-4">
                   <Link href={`/tienda/${product.id}`}>
-                    <h3 className="font-semibold text-sm line-clamp-2 mb-1 hover:text-blue-600">
+                    <h3 className="font-bold text-sm line-clamp-2 mb-2 hover:text-blue-600 transition-colors">
                       {product.name}
                     </h3>
                   </Link>
                   
-                  <div className="flex items-center gap-1 mb-2">
+                  <div className="flex items-center gap-1 mb-3">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                      <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                     ))}
-                    <span className="text-xs text-gray-500 ml-1">(4.8)</span>
+                    <span className="text-xs text-gray-500 ml-1 font-semibold">(4.8)</span>
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <span className="text-lg font-bold text-blue-600">
-                      {formatPrice(product.price)}
-                    </span>
-                    <Button
-                      size="sm"
-                      onClick={() => addToCart(product)}
-                      className="bg-blue-600 hover:bg-blue-700"
-                    >
-                      <ShoppingCart className="h-4 w-4" />
-                    </Button>
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <div className="text-xs text-gray-400 line-through">
+                        {formatPrice(product.price * 1.3)}
+                      </div>
+                      <div className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-500">
+                        {formatPrice(product.price)}
+                      </div>
+                    </div>
                   </div>
+
+                  <Button
+                    onClick={() => addToCart(product)}
+                    className="w-full bg-gradient-to-r from-blue-600 to-pink-500 hover:from-blue-700 hover:to-pink-600 text-white font-bold rounded-full"
+                  >
+                    <ShoppingCart className="h-4 w-4 mr-2" />
+                    Añadir al carrito
+                  </Button>
                 </div>
               </Card>
             )
@@ -261,18 +306,41 @@ export default function TiendaProfesional() {
         </div>
       </div>
 
+      {/* Features Section */}
+      <div className="bg-gradient-to-r from-blue-50 to-pink-50 py-12 mt-12">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid md:grid-cols-3 gap-8 text-center">
+            <div>
+              <div className="text-4xl mb-3">🚚</div>
+              <h3 className="font-bold mb-2">Envío Gratis</h3>
+              <p className="text-sm text-gray-600">En compras superiores a $100.000</p>
+            </div>
+            <div>
+              <div className="text-4xl mb-3">🔒</div>
+              <h3 className="font-bold mb-2">Compra Segura</h3>
+              <p className="text-sm text-gray-600">Protección al comprador garantizada</p>
+            </div>
+            <div>
+              <div className="text-4xl mb-3">🎁</div>
+              <h3 className="font-bold mb-2">Regalos Incluidos</h3>
+              <p className="text-sm text-gray-600">Obsequios en productos seleccionados</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Cart Sidebar */}
       {showCart && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50" onClick={() => setShowCart(false)}>
           <div
-            className="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-xl"
+            className="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex flex-col h-full">
-              <div className="flex items-center justify-between p-4 border-b">
-                <h2 className="text-xl font-bold">Carrito ({cart.length})</h2>
-                <Button variant="ghost" size="icon" onClick={() => setShowCart(false)}>
-                  <X className="h-5 w-5" />
+              <div className="flex items-center justify-between p-6 border-b-2 bg-gradient-to-r from-blue-50 to-pink-50">
+                <h2 className="text-2xl font-black">🛒 Mi Carrito ({cart.length})</h2>
+                <Button variant="ghost" size="icon" onClick={() => setShowCart(false)} className="rounded-full">
+                  <X className="h-6 w-6" />
                 </Button>
               </div>
 
@@ -330,14 +398,16 @@ export default function TiendaProfesional() {
               </div>
 
               {cart.length > 0 && (
-                <div className="border-t p-4 space-y-4">
-                  <div className="flex justify-between text-lg font-bold">
+                <div className="border-t-2 p-6 space-y-4 bg-gradient-to-r from-blue-50 to-pink-50">
+                  <div className="flex justify-between text-2xl font-black">
                     <span>Total:</span>
-                    <span className="text-blue-600">{formatPrice(getCartTotal())}</span>
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-500">
+                      {formatPrice(getCartTotal())}
+                    </span>
                   </div>
                   <Link href="/tienda/checkout">
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                      Proceder al Pago
+                    <Button className="w-full h-14 bg-gradient-to-r from-blue-600 to-pink-500 hover:from-blue-700 hover:to-pink-600 text-lg font-bold rounded-full">
+                      💳 Proceder al Pago
                     </Button>
                   </Link>
                 </div>
@@ -346,6 +416,48 @@ export default function TiendaProfesional() {
           </div>
         </div>
       )}
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white mt-16">
+        <div className="max-w-7xl mx-auto px-4 py-12">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <div className="text-3xl font-black mb-4">
+                <span className="text-blue-400">SMART</span>
+                <span className="text-pink-400">JOYS</span>
+              </div>
+              <p className="text-gray-400">Tu tienda de tecnología y accesorios de confianza</p>
+            </div>
+            <div>
+              <h3 className="font-bold mb-4">Compra</h3>
+              <ul className="space-y-2 text-gray-400">
+                <li><Link href="/tienda" className="hover:text-white">Productos</Link></li>
+                <li><Link href="/catalogo" className="hover:text-white">Catálogo</Link></li>
+                <li><Link href="/tienda" className="hover:text-white">Ofertas</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-bold mb-4">Ayuda</h3>
+              <ul className="space-y-2 text-gray-400">
+                <li><a href="#" className="hover:text-white">Preguntas Frecuentes</a></li>
+                <li><a href="#" className="hover:text-white">Envíos</a></li>
+                <li><a href="#" className="hover:text-white">Devoluciones</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-bold mb-4">Síguenos</h3>
+              <div className="flex gap-4">
+                <a href="#" className="text-2xl hover:text-blue-400">📘</a>
+                <a href="#" className="text-2xl hover:text-pink-400">📷</a>
+                <a href="#" className="text-2xl hover:text-green-400">💬</a>
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 pt-8 text-center text-gray-400">
+            <p>© 2024 SmartJoys. Todos los derechos reservados.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
