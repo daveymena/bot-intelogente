@@ -259,6 +259,49 @@ export function WhatsAppConnection() {
         }
     }
 
+    const handleResetSession = async () => {
+        if (!confirm('¿Estás seguro? Esto eliminará la sesión actual y generará un nuevo código QR.')) {
+            return
+        }
+
+        setLoading(true)
+        toast.info('Limpiando sesión...')
+
+        try {
+            // Paso 1: Limpiar la sesión
+            const resetResponse = await fetch('/api/whatsapp/reset', {
+                method: 'POST'
+            })
+
+            const resetData = await resetResponse.json()
+
+            if (!resetData.success) {
+                throw new Error(resetData.error || 'Error al limpiar sesión')
+            }
+
+            console.log('[WhatsApp] ✅ Sesión limpiada')
+            toast.success('Sesión limpiada. Generando nuevo QR...')
+
+            // Paso 2: Limpiar estado local
+            setQrCode(null)
+            setStatus('DISCONNECTED')
+            setPhoneNumber(null)
+
+            // Paso 3: Esperar un momento y reconectar
+            await new Promise(resolve => setTimeout(resolve, 2000))
+
+            // Paso 4: Generar nuevo QR
+            await handleConnect()
+
+        } catch (error) {
+            console.error('[WhatsApp] Error resetting session:', error)
+            toast.error(error instanceof Error ? error.message : 'Error al limpiar sesión')
+            setStatus('ERROR')
+        } finally {
+            setLoading(false)
+        }
+    }
+
     const getStatusBadge = () => {
         switch (status) {
             case 'CONNECTED':
@@ -390,13 +433,24 @@ export function WhatsAppConnection() {
                                 </ol>
                             </div>
 
-                            <Button
-                                onClick={handleDisconnect}
-                                variant="outline"
-                                className="w-full"
-                            >
-                                Cancelar
-                            </Button>
+                            <div className="flex gap-2">
+                                <Button
+                                    onClick={handleResetSession}
+                                    variant="destructive"
+                                    className="flex-1"
+                                    disabled={loading}
+                                >
+                                    <RefreshCw className="mr-2 h-4 w-4" />
+                                    Limpiar y Generar Nuevo QR
+                                </Button>
+                                <Button
+                                    onClick={handleDisconnect}
+                                    variant="outline"
+                                    className="flex-1"
+                                >
+                                    Cancelar
+                                </Button>
+                            </div>
                         </div>
                     )}
 
@@ -470,28 +524,43 @@ export function WhatsAppConnection() {
                             <Alert variant="destructive">
                                 <XCircle className="h-4 w-4" />
                                 <AlertDescription>
-                                    Error al conectar WhatsApp. Intenta de nuevo.
+                                    <strong>Error al conectar WhatsApp.</strong>
+                                    <br />
+                                    Si el problema persiste, limpia la sesión y genera un nuevo QR.
                                 </AlertDescription>
                             </Alert>
 
-                            <Button
-                                onClick={handleConnect}
-                                disabled={loading}
-                                className="w-full bg-green-600 hover:bg-green-700"
-                                size="lg"
-                            >
-                                {loading ? (
-                                    <>
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                        Reintentando...
-                                    </>
-                                ) : (
-                                    <>
-                                        <RefreshCw className="mr-2 h-4 w-4" />
-                                        Reintentar Conexión
-                                    </>
-                                )}
-                            </Button>
+                            <div className="flex gap-2">
+                                <Button
+                                    onClick={handleConnect}
+                                    disabled={loading}
+                                    className="flex-1 bg-green-600 hover:bg-green-700"
+                                    size="lg"
+                                >
+                                    {loading ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            Reintentando...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <RefreshCw className="mr-2 h-4 w-4" />
+                                            Reintentar
+                                        </>
+                                    )}
+                                </Button>
+
+                                <Button
+                                    onClick={handleResetSession}
+                                    variant="destructive"
+                                    className="flex-1"
+                                    size="lg"
+                                    disabled={loading}
+                                >
+                                    <RefreshCw className="mr-2 h-4 w-4" />
+                                    Limpiar Sesión
+                                </Button>
+                            </div>
 
                             <Button
                                 onClick={() => {
