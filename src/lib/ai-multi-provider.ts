@@ -46,8 +46,12 @@ export class AIMultiProvider {
     options: AICompletionOptions = {}
   ): Promise<AICompletionResponse> {
     // Obtener orden de fallback desde .env o usar default
-    const fallbackOrderEnv = process.env.AI_FALLBACK_ORDER || 'openrouter,groq,lmstudio'
+    const fallbackOrderEnv = process.env.AI_FALLBACK_ORDER || 'groq,openrouter,lmstudio'
     const fallbackOrder = fallbackOrderEnv.split(',').map(p => p.trim())
+    
+    // Configuración de reintentos
+    const maxRetries = 2
+    const retryDelay = 1000 // 1 segundo
     
     console.log(`[AI Multi-Provider] 🔄 Orden de fallback: ${fallbackOrder.join(' → ')}`)
     
@@ -161,7 +165,7 @@ export class AIMultiProvider {
     }
   }
 
-  // 🚀 Groq API (Principal)
+  // 🚀 Groq API (Principal) - Con reintentos automáticos
   private static async tryGroq(
     messages: AIMessage[],
     options: AICompletionOptions
@@ -173,36 +177,60 @@ export class AIMultiProvider {
     }
     
     const model = options.model || process.env.GROQ_MODEL || 'llama-3.1-8b-instant'
-    const timeout = parseInt(process.env.GROQ_TIMEOUT || '8000')
+    const timeout = parseInt(process.env.GROQ_TIMEOUT || '15000') // Aumentado a 15s
+    const maxRetries = 3 // 3 intentos
     
-    // Crear promesa con timeout
-    const completionPromise = client.chat.completions.create({
-      model,
-      messages: messages as any,
-      temperature: options.temperature || 0.7,
-      max_tokens: options.max_tokens || parseInt(process.env.GROQ_MAX_TOKENS || '400'),
-      top_p: options.top_p || 1,
-      stream: false
-    })
+    let lastError: Error | null = null
     
-    const timeoutPromise = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error('Groq timeout')), timeout)
-    )
-    
-    const completion = await Promise.race([completionPromise, timeoutPromise]) as any
-    
-    const content = completion.choices[0]?.message?.content
-    
-    if (!content) {
-      throw new Error('Groq no devolvió contenido')
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        console.log(`[Groq] Intento ${attempt}/${maxRetries}`)
+        
+        // Crear promesa con timeout
+        const completionPromise = client.chat.completions.create({
+          model,
+          messages: messages as any,
+          temperature: options.temperature || 0.7,
+          max_tokens: options.max_tokens || parseInt(process.env.GROQ_MAX_TOKENS || '400'),
+          top_p: options.top_p || 1,
+          stream: false
+        })
+        
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Groq timeout')), timeout)
+        )
+        
+        const completion = await Promise.race([completionPromise, timeoutPromise]) as any
+        
+        const content = completion.choices[0]?.message?.content
+        
+        if (!content) {
+          throw new Error('Groq no devolvió contenido')
+        }
+        
+        console.log(`[Groq] ✅ Éxito en intento ${attempt}`)
+        
+        return {
+          content,
+          provider: 'groq',
+          model,
+          success: true
+        }
+      } catch (error: any) {
+        lastError = error
+        console.log(`[Groq] ❌ Intento ${attempt} falló: ${error.message}`)
+        
+        // Si no es el último intento, esperar antes de reintentar
+        if (attempt < maxRetries) {
+          const delay = attempt * 1000 // 1s, 2s, 3s
+          console.log(`[Groq] ⏳ Esperando ${delay}ms antes de reintentar...`)
+          await new Promise(resolve => setTimeout(resolve, delay))
+        }
+      }
     }
     
-    return {
-      content,
-      provider: 'groq',
-      model,
-      success: true
-    }
+    // Si todos los intentos fallaron, lanzar el último error
+    throw lastError || new Error('Groq falló después de múltiples intentos')
   }
 
   // 🏠 LM Studio (Local - Sin límites)

@@ -245,29 +245,57 @@ Responde en formato JSON:
         return false
       }
 
-      // 2. Probar conexión con Groq
-      const testResponse = await groq.chat.completions.create({
-        model: 'llama-3.1-70b-versatile',
-        messages: [{ role: 'user', content: 'Test de conexión. Responde solo: OK' }],
+      // 2. Probar conexión con Groq (con timeout más largo)
+      console.log('🧪 Probando Groq con timeout de 20 segundos...')
+      
+      const testPromise = groq.chat.completions.create({
+        model: 'llama-3.1-8b-instant', // Modelo más rápido para test
+        messages: [{ role: 'user', content: 'Test' }],
         max_tokens: 10
       })
 
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Timeout')), 20000)
+      )
+
+      const testResponse = await Promise.race([testPromise, timeoutPromise]) as any
       const response = testResponse.choices[0]?.message?.content
 
       if (response) {
-        console.log('✅ Servicio de IA funcionando')
-        this.logRecovery('AI', 'Test de IA', 'Conexión verificada', 'Probar Groq API', true)
+        console.log('✅ Groq funcionando correctamente')
+        this.logRecovery('AI', 'Test de IA', 'Groq respondió correctamente', 'Probar Groq API', true)
         return true
       }
 
       return false
-    } catch (error) {
-      console.error('❌ Error en auto-recuperación de IA:', error)
+    } catch (error: any) {
+      console.error('❌ Error en Groq:', error.message)
       
-      // Intentar con fallback
-      if (process.env.OPENAI_API_KEY) {
-        console.log('🔄 Intentando con OpenAI como fallback...')
-        // Aquí podrías implementar el fallback a OpenAI
+      // Intentar con fallback a OpenRouter
+      if (process.env.OPENROUTER_API_KEY) {
+        console.log('🔄 Intentando con OpenRouter como fallback...')
+        try {
+          const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              model: 'anthropic/claude-3.5-sonnet',
+              messages: [{ role: 'user', content: 'Test' }],
+              max_tokens: 10
+            })
+          })
+
+          if (response.ok) {
+            console.log('✅ OpenRouter funcionando como fallback')
+            this.logRecovery('AI', 'Groq timeout', 'OpenRouter disponible como fallback', 'Usar OpenRouter', true)
+            return true
+          }
+        } catch (fallbackError) {
+          console.log('❌ OpenRouter también falló')
+        }
       }
 
       const diagnosis = await this.diagnoseError('AI', error)
