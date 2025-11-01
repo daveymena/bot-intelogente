@@ -1,0 +1,124 @@
+🔧 SOLUCIÓN: ERROR "Failed to pull changes" EN EASYPANEL
+
+═══════════════════════════════════════════════════════════
+
+❌ ERROR: Failed to pull changes from origin/main
+
+═══════════════════════════════════════════════════════════
+
+✅ SOLUCIONES (Probar en orden)
+
+═══════════════════════════════════════════════════════════
+
+## SOLUCIÓN 1: Verificar Conexión a GitHub
+
+1. Ve a tu app en Easypanel
+2. Settings → Source
+3. Verifica que esté conectado a: daveymena/bot-intelogente
+4. Branch: main
+5. Si no está conectado, reconecta tu cuenta de GitHub
+
+═══════════════════════════════════════════════════════════
+
+## SOLUCIÓN 2: Rebuild desde Easypanel
+
+1. Ve a tu app en Easypanel
+2. Click en "Rebuild" o "Redeploy"
+3. Esto forzará un nuevo pull desde GitHub
+
+═══════════════════════════════════════════════════════════
+
+## SOLUCIÓN 3: Verificar que GitHub esté accesible
+
+En tu terminal local, verifica que el último commit esté en GitHub:
+
+```bash
+git log --oneline -3
+```
+
+Deberías ver:
+- 42a9759 feat: Agregar sistema de webhooks de pagos y documentacion
+- 6380dfa feat: Sistema de webhooks de pagos + emails de confirmacion
+- d71b48e feat: v2.1 - Generador personalidad + PostgreSQL (sin secrets)
+
+Si no ves estos commits, hacer push:
+```bash
+git push origin main --force
+```
+
+═══════════════════════════════════════════════════════════
+
+## SOLUCIÓN 4: Limpiar Cache de Easypanel
+
+1. Ve a tu app en Easypanel
+2. Settings → Advanced
+3. Click en "Clear Build Cache"
+4. Luego "Rebuild"
+
+═══════════════════════════════════════════════════════════
+
+## SOLUCIÓN 5: Verificar Permisos de GitHub
+
+Easypanel necesita permisos para acceder a tu repositorio:
+
+1. Ve a GitHub → Settings → Applications
+2. Busca "Easypanel"
+3. Verifica que tenga acceso a tu repositorio
+4. Si no, autoriza el acceso
+
+═══════════════════════════════════════════════════════════
+
+## SOLUCIÓN 6: Deploy Manual (Si todo falla)
+
+Si ninguna solución funciona, puedes hacer deploy manual:
+
+### Opción A: Cambiar a HTTPS en lugar de SSH
+
+1. En Easypanel, Settings → Source
+2. Cambia la URL del repositorio a:
+   https://github.com/daveymena/bot-intelogente.git
+3. Guarda y rebuild
+
+### Opción B: Deploy desde ZIP
+
+1. En tu computadora:
+   ```bash
+   # Crear ZIP del proyecto (sin node_modules)
+   git archive -o bot-deploy.zip HEAD
+   ```
+
+2. Subir el ZIP a un servidor (Dropbox, Google Drive, etc.)
+
+3. En Easypanel, usar la opción de deploy desde URL
+
+═══════════════════════════════════════════════════════════
+
+## VERIFICAR LOGS
+
+Para ver más detalles del error:
+
+1. Ve a tu app en Easypanel
+2. Click en "Logs"
+3. Busca el error específico
+4. Copia el mensaje de error completo
+
+═══════════════════════════════════════════════════════════
+
+## CAUSA MÁS COMÚN
+
+El error suele ser por:
+- Permisos de GitHub no configurados
+- Cache corrupto en Easypanel
+- Conexión SSH no configurada
+
+La solución más rápida es REBUILD desde Easypanel.
+
+═══════════════════════════════════════════════════════════
+
+🎯 ACCIÓN RECOMENDADA
+
+1. Intenta REBUILD desde Easypanel (Solución 2)
+2. Si falla, verifica permisos de GitHub (Solución 5)
+3. Si aún falla, cambia a HTTPS (Solución 6A)
+
+═══════════════════════════════════════════════════════════
