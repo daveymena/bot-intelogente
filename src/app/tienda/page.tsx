@@ -156,9 +156,9 @@ export default function TiendaProfesional() {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-4">
             <Link href="/" className="flex items-center gap-2">
-              <div className="text-3xl font-black">
-                <span className="text-blue-600">SMART</span>
-                <span className="text-pink-500">JOYS</span>
+              <div className="text-2xl font-black">
+                <span className="text-blue-600">Tecnovariedades</span>
+                <span className="text-pink-500"> D&S</span>
               </div>
             </Link>
             
@@ -422,11 +422,13 @@ export default function TiendaProfesional() {
         <div className="max-w-7xl mx-auto px-4 py-12">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
-              <div className="text-3xl font-black mb-4">
-                <span className="text-blue-400">SMART</span>
-                <span className="text-pink-400">JOYS</span>
+              <div className="text-2xl font-black mb-4">
+                <span className="text-blue-400">Tecnovariedades</span>
+                <span className="text-pink-400"> D&S</span>
               </div>
               <p className="text-gray-400">Tu tienda de tecnología y accesorios de confianza</p>
+              <p className="text-gray-400 mt-2">📞 300 556 0186</p>
+              <p className="text-gray-400">✉️ deinermena25@gmail.com</p>
             </div>
             <div>
               <h3 className="font-bold mb-4">Compra</h3>
@@ -454,7 +456,7 @@ export default function TiendaProfesional() {
             </div>
           </div>
           <div className="border-t border-gray-800 pt-8 text-center text-gray-400">
-            <p>© 2024 SmartJoys. Todos los derechos reservados.</p>
+            <p>© 2024 Tecnovariedades D&S. Todos los derechos reservados.</p>
           </div>
         </div>
       </footer>

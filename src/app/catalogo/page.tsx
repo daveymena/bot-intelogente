@@ -82,8 +82,8 @@ export default function CatalogoPublico() {
   }
 
   const handleWhatsAppContact = (product: Product) => {
-    const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '573001234567'
-    const message = `Hola! Me interesa el producto: ${product.name}`
+    const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '573005560186'
+    const message = `Hola Tecnovariedades D&S! Me interesa el producto: ${product.name}`
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
     window.open(url, '_blank')
   }
@@ -123,7 +123,7 @@ export default function CatalogoPublico() {
             </div>
             <Button
               onClick={() => {
-                const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '573001234567'
+                const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '573005560186'
                 window.open(`https://wa.me/${phone}`, '_blank')
               }}
               className="bg-green-600 hover:bg-green-700"

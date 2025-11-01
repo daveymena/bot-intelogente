@@ -100,9 +100,9 @@ export class PaymentService {
 
   // WhatsApp - Generar mensaje
   static getWhatsAppLink(product: Product, quantity: number = 1): string {
-    const phone = '573001234567' // Tu número de WhatsApp
+    const phone = '573005560186' // Tecnovariedades D&S
     const total = product.price * quantity
-    const message = `Hola! Me interesa este producto:\n\n` +
+    const message = `Hola Tecnovariedades D&S! Me interesa este producto:\n\n` +
       `📦 ${product.name}\n` +
       `💰 Precio: $${total.toLocaleString('es-CO')}\n` +
       `📊 Cantidad: ${quantity}\n\n` +

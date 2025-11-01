@@ -214,9 +214,9 @@ export default function ProductoDetalle() {
               <span className="font-semibold">Volver a la tienda</span>
             </Link>
             <Link href="/tienda" className="flex items-center gap-2">
-              <div className="text-2xl font-black">
-                <span className="text-blue-600">SMART</span>
-                <span className="text-pink-500">JOYS</span>
+              <div className="text-xl font-black">
+                <span className="text-blue-600">Tecnovariedades</span>
+                <span className="text-pink-500"> D&S</span>
               </div>
             </Link>
             <Link href="/tienda">
