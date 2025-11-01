@@ -48,6 +48,8 @@ async function createMercadoPagoLink(
       return '#'
     }
 
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    
     const response = await fetch('https://api.mercadopago.com/checkout/preferences', {
       method: 'POST',
       headers: {
@@ -63,12 +65,11 @@ async function createMercadoPagoLink(
           currency_id: 'COP'
         }],
         back_urls: {
-          success: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/payment/success`,
-          failure: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/payment/failure`,
-          pending: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/payment/pending`
+          success: `${appUrl}/payment/success`,
+          failure: `${appUrl}/payment/failure`,
+          pending: `${appUrl}/payment/pending`
         },
-        auto_return: 'approved',
-        notification_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/payments/webhook`
+        notification_url: `${appUrl}/api/payments/webhook`
       })
     })
 
