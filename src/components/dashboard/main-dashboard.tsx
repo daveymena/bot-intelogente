@@ -27,6 +27,7 @@ import ProductsManagement from '@/components/ProductsManagement'
 import AIPromptsManagement from '@/components/AIPromptsManagement'
 import ImportExportManager from '@/components/ImportExportManager'
 import { WhatsAppConnection } from '@/components/dashboard/WhatsAppConnection'
+import BotPersonalityGenerator from '@/components/BotPersonalityGenerator'
 
 export function MainDashboard() {
   const { user, subscription, logout } = useAuth()
@@ -55,6 +56,7 @@ export function MainDashboard() {
     { id: 'overview', label: 'Resumen', icon: BarChart3 },
     { id: 'whatsapp', label: 'WhatsApp', icon: MessageSquare },
     { id: 'products', label: 'Productos', icon: Package },
+    { id: 'personality', label: 'Personalidad Bot', icon: Bot },
     { id: 'prompts', label: 'IA & Prompts', icon: Bot },
     { id: 'customers', label: 'Clientes', icon: Users },
     { id: 'settings', label: 'Configuración', icon: Settings },
@@ -208,6 +210,7 @@ export function MainDashboard() {
             {activeTab === 'overview' && <OverviewTab />}
             {activeTab === 'whatsapp' && <WhatsAppConnection />}
             {activeTab === 'products' && <ProductsManagement />}
+            {activeTab === 'personality' && <BotPersonalityGenerator />}
             {activeTab === 'prompts' && <AIPromptsManagement />}
             {activeTab === 'customers' && <CustomersTab />}
             {activeTab === 'settings' && <SettingsTab />}

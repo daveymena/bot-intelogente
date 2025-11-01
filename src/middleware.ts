@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 
 // Public routes that don't require authentication
 const publicRoutes = [
+  '/',
+  '/landing',
   '/login',
   '/register',
   '/forgot-password',
@@ -18,7 +20,9 @@ const publicRoutes = [
   '/api/auth/resend-verification',
   '/api/auth/session',
   '/api/health',
-  '/api/products/public'
+  '/api/products/public',
+  '/api/assistant/chat',
+  '/api/dropi'
 ]
 
 // Routes that require subscription

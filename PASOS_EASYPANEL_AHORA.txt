@@ -1,0 +1,192 @@
+════════════════════════════════════════════════════════════════
+🎯 PASOS EXACTOS PARA EASYPANEL - HACER AHORA
+════════════════════════════════════════════════════════════════
+
+Los archivos están en GitHub ✅
+Commits correctos:
+- 48b38e4 (más reciente)
+- 003dabb (con las membresías)
+
+El problema: Easypanel está usando un commit viejo.
+
+════════════════════════════════════════════════════════════════
+PASO 1: ENTRAR A EASYPANEL
+════════════════════════════════════════════════════════════════
+
+1. Abre https://easypanel.io
+2. Inicia sesión
+3. Selecciona tu proyecto del bot
+
+════════════════════════════════════════════════════════════════
+PASO 2: VERIFICAR QUÉ COMMIT ESTÁ USANDO
+════════════════════════════════════════════════════════════════
+
+Busca en tu proyecto una de estas secciones:
+- "Deployments"
+- "Builds"
+- "Deploy History"
+- "Activity"
+
+Mira el último deployment y dime:
+□ ¿Qué commit hash muestra? (debería ser 48b38e4)
+□ ¿Cuándo fue? (fecha y hora)
+□ ¿Estado? (Success, Failed, Building)
+
+Si muestra un commit viejo como:
+- f8f590f
+- 5111b76
+- 0b329a3
+
+Entonces NO ha actualizado. Continúa al Paso 3.
+
+════════════════════════════════════════════════════════════════
+PASO 3: FORZAR NUEVO DEPLOY
+════════════════════════════════════════════════════════════════
+
+Opción A - Si ves un botón "Redeploy" o "Rebuild":
+1. Haz clic en "Redeploy" o "Rebuild"
+2. Espera 3-5 minutos
+3. Ve al Paso 4
+
+Opción B - Si ves "Deploy" o "Trigger Deploy":
+1. Haz clic en "Deploy" o "Trigger Deploy"
+2. Selecciona branch: main
+3. Selecciona commit: 48b38e4 (el más reciente)
+4. Confirma
+5. Espera 3-5 minutos
+6. Ve al Paso 4
+
+Opción C - Si ves "Settings" o "Source":
+1. Ve a Settings → Source o Git
+2. Verifica que Branch sea "main"
+3. Busca un botón "Pull Latest" o "Update"
+4. Haz clic
+5. Luego busca "Redeploy"
+6. Espera 3-5 minutos
+7. Ve al Paso 4
+
+════════════════════════════════════════════════════════════════
+PASO 4: MONITOREAR EL BUILD
+════════════════════════════════════════════════════════════════
+
+Mientras se construye:
+
+1. Ve a "Logs" o "Build Logs"
+2. Observa el progreso
+3. Busca estos mensajes buenos:
+   ✅ "Cloning repository..."
+   ✅ "Installing dependencies..."
+   ✅ "Building application..."
+   ✅ "Build completed successfully"
+   ✅ "Starting application..."
+
+4. Si ves errores en rojo:
+   ❌ Copia el error completo
+   ❌ Compártelo conmigo
+   ❌ No continúes hasta resolver
+
+════════════════════════════════════════════════════════════════
+PASO 5: VERIFICAR QUE TERMINÓ
+════════════════════════════════════════════════════════════════
+
+Después de 3-5 minutos:
+
+1. Ve a "Deployments" o "Builds"
+2. El último deployment debe mostrar:
+   ✅ Commit: 48b38e4
+   ✅ Estado: Success o Running
+   ✅ Fecha: Hace pocos minutos
+
+Si muestra esto, continúa al Paso 6.
+
+════════════════════════════════════════════════════════════════
+PASO 6: VERIFICAR EN EL NAVEGADOR
+════════════════════════════════════════════════════════════════
+
+1. Abre tu navegador
+2. Presiona Ctrl + Shift + R (limpiar cache)
+3. Abre: https://tu-dominio.com/membresias
+
+¿Qué ves?
+
+A) Veo 4 planes (Trial, Mensual, Trimestral, Anual)
+   └─ ✅ ¡FUNCIONÓ! Continúa al Paso 7
+
+B) Veo error 404 o página no encontrada
+   └─ ❌ El archivo no se desplegó. Ve al Paso 8
+
+C) Veo la página vieja sin los planes
+   └─ ❌ Sigue usando código viejo. Ve al Paso 8
+
+════════════════════════════════════════════════════════════════
+PASO 7: VERIFICAR OTROS CAMBIOS
+════════════════════════════════════════════════════════════════
+
+Si /membresias funcionó, verifica:
+
+1. https://tu-dominio.com/register
+   └─ ¿Ves banner "🎁 10 Días GRATIS"?
+
+2. https://tu-dominio.com/dashboard
+   └─ ¿Ves widget de membresía?
+
+Si todo funciona:
+✅ ¡LISTO! El sistema está actualizado
+✅ Ahora configura las variables de entorno
+✅ Usa el archivo COPIAR_A_EASYPANEL.txt
+
+════════════════════════════════════════════════════════════════
+PASO 8: SI NO FUNCIONÓ
+════════════════════════════════════════════════════════════════
+
+Si después del deploy no ves los cambios:
+
+Comparte conmigo:
+1. Captura de pantalla de Deployments en Easypanel
+2. Qué commit hash muestra
+3. Los últimos 20 líneas de los logs
+4. Qué ves cuando abres /membresias
+
+Posibles problemas:
+- Easypanel está en otra branch
+- El build está fallando
+- Hay un error en el código
+- Cache del navegador muy agresivo
+
+════════════════════════════════════════════════════════════════
+ALTERNATIVA: RECREAR PROYECTO
+════════════════════════════════════════════════════════════════
+
+Si nada funciona, última opción:
+
+1. En Easypanel, elimina el proyecto actual
+2. Crea un nuevo proyecto
+3. Conecta a GitHub: daveymena/bot-intelogente
+4. Branch: main
+5. Build Command: npm run build
+6. Start Command: npm start
+7. Port: 3000
+8. Agrega las variables de entorno (COPIAR_A_EASYPANEL.txt)
+9. Deploy
+
+════════════════════════════════════════════════════════════════
+RESUMEN RÁPIDO
+════════════════════════════════════════════════════════════════
+
+1. Entra a Easypanel
+2. Ve a tu proyecto
+3. Busca "Redeploy" o "Rebuild"
+4. Haz clic
+5. Espera 5 minutos
+6. Ctrl + Shift + R en navegador
+7. Abre /membresias
+8. ¿Ves 4 planes? ✅ Listo
+
+════════════════════════════════════════════════════════════════
+
+Haz estos pasos y dime:
+- ¿Qué commit muestra Easypanel actualmente?
+- ¿Pudiste hacer clic en Redeploy?
+- ¿Qué ves en /membresias después?
+
+════════════════════════════════════════════════════════════════

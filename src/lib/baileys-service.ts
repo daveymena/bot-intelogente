@@ -435,7 +435,7 @@ export class BaileysService {
     })
   }
 
-  // Manejar respuesta automática con IA INTELIGENTE + DEMORA HUMANA
+  // Manejar respuesta automática con IA INTELIGENTE + DEMORA HUMANA + RAZONAMIENTO PROFUNDO
   private static async handleAutoResponse(
     socket: WASocket,
     userId: string,
@@ -448,6 +448,7 @@ export class BaileysService {
       // Importar servicios dinámicamente
       const { IntelligentResponseService } = await import('./intelligent-response-service')
       const { AIService } = await import('./ai-service')
+      const { ReasoningService } = await import('./reasoning-service')
 
       // Verificar si debe responder automáticamente
       if (!AIService.shouldAutoRespond(messageText)) {
@@ -455,7 +456,7 @@ export class BaileysService {
         return
       }
 
-      console.log(`[Baileys] 🧠 Generando respuesta INTELIGENTE con demora humana...`)
+      console.log(`[Baileys] 🧠 Iniciando RAZONAMIENTO PROFUNDO...`)
 
       // 1. Mostrar estado de "escribiendo..." en WhatsApp
       try {
@@ -468,13 +469,52 @@ export class BaileysService {
       // 2. Obtener historial de conversación
       const history = await AIService.getConversationHistory(conversationId)
 
-      // 3. Generar respuesta con sistema inteligente (incluye demora automática)
-      const intelligentResponse = await IntelligentResponseService.generateResponseWithHumanTouch(
-        userId,
+      // 🧠 PASO NUEVO: RAZONAMIENTO PROFUNDO
+      console.log(`[Baileys] 🔍 Analizando mensaje con razonamiento profundo...`)
+      const reasoning = await ReasoningService.reason(
         messageText,
+        userId,
         from,
         history
       )
+
+      // Mostrar proceso de razonamiento en consola
+      console.log(`[Baileys] 🧠 RAZONAMIENTO COMPLETADO:`)
+      console.log(`   - Intención: ${reasoning.finalIntent}`)
+      console.log(`   - Confianza: ${(reasoning.confidence * 100).toFixed(0)}%`)
+      console.log(`   - Producto: ${reasoning.productFound ? reasoning.productFound.name : 'No encontrado'}`)
+      console.log(`   - Usar IA: ${reasoning.shouldUseAI ? 'Sí' : 'No (respuesta directa)'}`)
+      console.log(`   - Pasos: ${reasoning.steps.length}`)
+
+      let intelligentResponse: any
+
+      // 3. Decidir cómo responder según el razonamiento
+      if (!reasoning.shouldUseAI && reasoning.suggestedResponse) {
+        // Respuesta directa sin IA (más rápido)
+        console.log(`[Baileys] ⚡ Usando respuesta directa (sin IA)`)
+        
+        // Simular demora humana breve
+        const delay = Math.floor(Math.random() * 1000) + 500 // 0.5-1.5 segundos
+        await new Promise(resolve => setTimeout(resolve, delay))
+        
+        intelligentResponse = {
+          message: reasoning.suggestedResponse,
+          confidence: reasoning.confidence,
+          usedAdvancedAI: false,
+          complexity: 'simple',
+          responseTime: delay
+        }
+      } else {
+        // Usar IA con razonamiento completo
+        console.log(`[Baileys] 🤖 Usando IA con contexto de razonamiento`)
+        
+        intelligentResponse = await IntelligentResponseService.generateResponseWithHumanTouch(
+          userId,
+          messageText,
+          from,
+          history
+        )
+      }
 
       console.log(`[Baileys] ✅ Respuesta generada:`, {
         complexity: intelligentResponse.complexity,

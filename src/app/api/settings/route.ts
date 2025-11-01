@@ -82,6 +82,7 @@ export async function PUT(request: NextRequest) {
       update: {
         businessName: body.businessName,
         businessPhone: body.businessPhone,
+        botPersonality: body.botPersonality,
         responseDelay: body.responseDelay,
         autoResponseEnabled: body.autoResponseEnabled,
         smartWaitingEnabled: body.smartWaitingEnabled,
@@ -92,6 +93,7 @@ export async function PUT(request: NextRequest) {
         userId: user.id,
         businessName: body.businessName || 'Mi Negocio',
         businessPhone: body.businessPhone || '+57 300 000 0000',
+        botPersonality: body.botPersonality,
         responseDelay: body.responseDelay || 2,
         autoResponseEnabled: body.autoResponseEnabled !== false,
         smartWaitingEnabled: body.smartWaitingEnabled !== false,
