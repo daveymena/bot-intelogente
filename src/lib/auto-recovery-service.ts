@@ -7,7 +7,18 @@ import { PrismaClient } from '@prisma/client'
 import Groq from 'groq-sdk'
 
 const prisma = new PrismaClient()
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
+
+// Lazy initialization de Groq para evitar errores en build time
+let groqInstance: Groq | null = null
+function getGroq(): Groq {
+    if (!groqInstance && process.env.GROQ_API_KEY) {
+        groqInstance = new Groq({ apiKey: process.env.GROQ_API_KEY })
+    }
+    if (!groqInstance) {
+        throw new Error('GROQ_API_KEY no configurado')
+    }
+    return groqInstance
+}
 
 interface RecoveryLog {
     timestamp: Date
@@ -48,7 +59,7 @@ Responde en formato JSON:
   "accion": "comando o código específico"
 }`
 
-            const response = await groq.chat.completions.create({
+            const response = await getGroq().chat.completions.create({
                 model: 'llama-3.1-70b-versatile',
                 messages: [{ role: 'user', content: prompt }],
                 temperature: 0.3,
@@ -248,7 +259,7 @@ Responde en formato JSON:
             // 2. Probar conexión con Groq (con timeout más largo)
             console.log('🧪 Probando Groq con timeout de 20 segundos...')
 
-            const testPromise = groq.chat.completions.create({
+            const testPromise = getGroq().chat.completions.create({
                 model: 'llama-3.1-8b-instant', // Modelo más rápido para test
                 messages: [{ role: 'user', content: 'Test' }],
                 max_tokens: 10
@@ -385,7 +396,7 @@ Responde en formato JSON:
         try {
             if (!process.env.GROQ_API_KEY) return false
 
-            const test = await groq.chat.completions.create({
+            const test = await getGroq().chat.completions.create({
                 model: 'llama-3.1-70b-versatile',
                 messages: [{ role: 'user', content: 'test' }],
                 max_tokens: 5
