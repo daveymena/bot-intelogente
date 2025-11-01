@@ -41,7 +41,10 @@ export default function ProductoDetalle() {
       const response = await fetch(`/api/products/${id}`)
       if (response.ok) {
         const data = await response.json()
-        setProduct(data.product)
+        // El API devuelve el producto directamente, no en { product }
+        setProduct(data)
+      } else {
+        console.error('Product not found:', response.status)
       }
     } catch (error) {
       console.error('Error:', error)
