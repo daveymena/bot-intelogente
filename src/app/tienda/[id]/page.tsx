@@ -29,12 +29,82 @@ export default function ProductoDetalle() {
   const [selectedImage, setSelectedImage] = useState(0)
   const [quantity, setQuantity] = useState(1)
   const [loading, setLoading] = useState(true)
+  const [paymentLinks, setPaymentLinks] = useState({
+    mercadopago: '#',
+    paypal: '#',
+    whatsapp: '#'
+  })
 
   useEffect(() => {
     if (params.id) {
       fetchProduct(params.id as string)
     }
   }, [params.id])
+
+  useEffect(() => {
+    if (product) {
+      generatePaymentLinks()
+    }
+  }, [product, quantity])
+
+  const generatePaymentLinks = async () => {
+    if (!product) return
+
+    try {
+      // MercadoPago
+      const mpResponse = await fetch('/api/payments/create-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          productId: product.id,
+          productName: product.name,
+          price: product.price,
+          description: product.description,
+          quantity,
+          method: 'mercadopago'
+        })
+      })
+      const mpData = await mpResponse.json()
+
+      // PayPal
+      const ppResponse = await fetch('/api/payments/create-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          productId: product.id,
+          productName: product.name,
+          price: product.price,
+          description: product.description,
+          quantity,
+          method: 'paypal'
+        })
+      })
+      const ppData = await ppResponse.json()
+
+      // WhatsApp
+      const waResponse = await fetch('/api/payments/create-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          productId: product.id,
+          productName: product.name,
+          price: product.price,
+          description: product.description,
+          quantity,
+          method: 'whatsapp'
+        })
+      })
+      const waData = await waResponse.json()
+
+      setPaymentLinks({
+        mercadopago: mpData.paymentLink || '#',
+        paypal: ppData.paymentLink || '#',
+        whatsapp: waData.paymentLink || '#'
+      })
+    } catch (error) {
+      console.error('Error generating payment links:', error)
+    }
+  }
 
   const fetchProduct = async (id: string) => {
     try {
@@ -272,37 +342,9 @@ export default function ProductoDetalle() {
               </div>
             </div>
 
-            <div className="mb-8">
-              <h3 className="font-bold text-lg mb-3">📝 Descripción</h3>
-              <p className="text-gray-700 leading-relaxed">
-                {product.description || 'La mejor calidad del mercado. AirPods inalámbricos con un diseño de cargador portátil, excelente sonido y bajos de alta calidad.'}
-              </p>
-            </div>
-
             {/* Stock Status */}
             <div className="mb-6 p-4 bg-green-50 border-2 border-green-200 rounded-2xl">
               <p className="text-green-700 font-bold">✅ Hay existencias</p>
-            </div>
-
-            {/* Payment Options */}
-            <div className="mb-8 p-6 bg-white border-2 border-gray-200 rounded-3xl">
-              <h3 className="font-bold text-lg mb-4">💳 Opciones de Pago</h3>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-xl">
-                  <span className="text-2xl">💳</span>
-                  <div>
-                    <p className="font-semibold">Compra a 3 cuotas de {formatPrice(product.price / 3)}</p>
-                    <p className="text-sm text-gray-600">con SurPay</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-xl">
-                  <span className="text-2xl">🏦</span>
-                  <div>
-                    <p className="font-semibold">Paga con Addi en hasta 6 cuotas</p>
-                    <a href="#" className="text-sm text-blue-600 hover:underline">Pide un cupo</a>
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* Quantity Selector */}
@@ -326,70 +368,93 @@ export default function ProductoDetalle() {
               </Button>
             </div>
 
-            {/* Action Button */}
-            <Button
-              onClick={addToCart}
-              className="w-full bg-black hover:bg-gray-800 h-16 text-xl font-bold rounded-full mb-4"
-            >
-              AÑADIR AL CARRITO
-            </Button>
-
-            {/* Payment Methods */}
-            <div className="mb-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-3xl border-2 border-green-200">
-              <div className="flex items-center gap-3 mb-4">
-                <span className="text-2xl">✅</span>
-                <p className="font-bold text-lg">Paga fácil y seguro con Mercado Pago</p>
-              </div>
-              <div className="flex gap-3 flex-wrap">
-                <div className="bg-white px-4 py-2 rounded-lg border">💳 VISA</div>
-                <div className="bg-white px-4 py-2 rounded-lg border">💳 Mastercard</div>
-                <div className="bg-white px-4 py-2 rounded-lg border">💳 Amex</div>
-                <div className="bg-white px-4 py-2 rounded-lg border">🏦 PSE</div>
-              </div>
-            </div>
-
-            {/* Features */}
-            <div className="grid grid-cols-1 gap-4">
-              <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl border-2 border-blue-200">
-                <div className="bg-blue-600 p-3 rounded-full">
-                  <Truck className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <p className="font-bold">Envío Gratis</p>
-                  <p className="text-sm text-gray-600">En compras superiores a $100.000</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-2xl border-2 border-green-200">
-                <div className="bg-green-600 p-3 rounded-full">
-                  <Shield className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <p className="font-bold">Compra 100% Segura</p>
-                  <p className="text-sm text-gray-600">Protección al comprador garantizada</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-2xl border-2 border-purple-200">
-                <div className="bg-purple-600 p-3 rounded-full">
-                  <RefreshCw className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <p className="font-bold">Devoluciones Fáciles</p>
-                  <p className="text-sm text-gray-600">30 días para devoluciones sin preguntas</p>
-                </div>
-              </div>
-            </div>
-
-            {/* WhatsApp Contact */}
-            <div className="mt-8 p-6 bg-gradient-to-r from-green-500 to-emerald-500 rounded-3xl text-white">
-              <div className="flex items-center gap-4">
-                <span className="text-4xl">💬</span>
-                <div className="flex-1">
-                  <p className="font-bold text-lg mb-1">¿Tienes dudas?</p>
-                  <p className="text-sm opacity-90">Contáctanos por WhatsApp</p>
-                </div>
-                <Button className="bg-white text-green-600 hover:bg-gray-100 font-bold rounded-full">
-                  Chatear
+            {/* Payment Methods - REAL BUTTONS */}
+            <div className="space-y-3 mb-6">
+              {/* MercadoPago */}
+              <a
+                href={paymentLinks.mercadopago}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+              >
+                <Button className="w-full bg-[#009EE3] hover:bg-[#0082c3] h-14 text-lg font-bold rounded-xl flex items-center justify-center gap-2">
+                  <Image src="https://http2.mlstatic.com/storage/logos-api-admin/a5f047d0-9be0-11ec-aad4-c3381f368aaf-m.svg" alt="MercadoPago" width={120} height={30} unoptimized />
+                  Pagar con MercadoPago
                 </Button>
+              </a>
+
+              {/* PayPal */}
+              <a
+                href={paymentLinks.paypal}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+              >
+                <Button className="w-full bg-[#0070BA] hover:bg-[#005a94] h-14 text-lg font-bold rounded-xl flex items-center justify-center gap-2">
+                  <Image src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" alt="PayPal" width={80} height={30} unoptimized />
+                  Pagar con PayPal
+                </Button>
+              </a>
+
+              {/* WhatsApp */}
+              <a
+                href={paymentLinks.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+              >
+                <Button className="w-full bg-[#25D366] hover:bg-[#1fb855] h-14 text-lg font-bold rounded-xl flex items-center justify-center gap-2">
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                  </svg>
+                  Consultar por WhatsApp
+                </Button>
+              </a>
+            </div>
+
+            {/* Payment Icons */}
+            <div className="mb-6 p-4 bg-gray-50 rounded-xl">
+              <p className="text-sm text-gray-600 mb-3 text-center">Aceptamos:</p>
+              <div className="flex justify-center gap-3 flex-wrap">
+                <Image src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa" width={50} height={30} unoptimized />
+                <Image src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" width={50} height={30} unoptimized />
+                <Image src="https://upload.wikimedia.org/wikipedia/commons/f/fa/American_Express_logo_%282018%29.svg" alt="Amex" width={50} height={30} unoptimized />
+                <Image src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" width={50} height={30} unoptimized />
+              </div>
+            </div>
+
+            {/* Description - MOVED TO BOTTOM */}
+            <div className="mb-6 p-6 bg-white border-2 border-gray-200 rounded-2xl">
+              <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
+                <span>📝</span> Descripción
+              </h3>
+              <p className="text-gray-700 leading-relaxed">
+                {product.description || 'La mejor calidad del mercado. Producto de alta calidad con garantía.'}
+              </p>
+            </div>
+
+            {/* Features - MOVED TO BOTTOM */}
+            <div className="grid grid-cols-1 gap-3">
+              <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-xl border border-blue-200">
+                <Truck className="h-5 w-5 text-blue-600" />
+                <div>
+                  <p className="font-semibold text-sm">Envío Gratis</p>
+                  <p className="text-xs text-gray-600">En compras +$100.000</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-3 bg-green-50 rounded-xl border border-green-200">
+                <Shield className="h-5 w-5 text-green-600" />
+                <div>
+                  <p className="font-semibold text-sm">Compra Segura</p>
+                  <p className="text-xs text-gray-600">Protección garantizada</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-xl border border-purple-200">
+                <RefreshCw className="h-5 w-5 text-purple-600" />
+                <div>
+                  <p className="font-semibold text-sm">Devoluciones</p>
+                  <p className="text-xs text-gray-600">30 días sin preguntas</p>
+                </div>
               </div>
             </div>
           </div>
