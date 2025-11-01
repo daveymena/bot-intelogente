@@ -46,6 +46,7 @@ model User {
   whatsappConnection    WhatsAppConnection?
   payments              Payment[]
   usageMetrics          UsageMetric[]
+  paymentConfig         PaymentConfig?
   
   @@map("users")
 }
@@ -63,6 +64,12 @@ model Product {
   tags          String?     // JSON string array of keywords for auto-response
   autoResponse  String?     // Predefined AI response
   stock         Int?        // null for digital products
+  
+  // Links de Pago Manuales (Configurables por producto)
+  paymentLinkMercadoPago String?
+  paymentLinkPayPal      String?
+  paymentLinkCustom      String?  // Cualquier otro link (Hotmart, etc.)
+  
   userId        String
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
@@ -253,6 +260,50 @@ model Payment {
   user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("payments")
+}
+
+// Payment Configuration (Configurable desde Dashboard)
+model PaymentConfig {
+  id                    String   @id @default(cuid())
+  userId                String   @unique
+  
+  // MercadoPago
+  mercadoPagoEnabled    Boolean  @default(false)
+  mercadoPagoPublicKey  String?
+  mercadoPagoAccessToken String?
+  
+  // PayPal
+  paypalEnabled         Boolean  @default(false)
+  paypalClientId        String?
+  paypalClientSecret    String?
+  
+  // Transferencias Bancarias
+  bankTransferEnabled   Boolean  @default(true)
+  bankName              String?  @default("Bancolombia")
+  bankAccountNumber     String?
+  bankAccountType       String?  @default("Ahorros")
+  bankAccountHolder     String?
+  
+  // Nequi
+  nequiEnabled          Boolean  @default(true)
+  nequiPhone            String?  @default("3136174267")
+  
+  // Daviplata
+  daviplataEnabled      Boolean  @default(true)
+  daviplataPhone        String?  @default("3136174267")
+  
+  // Información de Contacto
+  contactPhone          String?  @default("+57 304 274 8687")
+  contactEmail          String?  @default("deinermen25@gmail.com")
+  contactAddress        String?  @default("Centro Comercial El Diamante 2, San Nicolás, Cali")
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  // Relations
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("payment_configs")
 }
 
 // Usage Metrics

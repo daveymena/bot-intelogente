@@ -207,6 +207,15 @@ export class AuthService {
       })
     }
 
+    // Crear configuración de pagos por defecto
+    await db.paymentConfig.create({
+      data: {
+        userId: user.id,
+        // Los valores por defecto ya están en el schema
+        // El usuario podrá configurarlos desde el dashboard
+      }
+    })
+
     // Enviar código de verificación por WhatsApp
     try {
       const { WhatsAppVerificationService } = await import('./whatsapp-verification-service')
@@ -296,9 +305,10 @@ export class AuthService {
       throw new Error('Invalid credentials')
     }
 
-    if (!user.isEmailVerified) {
-      throw new Error('Email not verified. Please check your inbox.')
-    }
+    // VERIFICACIÓN DE EMAIL DESACTIVADA TEMPORALMENTE
+    // if (!user.isEmailVerified) {
+    //   throw new Error('Email not verified. Please check your inbox.')
+    // }
 
     if (!user.isActive) {
       throw new Error('Account is deactivated')
@@ -428,7 +438,7 @@ export class AuthService {
   // Create session
   static async createSession(userId: string): Promise<string> {
     const token = jwt.sign({ userId }, JWT_SECRET, { expiresIn: '7d' })
-    
+
     await db.session.create({
       data: {
         userId,

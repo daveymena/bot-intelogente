@@ -7,6 +7,7 @@
 import { db } from './db'
 import { ProductIntelligenceService } from './product-intelligence-service'
 import { ConversationContextService } from './conversation-context-service'
+import { AIMultiProvider } from './ai-multi-provider'
 
 export interface ReasoningStep {
   step: number
@@ -455,6 +456,89 @@ export class ReasoningService {
     response += `¿Deseas más información o el enlace de compra?`
 
     return response
+  }
+
+  /**
+   * Generar respuesta usando AIMultiProvider cuando se necesita IA
+   */
+  static async generateAIResponse(
+    message: string,
+    userId: string,
+    customerPhone: string,
+    reasoningResult: ReasoningResult,
+    conversationHistory: Array<{ role: 'user' | 'assistant'; content: string }> = []
+  ): Promise<string> {
+    // Si ya tenemos una respuesta sugerida, usarla
+    if (!reasoningResult.shouldUseAI && reasoningResult.suggestedResponse) {
+      return reasoningResult.suggestedResponse
+    }
+
+    // Construir contexto enriquecido para la IA
+    let contextPrompt = `Eres un asistente de ventas de Tecnovariedades D&S.\n\n`
+
+    // Agregar información del razonamiento
+    contextPrompt += `📊 ANÁLISIS DE LA CONSULTA:\n`
+    contextPrompt += `- Intención detectada: ${reasoningResult.finalIntent}\n`
+    contextPrompt += `- Confianza: ${(reasoningResult.confidence * 100).toFixed(0)}%\n\n`
+
+    // Agregar información del producto si se encontró
+    if (reasoningResult.productFound) {
+      const product = reasoningResult.productFound
+      contextPrompt += `🎯 PRODUCTO RELEVANTE:\n`
+      contextPrompt += `- Nombre: ${product.name}\n`
+      contextPrompt += `- Precio: ${product.price.toLocaleString('es-CO')} COP\n`
+      contextPrompt += `- Categoría: ${product.category}\n`
+      if (product.description) {
+        contextPrompt += `- Descripción: ${product.description.substring(0, 200)}...\n`
+      }
+      contextPrompt += `\n`
+    }
+
+    // Agregar historial de conversación
+    if (conversationHistory.length > 0) {
+      contextPrompt += `💬 HISTORIAL RECIENTE:\n`
+      conversationHistory.slice(-3).forEach(msg => {
+        contextPrompt += `${msg.role === 'user' ? '👤 Cliente' : '🤖 Asistente'}: ${msg.content}\n`
+      })
+      contextPrompt += `\n`
+    }
+
+    contextPrompt += `📝 MENSAJE ACTUAL DEL CLIENTE:\n${message}\n\n`
+    contextPrompt += `Responde de manera natural, amigable y profesional. Si el cliente pregunta por un producto que no encontramos, ofrece ayuda para buscar lo que necesita.`
+
+    try {
+      // Construir mensajes para el multi-provider
+      const messages = [
+        {
+          role: 'system' as const,
+          content: 'Eres un asistente de ventas experto en tecnología, amigable y profesional. Respondes en español de manera natural y conversacional.'
+        },
+        {
+          role: 'user' as const,
+          content: contextPrompt
+        }
+      ]
+
+      // Usar AIMultiProvider con fallback automático
+      const aiResponse = await AIMultiProvider.generateCompletion(
+        messages,
+        {
+          temperature: 0.7,
+          max_tokens: 500
+        }
+      )
+
+      return aiResponse.content
+    } catch (error) {
+      console.error('[Reasoning] Error generando respuesta con IA:', error)
+
+      // Fallback si falla la IA
+      if (reasoningResult.suggestedResponse) {
+        return reasoningResult.suggestedResponse
+      }
+
+      return '¡Hola! Estoy aquí para ayudarte. ¿En qué puedo asistirte hoy? 😊'
+    }
   }
 
   /**

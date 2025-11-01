@@ -476,4 +476,71 @@ export class AIMultiProvider {
     
     return results
   }
+
+  // 🦙 Ollama (IA local/servidor - GRATIS)
+  private static async tryOllama(
+    messages: AIMessage[],
+    options: AICompletionOptions
+  ): Promise<AICompletionResponse> {
+    const baseUrl = process.env.OLLAMA_BASE_URL || 'http://localhost:11434'
+    const model = options.model || process.env.OLLAMA_MODEL || 'gemma:2b'
+    const url = `${baseUrl}/api/chat`
+    const timeout = 30000 // 30 segundos
+    
+    console.log(`[Ollama] Conectando a: ${url}`)
+    console.log(`[Ollama] Modelo: ${model}`)
+    
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), timeout)
+    
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model,
+          messages,
+          stream: false,
+          options: {
+            temperature: options.temperature || 0.7,
+            num_predict: options.max_tokens || 400
+          }
+        }),
+        signal: controller.signal
+      })
+      
+      clearTimeout(timeoutId)
+      
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error(`[Ollama] Error response:`, errorText)
+        throw new Error(`Ollama HTTP ${response.status}: ${response.statusText}`)
+      }
+      
+      const data = await response.json()
+      const content = data.message?.content
+      
+      if (!content) {
+        throw new Error('Ollama no devolvió contenido')
+      }
+      
+      return {
+        content,
+        provider: 'ollama',
+        model,
+        success: true
+      }
+    } catch (error: any) {
+      clearTimeout(timeoutId)
+      
+      if (error.name === 'AbortError') {
+        throw new Error('Ollama timeout')
+      }
+      
+      throw error
+    }
+  }
+
 }
