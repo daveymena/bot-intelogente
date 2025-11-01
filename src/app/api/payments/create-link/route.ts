@@ -125,6 +125,8 @@ async function createPayPalLink(
 
     // Create order
     const totalUSD = (price * quantity / 4000).toFixed(2)
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    
     const orderResponse = await fetch('https://api-m.paypal.com/v2/checkout/orders', {
       method: 'POST',
       headers: {
@@ -134,15 +136,38 @@ async function createPayPalLink(
       body: JSON.stringify({
         intent: 'CAPTURE',
         purchase_units: [{
+          reference_id: 'TECNOVARIEDADES',
+          description: `${name} x${quantity}`,
+          custom_id: `PROD-${Date.now()}`,
+          soft_descriptor: 'TECNOVARIEDADES',
           amount: {
             currency_code: 'USD',
-            value: totalUSD
+            value: totalUSD,
+            breakdown: {
+              item_total: {
+                currency_code: 'USD',
+                value: totalUSD
+              }
+            }
           },
-          description: name
+          items: [{
+            name: name.substring(0, 127), // PayPal limit
+            description: (description || name).substring(0, 127),
+            unit_amount: {
+              currency_code: 'USD',
+              value: (price / 4000).toFixed(2)
+            },
+            quantity: quantity.toString()
+          }]
         }],
         application_context: {
-          return_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/payment/success`,
-          cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/payment/failure`
+          brand_name: 'Tecnovariedades D&S',
+          locale: 'es-CO',
+          landing_page: 'BILLING',
+          shipping_preference: 'NO_SHIPPING',
+          user_action: 'PAY_NOW',
+          return_url: `${appUrl}/payment/success`,
+          cancel_url: `${appUrl}/payment/failure`
         }
       })
     })
