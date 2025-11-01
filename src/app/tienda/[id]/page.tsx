@@ -317,190 +317,130 @@ export default function ProductoDetalle() {
 
           {/* Product Info */}
           <div>
-            <h1 className="text-4xl font-black mb-4 leading-tight">{product.name}</h1>
+            <h1 className="text-2xl font-bold mb-3 leading-tight">{product.name}</h1>
 
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-2 mb-4">
               <div className="flex">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                  <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                 ))}
               </div>
-              <span className="text-gray-600 font-semibold">(4.8)</span>
+              <span className="text-gray-600 text-sm">(4.8)</span>
             </div>
 
-            <div className="mb-8 p-6 bg-gradient-to-r from-blue-50 to-pink-50 rounded-3xl border-2 border-blue-200">
-              <div className="text-2xl text-gray-500 line-through mb-2">
-                {formatPrice(product.price * 1.5)}
-              </div>
-              <div className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-500 mb-3">
+            {/* Precio */}
+            <div className="mb-6">
+              <div className="text-4xl font-black text-gray-900 mb-2">
                 {formatPrice(product.price)}
               </div>
-              <div className="flex items-center gap-2 mb-4">
-                <Badge className="bg-green-500 text-white font-bold">
-                  Envío a <span className="font-black">todo</span> el país 🇨🇴
-                </Badge>
+              <p className="text-sm text-gray-600">Envío a <span className="font-semibold">todo el país</span> 🇨🇴</p>
+            </div>
+
+            {/* Stock */}
+            <div className="mb-4">
+              <p className="text-green-600 text-sm font-semibold">Hay existencias</p>
+            </div>
+
+            {/* Quantity + Add to Cart */}
+            <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center border-2 border-gray-300 rounded-lg">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="px-3 h-10"
+                >
+                  -
+                </Button>
+                <span className="px-4 font-semibold">{quantity}</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="px-3 h-10"
+                >
+                  +
+                </Button>
               </div>
-            </div>
-
-            {/* Stock Status */}
-            <div className="mb-6 p-4 bg-green-50 border-2 border-green-200 rounded-2xl">
-              <p className="text-green-700 font-bold">✅ Hay existencias</p>
-            </div>
-
-            {/* Quantity Selector */}
-            <div className="flex items-center gap-4 mb-6">
               <Button
-                variant="outline"
-                size="lg"
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="rounded-full w-12 h-12 text-xl font-bold"
+                onClick={addToCart}
+                className="flex-1 bg-black hover:bg-gray-800 h-10 font-bold rounded-lg"
               >
-                -
-              </Button>
-              <span className="w-16 text-center font-bold text-2xl">{quantity}</span>
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={() => setQuantity(quantity + 1)}
-                className="rounded-full w-12 h-12 text-xl font-bold"
-              >
-                +
+                AÑADIR AL CARRITO
               </Button>
             </div>
 
-            {/* Payment Methods - REAL BUTTONS CON ESTILO TIENDA */}
-            <div className="mb-8 p-6 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 rounded-3xl border-2 border-blue-200 shadow-lg">
-              <h3 className="font-black text-xl mb-4 text-center">💳 Métodos de Pago</h3>
+            {/* Payment Methods - COMPACTOS */}
+            <div className="mb-6">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-sm font-semibold text-gray-700">Paga con</span>
+                <Image src="https://http2.mlstatic.com/storage/logos-api-admin/a5f047d0-9be0-11ec-aad4-c3381f368aaf-xs.svg" alt="MercadoPago" width={60} height={20} unoptimized />
+              </div>
               
-              <div className="space-y-3">
-                {/* MercadoPago */}
+              <div className="flex gap-2 mb-4">
                 <a
                   href={paymentLinks.mercadopago}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block group"
+                  className="flex-1"
                 >
-                  <div className="bg-white p-4 rounded-2xl border-2 border-blue-200 hover:border-blue-400 hover:shadow-xl transition-all duration-300 group-hover:scale-105">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="bg-[#009EE3] p-3 rounded-xl">
-                          <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/>
-                          </svg>
-                        </div>
-                        <div>
-                          <p className="font-bold text-lg">MercadoPago</p>
-                          <p className="text-sm text-gray-600">Tarjetas, PSE, Efectivo</p>
-                        </div>
-                      </div>
-                      <div className="text-blue-600 font-bold group-hover:translate-x-2 transition-transform">→</div>
-                    </div>
-                  </div>
+                  <Button className="w-full bg-[#009EE3] hover:bg-[#0082c3] h-9 text-sm font-semibold rounded-lg">
+                    MercadoPago
+                  </Button>
                 </a>
-
-                {/* PayPal */}
                 <a
                   href={paymentLinks.paypal}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block group"
+                  className="flex-1"
                 >
-                  <div className="bg-white p-4 rounded-2xl border-2 border-purple-200 hover:border-purple-400 hover:shadow-xl transition-all duration-300 group-hover:scale-105">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="bg-[#0070BA] p-3 rounded-xl">
-                          <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M20.067 8.478c.492.88.556 2.014.3 3.327-.74 3.806-3.276 5.12-6.514 5.12h-.5a.805.805 0 00-.794.68l-.04.22-.63 3.993-.028.15a.805.805 0 01-.793.68H7.76c-.66 0-1.152-.57-1.028-1.19l2.037-12.908c.093-.593.615-1.028 1.218-1.028h6.46c1.425 0 2.542.328 3.32.984z"/>
-                          </svg>
-                        </div>
-                        <div>
-                          <p className="font-bold text-lg">PayPal</p>
-                          <p className="text-sm text-gray-600">Pagos internacionales</p>
-                        </div>
-                      </div>
-                      <div className="text-purple-600 font-bold group-hover:translate-x-2 transition-transform">→</div>
-                    </div>
-                  </div>
+                  <Button className="w-full bg-[#0070BA] hover:bg-[#005a94] h-9 text-sm font-semibold rounded-lg">
+                    PayPal
+                  </Button>
                 </a>
-
-                {/* WhatsApp */}
                 <a
                   href={paymentLinks.whatsapp}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block group"
+                  className="flex-1"
                 >
-                  <div className="bg-white p-4 rounded-2xl border-2 border-green-200 hover:border-green-400 hover:shadow-xl transition-all duration-300 group-hover:scale-105">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="bg-[#25D366] p-3 rounded-xl">
-                          <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-                          </svg>
-                        </div>
-                        <div>
-                          <p className="font-bold text-lg">WhatsApp</p>
-                          <p className="text-sm text-gray-600">Consulta y compra</p>
-                        </div>
-                      </div>
-                      <div className="text-green-600 font-bold group-hover:translate-x-2 transition-transform">→</div>
-                    </div>
-                  </div>
+                  <Button className="w-full bg-[#25D366] hover:bg-[#1fb855] h-9 text-sm font-semibold rounded-lg">
+                    WhatsApp
+                  </Button>
                 </a>
               </div>
 
               {/* Payment Icons */}
-              <div className="mt-6 pt-6 border-t-2 border-white">
-                <p className="text-sm text-gray-600 mb-3 text-center font-semibold">Aceptamos:</p>
-                <div className="flex justify-center gap-4 flex-wrap">
-                  <div className="bg-white p-2 rounded-lg shadow-sm">
-                    <Image src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa" width={45} height={28} unoptimized />
-                  </div>
-                  <div className="bg-white p-2 rounded-lg shadow-sm">
-                    <Image src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" width={45} height={28} unoptimized />
-                  </div>
-                  <div className="bg-white p-2 rounded-lg shadow-sm">
-                    <Image src="https://upload.wikimedia.org/wikipedia/commons/f/fa/American_Express_logo_%282018%29.svg" alt="Amex" width={45} height={28} unoptimized />
-                  </div>
-                  <div className="bg-white p-2 rounded-lg shadow-sm">
-                    <Image src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" width={45} height={28} unoptimized />
-                  </div>
-                </div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs text-gray-600">Aceptamos:</span>
+                <Image src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa" width={35} height={22} unoptimized />
+                <Image src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" width={35} height={22} unoptimized />
+                <Image src="https://upload.wikimedia.org/wikipedia/commons/f/fa/American_Express_logo_%282018%29.svg" alt="Amex" width={35} height={22} unoptimized />
+                <Image src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" width={35} height={22} unoptimized />
               </div>
             </div>
 
-            {/* Description - MOVED TO BOTTOM */}
-            <div className="mb-6 p-6 bg-white border-2 border-gray-200 rounded-2xl">
-              <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
-                <span>📝</span> Descripción
-              </h3>
-              <p className="text-gray-700 leading-relaxed">
+            {/* Description */}
+            <div className="mb-6 border-t pt-6">
+              <h3 className="font-bold text-base mb-3">Descripción</h3>
+              <p className="text-gray-700 text-sm leading-relaxed">
                 {product.description || 'La mejor calidad del mercado. Producto de alta calidad con garantía.'}
               </p>
             </div>
 
-            {/* Features - MOVED TO BOTTOM */}
-            <div className="grid grid-cols-1 gap-3">
-              <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-xl border border-blue-200">
-                <Truck className="h-5 w-5 text-blue-600" />
-                <div>
-                  <p className="font-semibold text-sm">Envío Gratis</p>
-                  <p className="text-xs text-gray-600">En compras +$100.000</p>
-                </div>
+            {/* Features */}
+            <div className="grid grid-cols-3 gap-2 mb-6">
+              <div className="text-center p-3 bg-gray-50 rounded-lg">
+                <Truck className="h-5 w-5 text-blue-600 mx-auto mb-1" />
+                <p className="text-xs font-semibold">Envío Gratis</p>
               </div>
-              <div className="flex items-center gap-3 p-3 bg-green-50 rounded-xl border border-green-200">
-                <Shield className="h-5 w-5 text-green-600" />
-                <div>
-                  <p className="font-semibold text-sm">Compra Segura</p>
-                  <p className="text-xs text-gray-600">Protección garantizada</p>
-                </div>
+              <div className="text-center p-3 bg-gray-50 rounded-lg">
+                <Shield className="h-5 w-5 text-green-600 mx-auto mb-1" />
+                <p className="text-xs font-semibold">Compra Segura</p>
               </div>
-              <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-xl border border-purple-200">
-                <RefreshCw className="h-5 w-5 text-purple-600" />
-                <div>
-                  <p className="font-semibold text-sm">Devoluciones</p>
-                  <p className="text-xs text-gray-600">30 días sin preguntas</p>
-                </div>
+              <div className="text-center p-3 bg-gray-50 rounded-lg">
+                <RefreshCw className="h-5 w-5 text-purple-600 mx-auto mb-1" />
+                <p className="text-xs font-semibold">Devoluciones</p>
               </div>
             </div>
           </div>
