@@ -25,6 +25,8 @@ const publicRoutes = [
   '/api/auth/session',
   '/api/health',
   '/api/products/public',
+  '/api/payments/create',
+  '/api/payments/webhook',
   '/api/assistant/chat',
   '/api/dropi'
 ]
