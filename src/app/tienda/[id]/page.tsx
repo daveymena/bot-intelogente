@@ -137,6 +137,42 @@ export default function ProductoDetalle() {
         </div>
       </header>
 
+      {/* Sticky Add to Cart Bar */}
+      <div className="sticky top-[73px] z-30 bg-gray-900 text-white shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <span className="text-2xl font-black">{formatPrice(product.price)}</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700 w-10 h-10 rounded-lg"
+              >
+                -
+              </Button>
+              <span className="w-12 text-center font-bold text-lg">{quantity}</span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setQuantity(quantity + 1)}
+                className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700 w-10 h-10 rounded-lg"
+              >
+                +
+              </Button>
+              <Button
+                onClick={addToCart}
+                className="bg-white text-black hover:bg-gray-100 font-bold px-8 h-10 rounded-lg"
+              >
+                AÑADIR AL CARRITO
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Images */}
