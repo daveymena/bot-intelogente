@@ -43,15 +43,24 @@ export default function ProductoDetalle() {
 
   useEffect(() => {
     if (product) {
+      console.log('🔄 Generando links de pago para:', product.name, 'Cantidad:', quantity)
       generatePaymentLinks()
     }
-  }, [product, quantity])
+  }, [product?.id, quantity])
 
   const generatePaymentLinks = async () => {
     if (!product) return
 
+    console.log('📦 Producto:', {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      quantity
+    })
+
     try {
       // MercadoPago
+      console.log('💳 Generando link MercadoPago...')
       const mpResponse = await fetch('/api/payments/create-link', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -65,8 +74,10 @@ export default function ProductoDetalle() {
         })
       })
       const mpData = await mpResponse.json()
+      console.log('✅ MercadoPago response:', mpData)
 
       // PayPal
+      console.log('💰 Generando link PayPal...')
       const ppResponse = await fetch('/api/payments/create-link', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -80,8 +91,10 @@ export default function ProductoDetalle() {
         })
       })
       const ppData = await ppResponse.json()
+      console.log('✅ PayPal response:', ppData)
 
       // WhatsApp
+      console.log('💬 Generando link WhatsApp...')
       const waResponse = await fetch('/api/payments/create-link', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -95,14 +108,18 @@ export default function ProductoDetalle() {
         })
       })
       const waData = await waResponse.json()
+      console.log('✅ WhatsApp response:', waData)
 
-      setPaymentLinks({
+      const newLinks = {
         mercadopago: mpData.paymentLink || '#',
         paypal: ppData.paymentLink || '#',
         whatsapp: waData.paymentLink || '#'
-      })
+      }
+
+      console.log('🔗 Links generados:', newLinks)
+      setPaymentLinks(newLinks)
     } catch (error) {
-      console.error('Error generating payment links:', error)
+      console.error('❌ Error generating payment links:', error)
     }
   }
 
