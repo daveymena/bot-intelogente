@@ -78,13 +78,31 @@ export default function ProductoDetalle() {
   }
 
   const getProductImages = (): string[] => {
-    if (!product?.images) return []
+    if (!product?.images) return ['/placeholder.svg']
+    
     try {
-      return JSON.parse(product.images)
+      // Si images es un array, devolverlo
+      if (Array.isArray(product.images)) {
+        return product.images.length > 0 ? product.images : ['/placeholder.svg']
+      }
+      
+      // Si es string, intentar parsear
+      if (typeof product.images === 'string') {
+        const parsed = JSON.parse(product.images)
+        return Array.isArray(parsed) && parsed.length > 0 ? parsed : ['/placeholder.svg']
+      }
+      
+      return ['/placeholder.svg']
     } catch {
-      return []
+      // Si falla el parse, usar la imagen como string directo
+      return [product.images || '/placeholder.svg']
     }
   }
+
+  // Scroll to top cuando carga la página
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [product])
 
   if (loading) {
     return (
@@ -189,6 +207,11 @@ export default function ProductoDetalle() {
                 alt={product.name}
                 fill
                 className="object-contain p-8 group-hover:scale-110 transition-transform duration-300"
+                unoptimized
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement
+                  target.src = 'https://via.placeholder.com/800x800/e5e7eb/6b7280?text=' + encodeURIComponent(product.name)
+                }}
               />
               {/* Zoom Icon */}
               <button className="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100">
@@ -205,7 +228,17 @@ export default function ProductoDetalle() {
                       selectedImage === idx ? 'border-blue-600 scale-105 shadow-lg' : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
-                    <Image src={img} alt={`${product.name} ${idx + 1}`} fill className="object-contain p-2" />
+                    <Image 
+                      src={img} 
+                      alt={`${product.name} ${idx + 1}`} 
+                      fill 
+                      className="object-contain p-2"
+                      unoptimized
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement
+                        target.src = 'https://via.placeholder.com/200x200/e5e7eb/6b7280?text=Imagen+' + (idx + 1)
+                      }}
+                    />
                   </button>
                 ))}
               </div>
