@@ -1,0 +1,52 @@
+# Dockerfile optimizado para Easypanel - Reducido uso de memoria
+FROM ghcr.io/puppeteer/puppeteer:21.6.0
+
+# Configurar directorio de trabajo
+WORKDIR /app
+
+# Variables de entorno para reducir uso de memoria en build
+ENV NODE_OPTIONS="--max-old-space-size=2048"
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Copiar archivos de dependencias
+COPY package*.json ./
+COPY prisma ./prisma/
+
+# Instalar dependencias con caché limpio
+RUN npm ci --prefer-offline --no-audit
+
+# Copiar el resto del código
+COPY . .
+
+# Generar Prisma Client
+RUN npx prisma generate
+
+# Build de Next.js con límite de memoria
+RUN npm run build
+
+# Limpiar caché de npm para reducir tamaño de imagen
+RUN npm cache clean --force
+
+# Crear directorio dist si no existe y dar permisos
+RUN mkdir -p /app/dist && chown -R pptruser:pptruser /app/dist
+
+# Script de inicio optimizado
+RUN echo '#!/bin/sh\n\
+echo "🚀 Iniciando aplicación..."\n\
+echo "📊 Aplicando migraciones de base de datos..."\n\
+npx prisma db push --accept-data-loss || echo "⚠️ Error en migraciones, continuando..."\n\
+echo "👤 Creando usuario admin..."\n\
+npx tsx scripts/create-admin.ts || echo "⚠️ Admin ya existe o error, continuando..."\n\
+echo "✅ Iniciando servidor..."\n\
+exec npm start' > /app/start.sh && \
+chmod +x /app/start.sh && \
+chown pptruser:pptruser /app/start.sh
+
+# Exponer puerto
+EXPOSE 3000
+
+# Variables de entorno para Puppeteer
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
+# Comando de inicio
+CMD ["/app/start.sh"]

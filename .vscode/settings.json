@@ -1,0 +1,19 @@
+{
+  // Desactivar autofix de Kiro IDE
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "never",
+    "source.organizeImports": "never"
+  },
+  "editor.formatOnSave": false,
+  
+  // Desactivar sugerencias automáticas que eliminan imports
+  "typescript.suggest.autoImports": true,
+  "javascript.suggest.autoImports": true,
+  
+  // Mantener imports no usados (crítico para sistema híbrido)
+  "typescript.preferences.organizeImportsIgnoreCase": false,
+  "typescript.preferences.organizeImportsCollation": "unicode",
+  
+  // Desactivar limpieza automática de imports
+  "source.organizeImports": false
+}

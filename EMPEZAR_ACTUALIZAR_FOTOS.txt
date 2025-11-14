@@ -1,0 +1,90 @@
+========================================
+  ACTUALIZAR FOTOS DE PRODUCTOS
+========================================
+
+🎯 OBJETIVO:
+Extraer fotos de productos desde las tiendas originales
+(Disyvar, SmartJoys, MegaComputer, Alkosto, Éxito)
+
+========================================
+  PASO 1: VERIFICAR ESTADO
+========================================
+
+Ejecuta:
+  ver-productos-sin-fotos.bat
+
+Esto te mostrará:
+  ❌ Productos sin fotos
+  ⚠️  Productos con pocas fotos
+  ✅ Productos con suficientes fotos
+
+========================================
+  PASO 2: ACTUALIZAR FOTOS
+========================================
+
+Opción A - Solo productos SIN fotos:
+  actualizar-fotos-sin-imagenes.bat
+
+Opción B - Productos con POCAS fotos:
+  actualizar-fotos-pocas-imagenes.bat
+
+Opción C - TODOS los productos:
+  actualizar-todas-fotos.bat
+  (⚠️ Puede tardar horas)
+
+========================================
+  PASO 3: VERIFICAR RESULTADOS
+========================================
+
+1. Ejecuta de nuevo:
+   ver-productos-sin-fotos.bat
+
+2. Revisa el reporte:
+   scripts/reporte-fotos.json
+
+3. Verifica en el dashboard
+
+========================================
+  TIENDAS SOPORTADAS
+========================================
+
+✅ Disyvar (disyvar.com.co)
+✅ SmartJoys (smartjoys.co)
+✅ MegaComputer (megacomputer.com.co)
+✅ Alkosto (alkosto.com)
+✅ Éxito (exito.com)
+
+========================================
+  CARACTERÍSTICAS
+========================================
+
+✅ Detección automática de tienda origen
+✅ Búsqueda inteligente en múltiples tiendas
+✅ Extracción de múltiples fotos por producto
+✅ Eliminación automática de duplicados
+✅ Reporte detallado de cambios
+✅ Actualización segura de base de datos
+
+========================================
+  TIEMPO ESTIMADO
+========================================
+
+50 productos sin fotos: ~10-15 minutos
+100 productos pocas fotos: ~20-30 minutos
+200+ todos los productos: 1-2 horas
+
+========================================
+  DOCUMENTACIÓN COMPLETA
+========================================
+
+Lee: GUIA_ACTUALIZAR_FOTOS_PRODUCTOS.md
+
+========================================
+  ¡EMPIEZA AHORA!
+========================================
+
+1. ver-productos-sin-fotos.bat
+2. actualizar-fotos-sin-imagenes.bat
+3. ¡Listo! 🎉
+
+========================================

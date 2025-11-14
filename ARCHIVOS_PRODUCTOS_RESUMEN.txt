@@ -1,0 +1,88 @@
+========================================
+  UBICACIÓN DE ARCHIVOS DE PRODUCTOS
+========================================
+
+📍 CARPETA PRINCIPAL:
+C:\Users\ADMIN\Music\botexperimento\
+
+========================================
+📄 ARCHIVOS PRINCIPALES (68 productos)
+========================================
+
+1. JSON (Para programar)
+   📁 catalogo-completo-68-productos.json
+   📍 C:\Users\ADMIN\Music\botexperimento\catalogo-completo-68-productos.json
+   💾 39 KB
+   ✅ Listo para importar
+
+2. CSV/EXCEL (Para editar)
+   📁 catalogo-completo-68-productos.csv
+   📍 C:\Users\ADMIN\Music\botexperimento\catalogo-completo-68-productos.csv
+   💾 23 KB
+   ✅ Abrir en Excel
+
+========================================
+📄 ARCHIVOS FUENTE (Importación inicial)
+========================================
+
+3. MegaComputer (24 productos)
+   📁 productos-megacomputer-completo.json
+   📍 C:\Users\ADMIN\Music\botexperimento\productos-megacomputer-completo.json
+
+4. Digitales + Moto (3 productos)
+   📁 productos-digitales-moto.json
+   📍 C:\Users\ADMIN\Music\botexperimento\productos-digitales-moto.json
+
+========================================
+🔧 COMANDOS RÁPIDOS
+========================================
+
+EXPORTAR (Crear JSON y CSV):
+   exportar-productos.bat
+
+IMPORTAR (Desde JSON):
+   importar-desde-json.bat
+
+VER PRODUCTOS:
+   ver-productos.bat
+
+IMPORTAR TODO DESDE CERO:
+   importar-productos-completo.bat
+
+========================================
+📊 CONTENIDO
+========================================
+
+Total: 68 productos
+
+DIGITALES (42):
+- 1 Curso de Piano ($60.000)
+- 1 Pack Completo ($60.000)
+- 40 Megapacks ($20.000 c/u)
+
+FÍSICOS (26):
+- 1 Moto Bajaj ($6.500.000)
+- 12 Laptops
+- 12 Impresoras/Escáneres
+- 1 Tablet
+
+========================================
+🖼️ FOTOS
+========================================
+
+LOCALES:
+📁 public/fotos/
+   - megapack completo.png
+   - megapack2.jpg
+
+EXTERNAS:
+   - MegaComputer: megacomputer.com.co
+   - Piano: landein-page-pian2.vercel.app
+   - Moto: images.unsplash.com
+
+========================================
+✅ TODO LISTO
+========================================
+
+Fecha: 3 noviembre 2025
+Estado: COMPLETO

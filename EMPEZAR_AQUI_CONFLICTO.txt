@@ -1,0 +1,34 @@
+========================================
+  SOLUCIÓN RÁPIDA - CONFLICTO WHATSAPP
+========================================
+
+🎯 PROBLEMA:
+Loop infinito de reconexiones de WhatsApp
+
+✅ SOLUCIÓN EN 3 PASOS:
+
+1. DETENER SERVIDOR
+   Presiona Ctrl + C en la terminal
+
+2. ELIMINAR SESIONES
+   Windows:
+   rmdir /s /q auth_sessions
+   
+   Linux/Mac:
+   rm -rf auth_sessions
+
+3. REINICIAR
+   npm run dev
+
+========================================
+
+📚 MÁS INFORMACIÓN:
+- SOLUCION_RAPIDA_CONFLICTO.md (guía rápida)
+- SOLUCION_CONFLICTO_SESIONES.md (guía completa)
+- RESUMEN_SOLUCION_CONFLICTOS.md (resumen técnico)
+
+🔧 HERRAMIENTAS:
+- limpiar-sesiones.bat (limpiar sesiones huérfanas)
+- resetear-whatsapp-completo.bat (reset total)
+
+========================================

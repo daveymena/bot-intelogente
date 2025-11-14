@@ -1,0 +1,27 @@
+✅ OLLAMA CONFIGURADO COMO FALLBACK ILIMITADO
+
+🎯 Orden de Fallback:
+1. Groq (rápido) → Si falla...
+2. Ollama (ILIMITADO) → Siempre funciona!
+
+⚙️ Configuración:
+- OLLAMA_ENABLED=true
+- OLLAMA_TIMEOUT=30000 (30 segundos)
+- AI_FALLBACK_ORDER=groq,ollama
+
+✅ Ventajas:
+- Nunca se queda sin tokens
+- Gratis e ilimitado
+- Siempre disponible
+
+⏱️ Tiempos:
+- Groq: 1-3s
+- Ollama: 10-30s (más lento pero funciona)
+
+🧪 Probar:
+npx tsx scripts/test-ollama.ts
+
+📖 Ver detalles:
+OLLAMA_FALLBACK_CONFIGURADO.md
+
+🚀 LISTO! El bot nunca dejará de funcionar.

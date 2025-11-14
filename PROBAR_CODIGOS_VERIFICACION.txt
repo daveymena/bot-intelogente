@@ -1,0 +1,133 @@
+╔══════════════════════════════════════════════════════════════╗
+║   ✅ CÓDIGOS DE VERIFICACIÓN POR WHATSAPP - ARREGLADO       ║
+╚══════════════════════════════════════════════════════════════╝
+
+🎯 PROBLEMA RESUELTO:
+   Los códigos ahora llegan correctamente por WhatsApp para:
+   ✅ Registro de nuevos usuarios
+   ✅ Recuperación de contraseña
+   ✅ Verificación de teléfono
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ REQUISITO IMPORTANTE:
+
+   Debe haber WhatsApp conectado en el Dashboard
+
+   1. Ir al Dashboard
+   2. Sección "Conexión WhatsApp"
+   3. Click en "Conectar WhatsApp"
+   4. Escanear código QR
+   5. Esperar a que diga "Conectado"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🧪 PRUEBA RÁPIDA:
+
+   Ejecutar script de prueba:
+
+   npx tsx scripts/test-verification-codes.ts
+
+   Este script:
+   ✓ Verifica conexión de WhatsApp
+   ✓ Genera código de verificación
+   ✓ Envía código por WhatsApp
+   ✓ Verifica el código
+   ✓ Prueba recuperación de contraseña
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📱 PRUEBA MANUAL:
+
+1️⃣ REGISTRO:
+   • Ir a /register
+   • Llenar formulario con teléfono
+   • Click en "Registrarse"
+   • Esperar código por WhatsApp (5 min)
+   • Ingresar código
+   • ✅ Cuenta activada
+
+2️⃣ RECUPERACIÓN DE CONTRASEÑA:
+   • Ir a /forgot-password
+   • Ingresar teléfono
+   • Click en "Enviar código"
+   • Esperar código por WhatsApp (10 min)
+   • Ingresar código
+   • Cambiar contraseña
+   • ✅ Contraseña actualizada
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📨 MENSAJES QUE LLEGARÁN:
+
+🔐 Código de Verificación (Registro):
+   "Tu código de verificación es: *123456*
+    Este código expira en 5 minutos."
+
+🔐 Recuperación de Contraseña:
+   "Tu código de verificación es: *123456*
+    Este código expira en 10 minutos."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔍 VERIFICAR EN LOGS:
+
+   npm run dev
+
+   Buscar en consola:
+   ✅ "Código de verificación enviado a +573041234567"
+   ✅ "[Baileys] Mensaje enviado a 573041234567"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ SOLUCIÓN DE PROBLEMAS:
+
+Si el código no llega:
+
+1. Verificar WhatsApp conectado:
+   • Dashboard → "Conexión WhatsApp" → "Conectado"
+
+2. Verificar número de teléfono:
+   • Formato: 3041234567 (10 dígitos)
+   • O: +573041234567 (con código)
+
+3. Ver logs del servidor:
+   • Buscar errores en consola
+   • Verificar "✅ Código enviado"
+
+4. Reconectar WhatsApp:
+   • Dashboard → "Desconectar"
+   • Esperar 5 segundos
+   • "Conectar WhatsApp"
+   • Escanear QR de nuevo
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📁 ARCHIVOS MODIFICADOS:
+
+   ✅ src/lib/whatsapp-verification-service.ts
+   ✅ src/app/api/auth/forgot-password/route.ts
+   ✨ scripts/test-verification-codes.ts (nuevo)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔒 SEGURIDAD:
+
+   ✓ Códigos de 6 dígitos aleatorios
+   ✓ Expiran en 5-10 minutos
+   ✓ Un solo uso por código
+   ✓ No revela si el usuario existe
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 DOCUMENTACIÓN COMPLETA:
+
+   Ver: CODIGOS_VERIFICACION_WHATSAPP_ARREGLADO.md
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Estado: LISTO PARA USAR
+📅 Fecha: 2 de Noviembre, 2025
+🔧 Versión: 1.0.0
+
+╚══════════════════════════════════════════════════════════════╝

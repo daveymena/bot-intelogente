@@ -1,0 +1,102 @@
+🚀 INTEGRACIÓN DROPI - INICIO RÁPIDO
+=====================================
+
+✅ Tu token de Dropi ya está configurado en .env
+
+📋 PASO 1: Probar la conexión
+------------------------------
+npx tsx scripts/test-dropi.ts
+
+Esto verificará:
+- Conexión con Dropi API
+- Obtención de productos
+- Búsqueda de productos
+- Consulta de órdenes
+
+
+📦 PASO 2: Ver productos en el navegador
+-----------------------------------------
+1. Inicia el servidor: npm run dev
+2. Abre: http://localhost:3000/api/dropi/products
+
+Verás todos los productos disponibles en Dropi
+
+
+🔍 PASO 3: Buscar productos
+----------------------------
+http://localhost:3000/api/dropi/products?q=celular
+
+Busca productos por término
+
+
+🛒 PASO 4: Crear una orden de prueba
+-------------------------------------
+POST http://localhost:3000/api/dropi/orders
+
+Body (JSON):
+{
+  "customer": {
+    "name": "Juan Pérez",
+    "email": "juan@example.com",
+    "phone": "+573001234567",
+    "address": "Calle 123 #45-67",
+    "city": "Bogotá",
+    "state": "Cundinamarca",
+    "zip_code": "110111",
+    "country": "Colombia"
+  },
+  "items": [
+    {
+      "product_id": 123,
+      "quantity": 1,
+      "price": 99.99
+    }
+  ],
+  "payment_method": "nequi"
+}
+
+
+🤖 PASO 5: Integrar con tu bot
+-------------------------------
+Usa el servicio DropiService en tu código:
+
+import { DropiService } from '@/lib/dropi-service'
+
+// Obtener productos
+const products = await DropiService.getProducts()
+
+// Buscar productos
+const results = await DropiService.searchProducts('celular')
+
+// Crear orden
+const order = await DropiService.createOrder(orderData)
+
+// Consultar orden
+const status = await DropiService.getOrder(orderId)
+
+
+📚 DOCUMENTACIÓN COMPLETA
+--------------------------
+Lee DROPI_INTEGRATION.md para:
+- Ejemplos de integración con el bot
+- Flujos completos de venta
+- Sincronización automática
+- Mejores prácticas
+
+
+🔌 ENDPOINTS DISPONIBLES
+-------------------------
+GET  /api/dropi/products          - Todos los productos
+GET  /api/dropi/products?q=...    - Buscar productos
+GET  /api/dropi/products/:id      - Producto específico
+POST /api/dropi/orders            - Crear orden
+GET  /api/dropi/orders            - Listar órdenes
+GET  /api/dropi/orders/:id        - Estado de orden
+POST /api/dropi/sync              - Sincronizar productos
+GET  /api/dropi/sync              - Test conexión
+
+
+✅ TODO LISTO PARA USAR
+========================
+Tu integración con Dropi está completamente configurada.
+Ejecuta el script de prueba y empieza a vender!

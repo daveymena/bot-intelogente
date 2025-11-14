@@ -1,0 +1,95 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║   🔧 ESTADO CONNECTING ATASCADO - SOLUCIÓN                   ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+❌ PROBLEMA:
+   El estado se quedó en CONNECTING de un intento anterior
+
+✅ SOLUCIÓN:
+   Resetear el estado en la base de datos
+
+═══════════════════════════════════════════════════════════════
+  🚀 EJECUTA ESTO AHORA (2 PASOS)
+═══════════════════════════════════════════════════════════════
+
+  1️⃣  Ejecuta el script de reseteo
+      → Doble clic en: resetear-whatsapp.bat
+      → O ejecuta: npx tsx scripts/reset-whatsapp-connection.ts
+
+  2️⃣  Refresca el navegador
+      → Presiona Ctrl + Shift + R
+      → O presiona F5
+
+
+═══════════════════════════════════════════════════════════════
+  ✅ QUÉ VERÁS
+═══════════════════════════════════════════════════════════════
+
+  Después de ejecutar el script:
+
+    🔄 Reseteando conexiones de WhatsApp...
+    ✅ 1 conexiones reseteadas
+    ✅ Todas las conexiones están ahora en estado DISCONNECTED
+    
+    🚀 Ahora puedes intentar conectar de nuevo
+
+  Después de refrescar el navegador:
+
+    Debug: Status = DISCONNECTED, QR = null, Loading = false
+    
+    [Botón: Conectar WhatsApp]  ← Este botón debe aparecer
+    [Botón: Simular Conexión]
+
+
+═══════════════════════════════════════════════════════════════
+  🎯 LUEGO DE RESETEAR
+═══════════════════════════════════════════════════════════════
+
+  1. Haz clic en "Conectar WhatsApp"
+  2. Espera 5-10 segundos
+  3. Debería aparecer el QR
+  4. Escanéalo con tu teléfono
+  5. ¡Listo!
+
+
+═══════════════════════════════════════════════════════════════
+  🐛 SI EL QR NO APARECE
+═══════════════════════════════════════════════════════════════
+
+  Revisa los logs del servidor (terminal):
+  
+  - ¿Aparece el error de bufferUtil.mask?
+    → Lee: SOLUCION_ERROR_BAILEYS.md
+  
+  - ¿Aparece el QR en ASCII en la terminal?
+    → El QR se está generando, espera unos segundos más
+  
+  - ¿No aparece nada?
+    → Verifica que el servidor esté corriendo
+
+
+═══════════════════════════════════════════════════════════════
+  📚 DOCUMENTACIÓN
+═══════════════════════════════════════════════════════════════
+
+  📄 SOLUCION_ESTADO_CONNECTING.md
+     → Explicación completa del problema
+
+  📄 SOLUCION_ERROR_BAILEYS.md
+     → Si aparece error de bufferUtil
+
+  📄 PASOS_SIGUIENTES.txt
+     → Guía general
+
+
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║   🎯 ACCIÓN REQUERIDA:                                        ║
+║                                                               ║
+║   1. Ejecuta: resetear-whatsapp.bat                          ║
+║   2. Refresca el navegador                                   ║
+║   3. Haz clic en "Conectar WhatsApp"                         ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝

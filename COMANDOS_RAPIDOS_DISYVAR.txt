@@ -1,0 +1,100 @@
+=================================================================
+  🚀 COMANDOS RÁPIDOS - DISYVAR DROPSHIPPING
+=================================================================
+
+📦 SCRAPEAR E IMPORTAR TODO (RECOMENDADO)
+-----------------------------------------------------------------
+npx tsx scripts/disyvar-completo.ts
+
+
+📥 SOLO SCRAPEAR PRODUCTOS
+-----------------------------------------------------------------
+npx tsx scripts/scrape-disyvar.ts
+
+
+📦 SOLO IMPORTAR A BASE DE DATOS
+-----------------------------------------------------------------
+npx tsx scripts/import-disyvar.ts
+
+
+🧪 PROBAR PANEL DE INTEGRACIONES
+-----------------------------------------------------------------
+npx tsx scripts/test-payment-integrations-panel.ts
+
+
+🌐 INICIAR SERVIDOR DE DESARROLLO
+-----------------------------------------------------------------
+npm run dev
+
+
+📊 VER PRODUCTOS EN JSON
+-----------------------------------------------------------------
+cat scripts/disyvar-productos.json
+
+
+🔍 VERIFICAR PRODUCTOS EN BD
+-----------------------------------------------------------------
+npx tsx scripts/ver-productos.ts
+
+
+🧹 LIMPIAR DUPLICADOS
+-----------------------------------------------------------------
+npx tsx scripts/limpiar-productos-duplicados.ts
+
+
+=================================================================
+  📚 DOCUMENTACIÓN
+=================================================================
+
+Panel de Integraciones:
+  - PANEL_INTEGRACIONES_COMPLETO.md
+  - USAR_PANEL_INTEGRACIONES.md
+  - RESUMEN_VISUAL_INTEGRACIONES.md
+
+Sistema Disyvar:
+  - DROPSHIPPING_DISYVAR.md
+  - EJECUTAR_DISYVAR_AHORA.md
+
+Resumen General:
+  - RESUMEN_SESION_INTEGRACIONES_DISYVAR.md
+
+
+=================================================================
+  🌐 URLS IMPORTANTES
+=================================================================
+
+Dashboard:           http://localhost:3000
+Catálogo Público:    http://localhost:3000/catalogo
+Tienda:              http://localhost:3000/tienda
+Disyvar (Proveedor): https://disyvar.com.co
+
+
+=================================================================
+  ✅ CHECKLIST DE INICIO
+=================================================================
+
+[ ] 1. Ejecutar scraper de Disyvar
+[ ] 2. Revisar productos en JSON
+[ ] 3. Importar a base de datos
+[ ] 4. Configurar panel de integraciones
+[ ] 5. Agregar márgenes de ganancia
+[ ] 6. Activar productos en tienda
+[ ] 7. Probar proceso de compra
+[ ] 8. Configurar bot de WhatsApp
+[ ] 9. ¡Empezar a vender!
+
+
+=================================================================
+  💡 TIPS RÁPIDOS
+=================================================================
+
+- Ejecuta el scraper máximo 2 veces por semana
+- Agrega 15-25% de margen de ganancia
+- Mejora descripciones con IA
+- Prueba el panel de integraciones antes de producción
+- Mantén backup de los JSON generados
+
+
+=================================================================
+  🎉 ¡TODO LISTO PARA VENDER!
+=================================================================

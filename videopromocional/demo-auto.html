@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Sales Bot Pro - Demo Auto</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+            color: #fff;
+        }
+
+        .fullscreen-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        .screen-content {
+            max-width: 1400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .screen-title {
+            font-size: 4rem;
+            margin-bottom: 30px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        .screen-subtitle {
+            font-size: 2rem;
+            margin-bottom: 50px;
+            opacity: 0.9;
+            animation: slideUp 0.8s ease-out 0.2s both;
+        }
+
+        .screenshot {
+            max-width: 90%;
+            max-height: 60vh;
+            border-radius: 20px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+            animation: zoomIn 0.8s ease-out 0.4s both;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+            animation: slideUp 0.8s ease-out 0.6s both;
+        }
+
+        .feature-item {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid rgba(255,255,255,0.3);
+            font-size: 1.3rem;
+            text-align: left;
+        }
+
+        .feature-item strong {
+            color: #FFD700;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .bonus-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #000;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        .timer-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #25D366 0%, #FFD700 100%);
+            transition: width linear;
+            z-index: 1000;
+        }
+
+        .screen-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            padding: 20px 35px;
+            border-radius: 30px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            z-index: 1000;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="timer-bar" id="timerBar"></div>
+    <div class="screen-counter" id="screenCounter">1 / 10</div>
+
+    <div class="fullscreen-container">
+        <!-- Screen 1 -->
+        <div class="screen active" data-duration="8000">
+            <div class="screen-content">
+                <h1 class="screen-title">📊 Dashboard Principal</h1>
+                <p class="screen-subtitle">Control total desde una interfaz intuitiva</p>
+                <img src="Captura de pantalla 2025-11-01 115218.png" alt="Dashboard" class="screenshot">
+            </div>
+        </div>
+
+        <!-- Screen 2 -->
+        <div class="screen" data-duration="7000">
+            <div class="screen-content">
+                <h1 class="screen-title">📱 Conexión WhatsApp</h1>
+                <p class="screen-subtitle">Conecta tu número en segundos</p>
+                <img src="Captura de pantalla 2025-11-01 115252.png" alt="WhatsApp" class="screenshot">
+            </div>
+        </div>
+
+        <!-- Screen 3 -->
+        <div class="screen" data-duration="8000">
+            <div class="screen-content">
+                <h1 class="screen-title">📦 Gestión de Productos</h1>
+                <p class="screen-subtitle">Administra tu catálogo fácilmente</p>
+                <img src="Captura de pantalla 2025-11-01 115343.png" alt="Products" class="screenshot">
+            </div>
+        </div>
+
+        <!-- Screen 4 -->
+        <div class="screen" data-duration="9000">
+            <div class="screen-content">
+                <h1 class="screen-title">🧠 Multi-Proveedor de IA</h1>
+                <p class="screen-subtitle">Groq, OpenAI, Claude, Gemini y más</p>
+                <img src="Captura de pantalla 2025-11-01 115409.png" alt="AI Config" class="screenshot">
+            </div>
+        </div>
+
+        <!-- Screen 5 -->
+        <div class="screen" data-duration="10000">
+            <div class="screen-content">
+                <h1 class="screen-title">💬 Conversación Inteligente</h1>
+                <p class="screen-subtitle">El bot responde como un humano</p>
+                <img src="Captura de pantalla 2025-11-01 115443.png" alt="Conversation" class="screenshot">
+            </div>
+        </div>
+
+        <!-- Screen 6 -->
+        <div class="screen" data-duration="8000">
+            <div class="screen-content">
+                <h1 class="screen-title">🔍 Búsqueda Inteligente</h1>
+                <p class="screen-subtitle">Encuentra productos por descripción natural</p>
+                <img src="Captura de pantalla 2025-11-01 120520.png" alt="Search" class="screenshot">
+            </div>
+        </div>
+
+        <!-- Screen 7 -->
+        <div class="screen" data-duration="8000">
+            <div class="screen-content">
+                <h1 class="screen-title">💳 Sistema de Pagos</h1>
+                <p class="screen-subtitle">MercadoPago, PayPal, Nequi y más</p>
+                <img src="Captura de pantalla 2025-11-01 120605.png" alt="Payments" class="screenshot">
+            </div>
+        </div>
+
+        <!-- Screen 8 -->
+        <div class="screen" data-duration="9000">
+            <div class="screen-content">
+                <div class="bonus-badge">✨ BONUS INCLUIDO ✨</div>
+                <h1 class="screen-title">🌐 Catálogo Web Gratis</h1>
+                <p class="screen-subtitle">Sin necesidad de comprar dominio</p>
+                <img src="Captura de pantalla 2025-11-01 120637.png" alt="Catalog" class="screenshot">
+            </div>
+        </div>
+
+        <!-- Screen 9 -->
+        <div class="screen" data-duration="9000">
+            <div class="screen-content">
+                <div class="bonus-badge">✨ BONUS INCLUIDO ✨</div>
+                <h1 class="screen-title">🛍️ Tienda Online Gratis</h1>
+                <p class="screen-subtitle">Sin costo de hosting ni dominio</p>
+                <img src="Captura de pantalla 2025-11-01 120859.png" alt="Store" class="screenshot">
+            </div>
+        </div>
+
+        <!-- Screen 10 -->
+        <div class="screen" data-duration="12000">
+            <div class="screen-content">
+                <h1 class="screen-title">🚀 Todo en Uno</h1>
+                <p class="screen-subtitle">La solución completa para automatizar ventas</p>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <strong>🤖 Bot IA 24/7</strong>
+                        Respuestas inteligentes automáticas
+                    </div>
+                    <div class="feature-item">
+                        <strong>📊 Dashboard</strong>
+                        Gestión completa centralizada
+                    </div>
+                    <div class="feature-item">
+                        <strong>🧠 Multi-IA</strong>
+                        Varios proveedores con fallback
+                    </div>
+                    <div class="feature-item">
+                        <strong>💳 Pagos</strong>
+                        Múltiples métodos integrados
+                    </div>
+                    <div class="feature-item">
+                        <strong>🌐 Catálogo Web</strong>
+                        GRATIS - Sin dominio
+                    </div>
+                    <div class="feature-item">
+                        <strong>🛍️ Tienda Online</strong>
+                        GRATIS - Sin hosting
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentScreen = 0;
+        const screens = document.querySelectorAll('.screen');
+        const totalScreens = screens.length;
+        let timerInterval;
+        let timerBarInterval;
+
+        function showScreen(index) {
+            // Hide all screens
+            screens.forEach(screen => screen.classList.remove('active'));
+            
+            // Show current screen
+            screens[index].classList.add('active');
+            
+            // Update counter
+            document.getElementById('screenCounter').textContent = `${index + 1} / ${totalScreens}`;
+            
+            // Get duration for this screen
+            const duration = parseInt(screens[index].dataset.duration) || 8000;
+            
+            // Animate timer bar
+            animateTimerBar(duration);
+            
+            // Schedule next screen
+            clearTimeout(timerInterval);
+            timerInterval = setTimeout(() => {
+                currentScreen = (currentScreen + 1) % totalScreens;
+                showScreen(currentScreen);
+            }, duration);
+        }
+
+        function animateTimerBar(duration) {
+            const timerBar = document.getElementById('timerBar');
+            timerBar.style.transition = 'none';
+            timerBar.style.width = '0%';
+            
+            setTimeout(() => {
+                timerBar.style.transition = `width ${duration}ms linear`;
+                timerBar.style.width = '100%';
+            }, 50);
+        }
+
+        // Start the demo
+        showScreen(0);
+
+        // Keyboard controls (optional)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                currentScreen = (currentScreen + 1) % totalScreens;
+                showScreen(currentScreen);
+            } else if (e.key === 'ArrowLeft') {
+                currentScreen = (currentScreen - 1 + totalScreens) % totalScreens;
+                showScreen(currentScreen);
+            } else if (e.key === ' ') {
+                e.preventDefault();
+                // Pause/resume functionality could be added here
+            }
+        });
+    </script>
+</body>
+</html>

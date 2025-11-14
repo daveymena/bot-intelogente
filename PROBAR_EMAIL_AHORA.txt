@@ -1,0 +1,69 @@
+========================================
+  PROBAR EMAIL DE VERIFICACIÓN AHORA
+========================================
+
+PASO 1: Editar el script de prueba
+-----------------------------------
+1. Abrir: scripts/test-email-verificacion-ahora.ts
+2. Cambiar línea 7:
+   const testEmail = 'TU_EMAIL_AQUI@gmail.com'
+3. Guardar
+
+PASO 2: Ejecutar el script
+---------------------------
+npx tsx scripts/test-email-verificacion-ahora.ts
+
+PASO 3: Ver resultado
+---------------------
+Deberías ver:
+✅ Email enviado exitosamente
+
+O si hay error:
+❌ Error al enviar el email
+
+PASO 4: Revisar tu email
+-------------------------
+1. Abrir tu bandeja de entrada
+2. Buscar email de "Smart Sales Bot"
+3. Si no está, revisar SPAM
+
+========================================
+  SI NO FUNCIONA
+========================================
+
+Opción 1: Verificar API Key
+----------------------------
+1. Ir a: https://resend.com/api-keys
+2. Verificar que la key esté activa
+3. Si no, crear nueva key
+4. Actualizar en .env:
+   RESEND_API_KEY=re_nueva_key
+
+Opción 2: Reiniciar servidor
+-----------------------------
+1. Detener: Ctrl + C
+2. Iniciar: npm run dev
+3. Probar de nuevo
+
+Opción 3: Revisar logs
+-----------------------
+En la consola del servidor buscar:
+📧 Enviando email a...
+✅ Email enviado exitosamente
+O
+❌ Error enviando email
+
+========================================
+  ALTERNATIVA RÁPIDA
+========================================
+
+Si Resend no funciona, usar Gmail:
+
+1. Abrir .env
+2. Agregar:
+   GMAIL_USER=tu-email@gmail.com
+   GMAIL_PASS=tu-contraseña-app
+3. Reiniciar servidor
+4. Probar de nuevo
+
+========================================

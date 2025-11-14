@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Rounded square background -->
+  <rect width="512" height="512" rx="100" fill="url(#grad)"/>
+  
+  <!-- Chat bubble -->
+  <path d="M 256 120 C 180 120 120 170 120 230 C 120 260 135 287 158 307 L 145 360 L 200 347 C 218 357 236 362 256 362 C 332 362 392 312 392 252 C 392 192 332 132 256 132 Z" 
+        fill="white" opacity="0.95"/>
+  
+  <!-- AI nodes -->
+  <g fill="#10b981">
+    <circle cx="256" cy="245" r="16"/>
+    <circle cx="220" cy="200" r="10"/>
+    <circle cx="256" cy="185" r="10"/>
+    <circle cx="292" cy="200" r="10"/>
+    <circle cx="220" cy="290" r="10"/>
+    <circle cx="292" cy="290" r="10"/>
+  </g>
+  
+  <!-- Connection lines -->
+  <g stroke="#3b82f6" stroke-width="3" opacity="0.5" fill="none">
+    <line x1="256" y1="245" x2="220" y2="200"/>
+    <line x1="256" y1="245" x2="256" y2="185"/>
+    <line x1="256" y1="245" x2="292" y2="200"/>
+    <line x1="256" y1="245" x2="220" y2="290"/>
+    <line x1="256" y1="245" x2="292" y2="290"/>
+  </g>
+  
+  <!-- Lightning -->
+  <path d="M 268 210 L 250 245 L 265 245 L 250 280 L 280 245 L 265 245 Z" fill="#fbbf24"/>
+</svg>

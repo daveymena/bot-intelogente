@@ -1,0 +1,47 @@
+🚀 GUÍA RÁPIDA: DEPLOY A EASYPANEL
+
+✅ TU PROYECTO YA ESTÁ LISTO PARA DESARROLLO LOCAL
+   - Base de datos: SQLite
+   - Todo funciona correctamente
+
+📦 CUANDO QUIERAS SUBIR A EASYPANEL:
+
+1️⃣ CAMBIAR A POSTGRESQL
+   npm run db:prod
+
+2️⃣ HACER COMMIT Y PUSH
+   git add .
+   git commit -m "Deploy: PostgreSQL para producción"
+   git push
+
+3️⃣ EN EASYPANEL
+   - Verifica que DATABASE_URL esté configurado:
+     postgresql://postgres:TU_PASSWORD@postgres:5432/botwhatsapp
+   
+   - Click en "Deploy"
+   
+   - Espera a que termine el build
+   
+   - Ejecuta en la terminal de Easypanel:
+     npx prisma db push
+
+4️⃣ VOLVER A DESARROLLO LOCAL
+   npm run db:dev
+   
+   Esto te permite seguir trabajando localmente con SQLite
+
+🎯 COMANDOS ÚTILES:
+
+npm run db:prod    → Cambiar a PostgreSQL (para deploy)
+npm run db:dev     → Cambiar a SQLite (para desarrollo)
+
+⚠️ IMPORTANTE:
+- Siempre ejecuta "npm run db:dev" después de hacer deploy
+- Esto evita conflictos entre tu entorno local y producción
+- SQLite es más rápido para desarrollo
+- PostgreSQL es necesario para Easypanel
+
+📝 NOTAS:
+- El script cambia automáticamente el provider en schema.prisma
+- No necesitas editar archivos manualmente
+- Es seguro cambiar entre SQLite y PostgreSQL

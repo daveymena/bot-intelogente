@@ -1,0 +1,34 @@
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+# Smart Sales Bot Pro - Robots.txt
+User-agent: *
+Allow: /
+Allow: /catalogo
+Allow: /membresias
+Allow: /tienda
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /verify-email
+Disallow: /verify-phone
+Disallow: /reset-password
+Disallow: /forgot-password
+
+# Sitemaps
+Sitemap: https://smartsalesbot.com/sitemap.xml
+
+# Crawl-delay for specific bots
+User-agent: Googlebot
+Crawl-delay: 0
+
+User-agent: Bingbot
+Crawl-delay: 1

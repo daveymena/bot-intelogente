@@ -1,0 +1,105 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║   📋 VARIABLES DE ENTORNO PARA EASYPANEL                     ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+Copia y pega estas variables en tu aplicación en Easypanel:
+(Settings → Environment Variables)
+
+═══════════════════════════════════════════════════════════════
+
+🤖 GROQ (Principal - Ya lo tienes)
+───────────────────────────────────────────────────────────────
+
+GROQ_API_KEY=gsk_tu_api_key_actual
+GROQ_MODEL=llama-3.1-8b-instant
+GROQ_MAX_TOKENS=400
+GROQ_TIMEOUT=15000
+
+
+🌐 OPENROUTER (Respaldo - 50 msg/día GRATIS)
+───────────────────────────────────────────────────────────────
+
+OPENROUTER_API_KEY=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
+OPENROUTER_MODEL=meta-llama/llama-3.2-3b-instruct:free
+
+
+🦙 OLLAMA (Local en Easypanel - Ilimitado)
+───────────────────────────────────────────────────────────────
+
+OLLAMA_BASE_URL=http://ollama:11434
+OLLAMA_MODEL=gemma:2b
+OLLAMA_ENABLED=true
+OLLAMA_TIMEOUT=60000
+
+
+⚙️ SISTEMA DE IA (Configuración del sistema)
+───────────────────────────────────────────────────────────────
+
+AI_FALLBACK_ORDER=groq,openrouter,ollama
+AI_AUTO_MODEL_DETECTION=true
+DEFAULT_AI_PROVIDER=groq
+
+
+═══════════════════════════════════════════════════════════════
+
+💡 EXPLICACIÓN:
+
+   ❓ ¿Por qué no necesito crear servicio para OpenRouter?
+   
+   → OpenRouter es una API externa (como Groq)
+   → Solo necesitas la API key
+   → Se conecta por internet
+   → No requiere servidor local
+
+   ❓ ¿Por qué SÍ necesito crear servicio para Ollama?
+   
+   → Ollama corre en tu servidor
+   → Es una IA local
+   → Necesita su propio contenedor
+   → Por eso usas: http://ollama:11434
+
+═══════════════════════════════════════════════════════════════
+
+🎯 RESUMEN:
+
+   Servicios a crear:
+   ✅ Ollama (contenedor Docker)
+   
+   Solo variables de entorno:
+   ✅ Groq (API externa)
+   ✅ OpenRouter (API externa)
+
+═══════════════════════════════════════════════════════════════
+
+📝 PASOS EN EASYPANEL:
+
+   1️⃣  Crear servicio Ollama:
+       - Add Service → Docker Image
+       - Image: ollama/ollama:latest
+       - Port: 11434
+       - Command: sh -c "ollama serve & sleep 10 && ollama pull gemma:2b && wait"
+
+   2️⃣  En tu aplicación del bot:
+       - Settings → Environment Variables
+       - Copiar y pegar TODAS las variables de arriba
+       - Save
+
+   3️⃣  Redeploy:
+       - Click en "Redeploy"
+       - Esperar 3-5 minutos
+
+   4️⃣  Verificar logs:
+       - Buscar: [AI Multi-Provider] ✅ Groq funcionando
+       - Buscar: [AI Multi-Provider] ✅ OpenRouter funcionando
+       - Buscar: [AI Multi-Provider] ✅ Ollama funcionando
+
+═══════════════════════════════════════════════════════════════
+
+✨ ¡ESO ES TODO!
+
+   No necesitas crear servicios para Groq ni OpenRouter.
+   Solo agregar las variables de entorno.
+
+═══════════════════════════════════════════════════════════════

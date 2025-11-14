@@ -1,0 +1,60 @@
+========================================
+  MEJORAS APLICADAS - PROBAR AHORA
+========================================
+
+✅ 1. ORDENAMIENTO POR PRECIO
+   - Productos se muestran del más económico al más caro
+   - Mejor percepción de variedad
+   - No da impresión de "muy caros"
+
+✅ 2. ENVÍO DE FOTOS ARREGLADO
+   - Nuevo sistema robusto de envío
+   - Validación de URLs
+   - Mejor manejo de errores
+   - Envío automático cuando piden fotos
+
+========================================
+  CÓMO PROBAR
+========================================
+
+1. INICIAR EL BOT:
+   npm run dev
+
+2. PROBAR ORDENAMIENTO:
+   - Pregunta: "Tienes portátiles disponibles?"
+   - Debe mostrar del más barato al más caro
+
+3. PROBAR FOTOS:
+   - Pregunta: "Info de la moto Bajaj"
+   - Luego: "Tienes foto?"
+   - Debe enviar las fotos
+
+4. DIAGNOSTICAR FOTOS (si hay problemas):
+   test-envio-fotos.bat
+
+========================================
+  ARCHIVOS MODIFICADOS
+========================================
+
+✅ src/lib/product-intelligence-service.ts
+   - Ordenamiento por precio
+
+✅ src/lib/baileys-stable-service.ts
+   - Integración de envío de fotos
+
+✅ src/lib/photo-sender-service.ts (NUEVO)
+   - Servicio dedicado para fotos
+
+✅ test-envio-fotos.js (NUEVO)
+   - Diagnóstico de fotos
+
+========================================
+  DOCUMENTACIÓN
+========================================
+
+📄 MEJORAS_BOT_APLICADAS.md
+   - Detalles completos de los cambios
+   - Guía de pruebas
+   - Solución de problemas
+
+========================================

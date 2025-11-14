@@ -1,0 +1,46 @@
+# 🚀 SUBIR CAMBIO DE SCHEMA A EASYPANEL
+
+## El Problema
+
+El schema.prisma en Easypanel todavía tiene `provider = "sqlite"` 
+pero tu código local ya tiene `provider = "postgresql"` ✅
+
+## Solución (3 comandos)
+
+Ejecuta estos comandos en tu terminal:
+
+```bash
+git add prisma/schema.prisma
+git commit -m "fix: cambiar schema a postgresql para producción"
+git push
+```
+
+## Después del Push
+
+1. Ve a Easypanel
+2. Tu app se redesplegaráautomáticamente (o haz click en "Deploy")
+3. Espera 2-3 minutos
+4. Abre la terminal de Easypanel y ejecuta:
+   ```bash
+   npx prisma db push
+   ```
+
+5. Deberías ver:
+   ```
+   ✔ Generated Prisma Client
+   ✔ The database is now in sync with the schema
+   ```
+
+6. Ejecuta para limpiar usuarios:
+   ```bash
+   npx tsx scripts/limpiar-usuarios-excepto-davey.ts
+   ```
+
+7. Prueba el login en:
+   https://bot-whatsapp-what-auto2.sqaoeo.easypanel.host
+
+## ✅ Resultado Esperado
+
+- Login funcionará correctamente
+- Base de datos PostgreSQL conectada
+- Solo quedará tu usuario daveymena16@gmail.com

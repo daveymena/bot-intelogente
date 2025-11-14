@@ -1,0 +1,75 @@
+✅ ACTIVADO: Envío de Fotos y Transcripción de Audio
+====================================================
+
+🎯 FUNCIONALIDADES ACTIVAS:
+
+1. 📸 ENVÍO AUTOMÁTICO DE FOTOS
+   Cliente: "Tienes bolsos?"
+   Bot: "Sí, tengo Bolso antirrobo..."
+   Cliente: "Me envía fotos?"
+   Bot: ✅ Responde Y envía 3 fotos automáticamente
+
+2. 🎤 TRANSCRIPCIÓN AUTOMÁTICA DE AUDIO
+   Cliente: [Envía audio: "Hola, tienes laptops?"]
+   Bot: ✅ Transcribe automáticamente con Groq Whisper
+   Bot: ✅ Responde como si fuera texto
+
+📊 CÓMO FUNCIONA:
+
+FOTOS:
+- Detecta cuando el cliente pide fotos
+- Busca el producto en el contexto de la conversación
+- Envía hasta 3 fotos automáticamente
+- Incluye nombre y precio en la primera foto
+
+AUDIO:
+- Descarga el audio automáticamente
+- Lo transcribe con Groq Whisper (español)
+- Procesa el texto como mensaje normal
+- Responde automáticamente
+
+🧪 PROBAR AHORA:
+
+1. Fotos:
+   - Envía: "Tienes bolsos?"
+   - Luego: "Me envía fotos?"
+   - ✅ Debe enviar fotos automáticamente
+
+2. Audio:
+   - Envía un audio diciendo: "Hola, tienes laptops?"
+   - ✅ Debe transcribir y responder
+
+📝 PATRONES DE SOLICITUD DE FOTOS:
+✅ "Me envía fotos?"
+✅ "Tiene fotos?"
+✅ "Me manda fotos"
+✅ "Me pasa fotos"
+✅ "Puedo ver fotos?"
+✅ "Hay fotos?"
+✅ "Como se ve?"
+
+🔍 LOGS:
+[WhatsApp Web] 📸 Cliente pidió fotos
+[WhatsApp Web] ✅ Producto encontrado: Bolso antirrobo
+[WhatsApp Web] 📸 Enviando 3 foto(s)...
+[WhatsApp Web] ✅ Todas las fotos enviadas
+
+[WhatsApp Web] 🎤 Audio recibido
+[WhatsApp Web] 🎤 Transcribiendo audio...
+[WhatsApp Web] ✅ Audio transcrito: "Hola, tienes laptops?"
+
+⚙️ CONFIGURACIÓN:
+- GROQ_API_KEY debe estar configurado (para transcripción)
+- Fotos deben estar en public/fotos/
+- Máximo 3 fotos por producto
+- Pausa de 1 segundo entre fotos
+
+📚 DOCUMENTACIÓN:
+- SISTEMA_FOTOS_AUDIO_ACTIVO.md (completa)
+- src/lib/media-service.ts (servicio de medios)
+- src/lib/whatsapp-web-service.ts (integración)
+
+---
+Estado: ✅ ACTIVO Y FUNCIONANDO
+Fecha: 2025-11-04
+Servicios: Groq Whisper + WhatsApp Web.js

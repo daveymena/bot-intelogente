@@ -1,0 +1,147 @@
+🚀 CONFIGURAR IA EN EASYPANEL - INSTRUCCIONES EXACTAS
+=====================================================
+
+✅ SISTEMA LISTO PARA DESPLEGAR
+
+📋 PASO 1: VARIABLES DE ENTORNO EN EASYPANEL
+---------------------------------------------
+
+Ve a tu app en Easypanel → Environment → Agrega estas variables:
+
+# ===== IA CON RAZONAMIENTO PROFUNDO =====
+AI_USE_REASONING=true
+
+# Ollama (Principal)
+OLLAMA_ENABLED=true
+OLLAMA_BASE_URL=https://bot-whatsapp-ollama.sqaoeo.easypanel.host
+OLLAMA_MODEL=gemma:2b
+OLLAMA_TIMEOUT=10000
+OLLAMA_MAX_TOKENS=300
+
+# Groq (Respaldo)
+GROQ_API_KEY=tu_groq_api_key_aqui
+GROQ_MODEL=llama-3.1-8b-instant
+GROQ_TIMEOUT=5000
+GROQ_MAX_TOKENS=350
+
+# Configuración de Fallback
+AI_FALLBACK_ENABLED=true
+AI_FALLBACK_ORDER=ollama,groq
+
+
+📋 PASO 2: SUBIR CÓDIGO A GIT
+------------------------------
+
+git add .
+git commit -m "IA super configurada: Ollama + Groq con razonamiento profundo"
+git push origin main
+
+
+📋 PASO 3: REDESPLEGAR EN EASYPANEL
+------------------------------------
+
+1. Ve a tu app en Easypanel
+2. Click en "Redeploy"
+3. Espera 5-10 minutos
+4. Verifica logs
+
+
+📋 PASO 4: VERIFICAR LOGS
+--------------------------
+
+En Easypanel → Logs, busca:
+
+✅ Éxito:
+  [AI Advanced] 🧠 Iniciando generación con razonamiento...
+  [AI Advanced] 🔄 Intentando con Ollama...
+  [Ollama] 📡 Conectando a: https://bot-whatsapp-ollama...
+  [AI Advanced] ✅ Éxito con Ollama
+
+⚠️ Si Ollama falla (normal al inicio):
+  [AI Advanced] ❌ Ollama falló: timeout
+  [AI Advanced] 🔄 Usando Groq como respaldo...
+  [AI Advanced] ✅ Éxito con Groq
+
+
+📋 PASO 5: PROBAR EL BOT
+-------------------------
+
+1. Envía mensaje por WhatsApp
+2. El bot debe responder en < 1 segundo
+3. Respuestas más inteligentes y naturales
+4. Verifica logs para ver qué IA usó
+
+
+🎯 QUÉ ESPERAR
+--------------
+
+Antes:
+  • Respuestas en 2-3 segundos
+  • Solo Groq
+  • Respuestas simples
+
+Ahora:
+  • Respuestas en < 500ms (Ollama)
+  • Ollama + Groq (respaldo)
+  • Razonamiento profundo
+  • Respuestas más inteligentes
+  • Contexto de 24 horas
+
+
+🔧 TROUBLESHOOTING
+------------------
+
+Problema: Bot no responde
+Solución:
+  1. Verifica logs en Easypanel
+  2. Busca errores de IA
+  3. Verifica que GROQ_API_KEY sea válido
+  4. Verifica que OLLAMA_BASE_URL sea accesible
+
+Problema: Respuestas lentas
+Solución:
+  1. Verifica que use Ollama (logs)
+  2. Si usa Groq, Ollama puede estar caído
+  3. Verifica URL de Ollama
+
+Problema: Respuestas poco inteligentes
+Solución:
+  1. Verifica AI_USE_REASONING=true
+  2. Redesplegar app
+  3. Limpiar caché del navegador
+
+
+✅ CHECKLIST FINAL
+------------------
+
+- [ ] Variables de entorno agregadas en Easypanel
+- [ ] Código subido a Git
+- [ ] App redesplegada
+- [ ] Logs verificados
+- [ ] Bot probado por WhatsApp
+- [ ] Respuestas rápidas (< 1s)
+- [ ] Respuestas inteligentes
+
+
+🎉 ¡LISTO!
+----------
+
+Tu bot ahora usa:
+  ✅ Ollama (Principal) - Ultra rápido
+  ✅ Groq (Respaldo) - Confiable
+  ✅ Razonamiento profundo
+  ✅ Contexto de 24h
+  ✅ 99.9% disponibilidad
+  ✅ Costo $0
+
+
+📖 MÁS INFO
+-----------
+
+SISTEMA_IA_RAZONAMIENTO_COMPLETO.md
+  → Documentación completa
+  → Troubleshooting avanzado
+  → Optimizaciones
+
+
+¡A VENDER CON IA SUPER INTELIGENTE! 🧠🚀

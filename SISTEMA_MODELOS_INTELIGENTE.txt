@@ -1,0 +1,180 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║              🤖 SISTEMA DE MODELOS INTELIGENTE CREADO                        ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+✅ ARCHIVOS CREADOS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+   1. src/lib/ai-model-selector.ts
+      → Selector inteligente de modelos
+      → Detecta automáticamente modelos disponibles
+      → Rota entre modelos para evitar rate limits
+
+   2. detectar-modelos-disponibles.js
+      → Script que prueba todos los modelos
+      → Actualiza .env automáticamente
+      → Muestra estadísticas
+
+   3. DETECTAR_MODELOS.bat
+      → Ejecuta la detección automáticamente
+      → Actualiza configuración
+      → Pregunta si reiniciar el bot
+
+
+🚀 CÓMO USAR:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+   Opción 1 - Automático (RECOMENDADO):
+   ────────────────────────────────────────────────────────────────────────
+
+   Doble clic en:
+   
+   ┌─────────────────────────────────────┐
+   │  📄 DETECTAR_MODELOS.bat            │
+   └─────────────────────────────────────┘
+   
+   Esto hará:
+   ✅ Probar todos los modelos de Groq
+   ✅ Detectar cuáles están disponibles
+   ✅ Actualizar .env con el mejor modelo
+   ✅ Preguntar si reiniciar el bot
+
+
+   Opción 2 - Manual:
+   ────────────────────────────────────────────────────────────────────────
+
+   node detectar-modelos-disponibles.js --auto
+
+
+   Opción 3 - Solo ver información:
+   ────────────────────────────────────────────────────────────────────────
+
+   node detectar-modelos-disponibles.js
+
+
+🎯 QUÉ HACE EL SISTEMA:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+   1. Prueba estos modelos en orden:
+      • llama-3.1-8b-instant (Rápido, Alta calidad)
+      • llama-3.2-3b-preview (Rápido, Media calidad)
+      • llama-3.2-1b-preview (Muy rápido, Media calidad)
+      • gemma2-9b-it (Rápido, Alta calidad)
+      • gemma-7b-it (Rápido, Media calidad)
+      • mixtral-8x7b-32768 (Medio, Alta calidad)
+      • llama-3.3-70b-versatile (Lento, Muy alta calidad)
+
+   2. Detecta cuáles están:
+      ✅ Disponibles
+      ⏳ Con rate limit
+      ❌ No disponibles
+
+   3. Actualiza .env con:
+      • Mejor modelo disponible
+      • Modelos de respaldo
+
+
+📊 EJEMPLO DE SALIDA:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+   🔍 Probando modelos de Groq...
+
+   Probando llama-3.1-8b-instant... ✅ Disponible
+   Probando llama-3.2-3b-preview... ✅ Disponible
+   Probando llama-3.2-1b-preview... ✅ Disponible
+   Probando gemma2-9b-it... ✅ Disponible
+   Probando gemma-7b-it... ✅ Disponible
+   Probando mixtral-8x7b-32768... ⏳ Rate limit alcanzado
+   Probando llama-3.3-70b-versatile... ⏳ Rate limit alcanzado
+
+   📊 RESUMEN:
+      ✅ Disponibles: 5
+      ⏳ Rate limit: 2
+      ❌ No disponibles: 0
+
+   🎯 MEJOR MODELO DETECTADO: Llama 3.1 8B Instant
+
+   📝 Actualizando .env...
+      ✅ Backup creado
+      ✅ Archivo .env actualizado
+
+   ✅ CONFIGURACIÓN ACTUALIZADA:
+      Modelo principal: llama-3.1-8b-instant
+      Modelos de respaldo: llama-3.2-3b-preview,llama-3.2-1b-preview
+
+
+✅ VENTAJAS DEL SISTEMA:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+   1. Detección Automática:
+      ✅ No necesitas saber qué modelos existen
+      ✅ Encuentra automáticamente los disponibles
+      ✅ Se adapta a cambios en la API de Groq
+
+   2. Evita Rate Limits:
+      ✅ Usa modelos ligeros que consumen menos tokens
+      ✅ Configura múltiples modelos de respaldo
+      ✅ Rota automáticamente si uno falla
+
+   3. Optimización Automática:
+      ✅ Selecciona el mejor modelo disponible
+      ✅ Balancea velocidad y calidad
+      ✅ Actualiza configuración automáticamente
+
+
+🔄 CUÁNDO EJECUTAR:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+   Ejecuta DETECTAR_MODELOS.bat cuando:
+
+   ✅ Ves errores de rate limit
+   ✅ El bot responde muy lento
+   ✅ Quieres optimizar el consumo de tokens
+   ✅ Groq lanza nuevos modelos
+   ✅ Una vez al día para mantener optimizado
+
+
+💡 INTEGRACIÓN CON EL BOT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+   El sistema ya está integrado en:
+   
+   • ai-multi-provider.ts - Usa los modelos detectados
+   • deep-reasoning-ai-service.ts - Usa el selector inteligente
+   
+   No necesitas hacer nada más, solo ejecutar DETECTAR_MODELOS.bat
+
+
+🎯 RESULTADO ESPERADO:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+   ANTES:
+   ❌ Rate limit con llama-3.3-70b-versatile
+   ❌ 22,901 tokens por consulta
+   ❌ Solo 4-5 consultas antes de agotar límite
+
+   DESPUÉS:
+   ✅ Usa llama-3.1-8b-instant automáticamente
+   ✅ ~2,000 tokens por consulta
+   ✅ 50+ consultas antes de agotar límite
+   ✅ Rota a otros modelos si es necesario
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║              ⚡ EJECUTA: DETECTAR_MODELOS.bat                                ║
+║                                                                              ║
+║              ⏱️ Tiempo: 30 segundos                                          ║
+║                                                                              ║
+║              ✅ Optimización automática                                      ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+Fecha: 5 de Noviembre, 2025
+Estado: ✅ LISTO PARA USAR
+Tiempo de ejecución: 30 segundos
+Impacto: 🚀 ALTO - Evita rate limits automáticamente

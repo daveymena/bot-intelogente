@@ -1,0 +1,40 @@
+⚡ REFERENCIA RÁPIDA: Sistema de Estabilización
+===============================================
+
+🎯 QUÉ SE ARREGLÓ:
+Error "Connection Closed" al enviar mensajes después de reconectar
+
+🔧 CÓMO FUNCIONA:
+Espera 3 segundos después de reconectar antes de permitir envíos
+
+📊 COMANDOS RÁPIDOS:
+
+# Verificar estado
+npx tsx scripts/test-estabilizacion-conexion.ts
+
+# Monitorear en tiempo real
+npx tsx scripts/monitorear-estabilidad-conexion.ts
+
+# Simular reconexión
+npx tsx scripts/simular-reconexion-rapida.ts
+
+# O usar el .bat
+verificar-solucion.bat
+
+🔍 LOGS CORRECTOS:
+✅ "Esperando 3000ms para estabilizar..."
+✅ "Conexión estabilizada y lista"
+✅ "Respuesta enviada exitosamente"
+❌ NO debe aparecer "Connection Closed"
+
+⚙️ AJUSTAR TIEMPO:
+Editar: src/lib/whatsapp-web-service.ts
+Línea: CONNECTION_STABLE_DELAY = 3000
+
+📚 DOCS:
+- SOLUCION_CONNECTION_CLOSED.md (técnica)
+- RESUMEN_SOLUCION_RACE_CONDITION.md (ejecutiva)
+- CHECKLIST_SOLUCION_CONNECTION_CLOSED.md (verificación)
+- COMANDOS_DIAGNOSTICO_CONEXION.txt (comandos)
+
+✅ ESTADO: Listo para probar

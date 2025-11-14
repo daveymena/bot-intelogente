@@ -1,0 +1,778 @@
+// Smart Sales Bot Pro - Enhanced Database Schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Users and Authentication
+model User {
+  id                    String            @id @default(cuid())
+  email                 String            @unique
+  name                  String?
+  phone                 String?
+  password              String            // Hashed password
+  role                  UserRole          @default(USER)
+  membershipType        MembershipType    @default(FREE)
+  membershipEnds        DateTime?
+  trialEnds             DateTime?         // 7-day trial period
+  isActive              Boolean           @default(true)
+  isEmailVerified       Boolean           @default(false)
+  emailVerificationToken String?
+  isPhoneVerified       Boolean           @default(false)
+  phoneVerificationCode String?
+  phoneVerificationExpires DateTime?
+  passwordResetToken    String?
+  passwordResetExpires  DateTime?
+  apiKey                String?           @unique
+  whatsappNumber        String?
+  businessName          String?
+  businessAddress       String?           // Dirección física del negocio
+  businessPhone         String?           // Teléfono de contacto del negocio
+  businessHours         String?           // Horario de atención (JSON)
+  businessDescription   String?           // Descripción del negocio
+  adminNotificationPhone String?          @default("3005560186") // Teléfono para notificaciones
+  lastLoginAt           DateTime?
+  stripeCustomerId      String?           @unique
+  
+  // Subscription fields (for SaaS multi-tenant)
+  subscriptionPlan      String?           @default("free") // free, basic, pro, enterprise
+  subscriptionStatus    String?           @default("trial") // trial, active, expired, cancelled
+  subscriptionExpiresAt DateTime?
+  
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+
+  // Relations
+  conversations         Conversation[]
+  products              Product[]
+  settings              BotSettings?
+  aiPrompts             AIPrompt[]
+  subscriptions         Subscription[]
+  sessions              Session[]
+  whatsappConnection    WhatsAppConnection?
+  payments              Payment[]
+  usageMetrics          UsageMetric[]
+  paymentConfig         PaymentConfig?
+  trainingData          TrainingData[]
+  paymentIntegration    PaymentIntegration?
+  storeSettings         StoreSettings?
+  appointments          Appointment[]
+  salesFlowConfig       SalesFlowConfig?
+  
+  @@map("users")
+}
+
+// Products Management
+model Product {
+  id            String      @id @default(cuid())
+  name          String
+  description   String?
+  price         Float
+  currency      String      @default("COP")
+  category      ProductType
+  subcategory   String?     // Subcategoría específica (ej: "Portátiles", "Monitores", "Cursos de Diseño")
+  store         String?     // Tienda/Proveedor (ej: "MegaComputer", "Hotmart", "Propio")
+  status        ProductStatus @default(AVAILABLE)
+  images        String?     // JSON string array of image URLs
+  tags          String?     // JSON string array of keywords for auto-response
+  autoResponse  String?     // Predefined AI response
+  stock         Int?        // null for digital products
+
+  // 🏷️ Sistema de Tags Inteligentes (SaaS)
+  smartTags     String?     // JSON array of smart tags with metadata
+  tagCategory   String?     // Categoría principal detectada automáticamente
+  searchPriority Int        @default(5) // Prioridad de búsqueda (1-10)
+  autoTagged    Boolean     @default(false) // Si fue etiquetado automáticamente
+  
+  // Links de Pago Manuales (Configurables por producto)
+  paymentLinkMercadoPago String?
+  paymentLinkPayPal      String?
+  paymentLinkCustom      String?  // Cualquier otro link (Hotmart, etc.)
+  
+  userId        String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  // Relations
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversations Conversation[]
+  
+  @@index([category, subcategory])
+  @@index([store])
+  @@map("products")
+}
+
+// Conversations and Messages
+model Conversation {
+  id            String           @id @default(cuid())
+  customerPhone String
+  customerName  String?
+  status        ConversationStatus @default(ACTIVE)
+  lastMessageAt DateTime         @default(now())
+  userId        String
+  productId     String?
+  productName   String?          // Nombre del producto en contexto
+  
+  // Relations
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product       Product?         @relation(fields: [productId], references: [id])
+  messages      Message[]
+  appointments  Appointment[]
+  trainingData  TrainingData[]
+  
+  @@map("conversations")
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  content        String
+  type           MessageType  @default(TEXT)
+  direction      MessageDirection // INCOMING or OUTGOING
+  aiGenerated    Boolean      @default(false)
+  confidence     Float?       // AI confidence score
+  conversationId String
+  createdAt      DateTime     @default(now())
+
+  // Relations
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  
+  @@map("messages")
+}
+
+// AI Prompts Management
+model AIPrompt {
+  id          String     @id @default(cuid())
+  name        String
+  prompt      String
+  type        PromptType
+  isActive    Boolean    @default(true)
+  userId      String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Relations
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("ai_prompts")
+}
+
+// Bot Configuration
+model BotSettings {
+  id                    String   @id @default(cuid())
+  userId                String   @unique
+  businessName          String   @default("Tecnovariedades D&S")
+  businessPhone         String
+  
+  // 📝 Información del Negocio (para respuestas directas)
+  businessHours         String?  // Horarios de atención
+  businessAddress       String?  // Dirección completa
+  whatsappNumber        String?  // Número de WhatsApp
+  shippingInfo          String?  // Información de envíos
+  warrantyInfo          String?  // Política de garantía
+  
+  botPersonality        String?  // Custom bot personality prompt
+  // API Keys de Proveedores de IA
+  groqApiKey           String?
+  openaiApiKey         String?
+  claudeApiKey         String?
+  geminiApiKey         String?
+  mistralApiKey        String?
+  anthropicApiKey      String?  // Claude alternativo
+  openrouterApiKey     String?  // OpenRouter (acceso a múltiples modelos)
+  ollamaBaseUrl        String?  // Para IA local con Ollama
+  ollamaModel          String?  @default("llama3.1")
+  
+  // Configuración de Prioridad de IA
+  preferredAiProvider  String   @default("groq")  // Proveedor preferido
+  aiProviderPriority   String   @default("[\"groq\",\"openai\",\"gemini\",\"claude\",\"mistral\"]") // JSON array
+  enableAutoFallback   Boolean  @default(true)    // Fallback automático si falla
+  
+  // Configuración de Respuestas
+  responseDelay        Int      @default(2) // seconds
+  autoResponseEnabled  Boolean  @default(true)
+  smartWaitingEnabled  Boolean  @default(true)
+  maxTokens            Int      @default(200) // Reducido para respuestas cortas
+  temperature          Float    @default(0.7)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  // Relations
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("bot_settings")
+}
+
+// Training Data for ML
+model TrainingData {
+  id                String        @id @default(cuid())
+  userId            String
+  conversationId    String
+  
+  // Datos de entrada
+  userMessage       String        @db.Text
+  botResponse       String        @db.Text
+  context           Json?         // Historial, producto mencionado, etc.
+  
+  // Metadatos
+  productId         String?
+  productName       String?
+  category          String?       // "producto", "pago", "soporte", etc.
+  
+  // Evaluación
+  qualityScore      Int?          // 1-5
+  wasSuccessful     Boolean?      // ¿Hubo venta o respuesta positiva?
+  userFeedback      String?       // Respuesta del cliente después
+  
+  // Timestamps
+  createdAt         DateTime      @default(now())
+  evaluatedAt       DateTime?
+  
+  // Relaciones
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation      Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  
+  @@map("training_data")
+  @@index([userId, qualityScore])
+  @@index([category, qualityScore])
+  @@index([createdAt])
+}
+
+// User Sessions
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+// Subscriptions
+model Subscription {
+  id                String            @id @default(cuid())
+  userId            String            @unique
+  stripeSubscriptionId String?        @unique
+  stripePriceId     String?
+  status            SubscriptionStatus @default(TRIAL)
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+  cancelAtPeriodEnd Boolean           @default(false)
+  trialStart        DateTime?
+  trialEnd          DateTime?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  // Relations
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}
+
+// WhatsApp Connection
+model WhatsAppConnection {
+  id                String              @id @default(cuid())
+  userId            String              @unique
+  phoneNumber       String              @unique
+  status            ConnectionStatus    @default(DISCONNECTED)
+  qrCode            String?             // Base64 encoded QR
+  qrExpiresAt       DateTime?
+  sessionId         String?             // WhatsApp session ID
+  lastConnectedAt   DateTime?
+  lastMessageAt     DateTime?
+  isConnected       Boolean             @default(false)
+  webhookUrl        String?
+  webhookSecret     String?
+  accessToken       String?             // OAuth token
+  refreshToken      String?             // For token refresh
+  tokenExpiresAt    DateTime?
+  connectionAttempts Int                @default(0)
+  lastError         String?
+  lastErrorAt       DateTime?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  // Relations
+  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("whatsapp_connections")
+}
+
+// Subscription Plans
+model SubscriptionPlan {
+  id                String              @id @default(cuid())
+  name              String
+  description       String
+  price             Float
+  currency          String              @default("USD")
+  interval          PlanInterval
+  intervalCount     Int                 @default(1)
+  stripePriceId     String?             @unique
+  features          String              // JSON array of features
+  isActive          Boolean             @default(true)
+  sortOrder         Int                 @default(0)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  @@map("subscription_plans")
+}
+
+// Payment History
+model Payment {
+  id                String              @id @default(cuid())
+  userId            String
+  subscriptionId    String?
+  stripePaymentId   String?             @unique
+  amount            Float
+  currency          String              @default("USD")
+  status            PaymentStatus        @default(PENDING)
+  paymentMethod     String?
+  description       String?
+  metadata          String?             // JSON metadata
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  // Relations
+  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+// Payment Configuration (Configurable desde Dashboard)
+model PaymentConfig {
+  id                    String   @id @default(cuid())
+  userId                String   @unique
+  
+  // MercadoPago
+  mercadoPagoEnabled    Boolean  @default(false)
+  mercadoPagoPublicKey  String?
+  mercadoPagoAccessToken String?
+  
+  // PayPal
+  paypalEnabled         Boolean  @default(false)
+  paypalClientId        String?
+  paypalClientSecret    String?
+  
+  // Transferencias Bancarias
+  bankTransferEnabled   Boolean  @default(true)
+  bankName              String?  @default("Bancolombia")
+  bankAccountNumber     String?
+  bankAccountType       String?  @default("Ahorros")
+  bankAccountHolder     String?
+  
+  // Nequi
+  nequiEnabled          Boolean  @default(true)
+  nequiPhone            String?  @default("3136174267")
+  
+  // Daviplata
+  daviplataEnabled      Boolean  @default(true)
+  daviplataPhone        String?  @default("3136174267")
+  
+  // Información de Contacto
+  contactPhone          String?  @default("+57 304 274 8687")
+  contactEmail          String?  @default("deinermen25@gmail.com")
+  contactAddress        String?  @default("Centro Comercial El Diamante 2, San Nicolás, Cali")
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  // Relations
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("payment_configs")
+}
+
+// Usage Metrics
+model UsageMetric {
+  id                String              @id @default(cuid())
+  userId            String
+  metricType        MetricType
+  value             Int
+  period            String              // e.g., "2024-01", "2024-01-15"
+  createdAt         DateTime            @default(now())
+
+  // Relations
+  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, metricType, period])
+  @@map("usage_metrics")
+}
+
+// Message Queue (para reconexión automática)
+model MessageQueue {
+  id            String              @id @default(cuid())
+  phoneNumber   String
+  message       String
+  type          String              @default("text") // text, image, audio
+  metadata      String?             // JSON metadata
+  status        QueueStatus         @default(PENDING)
+  attempts      Int                 @default(0)
+  sentAt        DateTime?
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  @@map("message_queue")
+}
+
+// Enums
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum MembershipType {
+  FREE
+  TRIAL
+  BASIC
+  PROFESSIONAL
+  ENTERPRISE
+}
+
+enum ProductType {
+  PHYSICAL
+  DIGITAL
+  SERVICE
+}
+
+enum ProductStatus {
+  AVAILABLE
+  OUT_OF_STOCK
+  DISCONTINUED
+}
+
+enum ConversationStatus {
+  ACTIVE
+  CLOSED
+  ARCHIVED
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  AUDIO
+  VIDEO
+  DOCUMENT
+}
+
+enum MessageDirection {
+  INCOMING
+  OUTGOING
+}
+
+enum PromptType {
+  WELCOME
+  PRODUCT_INFO
+  PRICING
+  SUPPORT
+  CLOSING
+  CUSTOM
+}
+
+enum SubscriptionStatus {
+  TRIAL
+  ACTIVE
+  CANCELED
+  PAST_DUE
+  UNPAID
+}
+
+enum ConnectionStatus {
+  DISCONNECTED
+  CONNECTING
+  CONNECTED
+  ERROR
+  QR_PENDING
+  QR_EXPIRED
+}
+
+enum PlanInterval {
+  DAY
+  WEEK
+  MONTH
+  YEAR
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+  CANCELED
+}
+
+enum MetricType {
+  MESSAGES_SENT
+  MESSAGES_RECEIVED
+  CONVERSATIONS
+  API_CALLS
+  STORAGE_USED
+}
+
+enum QueueStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+
+// Payment Integrations Configuration
+model PaymentIntegration {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Hotmart
+  hotmartEnabled      Boolean  @default(false)
+  hotmartApiKey       String?
+  hotmartProductId    String?
+  hotmartCheckoutUrl  String?
+  hotmartEmail        String?
+  
+  // MercadoPago
+  mercadopagoEnabled      Boolean  @default(false)
+  mercadopagoAccessToken  String?
+  mercadopagoPublicKey    String?
+  mercadopagoEmail        String?
+  
+  // PayPal
+  paypalEnabled       Boolean  @default(false)
+  paypalClientId      String?
+  paypalClientSecret  String?
+  paypalEmail         String?
+  paypalMode          String?  @default("sandbox")
+  
+  // Stripe
+  stripeEnabled          Boolean  @default(false)
+  stripeSecretKey        String?
+  stripePublishableKey   String?
+  stripeWebhookSecret    String?
+  
+  // Nequi/Daviplata (Colombia)
+  nequiEnabled        Boolean  @default(false)
+  nequiPhone          String?
+  nequiName           String?
+  
+  daviplataEnabled    Boolean  @default(false)
+  daviplataPhone      String?
+  daviplataName       String?
+  
+  // Transferencia Bancaria
+  bankTransferEnabled Boolean  @default(false)
+  bankName            String?
+  bankAccountNumber   String?
+  bankAccountType     String?
+  bankAccountHolder   String?
+  bankIdNumber        String?
+  
+  // Configuración General
+  defaultCurrency     String?  @default("COP")
+  autoGenerateLinks   Boolean  @default(true)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Orders - Órdenes de compra
+model Order {
+  id              String       @id @default(cuid())
+  customerName    String
+  customerEmail   String
+  customerPhone   String
+  customerAddress String?
+  customerCity    String?
+  notes           String?
+  items           String       // JSON string de los productos
+  total           Float
+  paymentMethod   String
+  status          String       @default("pending") // pending, paid, completed, cancelled
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  
+  @@map("orders")
+}
+
+// Store Settings - Configuración de la tienda
+model StoreSettings {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  
+  // Información básica
+  storeName   String   @default("Mi Tienda")
+  storeSlogan String?
+  description String?
+  
+  // Branding
+  logo        String?
+  favicon     String?
+  primaryColor String  @default("#10b981") // Verde
+  secondaryColor String @default("#3b82f6") // Azul
+  
+  // Contacto
+  email       String?
+  phone       String?
+  whatsapp    String?
+  address     String?
+  
+  // Redes sociales
+  facebook    String?
+  instagram   String?
+  twitter     String?
+  tiktok      String?
+  
+  // SEO
+  metaTitle   String?
+  metaDescription String?
+  keywords    String?
+  
+  // Configuración
+  currency    String   @default("COP")
+  language    String   @default("es")
+  timezone    String   @default("America/Bogota")
+  
+  // Políticas
+  termsUrl    String?
+  privacyUrl  String?
+  returnPolicy String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+}
+
+// Appointments / Citas
+model Appointment {
+  id                String              @id @default(cuid())
+  userId            String
+  customerPhone     String
+  customerName      String?
+  conversationId    String?
+  status            AppointmentStatus   @default(PENDING_ADMIN_APPROVAL)
+  requestedDate     DateTime?
+  requestedTime     String?
+  confirmedDate     DateTime?
+  confirmedTime     String?
+  adminResponse     String?
+  customerMessage   String?
+  notes             String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  // Relations
+  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation      Conversation?       @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+
+  @@map("appointments")
+}
+
+enum AppointmentStatus {
+  PENDING_ADMIN_APPROVAL  // Cliente solicitó cita, esperando respuesta del admin
+  ADMIN_RESPONDED         // Admin respondió con disponibilidad
+  CONFIRMED               // Cita confirmada
+  CANCELLED               // Cita cancelada
+  COMPLETED               // Cita completada
+}
+
+// Sales Flow Configuration - Configuración de flujos de venta
+model SalesFlowConfig {
+  id                String              @id @default(cuid())
+  userId            String              @unique
+  
+  // Tipo de negocio
+  businessType      BusinessType        @default(ECOMMERCE)
+  
+  // Configuración de dropshipping
+  dropshippingEnabled Boolean           @default(false)
+  deliveryDays      String?             @default("4-5 días hábiles")
+  paymentOnDelivery Boolean             @default(true)
+  
+  // Configuración de tienda física
+  hasPhysicalStore  Boolean             @default(false)
+  storeAddress      String?
+  storeHours        String?             // JSON: { "monday": "9am-7pm", ... }
+  allowPickup       Boolean             @default(false)
+  
+  // Configuración de servicios
+  requiresAppointment Boolean           @default(false)
+  appointmentDuration Int?              @default(60) // minutos
+  advanceBookingDays Int?               @default(7)
+  
+  // Configuración de vendedor/consultor
+  consultationEnabled Boolean           @default(false)
+  consultationPrice Float?
+  consultationDuration Int?             @default(30) // minutos
+  
+  // Mensajes personalizados
+  welcomeMessage    String?
+  priceMessage      String?
+  deliveryMessage   String?
+  confirmationMessage String?
+  
+  // Campos requeridos para captura de datos
+  requireName       Boolean             @default(true)
+  requirePhone      Boolean             @default(true)
+  requireEmail      Boolean             @default(false)
+  requireAddress    Boolean             @default(true)
+  requireCity       Boolean             @default(true)
+  requireNotes      Boolean             @default(false)
+  
+  // Opciones de productos
+  showColors        Boolean             @default(true)
+  showSizes         Boolean             @default(false)
+  showVariants      Boolean             @default(false)
+  
+  // Integración con redes sociales
+  facebookEnabled   Boolean             @default(false)
+  instagramEnabled  Boolean             @default(false)
+  detectSocialMedia Boolean             @default(true)
+  
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  // Relations
+  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sales_flow_configs")
+}
+
+// Enum para tipos de negocio
+enum BusinessType {
+  ECOMMERCE         // Tienda online con productos físicos
+  DROPSHIPPING      // Dropshipping con envío
+  PHYSICAL_STORE    // Tienda física
+  SERVICES          // Servicios profesionales (vendedor, consultor)
+  APPOINTMENTS      // Servicios con citas (clínica, peluquería, spa)
+  DIGITAL_PRODUCTS  // Productos digitales (cursos, megapacks)
+  HYBRID            // Combinación de varios tipos
+}
+
+
+// 🧠 Base de Conocimiento Local - Sistema de Aprendizaje
+model ConversationKnowledge {
+  id            String   @id @default(cuid())
+  userQuery     String   // Pregunta del usuario (normalizada)
+  botResponse   String   @db.Text // Respuesta del bot
+  productId     String?  // ID del producto relacionado (opcional)
+  productName   String?  // Nombre del producto
+  context       String   @default("general") // Contexto de la conversación
+  confidence    Float    @default(0.8) // Confianza de la respuesta (0-1)
+  usageCount    Int      @default(1) // Cuántas veces se ha usado
+  successRate   Float    @default(1.0) // Tasa de éxito (0-1)
+  createdAt     DateTime @default(now())
+  lastUsedAt    DateTime @default(now())
+  
+  @@index([userQuery])
+  @@index([productId])
+  @@index([successRate])
+  @@map("conversation_knowledge")
+}

@@ -1,0 +1,82 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+.env
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# WhatsApp sessions
+auth_sessions/
+.wwebjs_cache/
+.wwebjs_auth/
+
+# Database
+*.db
+*.db-journal
+prisma/dev.db
+prisma/dev.db-journal
+
+# Kiro requests
+.kiro-requests.json
+.kiro-history/
+
+# Temp files
+temp/
+temp-audio/
+
+# Archivos con credenciales (NUNCA subir)
+.env.backup
+.env.easypanel*
+.env.postgres*
+.env.production
+.env.license*
+.z-ai-config
+CREDENCIALES_REALES_LOCAL.txt
+TUS_CREDENCIALES.txt
+VARIABLES_EASYPANEL*.txt
+CAMBIOS_VARIABLES_EASYPANEL.md
+VARIABLES_EASYPANEL_ACTUALIZADAS.txt
+AGREGAR_ESTAS_VARIABLES_EASYPANEL.txt
+ACTUALIZAR_EASYPANEL_VARIABLES.md
+CONFIGURAR_CREDENCIALES_PRODUCCION.md
+VARIABLES_ENTORNO_EASYPANEL_COMPLETAS.env
+
+# API Keys y secretos
+*_API_KEY.txt
+*_SECRET.txt
+*_TOKEN.txt
+COPIAR_ESTO_*.txt
+
+# Archivos de configuración sensibles
+llm-config.json

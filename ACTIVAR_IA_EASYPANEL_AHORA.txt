@@ -1,0 +1,55 @@
+# 🚀 ACTIVAR IA EN EASYPANEL - 5 MINUTOS
+
+## ⚡ PASO 1: GROQ API KEY (2 min)
+
+1. Ir a: https://console.groq.com/keys
+2. Login/Registro (gratis)
+3. Click "Create API Key"
+4. Copiar la key (empieza con gsk_)
+
+## ⚡ PASO 2: EASYPANEL VARIABLES (2 min)
+
+1. Abrir Easypanel
+2. Ir a tu App → Environment
+3. Agregar estas 3 variables MÍNIMAS:
+
+   GROQ_API_KEY=gsk_tu_key_aqui
+   AI_ENABLED=true
+   AI_FALLBACK_ORDER=groq,ollama
+
+4. Guardar
+
+## ⚡ PASO 3: REDESPLEGAR (1 min)
+
+1. Click "Deploy"
+2. Esperar 2 minutos
+3. Ver logs
+
+## ✅ VERIFICAR
+
+Logs deben mostrar:
+[AI Multi-Provider] ✅ Éxito con: groq
+
+## 🎯 SI QUIERES OLLAMA TAMBIÉN
+
+1. Crear servicio "Ollama" en Easypanel
+2. Imagen: ollama/ollama:latest
+3. Puerto: 11434
+4. Terminal: ollama pull llama3.2
+5. Agregar variable: OLLAMA_URL=http://ollama:11434
+
+## 📝 VARIABLES COMPLETAS
+
+Ver archivo: VARIABLES_EASYPANEL_COPIAR.txt
+
+## 🆘 AYUDA
+
+Si no funciona:
+1. Verificar GROQ_API_KEY está bien copiada
+2. Verificar AI_ENABLED=true
+3. Redesplegar
+4. Ver logs para errores
+
+## 🎉 LISTO
+
+Tu bot ya tiene IA funcionando!

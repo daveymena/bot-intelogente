@@ -1,0 +1,130 @@
+╔══════════════════════════════════════════════════════════════╗
+║          🔐 RECUPERAR ACCESO AL DASHBOARD - GUÍA            ║
+╚══════════════════════════════════════════════════════════════╝
+
+🎯 SITUACIÓN:
+   No puedes iniciar sesión porque olvidaste la contraseña
+   Y no puedes recuperarla porque WhatsApp no está conectado
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ SOLUCIÓN RÁPIDA:
+
+1️⃣ EDITAR EL SCRIPT:
+   
+   Abrir: scripts/resetear-password-directo.ts
+   
+   Cambiar estas líneas:
+   
+   const email = 'admin@test.com'  // ⚠️ TU EMAIL AQUÍ
+   const newPassword = 'admin123'   // ⚠️ TU NUEVA CONTRASEÑA
+
+2️⃣ EJECUTAR EL SCRIPT:
+
+   npx tsx scripts/resetear-password-directo.ts
+
+3️⃣ INICIAR SESIÓN:
+
+   • Ir a: http://localhost:3000/login
+   • Email: (el que pusiste en el script)
+   • Password: (la que pusiste en el script)
+   • Click "Iniciar Sesión"
+
+4️⃣ CONECTAR WHATSAPP:
+
+   • Ir al Dashboard
+   • Sección "Conexión WhatsApp"
+   • Click "Conectar WhatsApp"
+   • Escanear código QR con tu teléfono
+   • Esperar a que diga "Conectado"
+
+5️⃣ AHORA SÍ FUNCIONA TODO:
+
+   ✅ Recuperación de contraseña por WhatsApp
+   ✅ Códigos de verificación para registro
+   ✅ Todos los mensajes automáticos
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 EJEMPLO COMPLETO:
+
+1. Editar script:
+   
+   const email = 'deinermen25@gmail.com'
+   const newPassword = 'MiNuevaContraseña123'
+
+2. Ejecutar:
+   
+   npx tsx scripts/resetear-password-directo.ts
+
+3. Ver resultado:
+   
+   ✅ Contraseña actualizada exitosamente
+   
+   ═══════════════════════════════════════════
+   📋 CREDENCIALES DE ACCESO:
+   ═══════════════════════════════════════════
+   Email:    deinermen25@gmail.com
+   Password: MiNuevaContraseña123
+   ═══════════════════════════════════════════
+
+4. Iniciar sesión en http://localhost:3000/login
+
+5. Conectar WhatsApp en el Dashboard
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ IMPORTANTE:
+
+• Este script SOLO funciona si tienes acceso a la base de datos
+• Es para uso de emergencia cuando no puedes iniciar sesión
+• Después de usarlo, CAMBIA la contraseña desde el dashboard
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔄 FLUJO NORMAL (después de recuperar acceso):
+
+1. Usuario olvida contraseña
+   ↓
+2. Va a /forgot-password
+   ↓
+3. Ingresa su teléfono
+   ↓
+4. Recibe código por WhatsApp (porque YA está conectado)
+   ↓
+5. Ingresa código
+   ↓
+6. Cambia contraseña
+   ↓
+7. Inicia sesión con nueva contraseña
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❓ SI NO SABES TU EMAIL:
+
+   Ejecuta el script sin cambiar nada:
+   
+   npx tsx scripts/resetear-password-directo.ts
+   
+   Te mostrará todos los usuarios disponibles:
+   
+   💡 Usuarios disponibles:
+      - admin@test.com (Admin) - Activo
+      - usuario@ejemplo.com (Usuario) - Activo
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 RESUMEN:
+
+1. Editar script con tu email y nueva contraseña
+2. Ejecutar: npx tsx scripts/resetear-password-directo.ts
+3. Iniciar sesión en /login
+4. Conectar WhatsApp en Dashboard
+5. ¡Listo! Ya funciona todo
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Estado: LISTO PARA USAR
+📅 Fecha: 2 de Noviembre, 2025
+
+╚══════════════════════════════════════════════════════════════╝

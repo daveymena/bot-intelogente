@@ -1,0 +1,39 @@
+========================================
+  ✅ SCORING INTELIGENTE LISTO
+========================================
+
+CAMBIO APLICADO:
+✅ Scoring inteligente integrado INLINE
+✅ Sin imports externos (a prueba de autofix)
+✅ 200+ puntos para coincidencias exactas
+
+CÓMO FUNCIONA:
+- Palabra específica en nombre: +50 puntos
+- Palabra en subcategoría: +30 puntos  
+- TODAS las palabras importantes: +100 MEGA BONUS
+
+EJEMPLO:
+Búsqueda: "quiero aprender inglés"
+Resultado: Mega Pack 03 (Inglés) = 190 puntos ✅
+
+PROBAR AHORA:
+
+1. Iniciar bot:
+   npm run dev
+
+2. Enviar por WhatsApp:
+   "quiero aprender inglés"
+
+3. Verificar en consola:
+   [Scoring] 🎯 "ingles" en nombre: +50 puntos
+   [Scoring] 🌟 MEGA BONUS: +100 puntos
+   [Scoring] 📊 Mega Pack 03: 190 puntos
+
+OTROS TESTS:
+- "curso de diseño" → Mega Pack 01 (Diseño)
+- "programación" → Mega Pack 02 (Programación)
+- "piano" → Curso de Piano
+
+========================================
+  🚀 LISTO PARA PROBAR
+========================================

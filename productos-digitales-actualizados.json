@@ -1,0 +1,73 @@
+[
+  {
+    "name": "Moto Bajaj Pulsar NS 160 FI1 (2020)",
+    "description": "🏍️ BAJAJ PULSAR NS 160 FI1 - MODELO 2020\n\n¡Moto en excelentes condiciones, lista para rodar! 🔥\n\n📋 ESPECIFICACIONES:\n🚦 Modelo: 2020\n⚙️ Motor: 160cc Inyección Electrónica (FI1)\n🧾 Papeles: Al día + Traspaso disponible\n🛠️ Mantenimiento: Reciente, todo al día\n💥 Estado: Impecable y muy cuidada\n✅ SOAT y Tecnomecánica vigentes\n\n💰 PRECIOS:\n💵 Precio inicial: $6.500.000 COP\n🎯 Con rebaja: $6.300.000 COP\n🔥 Precio final negociable: $6.000.000 COP\n\n📍 UBICACIÓN:\nCentro Comercial El Diamante 2, San Nicolás, Cali\n\n📞 CONTACTO DIRECTO:\nWhatsApp: +57 304 274 8687\n\n🎨 Perfecta para ciudad y carretera\n⛽ Excelente consumo de combustible\n🔧 Mantenimiento reciente realizado\n\n¡No te pierdas esta oportunidad! 😉",
+    "price": 6500000,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "images": [
+      "/fotos/moto2.jpg",
+      "/fotos/moto 3.jpg",
+      "/fotos/moto4.jpg",
+      "/fotos/moto5.png",
+      "/fotos/moto6.png"
+    ],
+    "tags": [
+      "moto",
+      "bajaj",
+      "pulsar",
+      "ns160",
+      "fi1",
+      "160cc",
+      "inyeccion",
+      "2020",
+      "deportiva",
+      "negociable",
+      "papeles al dia",
+      "traspaso",
+      "cali",
+      "san nicolas"
+    ]
+  },
+  {
+    "name": "Curso Completo de Piano Online",
+    "description": "Aprende piano desde cero con nuestro curso completo online. Incluye 50+ lecciones en video, partituras descargables, y soporte personalizado. Acceso de por vida.",
+    "price": 60000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "images": [
+      "/fotos/curso de piano completo .jpg"
+    ],
+    "tags": [
+      "curso",
+      "piano",
+      "online",
+      "musica",
+      "aprender",
+      "lecciones",
+      "video",
+      "partituras"
+    ]
+  },
+  {
+    "name": "Megapack Completo - Todos los Cursos",
+    "description": "Acceso completo a todos nuestros megapacks y cursos digitales. Más de 1000 recursos educativos.",
+    "price": 150000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "images": [
+      "/fotos/megapack completo.png",
+      "/fotos/megapack2.jpg"
+    ],
+    "tags": [
+      "megapack",
+      "cursos",
+      "digital",
+      "completo",
+      "educacion"
+    ]
+  }
+]

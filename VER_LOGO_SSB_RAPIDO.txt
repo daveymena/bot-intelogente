@@ -1,0 +1,52 @@
+========================================
+  VER LOGO SSB - INSTRUCCIONES RÁPIDAS
+========================================
+
+OPCIÓN 1: HARD REFRESH (30 segundos)
+-------------------------------------
+1. Abrir tu navegador
+2. Ir a: http://localhost:3000
+3. Presionar: Ctrl + Shift + R
+4. ¡Listo! Deberías ver "SSB" en el header
+
+OPCIÓN 2: MODO INCÓGNITO (1 minuto)
+------------------------------------
+1. Presionar: Ctrl + Shift + N
+2. Ir a: http://localhost:3000
+3. Login al dashboard
+4. Ver el logo SSB
+
+OPCIÓN 3: REINICIAR TODO (3 minutos)
+-------------------------------------
+1. Cerrar el servidor (Ctrl + C)
+2. Ejecutar: reiniciar-ver-cambios.bat
+3. Esperar que inicie
+4. Abrir: http://localhost:3000
+5. Hard refresh: Ctrl + Shift + R
+
+========================================
+
+QUÉ DEBERÍAS VER:
+
+ANTES:
+[☰] [🟢] Smart Sales
+          Bot Pro
+
+AHORA:
+[☰] [SSB]
+
+========================================
+
+SI NO SE VE:
+1. F12 (abrir consola)
+2. Click derecho en recargar
+3. "Empty Cache and Hard Reload"
+
+========================================
+
+VERIFICAR EN CÓDIGO:
+El cambio está en:
+src/components/dashboard/main-dashboard.tsx
+Línea 92: SSB
+
+========================================

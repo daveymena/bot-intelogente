@@ -1,0 +1,86 @@
+========================================
+  SOLUCION RAPIDA MEGAPACKS 20,000
+========================================
+
+PROBLEMA:
+42 megapacks de 20,000 COP sin imagen
+o con imagenes diferentes.
+
+NECESITAS:
+Todos con la MISMA imagen (la del cubo).
+
+========================================
+  OPCION 1: AUTOMATICO (RECOMENDADO)
+========================================
+
+Ejecuta:
+  actualizar-megapacks-automatico.bat
+
+Esto:
+✅ Busca la imagen mas comun
+✅ Actualiza TODOS automaticamente
+✅ Listo en 1 minuto
+
+========================================
+  OPCION 2: MANUAL (SI SABES LA URL)
+========================================
+
+1. Edita:
+   scripts/actualizar-megapacks-20mil.ts
+
+2. Cambia la URL:
+   const IMAGEN_MEGAPACK_20MIL = 'TU-URL-AQUI'
+
+3. Ejecuta:
+   actualizar-megapacks-20mil.bat
+
+========================================
+  OPCION 3: SUBIR NUEVA IMAGEN
+========================================
+
+Si no tienes la imagen del cubo:
+
+1. Sube la imagen a:
+   https://postimages.org/
+
+2. Copia la URL directa
+
+3. Usa Opcion 2 con esa URL
+
+========================================
+  VERIFICAR
+========================================
+
+1. Tienda:
+   http://localhost:3000/tienda
+
+2. Busca "megapack"
+
+3. Todos deben tener la misma imagen
+
+4. Bot:
+   "Muestra los megapacks"
+   "Info del Megapack 1"
+
+========================================
+  ARCHIVOS CREADOS
+========================================
+
+✅ actualizar-megapacks-automatico.bat
+   → Actualizacion automatica
+
+✅ actualizar-megapacks-20mil.bat
+   → Actualizacion manual
+
+✅ buscar-imagen-megapack.bat
+   → Ver imagenes actuales
+
+========================================
+  COMANDOS NPM
+========================================
+
+Tambien puedes usar:
+
+npm run actualizar-megapacks
+
+========================================

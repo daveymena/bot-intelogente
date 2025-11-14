@@ -1,0 +1,119 @@
+========================================
+  ACTUALIZAR MEGAPACKS DE 20,000 COP
+  TODOS CON LA MISMA IMAGEN
+========================================
+
+PROBLEMA:
+Los 42 megapacks de 20,000 COP no tienen
+la imagen correcta (la del cubo/caja).
+
+SOLUCION:
+Actualizar TODOS con la misma imagen.
+
+========================================
+  PASO 1: BUSCAR LA IMAGEN CORRECTA
+========================================
+
+Ejecuta:
+  buscar-imagen-megapack.bat
+
+Esto te mostrara:
+- Cuantos megapacks tienen cada imagen
+- Cual es la imagen mas comun
+- La URL de esa imagen
+
+Copia la URL que aparezca como "mas comun"
+
+========================================
+  PASO 2: CONFIGURAR LA URL
+========================================
+
+1. Abre el archivo:
+   scripts/actualizar-megapacks-20mil.ts
+
+2. Busca esta linea:
+   const IMAGEN_MEGAPACK_20MIL = '...'
+
+3. Reemplaza con la URL correcta:
+   const IMAGEN_MEGAPACK_20MIL = 'https://tu-url-correcta.com/cubo.jpg'
+
+4. Guarda el archivo
+
+========================================
+  PASO 3: ACTUALIZAR TODOS
+========================================
+
+Ejecuta:
+  actualizar-megapacks-20mil.bat
+
+Esto va a:
+✅ Buscar todos los megapacks de 20,000
+✅ Actualizar TODOS con la misma imagen
+✅ Mostrar reporte completo
+
+========================================
+  PASO 4: VERIFICAR
+========================================
+
+1. Abre: http://localhost:3000/tienda
+
+2. Busca "megapack"
+
+3. Verifica que TODOS los de 20,000
+   tengan la misma imagen (la del cubo)
+
+4. Prueba el bot:
+   "Muestra los megapacks"
+   "Info del Megapack 1"
+   "Tienes foto?"
+
+========================================
+  SI NO TIENES LA URL DE LA IMAGEN
+========================================
+
+Si no sabes cual es la URL de la imagen
+del cubo/caja:
+
+1. Busca un megapack que SI tenga la
+   imagen correcta en la tienda
+
+2. Inspecciona la imagen (click derecho)
+
+3. Copia la URL de la imagen
+
+4. Usala en el Paso 2
+
+O MEJOR:
+
+1. Sube la imagen del cubo a:
+   https://postimages.org/
+
+2. Copia la URL directa
+
+3. Usala en el Paso 2
+
+========================================
+  COMANDOS RAPIDOS
+========================================
+
+# Buscar imagen actual
+buscar-imagen-megapack.bat
+
+# Actualizar todos
+actualizar-megapacks-20mil.bat
+
+# Ver productos
+npx tsx scripts/ver-productos.ts
+
+========================================
+  RESULTADO ESPERADO
+========================================
+
+Despues de ejecutar:
+
+✅ 42 megapacks de 20,000 COP
+✅ TODOS con la misma imagen
+✅ Imagen del cubo/caja
+✅ Sincronizado en tienda y bot
+
+========================================

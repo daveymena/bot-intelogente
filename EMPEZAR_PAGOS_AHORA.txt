@@ -1,0 +1,141 @@
+🚀 SISTEMA DE PAGOS Y ASISTENTE - INICIO RÁPIDO
+================================================
+
+✅ TODO IMPLEMENTADO Y FUNCIONANDO
+
+
+📋 PASO 1: CONFIGURAR NÚMEROS DE PAGO (2 minutos)
+--------------------------------------------------
+
+Edita: src/lib/payment-link-generator.ts
+
+Línea 28-29:
+private static readonly NEQUI_NUMBER = '3136174267'  ← Tu número
+private static readonly DAVIPLATA_NUMBER = '3136174267'  ← Tu número
+
+Línea 200-204:
+transferencia: {
+  banco: 'Bancolombia',  ← Tu banco
+  cuenta: '12345678901',  ← Tu cuenta
+  titular: 'Tecnovariedades D&S'  ← Tu nombre
+}
+
+
+📋 PASO 2: CONFIGURAR MERCADOPAGO (Opcional - 5 minutos)
+---------------------------------------------------------
+
+1. Ve a: https://www.mercadopago.com.co/developers
+2. Crea una aplicación
+3. Copia tu Access Token
+4. Agrégalo en .env:
+
+MERCADOPAGO_ACCESS_TOKEN=tu_token_aqui
+MERCADOPAGO_PUBLIC_KEY=tu_public_key_aqui
+
+
+📋 PASO 3: CONFIGURAR PAYPAL (Opcional - 5 minutos)
+----------------------------------------------------
+
+1. Ve a: https://developer.paypal.com
+2. Crea una aplicación
+3. Copia Client ID y Secret
+4. Agrégalos en .env:
+
+PAYPAL_CLIENT_ID=tu_client_id_aqui
+PAYPAL_CLIENT_SECRET=tu_secret_aqui
+
+
+📋 PASO 4: PROBAR EL SISTEMA (1 minuto)
+----------------------------------------
+
+npx tsx scripts/test-payment-links.ts
+
+Esto mostrará:
+✅ Links generados para tus productos
+✅ Instrucciones para WhatsApp
+✅ Respuestas según método elegido
+
+
+📋 PASO 5: INICIAR EL SERVIDOR (1 minuto)
+------------------------------------------
+
+npm run dev
+
+Luego:
+1. Abre http://localhost:3000
+2. Verás el botón verde flotante (Asistente)
+3. Haz clic y pregunta: "Cómo configurar pagos?"
+
+
+📋 PASO 6: PROBAR EN WHATSAPP (2 minutos)
+------------------------------------------
+
+1. Conecta WhatsApp (escanea QR)
+2. Envía desde tu teléfono:
+   - "Info del curso de piano"
+   - "Dame el link de pago"
+3. Verás todas las opciones de pago
+
+
+🎯 QUÉ HACE EL SISTEMA:
+-----------------------
+
+💳 PAGOS AUTOMÁTICOS:
+• Genera links de MercadoPago y PayPal
+• Ofrece Nequi/Daviplata
+• Instrucciones de transferencia
+• Respuestas personalizadas por método
+
+🤖 ASISTENTE VIRTUAL:
+• Botón flotante verde en todas las páginas
+• Responde preguntas sobre configuración
+• Guías paso a paso
+• Solución de problemas
+
+
+📊 EJEMPLO DE CONVERSACIÓN:
+---------------------------
+
+Cliente: "Dame el link de pago"
+
+Bot: "💳 MÉTODOS DE PAGO
+     
+     1️⃣ NEQUI: 3136174267
+     2️⃣ TARJETA: https://mpago.li/abc123
+     3️⃣ PAYPAL: https://paypal.com/xyz789
+     4️⃣ TRANSFERENCIA: Bancolombia 12345678901
+     
+     ¿Con cuál método deseas pagar?"
+
+Cliente: "Nequi"
+
+Bot: "✅ PAGO POR NEQUI
+     
+     📱 Número: 3136174267
+     💰 Monto: 60.000 COP
+     
+     Pasos:
+     1. Abre Nequi
+     2. Envía 60.000 COP
+     3. Envía comprobante por aquí
+     
+     ✅ Acceso inmediato"
+
+
+📚 DOCUMENTACIÓN COMPLETA:
+--------------------------
+
+Ver: SISTEMA_COMPLETO_PAGOS_Y_ASISTENTE.md
+
+
+🆘 AYUDA:
+---------
+
+1. Asistente virtual (botón verde flotante)
+2. Documentación en archivos .md
+3. Scripts de prueba en scripts/
+
+
+✅ LISTO PARA USAR
+
+Solo configura tus números y credenciales, ¡y ya está funcionando!

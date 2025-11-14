@@ -1,0 +1,52 @@
+🚀 INSTALAR POSTGRESQL LOCAL - SUPER RÁPIDO
+
+═══════════════════════════════════════════════════════════
+
+OPCIÓN 1: CON DOCKER (Recomendado - 1 comando)
+═══════════════════════════════════════════════════════════
+
+1. Asegúrate de tener Docker Desktop instalado y corriendo
+
+2. Ejecuta este comando:
+
+docker run --name postgres-bot -e POSTGRES_PASSWORD=9feb7a0e7110d6a42e93 -e POSTGRES_DB=botwhatsapp -p 5432:5432 -d postgres:15
+
+3. ¡LISTO! Ya tienes PostgreSQL corriendo
+
+Para detener/iniciar después:
+docker stop postgres-bot
+docker start postgres-bot
+
+═══════════════════════════════════════════════════════════
+
+OPCIÓN 2: SIN DOCKER (Instalación tradicional)
+═══════════════════════════════════════════════════════════
+
+1. Descargar PostgreSQL:
+   https://www.postgresql.org/download/windows/
+
+2. Instalar con estos valores:
+   - Puerto: 5432
+   - Usuario: postgres
+   - Contraseña: 9feb7a0e7110d6a42e93
+
+3. Crear base de datos:
+   - Abrir pgAdmin
+   - Click derecho en "Databases"
+   - Create > Database
+   - Nombre: botwhatsapp
+
+═══════════════════════════════════════════════════════════
+
+DESPUÉS DE INSTALAR (cualquier opción):
+═══════════════════════════════════════════════════════════
+
+Dime "listo" y yo configuraré automáticamente:
+✅ Tu .env con la nueva URL
+✅ El schema.prisma a PostgreSQL
+✅ Prisma Client
+✅ Las tablas en la base de datos
+
+═══════════════════════════════════════════════════════════
+
+¿Tienes Docker instalado? (Sí/No)

@@ -1,0 +1,124 @@
+{
+  "productos": [
+    {
+      "name": "Mega Pack 01: Cursos Diseño Gráfico",
+      "description": "Colección completa de más de 100 cursos profesionales de diseño gráfico. Incluye Adobe Photoshop, Illustrator, InDesign, CorelDRAW, diseño de logos, branding, tipografía, teoría del color y mucho más. Acceso de por vida.",
+      "price": 20000,
+      "category": "Megapacks",
+      "status": "AVAILABLE",
+      "stock": 999,
+      "images": ["https://i.ibb.co/TU-IMAGEN-MEGAPACK-20MIL/megapack-diseno.jpg"],
+      "tags": ["megapack", "diseño", "grafico", "photoshop", "illustrator", "digital", "cursos", "nequi:3042748687", "payco:https://checkout.payco.co/TU-LINK-MEGAPACK-20MIL"]
+    },
+    {
+      "name": "Mega Pack 02: Cursos Programación Web",
+      "description": "Más de 150 cursos de desarrollo web completo. HTML, CSS, JavaScript, React, Node.js, Python, PHP, bases de datos, APIs y frameworks modernos. Desde principiante hasta avanzado.",
+      "price": 20000,
+      "category": "Megapacks",
+      "status": "AVAILABLE",
+      "stock": 999,
+      "images": ["https://i.ibb.co/TU-IMAGEN-MEGAPACK-20MIL/megapack-programacion.jpg"],
+      "tags": ["megapack", "programacion", "web", "javascript", "react", "nodejs", "python", "digital", "cursos", "nequi:3042748687", "payco:https://checkout.payco.co/TU-LINK-MEGAPACK-20MIL"]
+    },
+    {
+      "name": "Mega Pack 03: Cursos Marketing Digital",
+      "description": "Colección de 120+ cursos de marketing digital y redes sociales. SEO, SEM, Facebook Ads, Instagram Marketing, Google Ads, email marketing, copywriting, analítica web y estrategias de contenido.",
+      "price": 20000,
+      "category": "Megapacks",
+      "status": "AVAILABLE",
+      "stock": 999,
+      "images": ["https://i.ibb.co/TU-IMAGEN-MEGAPACK-20MIL/megapack-marketing.jpg"],
+      "tags": ["megapack", "marketing", "digital", "seo", "redes sociales", "publicidad", "cursos", "nequi:3042748687", "payco:https://checkout.payco.co/TU-LINK-MEGAPACK-20MIL"]
+    },
+    {
+      "name": "Mega Pack 04: Cursos Edición de Video",
+      "description": "Más de 100 cursos profesionales de edición de video. Adobe Premiere Pro, After Effects, Final Cut Pro, DaVinci Resolve, animación, efectos especiales, color grading y producción audiovisual.",
+      "price": 20000,
+      "category": "Megapacks",
+      "status": "AVAILABLE",
+      "stock": 999,
+      "images": ["https://i.ibb.co/TU-IMAGEN-MEGAPACK-20MIL/megapack-video.jpg"],
+      "tags": ["megapack", "video", "edicion", "premiere", "after effects", "animacion", "cursos", "nequi:3042748687", "payco:https://checkout.payco.co/TU-LINK-MEGAPACK-20MIL"]
+    },
+    {
+      "name": "Mega Pack 05: Cursos Excel y Office",
+      "description": "Colección completa de cursos de Microsoft Office. Excel avanzado, macros, VBA, Power BI, Word, PowerPoint, Access, automatización y análisis de datos profesional.",
+      "price": 20000,
+      "category": "Megapacks",
+      "status": "AVAILABLE",
+      "stock": 999,
+      "images": ["https://i.ibb.co/TU-IMAGEN-MEGAPACK-20MIL/megapack-excel.jpg"],
+      "tags": ["megapack", "excel", "office", "microsoft", "powerbi", "datos", "cursos", "nequi:3042748687", "payco:https://checkout.payco.co/TU-LINK-MEGAPACK-20MIL"]
+    },
+    {
+      "name": "Mega Pack 06: Cursos Fotografía",
+      "description": "Más de 80 cursos de fotografía profesional. Técnicas de iluminación, composición, retoque fotográfico, Lightroom, fotografía de producto, retrato, paisaje y fotografía comercial.",
+      "price": 20000,
+      "category": "Megapacks",
+      "status": "AVAILABLE",
+      "stock": 999,
+      "images": ["https://i.ibb.co/TU-IMAGEN-MEGAPACK-20MIL/megapack-fotografia.jpg"],
+      "tags": ["megapack", "fotografia", "lightroom", "retoque", "camara", "digital", "cursos", "nequi:3042748687", "payco:https://checkout.payco.co/TU-LINK-MEGAPACK-20MIL"]
+    },
+    {
+      "name": "Mega Pack 07: Cursos Emprendimiento",
+      "description": "Colección de 100+ cursos para emprendedores. Creación de negocios, finanzas, ventas, liderazgo, productividad, dropshipping, e-commerce, Amazon FBA y modelos de negocio digitales.",
+      "price": 20000,
+      "category": "Megapacks",
+      "status": "AVAILABLE",
+      "stock": 999,
+      "images": ["https://i.ibb.co/TU-IMAGEN-MEGAPACK-20MIL/megapack-emprendimiento.jpg"],
+      "tags": ["megapack", "emprendimiento", "negocios", "ventas", "ecommerce", "dropshipping", "cursos", "nequi:3042748687", "payco:https://checkout.payco.co/TU-LINK-MEGAPACK-20MIL"]
+    },
+    {
+      "name": "Mega Pack 08: Cursos Idiomas",
+      "description": "Más de 90 cursos de idiomas. Inglés, francés, alemán, italiano, portugués, chino, japonés. Desde nivel básico hasta avanzado con material audiovisual y ejercicios prácticos.",
+      "price": 20000,
+      "category": "Megapacks",
+      "status": "AVAILABLE",
+      "stock": 999,
+      "images": ["https://i.ibb.co/TU-IMAGEN-MEGAPACK-20MIL/megapack-idiomas.jpg"],
+      "tags": ["megapack", "idiomas", "ingles", "frances", "aleman", "lenguajes", "cursos", "nequi:3042748687", "payco:https://checkout.payco.co/TU-LINK-MEGAPACK-20MIL"]
+    },
+    {
+      "name": "Mega Pack 09: Cursos Música y Audio",
+      "description": "Colección de 110+ cursos de producción musical. FL Studio, Ableton Live, Logic Pro, mezcla, masterización, teoría musical, composición, piano, guitarra y producción de beats.",
+      "price": 20000,
+      "category": "Megapacks",
+      "status": "AVAILABLE",
+      "stock": 999,
+      "images": ["https://i.ibb.co/TU-IMAGEN-MEGAPACK-20MIL/megapack-musica.jpg"],
+      "tags": ["megapack", "musica", "audio", "produccion", "flstudio", "ableton", "cursos", "nequi:3042748687", "payco:https://checkout.payco.co/TU-LINK-MEGAPACK-20MIL"]
+    },
+    {
+      "name": "Mega Pack 10: Cursos 3D y Animación",
+      "description": "Más de 95 cursos de modelado 3D y animación. Blender, Maya, 3ds Max, Cinema 4D, ZBrush, animación de personajes, arquitectura 3D, efectos visuales y renderizado.",
+      "price": 20000,
+      "category": "Megapacks",
+      "status": "AVAILABLE",
+      "stock": 999,
+      "images": ["https://i.ibb.co/TU-IMAGEN-MEGAPACK-20MIL/megapack-3d.jpg"],
+      "tags": ["megapack", "3d", "animacion", "blender", "maya", "modelado", "cursos", "nequi:3042748687", "payco:https://checkout.payco.co/TU-LINK-MEGAPACK-20MIL"]
+    },
+    {
+      "name": "Mega Pack PREMIUM: Colección Completa 40 Megapacks",
+      "description": "🎁 OFERTA ESPECIAL: Todos los 40 megapacks en un solo paquete. Más de 4,000 cursos profesionales en todas las categorías: diseño, programación, marketing, video, fotografía, música, idiomas, emprendimiento, finanzas, salud, fitness y mucho más. Acceso de por vida a todo el contenido. ¡Ahorra más del 90%!",
+      "price": 60000,
+      "category": "Megapacks",
+      "status": "AVAILABLE",
+      "stock": 999,
+      "images": ["https://i.ibb.co/TU-IMAGEN-MEGAPACK-60MIL/megapack-premium-40.jpg"],
+      "tags": ["megapack", "premium", "completo", "40 megapacks", "todos", "coleccion", "oferta", "digital", "cursos", "nequi:3042748687", "payco:https://checkout.payco.co/TU-LINK-MEGAPACK-60MIL"]
+    },
+    {
+      "name": "Moto Bajaj Pulsar NS 160 FI (2020)",
+      "description": "🏍️ Motocicleta deportiva en excelente estado. Motor 160cc con inyección electrónica, frenos ABS, tablero digital completo, luces LED, suspensión deportiva. Ideal para ciudad y carretera. Papeles al día, SOAT vigente, revisión técnico-mecánica. Color negro con detalles rojos. Único dueño, mantenimientos en concesionario oficial. Incluye casco y kit de herramientas. Lista para rodar.",
+      "price": 6500000,
+      "category": "Vehículos",
+      "status": "AVAILABLE",
+      "stock": 1,
+      "images": ["https://i.ibb.co/TU-IMAGEN-MOTO/moto-bajaj-pulsar-ns160.jpg"],
+      "tags": ["moto", "motocicleta", "bajaj", "pulsar", "160cc", "deportiva", "vehiculo", "fisico", "transporte", "whatsapp:+573042748687", "efectivo", "negociable"]
+    }
+  ]
+}

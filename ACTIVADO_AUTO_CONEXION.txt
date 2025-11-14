@@ -1,0 +1,91 @@
+✅ ACTIVADO: Auto-Conexión de WhatsApp
+=======================================
+
+🎯 PROBLEMA RESUELTO:
+Ya NO necesitas hacer clic en "Conectar" cada vez que inicias el servidor.
+WhatsApp se conecta automáticamente al arrancar.
+
+✅ CÓMO FUNCIONA:
+
+1. AL INICIAR EL SERVIDOR:
+   - Espera 5 segundos
+   - Busca usuarios con sesión previa
+   - Reconecta automáticamente
+   - Si tiene sesión válida → Conecta sin QR ✅
+   - Si necesita QR → Lo genera automáticamente 📱
+
+2. VERIFICACIÓN PERIÓDICA (cada 30 segundos):
+   - Detecta conexiones caídas
+   - Reconecta automáticamente
+   - Mantiene WhatsApp siempre activo
+
+3. RECONEXIÓN FORZADA:
+   - API disponible para forzar reconexión
+   - Útil para troubleshooting
+
+📊 FLUJO:
+Servidor inicia → Espera 5s → Busca sesiones → Reconecta → Listo ✅
+
+🔍 LOGS AL INICIAR:
+[Auto-Connect] 🚀 Inicializando sistema de auto-conexión...
+[Auto-Connect] 📱 Encontrados 1 usuario(s) con sesión previa
+[Auto-Connect] 🔄 Reconectando usuario: admin@example.com
+[Baileys] ✅ Conexión establecida
+[Auto-Connect] ✅ Usuario reconectado
+[Auto-Connect] ⏰ Iniciando verificación periódica cada 30s
+[Auto-Connect] ✅ Sistema inicializado
+
+🧪 PROBAR:
+1. Detén el servidor (Ctrl+C)
+2. Inicia el servidor: npm run dev
+3. ✅ WhatsApp debe conectarse automáticamente
+4. Observa los logs de [Auto-Connect]
+
+📊 VERIFICAR ESTADO:
+npx tsx scripts/test-auto-connect.ts
+
+Muestra:
+- Estado del sistema
+- Usuarios con sesiones previas
+- Intervalo de verificación
+
+⚙️ CONFIGURACIÓN:
+- Intervalo de verificación: 30 segundos (configurable)
+- Delay inicial: 5 segundos
+- Reintentos automáticos: Cada 30 segundos
+
+📈 BENEFICIOS:
+✅ NO necesitas abrir el dashboard
+✅ NO necesitas hacer clic en "Conectar"
+✅ Reconexión automática después de reiniciar
+✅ Mantiene conexiones activas
+✅ Alta disponibilidad
+
+💡 CASOS DE USO:
+
+1. REINICIO DEL SERVIDOR:
+   - Servidor reinicia
+   - WhatsApp se conecta solo ✅
+
+2. DESCONEXIÓN TEMPORAL:
+   - WhatsApp se desconecta
+   - Sistema detecta y reconecta ✅
+
+3. PRIMERA VEZ (necesita QR):
+   - Sistema genera QR automáticamente
+   - Escaneas QR en dashboard
+   - Próximos reinicios: auto-conexión sin QR ✅
+
+📝 ARCHIVOS:
+- src/lib/whatsapp-auto-connect.ts (servicio)
+- server.ts (inicialización)
+- src/app/api/whatsapp/auto-connect/route.ts (API)
+- scripts/test-auto-connect.ts (prueba)
+
+📚 DOCUMENTACIÓN:
+- SISTEMA_AUTO_CONEXION_WHATSAPP.md (completa)
+
+---
+Estado: ✅ ACTIVO Y FUNCIONANDO
+Fecha: 2025-11-04
+Próximo reinicio: WhatsApp se conectará automáticamente 🚀

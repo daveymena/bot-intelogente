@@ -1,0 +1,158 @@
+═══════════════════════════════════════════════════════════════
+🚀 CREAR NUEVA APP EN EASYPANEL - PASOS SIMPLES
+═══════════════════════════════════════════════════════════════
+
+ANTES DE EMPEZAR
+────────────────────────────────────────────────────────────────
+
+1. Guarda TODAS las variables de entorno de tu app actual
+   Easypanel → Tu App → Environment → Copiar todo
+
+2. Especialmente estas (CRÍTICAS):
+   ✅ DATABASE_URL
+   ✅ NEXTAUTH_SECRET
+   ✅ GROQ_API_KEY
+   ✅ NEXTAUTH_URL
+   ✅ NEXT_PUBLIC_APP_URL
+
+
+PASO 1: ELIMINAR APP ACTUAL
+────────────────────────────────────────────────────────────────
+
+1. Easypanel → Tu App
+2. Settings (abajo)
+3. Scroll hasta el final
+4. "Delete Application"
+5. Confirmar
+
+⚠️  La base de datos NO se elimina, solo la app
+
+
+PASO 2: CREAR NUEVA APP
+────────────────────────────────────────────────────────────────
+
+1. Easypanel → "+ Create"
+2. "App"
+3. "GitHub"
+4. Selecciona tu repositorio
+5. Rama: main o master
+
+Configuración:
+
+   App Name: smart-sales-bot-pro
+   Build Method: Nixpacks
+   Build Command: npm ci && npm run build
+   Start Command: npm start
+   Port: 3000
+
+
+PASO 3: CONFIGURAR VARIABLES
+────────────────────────────────────────────────────────────────
+
+1. Environment → "Add Variable"
+2. Pega TODAS las variables que guardaste
+
+Mínimo requerido:
+
+DATABASE_URL=postgresql://...
+NEXTAUTH_SECRET=...
+GROQ_API_KEY=gsk_...
+NODE_ENV=production
+PORT=3000
+NEXTAUTH_URL=https://tu-dominio.com
+NEXT_PUBLIC_APP_URL=https://tu-dominio.com
+
+
+PASO 4: DESPLEGAR
+────────────────────────────────────────────────────────────────
+
+1. "Deploy"
+2. Esperar 3-5 minutos
+3. Ver logs en tiempo real
+
+Debe decir:
+✓ Installing dependencies...
+✓ Building Next.js app...
+✓ Build completed
+✓ Server listening on port 3000
+
+
+PASO 5: VERIFICAR
+────────────────────────────────────────────────────────────────
+
+1. Estado debe ser 🟢 Running
+2. Abrir el dominio
+3. Hacer login
+4. Ver que el dashboard carga
+5. Verificar que hay productos
+
+
+PASO 6: DIAGNOSTICAR WHATSAPP
+────────────────────────────────────────────────────────────────
+
+1. Console
+2. Ejecutar:
+
+npx tsx scripts/diagnostico-y-test-qr.ts
+
+3. Esperar 2 minutos
+4. Seguir recomendaciones
+
+
+PASO 7: CONECTAR WHATSAPP
+────────────────────────────────────────────────────────────────
+
+1. Dashboard → "Conectar WhatsApp"
+2. Escanear QR
+3. ✅ Listo
+
+
+SI ALGO FALLA
+────────────────────────────────────────────────────────────────
+
+Build falla:
+→ Verificar que todas las dependencias estén en package.json
+
+App no inicia:
+→ Ver Logs → Buscar error específico
+→ Verificar DATABASE_URL
+
+Login no funciona:
+→ Verificar NEXTAUTH_SECRET (debe ser el mismo)
+
+No hay productos:
+→ Importar: npx tsx scripts/importar-desde-json.ts
+
+
+VENTAJAS DE APP NUEVA
+────────────────────────────────────────────────────────────────
+
+✅ Configuración limpia
+✅ Sin archivos corruptos
+✅ Sin conflictos de sesión
+✅ Build fresco
+✅ Mejor rendimiento
+
+
+TIEMPO ESTIMADO
+────────────────────────────────────────────────────────────────
+
+15-20 minutos total
+
+
+═══════════════════════════════════════════════════════════════
+RESUMEN
+═══════════════════════════════════════════════════════════════
+
+1. Guardar variables de entorno
+2. Eliminar app actual
+3. Crear nueva desde GitHub
+4. Pegar variables
+5. Desplegar
+6. Verificar
+7. Diagnosticar WhatsApp
+8. Conectar
+
+═══════════════════════════════════════════════════════════════
+
+Ver guía completa: CREAR_APP_NUEVA_EASYPANEL.md

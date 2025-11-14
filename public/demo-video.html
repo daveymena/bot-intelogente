@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Sales Bot Pro - Demo Interactiva</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+            color: #333;
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .scene {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .scene.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* Intro Scene */
+        .intro {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+
+        .logo {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .intro h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .intro p {
+            font-size: 1.5rem;
+            opacity: 0.9;
+        }
+
+        /* Installation Scene */
+        .installation {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: white;
+        }
+
+        .terminal {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 2rem;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            width: 80%;
+            max-width: 800px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .terminal-line {
+            margin: 0.5rem 0;
+            opacity: 0;
+            animation: fadeInLine 0.5s forwards;
+        }
+
+        @keyframes fadeInLine {
+            to { opacity: 1; }
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background: #00ff00;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* WhatsApp Connection Scene */
+        .whatsapp-connect {
+            background: white;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-around;
+            padding: 2rem;
+        }
+
+        .phone-mockup {
+            width: 300px;
+            height: 600px;
+            background: #000;
+            border-radius: 30px;
+            padding: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            position: relative;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: #075e54;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .dashboard-preview {
+            width: 600px;
+            height: 500px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 2rem;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .status-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #25d366;
+            animation: pulse 2s infinite;
+        }
+
+        /* Products Scene */
+        .products {
+            background: white;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transform: translateY(50px);
+            opacity: 0;
+            animation: slideUp 0.5s forwards;
+        }
+
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .product-card:nth-child(1) { animation-delay: 0.1s; }
+        .product-card:nth-child(2) { animation-delay: 0.2s; }
+        .product-card:nth-child(3) { animation-delay: 0.3s; }
+        .product-card:nth-child(4) { animation-delay: 0.4s; }
+        .product-card:nth-child(5) { animation-delay: 0.5s; }
+        .product-card:nth-child(6) { animation-delay: 0.6s; }
+
+        .product-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #667eea;
+        }
+
+        .product-card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Chat Scene */
+        .chat-demo {
+            background: #e5ddd5;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+            padding: 2rem;
+        }
+
+        .chat-container {
+            width: 400px;
+            height: 700px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: #075e54;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #25d366;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #e5ddd5;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+            opacity: 0;
+            animation: fadeInMessage 0.5s forwards;
+        }
+
+        @keyframes fadeInMessage {
+            to { opacity: 1; }
+        }
+
+        .message.customer {
+            justify-content: flex-end;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .message.customer .message-bubble {
+            background: #dcf8c6;
+            border-bottom-right-radius: 0;
+        }
+
+        .message.bot .message-bubble {
+            background: white;
+            border-bottom-left-radius: 0;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 1rem;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #999;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        .features-list {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-width: 500px;
+        }
+
+        .features-list h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateX(-30px);
+            animation: slideInLeft 0.5s forwards;
+        }
+
+        @keyframes slideInLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .feature-item:nth-child(1) { animation-delay: 0.2s; }
+        .feature-item:nth-child(2) { animation-delay: 0.4s; }
+        .feature-item:nth-child(3) { animation-delay: 0.6s; }
+        .feature-item:nth-child(4) { animation-delay: 0.8s; }
+        .feature-item:nth-child(5) { animation-delay: 1s; }
+
+        .feature-icon {
+            font-size: 2rem;
+            min-width: 50px;
+        }
+
+        .feature-text h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+            color: #333;
+        }
+
+        .feature-text p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Benefits Scene */
+        .benefits {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .benefits h1 {
+            font-size: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+        }
+
+        .benefit-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            transform: scale(0);
+            animation: popIn 0.5s forwards;
+        }
+
+        @keyframes popIn {
+            to { transform: scale(1); }
+        }
+
+        .benefit-card:nth-child(1) { animation-delay: 0.1s; }
+        .benefit-card:nth-child(2) { animation-delay: 0.2s; }
+        .benefit-card:nth-child(3) { animation-delay: 0.3s; }
+
+        .benefit-number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .benefit-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .benefit-card p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Final CTA Scene */
+        .cta {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+
+        .cta h1 {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            animation: bounce 2s infinite;
+        }
+
+        .cta-button {
+            background: white;
+            color: #11998e;
+            padding: 1.5rem 3rem;
+            border-radius: 50px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite;
+        }
+
+        .cta-info {
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Navigation Controls */
+        .controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        .control-btn {
+            background: rgba(255,255,255,0.9);
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+
+        .control-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 5px;
+            background: #25d366;
+            transition: width 0.5s ease;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <div class="container">
+        <!-- Scene 1: Intro -->
+        <div class="scene intro active" id="scene1">
+            <div class="logo">🤖</div>
+            <h1>Smart Sales Bot Pro</h1>
+            <p>Automatiza tus ventas por WhatsApp con Inteligencia Artificial</p>
+        </div>
+
+        <!-- Scene 2: Installation -->
+        <div class="scene installation" id="scene2">
+            <h1 style="margin-bottom: 2rem; color: #667eea;">Instalación en 3 Pasos</h1>
+            <div class="terminal">
+                <div class="terminal-line" style="animation-delay: 0.5s;">$ git clone https://github.com/tu-repo/smart-sales-bot.git</div>
+                <div class="terminal-line" style="animation-delay: 1.5s;">$ cd smart-sales-bot</div>
+                <div class="terminal-line" style="animation-delay: 2.5s;">$ npm install</div>
+                <div class="terminal-line" style="animation-delay: 3.5s; color: #00ff00;">✓ Instalación completada exitosamente</div>
+                <div class="terminal-line" style="animation-delay: 4.5s;">$ npm run dev</div>
+                <div class="terminal-line" style="animation-delay: 5.5s; color: #00ff00;">✓ Servidor iniciado en http://localhost:3000</div>
+                <div class="terminal-line" style="animation-delay: 6s;"><span class="cursor"></span></div>
+            </div>
+        </div>
+
+        <!-- Scene 3: WhatsApp Connection -->
+        <div class="scene whatsapp-connect" id="scene3">
+            <div class="phone-mockup">
+                <div class="phone-screen">
+                    <div style="color: white; margin-bottom: 2rem; text-align: center;">
+                        <h2>WhatsApp</h2>
+                        <p style="font-size: 0.9rem; opacity: 0.8;">Escanea el código QR</p>
+                    </div>
+                    <div class="qr-code">
+                        <div style="width: 150px; height: 150px; background: #000; display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px;">
+                            <div style="background: white;"></div>
+                            <div style="background: black;"></div>
+                            <div style="background: white;"></div>
+                            <div style="background: black;"></div>
+                            <div style="background: white;"></div>
+                            <div style="background: black;"></div>
+                            <div style="background: white;"></div>
+                            <div style="background: black;"></div>
+                            <div style="background: white;"></div>
+                            <div style="background: black;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="dashboard-preview">
+                <h2 style="color: #667eea; margin-bottom: 2rem;">Dashboard</h2>
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <div>
+                        <h3 style="color: #25d366;">WhatsApp Conectado</h3>
+                        <p style="color: #666; font-size: 0.9rem;">+57 300 123 4567</p>
+                    </div>
+                </div>
+                <div style="background: #f5f5f5; padding: 1.5rem; border-radius: 10px; margin-bottom: 1rem;">
+                    <h4 style="margin-bottom: 0.5rem;">Conversaciones Activas</h4>
+                    <p style="font-size: 2rem; color: #667eea; font-weight: bold;">24</p>
+                </div>
+                <div style="background: #f5f5f5; padding: 1.5rem; border-radius: 10px;">
+                    <h4 style="margin-bottom: 0.5rem;">Mensajes Hoy</h4>
+                    <p style="font-size: 2rem; color: #667eea; font-weight: bold;">156</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 4: Products -->
+        <div class="scene products" id="scene4">
+            <h1 style="margin-bottom: 3rem; color: #667eea;">Importa tus Productos</h1>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-icon">💻</div>
+                    <h3>Laptops</h3>
+                    <p>Importa desde CSV o JSON</p>
+                </div>
+                <div class="product-card">
+                    <div class="product-icon">🏍️</div>
+                    <h3>Motos</h3>
+                    <p>Gestión de inventario</p>
+                </div>
+                <div class="product-card">
+                    <div class="product-icon">📚</div>
+                    <h3>Cursos</h3>
+                    <p>Productos digitales</p>
+                </div>
+                <div class="product-card">
+                    <div class="product-icon">📦</div>
+                    <h3>Megapacks</h3>
+                    <p>Paquetes especiales</p>
+                </div>
+                <div class="product-card">
+                    <div class="product-icon">🎯</div>
+                    <h3>Servicios</h3>
+                    <p>Ofertas personalizadas</p>
+                </div>
+                <div class="product-card">
+                    <div class="product-icon">⚡</div>
+                    <h3>Dropshipping</h3>
+                    <p>Scraping automático</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 5: Chat Demo -->
+        <div class="scene chat-demo" id="scene5">
+            <div class="chat-container">
+                <div class="chat-header">
+                    <div class="chat-avatar">🤖</div>
+                    <div>
+                        <h3>Bot de Ventas</h3>
+                        <p style="font-size: 0.8rem; opacity: 0.8;">En línea</p>
+                    </div>
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Messages will be added dynamically -->
+                </div>
+            </div>
+            <div class="features-list">
+                <h2>IA Inteligente</h2>
+                <div class="feature-item">
+                    <div class="feature-icon">🧠</div>
+                    <div class="feature-text">
+                        <h3>Comprensión Natural</h3>
+                        <p>Entiende preguntas complejas</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-text">
+                        <h3>Recomendaciones</h3>
+                        <p>Sugiere productos relevantes</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">💬</div>
+                    <div class="feature-text">
+                        <h3>Contexto 24h</h3>
+                        <p>Recuerda conversaciones</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎤</div>
+                    <div class="feature-text">
+                        <h3>Audio y Fotos</h3>
+                        <p>Transcripción automática</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">👤</div>
+                    <div class="feature-text">
+                        <h3>Escalamiento</h3>
+                        <p>Detecta cuando necesitas intervenir</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 6: Benefits -->
+        <div class="scene benefits" id="scene6">
+            <h1>Beneficios Reales</h1>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-number">24/7</div>
+                    <h3>Disponibilidad</h3>
+                    <p>Atiende clientes día y noche sin descanso</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-number">10x</div>
+                    <h3>Más Rápido</h3>
+                    <p>Respuestas instantáneas a múltiples clientes</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-number">80%</div>
+                    <h3>Ahorro</h3>
+                    <p>Reduce costos de atención al cliente</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-number">5+</div>
+                    <h3>Proveedores IA</h3>
+                    <p>Groq, OpenAI, Claude, Gemini, Mistral</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-number">∞</div>
+                    <h3>Productos</h3>
+                    <p>Gestiona catálogos ilimitados</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-number">🚀</div>
+                    <h3>Fácil Setup</h3>
+                    <p>Listo en menos de 5 minutos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 7: Final CTA -->
+        <div class="scene cta" id="scene7">
+            <h1>¡Empieza Ahora!</h1>
+            <button class="cta-button" onclick="window.location.reload()">Ver Demo Nuevamente</button>
+            <div class="cta-info">
+                <p>✅ Sin tarjeta de crédito</p>
+                <p>✅ Instalación en 5 minutos</p>
+                <p>✅ Soporte completo en español</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="controls">
+        <button class="control-btn" onclick="previousScene()">◀ Anterior</button>
+        <button class="control-btn" onclick="nextScene()">Siguiente ▶</button>
+        <button class="control-btn" onclick="toggleAutoplay()" id="autoplayBtn">▶ Auto</button>
+    </div>
+
+    <script>
+        let currentScene = 1;
+        const totalScenes = 7;
+        let autoplayInterval = null;
+        let isAutoplay = false;
+
+        function showScene(sceneNumber) {
+            // Hide all scenes
+            document.querySelectorAll('.scene').forEach(scene => {
+                scene.classList.remove('active');
+            });
+
+            // Show current scene
+            const scene = document.getElementById(`scene${sceneNumber}`);
+            scene.classList.add('active');
+
+            // Update progress bar
+            const progress = (sceneNumber / totalScenes) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            // Special handling for chat scene
+            if (sceneNumber === 5) {
+                setTimeout(() => startChatDemo(), 500);
+            }
+
+            currentScene = sceneNumber;
+        }
+
+        function nextScene() {
+            if (currentScene < totalScenes) {
+                showScene(currentScene + 1);
+            } else {
+                showScene(1);
+            }
+        }
+
+        function previousScene() {
+            if (currentScene > 1) {
+                showScene(currentScene - 1);
+            } else {
+                showScene(totalScenes);
+            }
+        }
+
+        function toggleAutoplay() {
+            isAutoplay = !isAutoplay;
+            const btn = document.getElementById('autoplayBtn');
+            
+            if (isAutoplay) {
+                btn.textContent = '⏸ Pausar';
+                autoplayInterval = setInterval(() => {
+                    nextScene();
+                }, 8000); // 8 seconds per scene
+            } else {
+                btn.textContent = '▶ Auto';
+                clearInterval(autoplayInterval);
+            }
+        }
+
+        function startChatDemo() {
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.innerHTML = '';
+
+            const conversation = [
+                { type: 'customer', text: 'Hola, busco una laptop para diseño gráfico', delay: 500 },
+                { type: 'bot', text: '¡Hola! 👋 Claro, te puedo ayudar. ¿Qué presupuesto tienes en mente?', delay: 2000 },
+                { type: 'customer', text: 'Entre 2 y 3 millones', delay: 3500 },
+                { type: 'bot', text: 'Perfecto! Te recomiendo estas opciones:\n\n💻 Lenovo IdeaPad 3 - $2,499,000\n• Intel Core i5\n• 16GB RAM\n• 512GB SSD\n• Pantalla 15.6" Full HD\n\n¿Te gustaría más información?', delay: 5500 },
+                { type: 'customer', text: 'Sí, ¿tiene garantía?', delay: 8000 },
+                { type: 'bot', text: '¡Por supuesto! 🛡️\n\n✅ Garantía de 1 año\n✅ Envío gratis a toda Colombia\n✅ Soporte técnico incluido\n\n¿Te gustaría separarlo?', delay: 9500 }
+            ];
+
+            conversation.forEach(msg => {
+                setTimeout(() => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `message ${msg.type}`;
+                    messageDiv.innerHTML = `
+                        <div class="message-bubble">
+                            ${msg.text.replace(/\n/g, '<br>')}
+                        </div>
+                    `;
+                    chatMessages.appendChild(messageDiv);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, msg.delay);
+            });
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextScene();
+            } else if (e.key === 'ArrowLeft') {
+                previousScene();
+            } else if (e.key === 'Enter') {
+                toggleAutoplay();
+            }
+        });
+
+        // Initialize
+        showScene(1);
+    </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+✅ RAILWAY - OPTIMIZADO PARA 4GB
+
+🎯 Problema:
+❌ Imagen de 5.3 GB (excede límite de 4 GB)
+
+✅ Solución:
+✅ Dockerfile.railway (multi-stage build)
+✅ .dockerignore agresivo
+✅ next.config.ts (standalone mode)
+✅ railway.json (configuración)
+
+📊 Resultado:
+Antes: 5.3 GB ❌
+Después: ~500 MB - 1 GB ✅
+
+🚀 Desplegar:
+
+1. Commit y push:
+   git add .
+   git commit -m "feat: Optimizar para Railway"
+   git push origin main
+
+2. En Railway:
+   - New Project
+   - Deploy from GitHub
+   - Seleccionar repo
+   - Agregar PostgreSQL
+   - Configurar variables de entorno
+
+3. Esperar build (5-10 min)
+
+📖 Ver guía completa:
+DESPLEGAR_RAILWAY.md
+
+✅ LISTO PARA RAILWAY!

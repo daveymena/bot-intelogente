@@ -1,0 +1,155 @@
+🔧 COMANDOS DE DIAGNÓSTICO - CONEXIÓN WHATSAPP
+==============================================
+
+📊 VERIFICAR ESTADO ACTUAL
+---------------------------
+npx tsx scripts/test-estabilizacion-conexion.ts
+
+Muestra:
+- Estado de la sesión (CONNECTED, DISCONNECTED, etc.)
+- Si está lista para enviar (isReady)
+- Tiempo desde última conexión
+- Mensajes en cola (pendientes, enviados, fallidos)
+
+
+🔍 MONITOREAR EN TIEMPO REAL
+-----------------------------
+npx tsx scripts/monitorear-estabilidad-conexion.ts
+
+Actualiza cada 500ms:
+- 🟢 Estado de conexión
+- ✅ Si está lista
+- ⏱️  Tiempo desde conexión
+- ⏳ Tiempo restante para estabilizar
+- 📬 Mensajes en cola
+
+Presiona Ctrl+C para detener
+
+
+🧪 SIMULAR RECONEXIÓN RÁPIDA
+-----------------------------
+npx tsx scripts/simular-reconexion-rapida.ts
+
+Simula el escenario que causaba "Connection Closed":
+- Verifica estado de conexión
+- Intenta enviar mensaje inmediatamente
+- Muestra si el sistema espera correctamente
+- Verifica cola de mensajes
+
+
+🔄 RESETEAR WHATSAPP COMPLETAMENTE
+-----------------------------------
+npx tsx scripts/reset-completo-baileys.ts
+
+Limpia TODO:
+- Cierra conexión actual
+- Elimina archivos de sesión
+- Limpia base de datos
+- Permite empezar desde cero
+
+
+📋 VERIFICAR CONFIGURACIÓN
+---------------------------
+npx tsx scripts/verificar-config-ia.ts
+
+Verifica:
+- Variables de entorno
+- Configuración de IA
+- Credenciales de Groq
+- Estado de servicios
+
+
+🎯 DIAGNOSTICAR PROBLEMAS
+--------------------------
+npx tsx scripts/diagnosticar-bot-completo.ts
+
+Diagnóstico completo:
+- Estado de WhatsApp
+- Configuración de IA
+- Productos en base de datos
+- Conversaciones activas
+- Mensajes recientes
+
+
+📊 VER ESTADÍSTICAS DE COLA
+----------------------------
+# Incluido en test-estabilizacion-conexion.ts
+npx tsx scripts/test-estabilizacion-conexion.ts
+
+
+🔧 COMANDOS ÚTILES DEL SERVIDOR
+--------------------------------
+# Iniciar servidor en desarrollo
+npm run dev
+
+# Ver logs en tiempo real
+# (Los logs se muestran automáticamente en la consola)
+
+# Reiniciar servidor
+# Presiona Ctrl+C y luego npm run dev
+
+
+📝 LOGS IMPORTANTES A OBSERVAR
+-------------------------------
+
+✅ CONEXIÓN EXITOSA:
+[WhatsApp Web] ✅ Conexión establecida
+[WhatsApp Web] ⏳ Esperando 3000ms para estabilizar...
+[WhatsApp Web] ✅ Conexión estabilizada y lista
+
+✅ ENVÍO EXITOSO:
+[WhatsApp Web] 📤 Enviando respuesta...
+[WhatsApp Web] ✅ Respuesta enviada exitosamente
+
+⏳ ESPERANDO ESTABILIZACIÓN:
+[WhatsApp Web] ⏳ Esperando XXXms para que la conexión se estabilice...
+
+📬 MENSAJE ENCOLADO:
+[WhatsApp Web] 📬 WhatsApp desconectado, agregando mensaje a la cola
+
+❌ ERROR (ya no debería pasar):
+[WhatsApp Web] ❌ Error: Connection Closed
+
+
+🎯 FLUJO DE DIAGNÓSTICO RECOMENDADO
+------------------------------------
+
+1. Verificar estado actual:
+   npx tsx scripts/test-estabilizacion-conexion.ts
+
+2. Si hay problemas, monitorear en tiempo real:
+   npx tsx scripts/monitorear-estabilidad-conexion.ts
+
+3. Probar reconexión:
+   - Desconecta WhatsApp Web en tu teléfono
+   - Observa el monitor
+   - Reconecta WhatsApp Web
+   - Verifica que se estabiliza correctamente
+
+4. Si persisten problemas, resetear:
+   npx tsx scripts/reset-completo-baileys.ts
+
+5. Verificar configuración:
+   npx tsx scripts/verificar-config-ia.ts
+
+
+⚙️ AJUSTAR TIEMPO DE ESTABILIZACIÓN
+------------------------------------
+
+Si necesitas cambiar el tiempo de espera (actualmente 3 segundos):
+
+Editar: src/lib/whatsapp-web-service.ts
+Línea: private static readonly CONNECTION_STABLE_DELAY = 3000
+
+Valores recomendados:
+- Desarrollo local: 2000 (2 segundos)
+- Producción estable: 3000 (3 segundos)
+- Conexión inestable: 5000 (5 segundos)
+
+
+📚 DOCUMENTACIÓN COMPLETA
+--------------------------
+- SOLUCION_CONNECTION_CLOSED.md (explicación técnica)
+- RESUMEN_SOLUCION_RACE_CONDITION.md (resumen ejecutivo)
+- ARREGLADO_CONNECTION_CLOSED.txt (resumen simple)
+- PROBAR_SOLUCION_CONNECTION_CLOSED.txt (instrucciones de prueba)

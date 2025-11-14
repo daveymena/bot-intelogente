@@ -1,0 +1,74 @@
+═══════════════════════════════════════════════════════════
+  CÓMO RESETEAR WHATSAPP CUANDO EL QR NO FUNCIONA
+═══════════════════════════════════════════════════════════
+
+🎯 PROBLEMA RESUELTO:
+   - QR pegado o no se genera
+   - Error "Connection Closed"
+   - No puedes conectar después de desconectar
+   - Quieres cambiar de número
+
+═══════════════════════════════════════════════════════════
+
+🚀 SOLUCIÓN RÁPIDA (3 PASOS):
+
+1. Doble clic en:
+   resetear-whatsapp.bat
+
+2. Escribe tu email cuando te lo pida
+
+3. Confirma con "si"
+
+¡LISTO! Ahora puedes conectar WhatsApp desde cero.
+
+═══════════════════════════════════════════════════════════
+
+📝 QUÉ HACE EL RESETEO:
+
+✅ Cierra la conexión actual
+✅ Elimina TODOS los archivos de sesión
+✅ Limpia la base de datos
+✅ Limpia mensajes pendientes
+✅ Deja todo listo para empezar desde cero
+
+═══════════════════════════════════════════════════════════
+
+⏱️ TIEMPO TOTAL: ~15 segundos
+
+   - Reseteo: 2 segundos
+   - Generar nuevo QR: 10 segundos
+   - Escanear QR: 3 segundos
+
+═══════════════════════════════════════════════════════════
+
+💡 CUÁNDO USAR:
+
+❌ El QR no aparece
+❌ El QR se queda pegado
+❌ Error de conexión
+❌ Quieres cambiar de número
+❌ El bot no responde después de conectar
+
+═══════════════════════════════════════════════════════════
+
+🔧 ALTERNATIVA (Línea de Comandos):
+
+npx tsx scripts/resetear-whatsapp-completo.ts tu@email.com
+
+═══════════════════════════════════════════════════════════
+
+✅ DESPUÉS DEL RESETEO:
+
+1. Ve al dashboard
+2. Clic en "Conectar WhatsApp"
+3. Escanea el nuevo QR
+4. ¡Listo!
+
+═══════════════════════════════════════════════════════════
+
+📚 MÁS INFORMACIÓN:
+
+Ver: SOLUCION_QR_PEGADO.md
+Ver: RESETEO_WHATSAPP_IMPLEMENTADO.md
+
+═══════════════════════════════════════════════════════════

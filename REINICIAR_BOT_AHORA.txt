@@ -1,0 +1,70 @@
+========================================
+REINICIAR BOT CON CORRECCIONES
+========================================
+
+SE APLICARON 2 CORRECCIONES CRÍTICAS:
+
+1. ✅ Métodos de pago del producto correcto
+2. ✅ Rotación automática de API keys (8x capacidad)
+
+========================================
+EJECUTAR AHORA:
+========================================
+
+1. DETENER EL SERVIDOR ACTUAL:
+   
+   Presiona: Ctrl+C
+
+
+2. REINICIAR EL SERVIDOR:
+   
+   npm run dev
+
+
+3. VERIFICAR EN LOS LOGS:
+
+   Deberías ver:
+   ✅ "🔑 8 API keys de Groq disponibles"
+   ✅ "✅ Sistema de auto-reconexión iniciado"
+   ✅ "✅ Usuario conectado"
+
+
+4. PROBAR CON WHATSAPP:
+
+   Envía: "Hola"
+   
+   Si ves rate limit, el bot rotará automáticamente:
+   ⚠️ "Rate limit en API key #1, rotando..."
+   🔄 "Rotando a API key #2"
+   ✅ "Respuesta generada"
+
+
+========================================
+QUÉ ESPERAR:
+========================================
+
+✅ El bot responde normalmente
+✅ Si hay rate limit, rota automáticamente
+✅ Los métodos de pago son del producto correcto
+✅ 8x más capacidad (800,000 tokens/día)
+
+
+========================================
+SI HAY PROBLEMAS:
+========================================
+
+1. Verifica que el servidor se reinició:
+   - Debes ver "🔑 8 API keys disponibles"
+
+2. Si sigue con rate limit en todas las keys:
+   - Espera 10 minutos
+   - Las keys se resetean automáticamente
+
+3. Revisa los logs para ver qué key está usando:
+   - "Rotando a API key #X"
+
+
+========================================
+FECHA: 2025-11-11
+ESTADO: LISTO PARA REINICIAR
+========================================

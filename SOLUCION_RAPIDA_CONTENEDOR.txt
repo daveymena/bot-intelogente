@@ -1,0 +1,82 @@
+═══════════════════════════════════════════════════════════════
+🚨 ERROR: Container is not running
+═══════════════════════════════════════════════════════════════
+
+PROBLEMA
+────────────────────────────────────────────────────────────────
+Tu aplicación está DETENIDA en Easypanel.
+No puedes ejecutar comandos hasta que esté corriendo.
+
+
+SOLUCIÓN INMEDIATA
+────────────────────────────────────────────────────────────────
+
+1. Ve a Easypanel Dashboard
+2. Selecciona tu aplicación
+3. Haz clic en el botón "START" o "RESTART"
+4. Espera 30-60 segundos
+5. Verifica que el estado sea 🟢 Running
+
+
+VERIFICAR ESTADO
+────────────────────────────────────────────────────────────────
+
+En Easypanel, el estado debe ser:
+🟢 Running  ← CORRECTO
+🔴 Stopped  ← INCORRECTO (iniciar)
+🟡 Starting ← ESPERAR
+🔴 Failed   ← VER LOGS
+
+
+SI NO INICIA
+────────────────────────────────────────────────────────────────
+
+1. Ve a: Tu App → Logs
+2. Busca errores en las últimas líneas
+3. Errores comunes:
+
+   ❌ "Cannot find module"
+      → Rebuild: Deploy → Rebuild
+
+   ❌ "ECONNREFUSED postgresql"
+      → Verificar DATABASE_URL en Environment
+
+   ❌ "Port already in use"
+      → Recreate Container en Settings
+
+   ❌ "Out of memory"
+      → Aumentar memoria en Settings → Resources
+
+
+DESPUÉS DE INICIAR
+────────────────────────────────────────────────────────────────
+
+Una vez que esté 🟢 Running:
+
+1. Ve a: Tu App → Console
+2. Ejecuta: npx tsx scripts/diagnostico-y-test-qr.ts
+3. Espera 2 minutos
+4. Sigue las recomendaciones
+
+
+OPCIÓN RÁPIDA: RECREAR CONTENEDOR
+────────────────────────────────────────────────────────────────
+
+Si no inicia después de varios intentos:
+
+1. Stop la aplicación
+2. Settings → Advanced → Recreate Container
+3. Confirmar
+4. Esperar
+5. Start la aplicación
+
+
+═══════════════════════════════════════════════════════════════
+RESUMEN
+═══════════════════════════════════════════════════════════════
+
+1. Easypanel → Tu App → START
+2. Esperar a 🟢 Running
+3. Console → npx tsx scripts/diagnostico-y-test-qr.ts
+
+═══════════════════════════════════════════════════════════════

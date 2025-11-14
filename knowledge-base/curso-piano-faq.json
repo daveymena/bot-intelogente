@@ -1,0 +1,142 @@
+{
+  "producto": "Curso Completo de Piano Online",
+  "productId": "cmhpw941q0000kmp85qvjm0o5-curso-completo-de-piano-online",
+  "categoria": "DIGITAL",
+  "precio": 60000,
+  "linkPago": "https://pay.hotmart.com/I95497720H?checkoutMode=2&bid=1760738599205",
+  "faqs": [
+    {
+      "id": 1,
+      "pregunta": "¿De qué trata el curso de Piano Profesional Completo?",
+      "keywords": ["trata", "sobre", "qué es", "contenido", "curso"],
+      "respuesta": "🎹 Es un curso 100% en línea que te enseña a tocar el piano desde cero hasta nivel profesional, paso a paso, aunque nunca hayas tocado antes. Incluye clases en video, ejercicios guiados y acompañamiento práctico para que aprendas con confianza y a tu ritmo."
+    },
+    {
+      "id": 2,
+      "pregunta": "¿Necesito tener piano o teclado para empezar?",
+      "keywords": ["necesito piano", "necesito teclado", "sin piano", "sin teclado", "instrumento"],
+      "respuesta": "No necesariamente 😊 Puedes comenzar aprendiendo teoría, digitación y lectura con un piano virtual o con un teclado básico (de 61 teclas o más). Luego, cuando avances, podrás aplicar todo en cualquier instrumento real 🎶"
+    },
+    {
+      "id": 3,
+      "pregunta": "¿Puedo aprender aunque nunca haya tocado un instrumento?",
+      "keywords": ["principiante", "nunca tocado", "desde cero", "sin experiencia", "novato"],
+      "respuesta": "¡Claro que sí! 🙌 Está diseñado para principiantes absolutos, explicando desde cómo sentarte correctamente hasta cómo leer partituras y tocar tus primeras canciones. Muchos alumnos empezaron desde cero y hoy tocan temas completos."
+    },
+    {
+      "id": 4,
+      "pregunta": "¿El curso también sirve para nivel intermedio o avanzado?",
+      "keywords": ["intermedio", "avanzado", "ya sé", "tengo experiencia", "nivel"],
+      "respuesta": "Sí 🎼 Si ya tienes base, puedes saltar los módulos iniciales y entrar directamente en los temas de armonía moderna, improvisación y repertorio avanzado. El contenido se adapta a tu ritmo y nivel."
+    },
+    {
+      "id": 5,
+      "pregunta": "¿Cuánto dura el curso?",
+      "keywords": ["duración", "cuánto dura", "tiempo", "semanas", "meses"],
+      "respuesta": "El curso tiene más de 76 lecciones en video, organizadas en módulos. En promedio, los alumnos avanzan en 8 a 12 semanas, pero puedes hacerlo a tu ritmo, sin horarios fijos ⏰"
+    },
+    {
+      "id": 6,
+      "pregunta": "¿Cuánto tiempo tengo acceso al curso?",
+      "keywords": ["acceso", "cuánto tiempo", "vencimiento", "caducidad", "por vida"],
+      "respuesta": "¡Acceso de por vida! 🔓 Una vez te inscribes, puedes entrar las veces que quieras, sin límite de tiempo ni mensualidades."
+    },
+    {
+      "id": 7,
+      "pregunta": "¿Puedo ver las clases desde el celular o tablet?",
+      "keywords": ["celular", "móvil", "tablet", "dispositivo", "teléfono"],
+      "respuesta": "Sí 📱 Puedes acceder desde tu celular, tablet o computadora. Solo necesitas conexión a internet para ver las clases, o puedes descargarlas para verlas sin conexión."
+    },
+    {
+      "id": 8,
+      "pregunta": "¿Qué aprenderé exactamente en el curso?",
+      "keywords": ["aprenderé", "contenido", "temas", "módulos", "incluye"],
+      "respuesta": "🎵 Desde el primer módulo aprenderás:\n\n• Lectura musical y digitación correcta\n• Acordes, escalas y ritmos\n• Improvisación y acompañamientos\n• Cómo tocar canciones reales paso a paso\n\nY al final, dominarás piezas completas en varios estilos: pop, clásico, balada, jazz, etc."
+    },
+    {
+      "id": 9,
+      "pregunta": "¿Las clases son en vivo o grabadas?",
+      "keywords": ["en vivo", "grabadas", "horario", "directo", "streaming"],
+      "respuesta": "Son clases grabadas en alta calidad, explicadas paso a paso. Así puedes pausar, retroceder y practicar cuando quieras, sin depender de horarios 🎬"
+    },
+    {
+      "id": 10,
+      "pregunta": "¿Recibiré algún certificado al finalizar?",
+      "keywords": ["certificado", "diploma", "título", "acreditación"],
+      "respuesta": "Sí 🎓 Al completar el curso obtienes tu Certificado de Finalización, que puedes incluir en tu hoja de vida o portafolio musical."
+    },
+    {
+      "id": 11,
+      "pregunta": "¿Quién enseña el curso?",
+      "keywords": ["profesor", "instructor", "maestro", "quién enseña", "docente"],
+      "respuesta": "El curso fue creado por un pianista profesional con más de 10 años de experiencia en docencia y conciertos, especializado en formación para principiantes y músicos autodidactas. Su método es progresivo, fácil de seguir y probado por miles de alumnos."
+    },
+    {
+      "id": 12,
+      "pregunta": "¿Tiene garantía o devolución si no me gusta?",
+      "keywords": ["garantía", "devolución", "reembolso", "devolver", "no me gusta"],
+      "respuesta": "Sí 😌 Cuenta con garantía total de 7 días. Si no te gusta el curso o no cumple tus expectativas, puedes solicitar reembolso completo sin preguntas."
+    },
+    {
+      "id": 13,
+      "pregunta": "¿Qué pasa si no tengo tiempo todos los días?",
+      "keywords": ["tiempo", "ocupado", "poco tiempo", "minutos", "constancia"],
+      "respuesta": "No hay problema ⏳ El curso se adapta a ti. Puedes avanzar a tu ritmo, incluso practicando 15 minutos al día. Lo importante es la constancia, no la velocidad 💪"
+    },
+    {
+      "id": 14,
+      "pregunta": "¿Cómo se realiza el pago?",
+      "keywords": ["pago", "pagar", "cómo comprar", "métodos de pago"],
+      "respuesta": "El pago es 100% seguro a través de Hotmart, con distintas opciones:\n\n💳 Tarjeta de crédito o débito\n🏦 Transferencia\n💵 Pago en efectivo (según tu país)\n\n👉 Haz tu pago aquí: https://pay.hotmart.com/I95497720H?checkoutMode=2&bid=1760738599205"
+    },
+    {
+      "id": 15,
+      "pregunta": "¿Cuál es el precio actual del curso?",
+      "keywords": ["precio", "costo", "valor", "cuánto cuesta", "cuánto vale"],
+      "respuesta": "El curso tiene un precio promocional de 60.000 COP con acceso de por vida y todas las actualizaciones gratis 🎁\n\n👉 Compra aquí: https://pay.hotmart.com/I95497720H?checkoutMode=2&bid=1760738599205"
+    },
+    {
+      "id": 16,
+      "pregunta": "¿Puedo pagar en mi moneda local?",
+      "keywords": ["moneda", "divisa", "país", "internacional", "dólares"],
+      "respuesta": "Sí 🌎 Hotmart adapta el precio automáticamente a tu moneda local y acepta distintos métodos de pago según tu país."
+    },
+    {
+      "id": 17,
+      "pregunta": "¿Qué pasa después de pagar?",
+      "keywords": ["después de pagar", "acceso", "cómo entrar", "login", "contraseña"],
+      "respuesta": "Una vez realizado el pago ✅ recibirás un correo con tus datos de acceso y contraseña para entrar a la plataforma. Desde ese momento podrás ver todas las clases sin restricciones."
+    },
+    {
+      "id": 18,
+      "pregunta": "¿Ofrecen soporte o ayuda durante el curso?",
+      "keywords": ["soporte", "ayuda", "dudas", "preguntas", "apoyo"],
+      "respuesta": "Sí 💬 Tendrás soporte directo del equipo y del profesor por correo o dentro de la plataforma. Si te atascas o tienes dudas, te ayudarán rápidamente."
+    },
+    {
+      "id": 19,
+      "pregunta": "¿Puedo regalar el curso a otra persona?",
+      "keywords": ["regalar", "regalo", "otra persona", "gift", "obsequio"],
+      "respuesta": "¡Sí, excelente idea! 🎁 Puedes comprarlo con tus datos y luego enviar el acceso a quien quieras. Solo avísanos para actualizar el correo del alumno."
+    },
+    {
+      "id": 20,
+      "pregunta": "¿Por qué debería elegir este curso y no otro?",
+      "keywords": ["por qué", "ventajas", "beneficios", "diferencia", "mejor"],
+      "respuesta": "Porque combina tres cosas que pocos ofrecen:\n\n✅ Método probado paso a paso\n✅ Resultados reales desde la primera semana\n✅ Acceso ilimitado y soporte humano\n\nEs una inversión pequeña que puede abrirte una pasión o una carrera musical completa 🎹🔥"
+    }
+  ],
+  "informacionAdicional": {
+    "lecciones": "76+ lecciones en video HD",
+    "duracion": "19 horas de contenido",
+    "recursos": "157 recursos descargables",
+    "articulos": "34 artículos complementarios",
+    "acceso": "De por vida",
+    "dispositivos": "Celular, tablet, TV, computadora",
+    "garantia": "7 días de garantía total",
+    "certificado": "Sí, al finalizar",
+    "nivel": "Desde principiante hasta avanzado",
+    "idioma": "Español",
+    "actualizaciones": "Gratis de por vida"
+  }
+}

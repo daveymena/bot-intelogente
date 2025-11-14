@@ -1,0 +1,144 @@
+════════════════════════════════════════════════════════════════
+🔄 REDESPLEGAR EN EASYPANEL - PASOS RÁPIDOS
+════════════════════════════════════════════════════════════════
+
+El problema es que Easypanel no ha actualizado el código desde GitHub.
+Necesitas forzar un nuevo deploy.
+
+════════════════════════════════════════════════════════════════
+OPCIÓN 1: REDESPLEGAR DESDE EASYPANEL (MÁS FÁCIL)
+════════════════════════════════════════════════════════════════
+
+1. Entra a Easypanel
+   └─ https://easypanel.io
+
+2. Selecciona tu proyecto/aplicación
+   └─ Busca tu bot en la lista
+
+3. Busca una de estas secciones:
+   ├─ "Deploy" o "Deployments"
+   ├─ "Build" o "Builds"
+   ├─ "Git" o "Source"
+   └─ "Settings"
+
+4. Busca y haz clic en uno de estos botones:
+   ├─ "Redeploy" ⭐ (Este es el más común)
+   ├─ "Rebuild"
+   ├─ "Deploy Latest"
+   ├─ "Trigger Deploy"
+   └─ "Pull & Rebuild"
+
+5. Espera 2-5 minutos mientras se construye
+
+6. Limpia el cache de tu navegador:
+   └─ Presiona: Ctrl + Shift + R (Windows)
+   └─ O: Cmd + Shift + R (Mac)
+
+7. ¡Verifica los cambios!
+
+════════════════════════════════════════════════════════════════
+OPCIÓN 2: VERIFICAR CONFIGURACIÓN DE GIT
+════════════════════════════════════════════════════════════════
+
+1. En Easypanel → Tu Proyecto → Settings o Source
+
+2. Verifica que esté configurado así:
+   ├─ Repository: daveymena/bot-intelogente
+   ├─ Branch: main
+   └─ Auto Deploy: ON (opcional)
+
+3. Si está correcto, haz clic en "Redeploy"
+
+════════════════════════════════════════════════════════════════
+OPCIÓN 3: CONFIGURAR AUTO-DEPLOY (RECOMENDADO)
+════════════════════════════════════════════════════════════════
+
+Para que se actualice automáticamente con cada git push:
+
+1. En Easypanel → Tu Proyecto → Settings
+   └─ Busca "Auto Deploy" o "Automatic Deployments"
+   └─ Actívalo (ON)
+
+2. O configura Webhook:
+   ├─ Copia la "Webhook URL" de Easypanel
+   ├─ Ve a GitHub → Tu Repo → Settings → Webhooks
+   ├─ Add webhook
+   ├─ Pega la URL
+   └─ Save
+
+════════════════════════════════════════════════════════════════
+¿QUÉ CAMBIOS DEBERÍAS VER?
+════════════════════════════════════════════════════════════════
+
+✅ Página /membresias:
+   ├─ 4 planes (Trial, Mensual, Trimestral, Anual)
+   ├─ Plan gratuito con badge "🎁 AUTOMÁTICO"
+   └─ Botones de Mercado Pago y PayPal
+
+✅ Página /register:
+   ├─ Banner grande "🎁 10 Días GRATIS"
+   └─ Mensaje de activación automática
+
+✅ Dashboard:
+   └─ Widget de estado de membresía
+
+✅ Importación de Productos:
+   ├─ Iconos de JSON (azul)
+   ├─ Iconos de CSV (verde)
+   └─ Badges de formato
+
+════════════════════════════════════════════════════════════════
+TROUBLESHOOTING
+════════════════════════════════════════════════════════════════
+
+❌ "Build Failed"
+   └─ Revisa los logs en Easypanel
+   └─ Verifica que DATABASE_URL esté configurado
+   └─ Verifica todas las variables de entorno
+
+❌ "Deploy exitoso pero no veo cambios"
+   └─ Limpia cache: Ctrl + Shift + R
+   └─ Verifica que el commit sea 003dabb
+   └─ Espera 1-2 minutos más
+
+❌ "Error de base de datos"
+   └─ En Easypanel Console ejecuta:
+      npx prisma migrate deploy
+      npx prisma generate
+
+════════════════════════════════════════════════════════════════
+VERIFICACIÓN RÁPIDA
+════════════════════════════════════════════════════════════════
+
+Después de redesplegar, abre estas URLs:
+
+1. https://tu-dominio.com/membresias
+   └─ ¿Ves 4 planes? ✅
+
+2. https://tu-dominio.com/register
+   └─ ¿Ves banner de 10 días gratis? ✅
+
+3. https://tu-dominio.com/dashboard
+   └─ ¿Ves widget de membresía? ✅
+
+Si ves todo esto, ¡funcionó! 🎉
+
+════════════════════════════════════════════════════════════════
+RESUMEN ULTRA RÁPIDO
+════════════════════════════════════════════════════════════════
+
+1. Easypanel → Tu Proyecto
+2. Busca botón "Redeploy" o "Rebuild"
+3. Haz clic
+4. Espera 2-5 minutos
+5. Ctrl + Shift + R en navegador
+6. ¡Listo!
+
+════════════════════════════════════════════════════════════════
+
+Si después de esto no ves los cambios, comparte:
+- Los logs de Easypanel
+- El último commit que muestra Easypanel
+- Capturas de pantalla de la configuración
+
+════════════════════════════════════════════════════════════════
