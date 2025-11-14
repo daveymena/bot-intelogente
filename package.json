@@ -50,7 +50,13 @@
     "train": "npx tsx scripts/entrenar-reforzado.ts",
     "metrics": "npx tsx scripts/metricas-aprendizaje.ts",
     "train:products": "npx tsx scripts/entrenar-con-productos.ts",
-    "generate:training": "npx tsx scripts/entrenar-con-productos.ts"
+    "generate:training": "npx tsx scripts/entrenar-con-productos.ts",
+    "train:quick": "npx tsx scripts/entrenar-rapido.ts",
+    "train:full": "npx tsx scripts/entrenar-conversaciones-completas.ts",
+    "train:test": "npx tsx scripts/test-sin-tokens.ts",
+    "knowledge:export": "npx tsx scripts/exportar-conocimiento.ts",
+    "knowledge:import": "IMPORT_MODE=add npx tsx scripts/importar-conocimiento.ts",
+    "knowledge:replace": "IMPORT_MODE=replace npx tsx scripts/importar-conocimiento.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

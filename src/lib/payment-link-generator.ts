@@ -278,7 +278,7 @@ export class PaymentLinkGenerator {
 
     instructions += `📞 **Soporte:** ${process.env.BUSINESS_PHONE || '+57 300 556 0186'}\n`
     instructions += `📧 **Email:** ${process.env.BUSINESS_EMAIL || 'deinermena25@gmail.com'}\n\n`
-    instructions += `¿Con cuál método deseas pagar?`
+    instructions += `Escribe el nombre del método que prefieres (Nequi, MercadoPago, PayPal, Transferencia) y te envío los datos inmediatamente 👇`
 
     return instructions
   }
@@ -309,66 +309,75 @@ export class PaymentLinkGenerator {
   static generateMethodResponse(method: string, paymentLinks: PaymentLinks): string {
     const emoji = this.getProductEmoji(paymentLinks.product)
     const price = paymentLinks.product.price.toLocaleString('es-CO')
+    const productName = paymentLinks.product.name
 
     switch (method.toLowerCase()) {
       case 'nequi':
       case 'daviplata':
       case '1':
-        return `✅ **PAGO POR NEQUI/DAVIPLATA** ${emoji}\n\n` +
-               `📱 Número: ${paymentLinks.methods.nequi}\n` +
-               `💰 Monto: ${price} COP\n\n` +
-               `**Pasos:**\n` +
-               `1. Abre tu app Nequi o Daviplata\n` +
-               `2. Envía ${price} COP al número ${paymentLinks.methods.nequi}\n` +
-               `3. Toma captura del comprobante\n` +
-               `4. Envíalo por este chat\n\n` +
-               `✅ Recibirás tu producto inmediatamente después de verificar el pago`
+        return `¡Perfecto! 💳 Aquí está la información de pago:\n\n` +
+               `📦 *Producto:* ${productName}\n` +
+               `💰 *Monto:* ${price} COP\n\n` +
+               `📱 *Número Nequi/Daviplata:*\n` +
+               `${paymentLinks.methods.nequi}\n\n` +
+               `*Pasos:*\n` +
+               `1️⃣ Abre tu app Nequi o Daviplata\n` +
+               `2️⃣ Envía ${price} COP al número ${paymentLinks.methods.nequi}\n` +
+               `3️⃣ Toma captura del comprobante\n` +
+               `4️⃣ Envíalo por este chat\n\n` +
+               `👀 *Estaremos pendientes de tu comprobante para enviarte el producto inmediatamente* ✅`
 
+      case 'mercadopago':
+      case 'mercado':
       case 'tarjeta':
       case 'credito':
       case 'debito':
       case '2':
         if (paymentLinks.methods.mercadopago) {
-          return `✅ **PAGO CON TARJETA** ${emoji}\n\n` +
-                 `💳 Pago seguro con MercadoPago\n` +
-                 `💰 Monto: ${price} COP\n\n` +
-                 `👉 Link de pago:\n${paymentLinks.methods.mercadopago}\n\n` +
-                 `**Pasos:**\n` +
-                 `1. Haz clic en el link\n` +
-                 `2. Ingresa los datos de tu tarjeta\n` +
-                 `3. Confirma el pago\n\n` +
-                 `✅ Acceso inmediato después del pago`
+          return `¡Perfecto! 💳 Aquí está tu link de pago:\n\n` +
+                 `📦 *Producto:* ${productName}\n` +
+                 `💰 *Monto:* ${price} COP\n\n` +
+                 `🔗 *Link de MercadoPago:*\n` +
+                 `${paymentLinks.methods.mercadopago}\n\n` +
+                 `*Pasos:*\n` +
+                 `1️⃣ Haz clic en el link\n` +
+                 `2️⃣ Ingresa los datos de tu tarjeta\n` +
+                 `3️⃣ Confirma el pago\n\n` +
+                 `👀 *Estaremos pendientes de la confirmación del pago para enviarte el producto inmediatamente* ✅`
         }
-        return `⚠️ Pago con tarjeta no disponible. Elige otro método.`
+        return `⚠️ Pago con tarjeta no disponible en este momento. Por favor elige otro método.`
 
       case 'paypal':
       case '3':
         if (paymentLinks.methods.paypal) {
-          return `✅ **PAGO CON PAYPAL** ${emoji}\n\n` +
-                 `🌎 Pago internacional seguro\n` +
-                 `💰 Monto: ${price} COP\n\n` +
-                 `👉 Link de pago:\n${paymentLinks.methods.paypal}\n\n` +
-                 `**Pasos:**\n` +
-                 `1. Haz clic en el link\n` +
-                 `2. Inicia sesión en PayPal\n` +
-                 `3. Confirma el pago\n\n` +
-                 `✅ Acceso inmediato después del pago`
+          return `¡Perfecto! 💳 Aquí está tu link de pago:\n\n` +
+                 `📦 *Producto:* ${productName}\n` +
+                 `💰 *Monto:* ${price} COP\n\n` +
+                 `🔗 *Link de PayPal:*\n` +
+                 `${paymentLinks.methods.paypal}\n\n` +
+                 `*Pasos:*\n` +
+                 `1️⃣ Haz clic en el link\n` +
+                 `2️⃣ Inicia sesión en PayPal\n` +
+                 `3️⃣ Confirma el pago\n\n` +
+                 `👀 *Estaremos pendientes de la confirmación del pago para enviarte el producto inmediatamente* ✅`
         }
-        return `⚠️ PayPal no disponible. Elige otro método.`
+        return `⚠️ PayPal no disponible en este momento. Por favor elige otro método.`
 
       case 'transferencia':
       case 'bancaria':
       case '4':
-        return `✅ **TRANSFERENCIA BANCARIA** ${emoji}\n\n` +
-               `🏦 Banco: ${paymentLinks.methods.transferencia?.banco}\n` +
-               `📋 Cuenta: ${paymentLinks.methods.transferencia?.cuenta}\n` +
-               `👤 Titular: ${paymentLinks.methods.transferencia?.titular}\n` +
-               `💰 Monto: ${price} COP\n\n` +
-               `**Pasos:**\n` +
-               `1. Realiza la transferencia desde tu banco\n` +
-               `2. Toma captura del comprobante\n` +
-               `3. Envíalo por este chat\n\n` +
-               `✅ Recibirás tu producto después de verificar el pago`
+        return `¡Perfecto! 💳 Aquí están los datos bancarios:\n\n` +
+               `📦 *Producto:* ${productName}\n` +
+               `💰 *Monto:* ${price} COP\n\n` +
+               `🏦 *Datos bancarios:*\n` +
+               `Banco: ${paymentLinks.methods.transferencia?.banco}\n` +
+               `Cuenta: ${paymentLinks.methods.transferencia?.cuenta}\n` +
+               `Titular: ${paymentLinks.methods.transferencia?.titular}\n\n` +
+               `*Pasos:*\n` +
+               `1️⃣ Realiza la transferencia desde tu banco\n` +
+               `2️⃣ Toma captura del comprobante\n` +
+               `3️⃣ Envíalo por este chat\n\n` +
+               `👀 *Estaremos pendientes de tu comprobante para enviarte el producto inmediatamente* ✅`
 
       default:
         return paymentLinks.instructions

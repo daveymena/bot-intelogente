@@ -1,137 +1,127 @@
-# ⚡ INICIO RÁPIDO - Bot Super Inteligente
+# 🚀 Inicio Rápido - Smart Sales Bot
 
-## 🚀 3 Pasos para Empezar
+## ⚡ Comandos Esenciales
 
-### 1️⃣ Instalar (5 minutos)
+### Desarrollo Normal
 ```bash
-# Ejecuta el instalador automático
-install-bot-unificado.bat
+npm run dev
 ```
 
-Esto instalará:
-- ✅ Todas las dependencias de npm
-- ✅ Base de datos Prisma
-- ✅ Archivo .env de configuración
-
-### 2️⃣ Configurar API Key (2 minutos)
-
-1. **Obtén tu API Key de Groq (GRATIS)**
-   - Ve a: https://console.groq.com
-   - Crea una cuenta (es gratis)
-   - Ve a "API Keys"
-   - Crea una nueva key
-   - Cópiala
-
-2. **Agrégala al archivo .env**
-   ```env
-   # Abre el archivo .env y pega tu key:
-   GROQ_API_KEY=gsk_tu_key_aqui
-   ```
-
-### 3️⃣ Iniciar el Bot (1 minuto)
+### Verificar Estado de WhatsApp
 ```bash
-# Ejecuta el iniciador
-iniciar-bot-unificado.bat
+node verificar-estado-whatsapp.js
 ```
 
-¡Eso es todo! El bot estará corriendo en: **http://localhost:3000**
-
----
-
-## 📱 Conectar WhatsApp
-
-1. Abre tu navegador en `http://localhost:3000`
-2. Ve a la sección "WhatsApp" o "Conexión"
-3. Verás un código QR
-4. Abre WhatsApp en tu teléfono
-5. Ve a **Configuración > Dispositivos vinculados**
-6. Toca **"Vincular un dispositivo"**
-7. Escanea el código QR
-8. ✅ ¡Conectado!
-
----
-
-## 🎯 Probar el Bot
-
-### Prueba 1: Mensaje de Texto
-```
-Tú: "Hola, ¿tienes laptops?"
-Bot: "¡Hola! 😊 Sí, tenemos laptops disponibles..."
-```
-
-### Prueba 2: Mensaje de Voz
-```
-Tú: [Audio: "Quiero información sobre productos"]
-Bot: [Transcribe y responde automáticamente]
-```
-
-### Prueba 3: Solicitar Fotos
-```
-Tú: "Muéstrame fotos de motos"
-Bot: [Envía fotos automáticamente]
-```
-
----
-
-## 🎨 Usar el Dashboard
-
-Abre `http://localhost:3000` y verás:
-
-- **📊 Dashboard**: Métricas en tiempo real
-- **💬 Conversaciones**: Historial completo
-- **📦 Productos**: Gestión de catálogo
-- **⚙️ Configuración**: Ajustes del bot
-- **📈 Métricas**: Estadísticas detalladas
-
----
-
-## ❓ Problemas Comunes
-
-### El bot no responde
-✅ **Solución**: Verifica que agregaste tu `GROQ_API_KEY` en el archivo `.env`
-
-### No aparece el código QR
-✅ **Solución**: Espera 30 segundos, el QR se genera automáticamente
-
-### Error al instalar dependencias
-✅ **Solución**: Asegúrate de tener Node.js 18+ instalado
+### Limpiar Conexiones (si hay problemas)
 ```bash
-node --version  # Debe ser v18 o superior
+node limpiar-conexiones-whatsapp.js
 ```
 
-### Puerto 3000 ocupado
-✅ **Solución**: Cambia el puerto en `.env`:
-```env
-PORT=3001
+### Monitorear en Tiempo Real
+```bash
+monitorear-whatsapp.bat
 ```
 
----
+### Sincronizar Base de Datos
+```bash
+sync-database.bat
+```
 
-## 📚 Más Información
+## 🔧 Solución Rápida de Problemas
 
-- **Documentación Completa**: `README_BOT_UNIFICADO.md`
-- **Plan de Unificación**: `PLAN_UNIFICACION.md`
-- **Resumen Detallado**: `RESUMEN_UNIFICACION.md`
+### WhatsApp no conecta
+```bash
+node limpiar-conexiones-whatsapp.js
+npm run dev
+```
 
----
+### Loop de reconexiones
+```bash
+# Detener servidor (Ctrl+C)
+node limpiar-conexiones-whatsapp.js
+# Esperar 30 segundos
+npm run dev
+```
 
-## 🆘 Necesitas Ayuda?
+### Verificar API Keys
+```bash
+node verificar-api-keys.js
+```
 
-1. Revisa los archivos de documentación
-2. Verifica que todas las variables de entorno estén configuradas
-3. Revisa los logs en la consola
-4. Asegúrate de tener una conexión a internet estable
+### Ver productos
+```bash
+npx tsx scripts/ver-productos.ts
+```
 
----
+## 📊 Verificación del Sistema
 
-## 🎉 ¡Listo!
+### 1. Base de Datos
+```bash
+npx prisma studio
+```
 
-Tu Bot Super Inteligente está funcionando con:
+### 2. WhatsApp
+```bash
+node verificar-estado-whatsapp.js
+```
 
-- ✅ IA avanzada (Groq Llama 3.1)
-- ✅ Transcripción de audio
-- ✅ Envío inteligente de fotos
-- ✅ Dashboard web profesional
-- ✅ Métricas en tiempo real
+### 3. API Keys
+```bash
+node verificar-api-keys.js
+```
 
-**¡Disfruta tu bot!** 🚀🤖
+### 4. Productos
+```bash
+npx tsx scripts/ver-productos.ts
+```
+
+## 🎯 Flujo de Trabajo Diario
+
+```bash
+# 1. Iniciar servidor
+npm run dev
+
+# 2. Verificar WhatsApp (en otra terminal)
+node verificar-estado-whatsapp.js
+
+# 3. Si todo está bien, trabajar normalmente
+# 4. Si hay problemas, limpiar y reiniciar
+node limpiar-conexiones-whatsapp.js
+npm run dev
+```
+
+## 📝 Logs Importantes
+
+### ✅ Sistema Funcionando
+```
+✅ [Auto-Reconnect] Usuario conectado
+[Baileys] ✅ Conexión establecida
+[Baileys] 💓 Keep-alive configurado
+```
+
+### ❌ Hay Problemas
+```
+[Baileys] 🔌 Conexión cerrada. Código: 440
+[Baileys] 🔄 Reconectando... (repetido)
+```
+
+## 🆘 Ayuda Rápida
+
+| Problema | Solución |
+|----------|----------|
+| No conecta WhatsApp | `node limpiar-conexiones-whatsapp.js` |
+| Loop de reconexiones | Limpiar + esperar 30s + reiniciar |
+| Error 440 | `node limpiar-conexiones-whatsapp.js` |
+| Sesión expirada | Reconectar desde dashboard |
+| Base de datos | `sync-database.bat` |
+
+## 📚 Documentación Completa
+
+- `ESTABILIZACION_WHATSAPP_COMPLETA.md` - Guía completa de WhatsApp
+- `COMANDOS_WHATSAPP.md` - Todos los comandos disponibles
+- `SOLUCION_LOOP_RECONEXION.md` - Explicación técnica
+- `LISTO_PARA_DEPLOY_FINAL.md` - Guía de deployment
+
+## 🎉 Todo Listo!
+
+El sistema está estabilizado y listo para usar. Cualquier problema, consulta la documentación o ejecuta los scripts de diagnóstico.

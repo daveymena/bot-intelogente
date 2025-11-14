@@ -1,304 +1,313 @@
 /**
- * 🎓 ENTRENAMIENTO CON CONVERSACIONES COMPLETAS
- * Simula conversaciones reales de principio a fin,
- * incluyendo múltiples intercambios como un cliente real
+ * 🎓 ENTRENAMIENTO COMPLETO DE CONVERSACIONES
+ * 
+ * Simula conversaciones realistas con TODOS los productos y métodos de pago
+ * Guarda las respuestas exitosas en la base de conocimiento local
+ * Permite que el bot funcione sin tokens de IA usando razonamiento local
  */
 
+import { PrismaClient } from '@prisma/client';
 import { getIntelligentEngine } from '../src/lib/intelligent-conversation-engine';
 import { LocalKnowledgeBase } from '../src/lib/local-knowledge-base';
-import { OllamaService } from '../src/lib/ollama-service';
-import { db } from '../src/lib/db';
 
-// 💬 CONVERSACIONES COMPLETAS SIMULADAS
-const CONVERSACIONES_COMPLETAS = [
-  // Conversación 1: Cliente interesado en curso de piano
-  {
-    nombre: 'Cliente interesado en Curso de Piano',
-    mensajes: [
-      'Hola, buenos días',
-      'Tienes el curso de piano?',
-      'Cuánto cuesta?',
-      'Qué incluye el curso?',
-      'Tiene certificado?',
-      'Cómo puedo pagar?',
-      'Acepto, quiero pagar con Nequi'
-    ]
-  },
+const prisma = new PrismaClient();
 
-  // Conversación 2: Cliente buscando laptop
-  {
-    nombre: 'Cliente buscando Laptop',
-    mensajes: [
-      'Hola',
-      'Tienes laptops?',
-      'Cuáles tienes disponibles?',
-      'Cuánto cuesta la más económica?',
-      'Tiene garantía?',
-      'Hacen envíos?',
-      'Cuánto cuesta el envío?',
-      'Ok, cómo hago para comprar?'
-    ]
-  },
+// Plantillas de conversaciones realistas POR TIPO DE PRODUCTO
+const CONVERSATION_TEMPLATES = {
+  // Flujos para PRODUCTOS DIGITALES (cursos, megapacks)
+  DIGITAL: [
+    {
+      name: 'Digital - Directo',
+      steps: [
+        { user: '{PRODUCT_NAME}', expectation: 'info_producto' },
+        { user: '¿Cómo puedo pagar?', expectation: 'metodos_pago' },
+        { user: '{PAYMENT_METHOD}', expectation: 'link_pago' }
+      ]
+    },
+    {
+      name: 'Digital - Con Contenido',
+      steps: [
+        { user: '{PRODUCT_NAME}', expectation: 'info_producto' },
+        { user: '¿Qué incluye el curso?', expectation: 'contenido' },
+        { user: 'Me interesa', expectation: 'metodos_pago' },
+        { user: '{PAYMENT_METHOD}', expectation: 'link_pago' }
+      ]
+    },
+    {
+      name: 'Digital - Acceso',
+      steps: [
+        { user: '{PRODUCT_NAME}', expectation: 'info_producto' },
+        { user: '¿Cómo recibo el curso?', expectation: 'entrega' },
+        { user: 'Quiero comprarlo', expectation: 'metodos_pago' },
+        { user: '{PAYMENT_METHOD}', expectation: 'link_pago' }
+      ]
+    }
+  ],
 
-  // Conversación 3: Cliente preguntando por megapack
-  {
-    nombre: 'Cliente interesado en Megapack Completo',
-    mensajes: [
-      'Hola, qué tal',
-      'Qué es el megapack?',
-      'Cuántos cursos incluye?',
-      'Cuánto cuesta?',
-      'Es mejor comprar el megapack o cursos individuales?',
-      'Ok, me interesa el megapack completo',
-      'Métodos de pago?',
-      'Perfecto, voy a pagar con tarjeta'
-    ]
-  },
+  // Flujos para PRODUCTOS FÍSICOS (laptops, motos, etc)
+  PHYSICAL: [
+    {
+      name: 'Físico - Directo',
+      steps: [
+        { user: '{PRODUCT_NAME}', expectation: 'info_producto' },
+        { user: '¿Cuánto cuesta?', expectation: 'precio' },
+        { user: 'Métodos de pago', expectation: 'metodos_pago' },
+        { user: '{PAYMENT_METHOD}', expectation: 'link_pago' }
+      ]
+    },
+    {
+      name: 'Físico - Con Envío',
+      steps: [
+        { user: '{PRODUCT_NAME}', expectation: 'info_producto' },
+        { user: '¿Hacen envíos?', expectation: 'envio' },
+        { user: '¿Cuánto demora?', expectation: 'tiempo_envio' },
+        { user: 'Quiero comprarlo', expectation: 'metodos_pago' },
+        { user: '{PAYMENT_METHOD}', expectation: 'link_pago' }
+      ]
+    },
+    {
+      name: 'Físico - Stock',
+      steps: [
+        { user: '{PRODUCT_NAME}', expectation: 'in
 
-  // Conversación 4: Cliente comparando productos
-  {
-    nombre: 'Cliente comparando Cursos',
-    mensajes: [
-      'Hola',
-      'Tienes curso de diseño gráfico?',
-      'Y curso de programación?',
-      'Cuál me recomiendas?',
-      'Cuánto cuesta cada uno?',
-      'Ok, quiero el de diseño gráfico',
-      'Cómo pago?'
-    ]
-  },
-
-  // Conversación 5: Cliente con dudas sobre acceso
-  {
-    nombre: 'Cliente con dudas sobre Acceso Digital',
-    mensajes: [
-      'Hola',
-      'Los cursos son online?',
-      'Cómo accedo al curso después de pagar?',
-      'El acceso es de por vida?',
-      'Puedo descargar el contenido?',
-      'Perfecto, quiero comprar el curso de Excel',
-      'Cuánto cuesta?',
-      'Cómo puedo pagar?'
-    ]
-  },
-
-  // Conversación 6: Cliente preguntando por descuentos
-  {
-    nombre: 'Cliente buscando Descuentos',
-    mensajes: [
-      'Hola',
-      'Tienen descuentos?',
-      'Hay alguna promoción activa?',
-      'Cuánto es el descuento en el megapack?',
-      'Hasta cuándo dura la promoción?',
-      'Ok, quiero aprovechar la oferta',
-      'Cómo procedo con la compra?'
-    ]
-  },
-
-  // Conversación 7: Cliente preguntando por garantía
-  {
-    nombre: 'Cliente preguntando por Garantía',
-    mensajes: [
-      'Hola',
-      'Tienes MacBook?',
-      'Cuánto cuesta?',
-      'Tiene garantía?',
-      'Cuánto dura la garantía?',
-      'Qué cubre la garantía?',
-      'Ok, me interesa',
-      'Formas de pago?'
-    ]
-  },
-
-  // Conversación 8: Cliente indeciso
-  {
-    nombre: 'Cliente Indeciso',
-    mensajes: [
-      'Hola',
-      'Qué productos tienes?',
-      'Tienes laptops?',
-      'Y cursos?',
-      'Cuál me recomiendas para empezar?',
-      'Cuánto cuesta el curso de piano?',
-      'Déjame pensarlo',
-      'Ok, decidí comprar',
-      'Cómo pago?'
-    ]
-  },
-
-  // Conversación 9: Cliente preguntando por envío
-  {
-    nombre: 'Cliente preguntando por Envío',
-    mensajes: [
-      'Hola',
-      'Tienes motos eléctricas?',
-      'Cuánto cuesta?',
-      'Hacen envíos?',
-      'Envían a Medellín?',
-      'Cuánto cuesta el envío?',
-      'Cuánto demora?',
-      'Ok, quiero comprar',
-      'Métodos de pago?'
-    ]
-  },
-
-  // Conversación 10: Cliente con problema técnico
-  {
-    nombre: 'Cliente con Problema Técnico',
-    mensajes: [
-      'Hola',
-      'Compré un curso pero no puedo acceder',
-      'Ya pagué pero no me llegó el link',
-      'Tienen soporte técnico?',
-      'Cómo los contacto?',
-      'Gracias por la ayuda'
-    ]
-  }
+// Métodos de pago a probar
+const PAYMENT_METHODS = [
+  'MercadoPago',
+  'Nequi',
+  'Daviplata',
+  'PayPal',
+  'Transferencia'
 ];
 
-async function entrenarConversacionesCompletas() {
-  console.log('🎓 ENTRENAMIENTO CON CONVERSACIONES COMPLETAS\n');
-  console.log('Simulando conversaciones reales de principio a fin...\n');
+// Categorías para buscar
+const CATEGORIES = [
+  'música',
+  'diseño',
+  'programación',
+  'marketing',
+  'idiomas',
+  'fotografía'
+];
+
+interface TrainingResult {
+  productId: string;
+  productName: string;
+  flowName: string;
+  paymentMethod: string;
+  success: boolean;
+  conversationSteps: number;
+  savedToKnowledge: number;
+  errors: string[];
+}
+
+async function trainConversations() {
+  console.log('🎓 INICIANDO ENTRENAMIENTO COMPLETO DE CONVERSACIONES\n');
+  console.log('═══════════════════════════════════════════════════════════\n');
+
+  const results: TrainingResult[] = [];
+  const engine = getIntelligentEngine();
 
   try {
-    // Inicializar sistemas
-    console.log('1️⃣ Inicializando sistemas...');
-    await LocalKnowledgeBase.initialize();
-    const engine = getIntelligentEngine();
-    
-    // Verificar Ollama
-    const ollamaAvailable = await OllamaService.isAvailable();
-    if (ollamaAvailable) {
-      console.log('✅ Ollama disponible - Entrenamiento ILIMITADO 🚀');
-      const hasModel = await OllamaService.checkModel();
-      if (hasModel) {
-        console.log('✅ Modelo gemma:2b listo');
-      } else {
-        console.log('⚠️ Modelo gemma:2b no encontrado');
-        console.log('💡 Descárgalo con: ollama pull gemma:2b');
+    // Obtener todos los productos disponibles
+    const products = await prisma.product.findMany({
+      where: {
+        status: 'AVAILABLE'
+      },
+      orderBy: {
+        category: 'asc'
       }
-    } else {
-      console.log('⚠️ Ollama no disponible, usando Groq (limitado a 800k tokens/día)');
-    }
-    
-    console.log('✅ Sistemas inicializados\n');
+    });
 
-    // Obtener usuario de prueba
-    const user = await db.user.findFirst();
-    if (!user) {
-      console.error('❌ No hay usuarios en la base de datos');
-      return;
-    }
+    console.log(`📦 Productos encontrados: ${products.length}\n`);
 
-    let totalMensajes = 0;
-    let respuestasGuardadas = 0;
+    let totalConversations = 0;
+    let successfulConversations = 0;
+    let totalKnowledgeSaved = 0;
 
-    // Procesar cada conversación completa
-    for (let i = 0; i < CONVERSACIONES_COMPLETAS.length; i++) {
-      const conversacion = CONVERSACIONES_COMPLETAS[i];
-      
+    // Para cada producto
+    for (const product of products) {
       console.log(`\n${'='.repeat(60)}`);
-      console.log(`📞 CONVERSACIÓN ${i + 1}/${CONVERSACIONES_COMPLETAS.length}: ${conversacion.nombre}`);
-      console.log('='.repeat(60));
+      console.log(`📦 PRODUCTO: ${product.name}`);
+      console.log(`💰 Precio: ${product.price.toLocaleString('es-CO')} COP`);
+      console.log(`📂 Categoría: ${product.category}`);
+      console.log(`${'='.repeat(60)}\n`);
 
-      // Crear un chat ID único para esta conversación
-      const chatId = `training-conversation-${Date.now()}-${i}`;
-
-      // Procesar cada mensaje de la conversación
-      for (let j = 0; j < conversacion.mensajes.length; j++) {
-        const mensaje = conversacion.mensajes[j];
-        
-        console.log(`\n👤 Cliente: "${mensaje}"`);
-        
-        try {
-          // Procesar mensaje con el motor inteligente
-          // IMPORTANTE: Usar el mismo chatId para mantener el contexto
-          const response = await engine.processMessage({
-            chatId, // Mismo chatId = mantiene contexto de conversación
-            userName: conversacion.nombre,
-            message: mensaje,
-            userId: user.id
-          });
-
-          totalMensajes++;
-
-          // Mostrar respuesta
-          const respuestaCorta = response.text.length > 200 
-            ? response.text.substring(0, 200) + '...' 
-            : response.text;
+      // Para cada flujo de conversación
+      for (const template of CONVERSATION_TEMPLATES) {
+        // Para cada método de pago
+        for (const paymentMethod of PAYMENT_METHODS) {
+          totalConversations++;
           
-          console.log(`🤖 Bot (${(response.confidence * 100).toFixed(0)}% confianza):`);
-          console.log(`   ${respuestaCorta.replace(/\n/g, '\n   ')}`);
+          const chatId = `training-${Date.now()}-${Math.random()}`;
+          const result: TrainingResult = {
+            productId: product.id,
+            productName: product.name,
+            flowName: template.name,
+            paymentMethod,
+            success: true,
+            conversationSteps: 0,
+            savedToKnowledge: 0,
+            errors: []
+          };
 
-          // Guardar si la confianza es alta
-          if (response.confidence >= 0.7) {
-            await LocalKnowledgeBase.saveSuccessfulResponse({
-              userQuery: mensaje,
-              botResponse: response.text,
-              productId: response.context.currentProduct?.id,
-              productName: response.context.currentProduct?.name,
-              context: conversacion.nombre,
-              confidence: response.confidence
-            });
+          console.log(`\n🔄 Flujo: ${template.name} | Método: ${paymentMethod}`);
+          console.log(`${'─'.repeat(60)}`);
 
-            respuestasGuardadas++;
-            console.log(`   ✅ Respuesta guardada en base de conocimiento`);
-          } else {
-            console.log(`   ⚠️ Confianza baja, no guardada`);
+          try {
+            // Ejecutar cada paso de la conversación
+            for (let i = 0; i < template.steps.length; i++) {
+              const step = template.steps[i];
+              
+              // Reemplazar placeholders
+              let userMessage = step.user
+                .replace('{PRODUCT_NAME}', product.name)
+                .replace('{PAYMENT_METHOD}', paymentMethod)
+                .replace('{CATEGORY}', product.category || 'cursos');
+
+              console.log(`\n👤 Usuario: "${userMessage}"`);
+
+              // Procesar mensaje
+              const response = await engine.processMessage({
+                chatId,
+                userName: 'Training User',
+                message: userMessage,
+                userId: product.userId
+              });
+
+              result.conversationSteps++;
+
+              console.log(`🤖 Bot: ${response.text.substring(0, 150)}...`);
+              console.log(`📊 Confianza: ${(response.confidence * 100).toFixed(0)}%`);
+              console.log(`⚡ Acciones: ${response.actions.map(a => a.type).join(', ') || 'ninguna'}`);
+
+              // Guardar en base de conocimiento si la confianza es alta
+              if (response.confidence > 0.7) {
+                try {
+                  await LocalKnowledgeBase.saveSuccessfulResponse({
+                    userQuery: userMessage,
+                    botResponse: response.text,
+                    productId: product.id,
+                    confidence: response.confidence
+                  });
+                  result.savedToKnowledge++;
+                  totalKnowledgeSaved++;
+                  console.log(`✅ Guardado en base de conocimiento`);
+                } catch (error: any) {
+                  console.log(`⚠️  No se pudo guardar: ${error.message}`);
+                }
+              }
+
+              // Pequeña pausa entre mensajes
+              await new Promise(resolve => setTimeout(resolve, 500));
+            }
+
+            successfulConversations++;
+            console.log(`\n✅ Conversación completada exitosamente`);
+
+          } catch (error: any) {
+            result.success = false;
+            result.errors.push(error.message);
+            console.error(`\n❌ Error en conversación: ${error.message}`);
           }
 
-          // Pausa entre mensajes para simular conversación real
-          await new Promise(resolve => setTimeout(resolve, 1500));
+          results.push(result);
 
-        } catch (error: any) {
-          console.log(`   ❌ Error: ${error.message}`);
-          
-          // Si es rate limit, esperar más tiempo
-          if (error.status === 429) {
-            console.log('   ⏳ Rate limit alcanzado, esperando 15 segundos...');
-            await new Promise(resolve => setTimeout(resolve, 15000));
-          }
+          // Limpiar memoria del chat
+          engine.clearMemory(chatId);
+
+          // Pausa entre conversaciones
+          await new Promise(resolve => setTimeout(resolve, 1000));
         }
       }
-
-      // Limpiar memoria de esta conversación para la siguiente
-      engine.clearMemory(chatId);
-      console.log(`\n✅ Conversación ${i + 1} completada`);
-
-      // Pausa entre conversaciones
-      if (i < CONVERSACIONES_COMPLETAS.length - 1) {
-        console.log('⏳ Esperando 3 segundos antes de la siguiente conversación...');
-        await new Promise(resolve => setTimeout(resolve, 3000));
-      }
     }
 
-    // Resumen final
-    console.log('\n' + '='.repeat(60));
-    console.log('🎉 ENTRENAMIENTO COMPLETADO\n');
-    console.log(`📊 Estadísticas:`);
-    console.log(`   Conversaciones simuladas: ${CONVERSACIONES_COMPLETAS.length}`);
-    console.log(`   Total de mensajes procesados: ${totalMensajes}`);
-    console.log(`   Respuestas guardadas: ${respuestasGuardadas}`);
-    console.log(`   Tasa de guardado: ${((respuestasGuardadas / totalMensajes) * 100).toFixed(1)}%`);
+    // RESUMEN FINAL
+    console.log('\n\n');
+    console.log('═'.repeat(60));
+    console.log('📊 RESUMEN DEL ENTRENAMIENTO');
+    console.log('═'.repeat(60));
+    console.log(`\n📦 Productos entrenados: ${products.length}`);
+    console.log(`💬 Conversaciones totales: ${totalConversations}`);
+    console.log(`✅ Conversaciones exitosas: ${successfulConversations}`);
+    console.log(`❌ Conversaciones fallidas: ${totalConversations - successfulConversations}`);
+    console.log(`🧠 Respuestas guardadas en conocimiento: ${totalKnowledgeSaved}`);
+    console.log(`📈 Tasa de éxito: ${((successfulConversations / totalConversations) * 100).toFixed(1)}%`);
+
+    // Resumen por producto
+    console.log('\n\n📦 RESUMEN POR PRODUCTO:');
+    console.log('─'.repeat(60));
     
-    const stats = await LocalKnowledgeBase.getStats();
-    console.log(`\n📚 Base de Conocimiento:`);
-    console.log(`   Total de entradas: ${stats.totalEntries}`);
-    console.log(`   Tasa de éxito promedio: ${(stats.avgSuccessRate * 100).toFixed(1)}%`);
-    console.log(`   Uso total: ${stats.totalUsage} veces`);
+    const productSummary = new Map<string, { success: number; total: number; saved: number }>();
+    
+    for (const result of results) {
+      if (!productSummary.has(result.productName)) {
+        productSummary.set(result.productName, { success: 0, total: 0, saved: 0 });
+      }
+      const summary = productSummary.get(result.productName)!;
+      summary.total++;
+      if (result.success) summary.success++;
+      summary.saved += result.savedToKnowledge;
+    }
 
-    console.log('\n✅ El bot ahora tiene conocimiento de conversaciones completas');
-    console.log('✅ Entiende el flujo natural de una conversación de ventas');
-    console.log('✅ Puede manejar contexto y seguimiento de temas');
-    console.log('✅ Listo para atender clientes reales\n');
+    for (const [productName, summary] of productSummary) {
+      const successRate = ((summary.success / summary.total) * 100).toFixed(0);
+      console.log(`\n${productName}:`);
+      console.log(`  ✅ ${summary.success}/${summary.total} exitosas (${successRate}%)`);
+      console.log(`  🧠 ${summary.saved} respuestas guardadas`);
+    }
 
-  } catch (error) {
-    console.error('❌ Error en el entrenamiento:', error);
+    // Resumen por método de pago
+    console.log('\n\n💳 RESUMEN POR MÉTODO DE PAGO:');
+    console.log('─'.repeat(60));
+    
+    const methodSummary = new Map<string, { success: number; total: number }>();
+    
+    for (const result of results) {
+      if (!methodSummary.has(result.paymentMethod)) {
+        methodSummary.set(result.paymentMethod, { success: 0, total: 0 });
+      }
+      const summary = methodSummary.get(result.paymentMethod)!;
+      summary.total++;
+      if (result.success) summary.success++;
+    }
+
+    for (const [method, summary] of methodSummary) {
+      const successRate = ((summary.success / summary.total) * 100).toFixed(0);
+      console.log(`${method}: ${summary.success}/${summary.total} (${successRate}%)`);
+    }
+
+    // Verificar base de conocimiento
+    console.log('\n\n🧠 VERIFICANDO BASE DE CONOCIMIENTO:');
+    console.log('─'.repeat(60));
+    
+    const knowledgeCount = await prisma.knowledgeBase.count();
+    console.log(`Total de respuestas en base de conocimiento: ${knowledgeCount}`);
+
+    // Mostrar algunas respuestas guardadas
+    const sampleKnowledge = await prisma.knowledgeBase.findMany({
+      take: 5,
+      orderBy: {
+        confidence: 'desc'
+      }
+    });
+
+    console.log('\n📝 Ejemplos de respuestas guardadas:');
+    for (const knowledge of sampleKnowledge) {
+      console.log(`\n  Consulta: "${knowledge.userQuery.substring(0, 50)}..."`);
+      console.log(`  Confianza: ${(knowledge.confidence * 100).toFixed(0)}%`);
+      console.log(`  Producto: ${knowledge.productId || 'N/A'}`);
+    }
+
+    console.log('\n\n✅ ENTRENAMIENTO COMPLETADO\n');
+    console.log('El bot ahora puede responder sin tokens de IA usando la base de conocimiento local.\n');
+
+  } catch (error: any) {
+    console.error('\n❌ Error en entrenamiento:', error.message);
+    console.error(error.stack);
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
 // Ejecutar entrenamiento
-entrenarConversacionesCompletas();
+trainConversations();

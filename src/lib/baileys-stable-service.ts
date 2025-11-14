@@ -273,6 +273,19 @@ export class BaileysStableService {
         
         // Determinar si debe reconectar basado en el motivo de desconexión
         const statusCode = (lastDisconnect?.error as Boom)?.output?.statusCode
+        
+        // 🚫 Código 440 = Conflicto de sesión (múltiples conexiones)
+        // NO reconectar automáticamente, esperar a que el sistema se estabilice
+        if (statusCode === 440) {
+          console.log(`[Baileys] ⚠️ Conflicto de sesión detectado (440), limpiando y esperando...`)
+          session.status = 'DISCONNECTED'
+          await this.updateConnectionStatus(userId, 'DISCONNECTED', 'Conflicto de sesión - múltiples conexiones')
+          this.stopKeepAlive(userId)
+          this.sessions.delete(userId)
+          this.connectionLocks.delete(userId)
+          return
+        }
+        
         const shouldReconnect = statusCode !== DisconnectReason.loggedOut
         
         console.log(`[Baileys] 🔌 Conexión cerrada. Código: ${statusCode}, Reconectar: ${shouldReconnect}`)
@@ -281,8 +294,8 @@ export class BaileysStableService {
           session.reconnectAttempts++
 
           // 🔒 Límite de reintentos para evitar bucle infinito
-          if (session.reconnectAttempts > 10) {
-            console.log(`[Baileys] ❌ Máximo de reintentos alcanzado (10), deteniendo reconexión`)
+          if (session.reconnectAttempts > 5) {
+            console.log(`[Baileys] ❌ Máximo de reintentos alcanzado (5), deteniendo reconexión`)
             session.status = 'DISCONNECTED'
             await this.updateConnectionStatus(userId, 'DISCONNECTED', 'Máximo de reintentos alcanzado')
             this.stopKeepAlive(userId) // 💓 Detener keep-alive
@@ -294,7 +307,7 @@ export class BaileysStableService {
           console.log(`[Baileys] 🔄 Intento de reconexión #${session.reconnectAttempts}`)
 
           // Reconexión exponencial con backoff
-          const delay = Math.min(1000 * Math.pow(2, session.reconnectAttempts - 1), 30000)
+          const delay = Math.min(2000 * Math.pow(2, session.reconnectAttempts - 1), 60000)
           console.log(`[Baileys] ⏳ Esperando ${delay}ms antes de reconectar...`)
 
           // 🔓 Desbloquear antes de reconectar

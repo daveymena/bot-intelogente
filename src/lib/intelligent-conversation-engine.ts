@@ -372,18 +372,30 @@ CONTEXTO ACTUAL DE LA CONVERSACIÓN:`;
 12. **MANTÉN EL CONTEXTO**: Si ya estás hablando de un producto, mantén ese contexto en toda la conversación
 13. **DESPEDIDAS Y AGRADECIMIENTOS**: Si el cliente dice "gracias", "ok", "perfecto", "entendido" o se despide, responde de forma breve y amable SIN mencionar métodos de pago ni productos. Ejemplo: "¡De nada! 😊 Estoy aquí si necesitas algo más. ¡Que tengas un excelente día! 👋"
 
-14. **SELECCIÓN DE MÉTODO DE PAGO**: Si acabas de mostrar los métodos de pago y el cliente responde con SOLO el nombre de uno, genera el link INMEDIATAMENTE con respuesta BREVE (máximo 3 líneas):
+14. **SELECCIÓN DE MÉTODO DE PAGO**: Si acabas de mostrar los métodos de pago y el cliente responde con SOLO el nombre de uno, el sistema generará el link automáticamente.
+   
+   **TU RESPUESTA DEBE SER MUY BREVE (máximo 2 líneas):**
    
    Ejemplos de respuestas del cliente que activan link:
-   - "MercadoPago" → Genera link de MercadoPago
-   - "PayPal" → Genera link de PayPal
-   - "Nequi" → Muestra número de Nequi
-   - "Daviplata" → Muestra número de Daviplata
-   - "Transferencia" → Muestra datos bancarios
+   - "MercadoPago" → Responde: "¡Perfecto! 💳 Aquí está tu link de pago:"
+   - "PayPal" → Responde: "¡Perfecto! 💳 Aquí está tu link de pago:"
+   - "Nequi" → Responde: "¡Perfecto! 📱 Aquí está el número:"
+   - "Daviplata" → Responde: "¡Perfecto! 📱 Aquí está el número:"
+   - "Transferencia" → Responde: "¡Perfecto! 🏦 Aquí están los datos:"
    
-   Respuesta: "¡Perfecto! 💳 Aquí está tu enlace 👇 [PAYMENT_LINK] Una vez pagues, recibirás acceso inmediato ✅"
+   **CRÍTICO - PROHIBIDO CUANDO EL CLIENTE SELECCIONA UN MÉTODO:**
+   ❌ NO menciones Google Drive
+   ❌ NO menciones Hotmart
+   ❌ NO menciones certificados
+   ❌ NO menciones "de dos formas"
+   ❌ NO menciones "área de miembros"
+   ❌ NO menciones "descargar o ver online"
+   ❌ NO menciones "después de confirmar tu pago"
+   ❌ NO menciones "recibirás el curso"
+   ❌ NO inventes NINGUNA información adicional
+   ❌ NO expliques el proceso de entrega
    
-   NO agregues: Explicaciones de Google Drive, Hotmart, certificados, guías paso a paso, etc.
+   **SOLO** di "¡Perfecto! 💳 Aquí está tu link de pago:" y el sistema agregará el link automáticamente.
 
 FORMATO DE RESPUESTA (USA ESTE ESTILO):
 
@@ -1122,8 +1134,53 @@ USA ESTE FORMATO CON EMOJIS Y ORGANIZACIÓN CLARA.`;
       productoActual: memory.context.currentProduct?.name || 'ninguno'
     });
 
-    // Mostrar TODOS los métodos de pago disponibles
-    if (isPaymentMethodRequest && memory.context.currentProduct) {
+    // 🎯 DETECTAR SI EL CLIENTE ESTÁ SELECCIONANDO UN MÉTODO ESPECÍFICO
+    const selectedMethod = this.detectPaymentMethod(lastUserMessage);
+    const isSelectingMethod = selectedMethod && memory.context.paymentIntent && memory.context.currentProduct;
+    
+    console.log('[IntelligentEngine] 🔍 Detección de selección:', {
+      metodoDetectado: selectedMethod,
+      estaSeleccionando: isSelectingMethod,
+      tieneIntencionPago: memory.context.paymentIntent,
+      tieneProducto: !!memory.context.currentProduct
+    });
+
+    // Si el cliente está SELECCIONANDO un método específico, generar link inmediatamente
+    if (isSelectingMethod) {
+      const product = memory.context.currentProduct;
+      
+      console.log('[IntelligentEngine] 💳 Cliente seleccionó método:', selectedMethod);
+      console.log('[IntelligentEngine] 📦 Producto:', product.name);
+
+      // Importar el generador de links
+      const { PaymentLinkGenerator } = await import('./payment-link-generator');
+      
+      // Generar los links de pago
+      const paymentLinks = await PaymentLinkGenerator.generatePaymentLinks(product.id);
+      
+      if (paymentLinks) {
+        // Generar respuesta específica para el método seleccionado
+        const methodResponse = PaymentLinkGenerator.generateMethodResponse(selectedMethod, paymentLinks);
+        
+        console.log('[IntelligentEngine] ✅ Link generado para método:', selectedMethod);
+        
+        actions.push({
+          type: 'send_specific_payment_method',
+          method: selectedMethod,
+          product: product,
+          paymentLinks: paymentLinks,
+          formattedText: methodResponse
+        });
+      } else {
+        console.error('[IntelligentEngine] ❌ Error generando link para:', selectedMethod);
+        actions.push({
+          type: 'send_text',
+          text: '⚠️ Disculpa, hubo un problema generando el link de pago. Por favor intenta de nuevo.'
+        });
+      }
+    }
+    // Mostrar TODOS los métodos de pago disponibles (cuando pregunta por métodos)
+    else if (isPaymentMethodRequest && memory.context.currentProduct) {
       const product = memory.context.currentProduct;
 
       console.log('[IntelligentEngine] 💳 Generando TODOS los métodos de pago para:', {

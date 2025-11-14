@@ -81,6 +81,19 @@ export class IntelligentBaileysIntegration {
           }
         }
 
+        // 🎯 NUEVA ACCIÓN: Enviar link de método ESPECÍFICO (cuando el cliente selecciona uno)
+        if (action.type === 'send_specific_payment_method') {
+          console.log('[IntelligentBot] 💳 Cliente seleccionó método:', action.method);
+          console.log('[IntelligentBot] 📦 Producto:', action.product.name);
+          
+          // REEMPLAZAR COMPLETAMENTE el texto de la IA con el link real
+          // La IA puede haber inventado texto, así que lo ignoramos
+          finalText = action.formattedText;
+          
+          console.log('[IntelligentBot] ✅ Link de pago específico generado');
+          console.log('[IntelligentBot] 📝 Texto final:', finalText.substring(0, 150));
+        }
+
         // Nueva acción: enviar TODOS los métodos de pago
         if (action.type === 'send_all_payment_methods') {
           console.log('[IntelligentBot] 💳 Enviando TODOS los métodos de pago...');

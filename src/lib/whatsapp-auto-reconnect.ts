@@ -57,8 +57,7 @@ export class WhatsAppAutoReconnect {
             })
 
             if (users.length === 0) {
-                console.log('⚠️ [Auto-Reconnect] No hay usuarios para conectar')
-                return
+                return // Silencioso
             }
 
             // Verificar estado de conexión
@@ -68,12 +67,22 @@ export class WhatsAppAutoReconnect {
                 const session = BaileysStableService.getConnectionStatus(user.id)
                 const isConnected = session?.status === 'CONNECTED' && session?.isReady
                 
-                if (!isConnected) {
-                    console.log(`🔄 [Auto-Reconnect] Usuario ${user.email} desconectado (estado: ${session?.status || 'sin sesión'}), intentando reconectar...`)
+                // 🔒 SOLO reconectar si está completamente DISCONNECTED
+                // NO reconectar si está CONNECTING, QR_PENDING, o en proceso
+                if (!session || (session.status === 'DISCONNECTED' && !isConnected)) {
+                    // Verificar que no haya una reconexión reciente (evitar spam)
+                    const lastDisconnect = session?.lastDisconnect
+                    if (lastDisconnect) {
+                        const timeSinceDisconnect = Date.now() - lastDisconnect.getTime()
+                        if (timeSinceDisconnect < 60000) { // Menos de 1 minuto
+                            continue // Esperar más tiempo
+                        }
+                    }
+                    
+                    console.log(`🔄 [Auto-Reconnect] Usuario ${user.email} desconectado, intentando reconectar...`)
                     await this.attemptConnection(user.id)
-                } else {
-                    console.log(`✅ [Auto-Reconnect] Usuario ${user.email} conectado`)
                 }
+                // No hacer nada si ya está conectado o en proceso de conexión
             }
 
             // Resetear contador de intentos si hay conexión exitosa
