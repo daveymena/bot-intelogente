@@ -80,3 +80,36 @@ COPIAR_ESTO_*.txt
 
 # Archivos de configuración sensibles
 llm-config.json
+
+# Megaflujos y datos sensibles (solo mantener estructura)
+data/megaflujos-*.json
+data/ejemplos-*.json
+data/entrenamiento-*.json
+
+# Archivos de prueba con datos reales (EXCEPTO megaflujos)
+test-*.js
+test-*.ts
+*-test.json
+!scripts/test-megaflujos-bot.ts
+!scripts/*megaflujos*.ts
+
+# Logs y temporales
+*.log
+logs/
+.tmp/
+
+# Archivos de sesión
+session.json
+sessions/
+
+# Configuración local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
