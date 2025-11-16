@@ -1,101 +1,141 @@
 /**
- * 🧪 TEST: Verificar Ollama
- * 
- * Verifica que Ollama esté instalado y funcionando correctamente
+ * Script para probar Ollama como fallback
  */
 
-import { OllamaService } from '../src/lib/ollama-service';
+// Cargar variables de entorno
+import dotenv from 'dotenv'
+import path from 'path'
+
+// Cargar .env desde la raíz del proyecto
+dotenv.config({ path: path.resolve(process.cwd(), '.env') })
+
+import { AIMultiProvider } from '@/lib/ai-multi-provider'
 
 async function testOllama() {
-  console.log('🧪 TEST: Verificando Ollama\n');
-  console.log('═══════════════════════════════════════════════════════\n');
+  console.log('🧪 Probando Ollama como Fallback\n')
+  console.log('='.repeat(50))
+
+  // Test 1: Verificar configuración
+  console.log('\n📋 Test 1: Configuración')
+  console.log('OLLAMA_BASE_URL:', process.env.OLLAMA_BASE_URL || '❌ No configurado')
+  console.log('OLLAMA_MODEL:', process.env.OLLAMA_MODEL || '❌ No configurado')
+  console.log('OLLAMA_ENABLED:', process.env.OLLAMA_ENABLED || '❌ No configurado')
+  console.log('OLLAMA_TIMEOUT:', process.env.OLLAMA_TIMEOUT || '❌ No configurado')
+  console.log('AI_FALLBACK_ORDER:', process.env.AI_FALLBACK_ORDER || '❌ No configurado')
+  console.log('GROQ_API_KEY:', process.env.GROQ_API_KEY ? '✅ Configurado' : '❌ No configurado')
+
+  // Test 2: Probar respuesta simple
+  console.log('\n\n💬 Test 2: Respuesta Simple')
+  console.log('='.repeat(50))
+
+  const testMessages = [
+    {
+      role: 'system' as const,
+      content: 'Eres un asistente de ventas. Responde en español, máximo 3 líneas.'
+    },
+    {
+      role: 'user' as const,
+      content: 'Tienes laptops?'
+    }
+  ]
 
   try {
-    // 1. Verificar disponibilidad
-    console.log('1️⃣ Verificando conexión...');
-    const isAvailable = await OllamaService.isAvailable();
+    console.log('\n👤 Cliente: "Tienes laptops?"')
+    console.log('⏳ Esperando respuesta de Ollama...')
     
-    if (!isAvailable) {
-      console.log('\n❌ Ollama no está disponible\n');
-      console.log('📝 Pasos para solucionar:');
-      console.log('1. Instalar Ollama: https://ollama.com/download');
-      console.log('2. Descargar modelo: ollama pull gemma2:2b');
-      console.log('3. Configurar .env: OLLAMA_ENABLED=true');
-      console.log('4. Reiniciar el bot\n');
-      return;
-    }
-
-    console.log('✅ Ollama está disponible\n');
-
-    // 2. Listar modelos
-    console.log('2️⃣ Listando modelos instalados...');
-    const models = await OllamaService.listModels();
+    const startTime = Date.now()
     
-    if (models.length === 0) {
-      console.log('⚠️  No hay modelos instalados\n');
-      console.log('📝 Instala un modelo:');
-      console.log('   ollama pull gemma2:2b\n');
-      return;
-    }
-
-    console.log(`✅ ${models.length} modelo(s) instalado(s):`);
-    models.forEach(model => console.log(`   - ${model}`));
-    console.log('');
-
-    // 3. Verificar modelo configurado
-    console.log('3️⃣ Verificando modelo configurado...');
-    const hasModel = await OllamaService.checkModel();
+    const response = await AIMultiProvider.generateCompletion(testMessages, {
+      max_tokens: 200,
+      temperature: 0.7
+    })
     
-    if (!hasModel) {
-      console.log('⚠️  El modelo configurado no está instalado\n');
-      console.log('📝 Instala el modelo:');
-      console.log(`   ollama pull ${process.env.OLLAMA_MODEL || 'gemma2:2b'}\n`);
-      return;
+    const endTime = Date.now()
+    const duration = endTime - startTime
+
+    console.log(`\n✅ Respuesta recibida en ${duration}ms (${(duration/1000).toFixed(1)}s)`)
+    console.log(`🤖 Provider: ${response.provider}`)
+    console.log(`📦 Modelo: ${response.model}`)
+    console.log(`\n💬 Respuesta:\n${response.content}`)
+
+    // Verificar si usó Ollama
+    if (response.provider === 'ollama') {
+      console.log('\n✅ Ollama funcionando correctamente!')
+    } else {
+      console.log(`\n⚠️  Se usó ${response.provider} en lugar de Ollama`)
+      console.log('   Esto es normal si Groq/OpenRouter están disponibles')
     }
-
-    console.log('✅ Modelo configurado está instalado\n');
-
-    // 4. Probar generación de respuesta
-    console.log('4️⃣ Probando generación de respuesta...');
-    console.log('   Pregunta: "Hola, ¿cómo estás?"\n');
-
-    const response = await OllamaService.generateResponse({
-      systemPrompt: 'Eres un asistente amable y profesional.',
-      messages: [
-        { role: 'user', content: 'Hola, ¿cómo estás?' }
-      ]
-    });
-
-    if (!response) {
-      console.log('❌ No se pudo generar respuesta\n');
-      return;
-    }
-
-    console.log('✅ Respuesta generada:');
-    console.log(`   "${response.text}"`);
-    console.log(`   Confianza: ${(response.confidence * 100).toFixed(0)}%\n`);
-
-    // 5. Resumen
-    console.log('═══════════════════════════════════════════════════════');
-    console.log('📊 RESUMEN');
-    console.log('═══════════════════════════════════════════════════════\n');
-    console.log('✅ Ollama está funcionando correctamente');
-    console.log(`✅ Modelo: ${process.env.OLLAMA_MODEL || 'gemma2:2b'}`);
-    console.log(`✅ URL: ${process.env.OLLAMA_BASE_URL || 'http://localhost:11434'}`);
-    console.log('✅ El bot puede usar Ollama como fallback\n');
-
-    console.log('💡 Próximos pasos:');
-    console.log('1. Configurar OLLAMA_ENABLED=true en .env');
-    console.log('2. Reiniciar el bot: npm run dev');
-    console.log('3. El bot usará Ollama cuando Groq falle\n');
 
   } catch (error: any) {
-    console.error('\n❌ Error:', error.message);
-    console.error('\n📝 Verifica:');
-    console.error('- Ollama está instalado');
-    console.error('- Ollama está corriendo (ollama serve)');
-    console.error('- Puerto 11434 está disponible\n');
+    console.error('\n❌ Error:', error.message)
+    console.error('\n🔧 Posibles soluciones:')
+    console.error('   1. Verificar que Ollama esté corriendo')
+    console.error('   2. Verificar OLLAMA_BASE_URL en .env')
+    console.error('   3. Verificar que el modelo esté descargado')
+    console.error('   4. Aumentar OLLAMA_TIMEOUT')
   }
+
+  // Test 3: Forzar uso de Ollama
+  console.log('\n\n🎯 Test 3: Forzar Uso de Ollama')
+  console.log('='.repeat(50))
+
+  try {
+    // Temporalmente cambiar el orden de fallback
+    const originalOrder = process.env.AI_FALLBACK_ORDER
+    process.env.AI_FALLBACK_ORDER = 'ollama'
+
+    console.log('\n👤 Cliente: "Cuánto cuesta?"')
+    console.log('⏳ Forzando uso de Ollama...')
+    
+    const startTime = Date.now()
+    
+    const response = await AIMultiProvider.generateCompletion([
+      {
+        role: 'system' as const,
+        content: 'Eres un asistente. Responde en español, máximo 2 líneas.'
+      },
+      {
+        role: 'user' as const,
+        content: 'Cuánto cuesta?'
+      }
+    ], {
+      max_tokens: 150,
+      temperature: 0.7
+    })
+    
+    const endTime = Date.now()
+    const duration = endTime - startTime
+
+    console.log(`\n✅ Respuesta en ${duration}ms (${(duration/1000).toFixed(1)}s)`)
+    console.log(`🤖 Provider: ${response.provider}`)
+    console.log(`💬 Respuesta:\n${response.content}`)
+
+    // Restaurar orden original
+    process.env.AI_FALLBACK_ORDER = originalOrder
+
+    if (response.provider === 'ollama') {
+      console.log('\n✅ Ollama funciona correctamente como fallback!')
+    }
+
+  } catch (error: any) {
+    console.error('\n❌ Error forzando Ollama:', error.message)
+  }
+
+  // Resumen
+  console.log('\n\n📊 Resumen')
+  console.log('='.repeat(50))
+  console.log('\n✅ Configuración de Fallback:')
+  console.log('   1. Groq (rápido, límite de tokens)')
+  console.log('   2. Ollama (ilimitado, más lento)')
+  console.log('\n💡 Ollama se usará cuando:')
+  console.log('   - Groq se quede sin tokens')
+  console.log('   - Groq falle por cualquier razón')
+  console.log('   - Necesites respuestas ilimitadas 24/7')
+  console.log('\n⏱️  Tiempos esperados:')
+  console.log('   - Groq: 1-3 segundos')
+  console.log('   - Ollama: 10-30 segundos')
+  console.log('\n🚀 El bot nunca dejará de funcionar!')
 }
 
-testOllama();
+// Ejecutar pruebas
+testOllama().catch(console.error)

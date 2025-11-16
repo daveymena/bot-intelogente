@@ -64,42 +64,24 @@ export function StoreSettingsTab() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between flex-wrap gap-4">
+      <div className="flex items-center justify-between">
         <div>
           <h2 className="text-3xl font-bold">Configuración de Tienda</h2>
           <p className="text-gray-600">Personaliza tu tienda online</p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            onClick={() => window.open('/tienda', '_blank')}
-            className="cursor-pointer"
-          >
-            <Store className="mr-2 h-4 w-4" />
-            Ver Tienda
-          </Button>
-          <Button 
-            variant="outline" 
-            onClick={() => window.open('/tienda', '_blank')}
-            className="cursor-pointer"
-          >
-            <Store className="mr-2 h-4 w-4" />
-            Ver Tienda
-          </Button>
-          <Button onClick={handleSave} disabled={saving}>
-            {saving ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Guardando...
-              </>
-            ) : (
-              <>
-                <Save className="mr-2 h-4 w-4" />
-                Guardar
-              </>
-            )}
-          </Button>
-        </div>
+        <Button onClick={handleSave} disabled={saving}>
+          {saving ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Guardando...
+            </>
+          ) : (
+            <>
+              <Save className="mr-2 h-4 w-4" />
+              Guardar Cambios
+            </>
+          )}
+        </Button>
       </div>
 
       <Tabs defaultValue="basic" className="w-full">

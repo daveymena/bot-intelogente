@@ -19,8 +19,8 @@ export interface PriceBreakdown {
 export class DropshippingPricing {
   // Configuración por defecto
   private static config: PricingConfig = {
-    shippingCostMin: 0,      // ENVÍO GRATIS
-    shippingCostMax: 0,      // ENVÍO GRATIS
+    shippingCostMin: 15000,  // $15.000 COP
+    shippingCostMax: 20000,  // $20.000 COP
     profitMarginMin: 20000,  // $20.000 COP ganancia mínima
     profitMarginMax: 30000,  // $30.000 COP ganancia máxima
   }

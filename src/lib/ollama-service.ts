@@ -25,7 +25,7 @@ export class OllamaService {
   }
   
   private static get model() {
-    return process.env.OLLAMA_MODEL || 'gemma3:4b';
+    return process.env.OLLAMA_MODEL || 'gemma:2b';
   }
   
   private static get timeout() {
