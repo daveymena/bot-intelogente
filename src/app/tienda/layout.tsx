@@ -3,11 +3,11 @@ import StructuredData from '@/components/StructuredData'
 import { breadcrumbSchema } from '@/lib/seo-schema'
 
 export const metadata: Metadata = {
-  title: 'Tienda Online',
-  description: 'Compra productos de tecnología, motos y cursos digitales. Pagos seguros con MercadoPago, PayPal y más. Envíos a toda Colombia.',
+  title: 'Catálogo de Productos',
+  description: 'Explora nuestro catálogo completo de productos: laptops, motos, cursos digitales y megapacks. Precios competitivos y atención personalizada con IA.',
   openGraph: {
-    title: 'Tienda Online - Tecnovariedades D&S',
-    description: 'Tecnología, motos y cursos digitales. Pagos seguros y envíos a toda Colombia.',
+    title: 'Catálogo de Productos - Smart Sales Bot Pro',
+    description: 'Descubre laptops, motos, cursos digitales y más. Atención automatizada 24/7.',
   },
 }
 
@@ -16,7 +16,7 @@ const breadcrumbs = breadcrumbSchema([
   { name: 'Tienda', url: '/tienda' },
 ])
 
-export default function TiendaLayout({
+export default function CatalogoLayout({
   children,
 }: {
   children: React.ReactNode

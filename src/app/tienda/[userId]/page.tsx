@@ -133,8 +133,8 @@ export default function TiendaUsuario() {
           <Store className="mx-auto h-16 w-16 text-gray-400 mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Tienda no encontrada</h2>
           <p className="text-gray-600 mb-6">{error}</p>
-          <Button onClick={() => window.location.href = '/catalogo'}>
-            Ver catálogo general
+          <Button onClick={() => window.location.href = '/tienda'}>
+            Ver tienda general
           </Button>
         </div>
       </div>
