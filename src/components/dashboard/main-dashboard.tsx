@@ -34,6 +34,7 @@ import ShareStoreButton from '@/components/ShareStoreButton'
 import { DemoSection } from '@/components/dashboard/DemoSection'
 import { StoreSettingsTab } from '@/components/dashboard/store-settings-tab'
 import { SubscriptionStatus } from '@/components/SubscriptionStatus'
+import { MegaflujosDashboard } from '@/components/MegaflujosDashboard'
 
 export function MainDashboard() {
   const { user, subscription, logout } = useAuth()
@@ -66,6 +67,7 @@ export function MainDashboard() {
     { id: 'whatsapp', label: 'WhatsApp', icon: MessageSquare },
     { id: 'products', label: 'Productos', icon: Package },
     { id: 'store', label: 'Mi Tienda', icon: Store },
+    { id: 'megaflujos', label: '📚 Megaflujos', icon: Bot },
     { id: 'personality', label: 'Personalidad Bot', icon: Bot },
     { id: 'prompts', label: 'IA & Prompts', icon: Bot },
     { id: 'customers', label: 'Clientes', icon: Users },
