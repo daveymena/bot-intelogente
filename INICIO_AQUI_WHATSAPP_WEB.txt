@@ -1,0 +1,144 @@
+🚀 WHATSAPP WEB ESTABLE - INICIO RÁPIDO
+
+Meta bloqueó tu WhatsApp. Ahora usaremos WhatsApp Web (Baileys) de forma profesional.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 PASOS RÁPIDOS (30 minutos)
+
+1️⃣ ACTUALIZAR .env
+   Copiar estas variables:
+   
+   HEARTBEAT_INTERVAL=15000
+   RECONNECT_ATTEMPTS_MAX=50
+   RECONNECT_DELAY_BASE=1000
+   RECONNECT_DELAY_MAX=30000
+   ENABLE_CONNECTION_MONITOR=true
+   CONNECTION_HEALTH_CHECK_INTERVAL=30000
+   CONNECTION_HEALTH_THRESHOLD=80
+
+2️⃣ EJECUTAR OPTIMIZACIÓN
+   npx tsx scripts/optimizar-baileys-reconexion.ts
+
+3️⃣ INSTALAR DEPENDENCIAS
+   npm install
+
+4️⃣ INICIAR BOT
+   npm run dev
+
+5️⃣ ESCANEAR QR
+   - Abre http://localhost:4000
+   - Ve a "Conexión WhatsApp"
+   - Escanea QR con tu teléfono
+
+6️⃣ VERIFICAR SALUD
+   curl http://localhost:4000/api/whatsapp/health?userId=user123
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ ARCHIVOS CREADOS
+
+Documentación:
+  📄 WHATSAPP_WEB_ESTABLE_INICIO_RAPIDO.md - Guía paso a paso
+  📄 MIGRACION_WHATSAPP_WEB_ESTABLE.md - Plan completo
+  📄 COMANDOS_WHATSAPP_WEB_ESTABLE.md - Referencia de comandos
+  📄 CHECKLIST_IMPLEMENTACION_WHATSAPP_WEB.md - Checklist
+  📄 RESUMEN_MIGRACION_WHATSAPP_WEB.md - Resumen ejecutivo
+  📄 IMPLEMENTACION_WHATSAPP_WEB_COMPLETADA.md - Detalles técnicos
+
+Código:
+  💻 src/lib/whatsapp-health-monitor.ts - Monitor de salud
+  💻 src/app/api/whatsapp/health/route.ts - API de estado
+  💻 src/components/WhatsAppHealthMonitor.tsx - Componente UI
+  💻 scripts/optimizar-baileys-reconexion.ts - Script de optimización
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 VENTAJAS DE WHATSAPP WEB
+
+✅ Gratuito (sin costos de API)
+✅ Rápido (respuestas instantáneas)
+✅ Confiable (conexión directa)
+✅ Flexible (control total)
+✅ Escalable (múltiples instancias)
+✅ Privado (datos en tu servidor)
+✅ Estable (Baileys es ampliamente usado)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📊 MONITOREO
+
+Dashboard:
+  http://localhost:4000/dashboard
+  → Buscar "Estado de WhatsApp"
+  → Ver métricas en tiempo real
+
+API:
+  curl http://localhost:4000/api/whatsapp/health?userId=user123
+
+Logs:
+  npm run dev 2>&1 | grep Baileys
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔧 TROUBLESHOOTING
+
+QR no aparece:
+  rm -rf ./auth_sessions/user123
+  npm run dev
+
+Desconexión frecuente:
+  HEARTBEAT_INTERVAL=20000 npm run dev
+
+Mensajes no se envían:
+  curl http://localhost:4000/api/whatsapp/health?userId=user123
+
+Bot no inicia:
+  kill -9 $(lsof -t -i :4000)
+  npm run dev
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📚 DOCUMENTACIÓN
+
+Para empezar:
+  → WHATSAPP_WEB_ESTABLE_INICIO_RAPIDO.md
+
+Plan completo:
+  → MIGRACION_WHATSAPP_WEB_ESTABLE.md
+
+Referencia de comandos:
+  → COMANDOS_WHATSAPP_WEB_ESTABLE.md
+
+Checklist:
+  → CHECKLIST_IMPLEMENTACION_WHATSAPP_WEB.md
+
+═══════════════════════════════════════════════════════════════════════════════
+
+⏱️ ESTIMADO
+
+Implementación: 30 minutos
+Testing: 1 hora
+Monitoreo: 24/7 por 1 semana
+Ajustes: Según resultados
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎉 RESULTADO FINAL
+
+Un sistema de WhatsApp Web completamente estable que:
+
+✅ Se reconecta automáticamente
+✅ Monitorea salud en tiempo real
+✅ Envía y recibe mensajes confiablemente
+✅ Mantiene sesión activa
+✅ Proporciona métricas detalladas
+✅ Alerta de problemas
+✅ Permite reconexión manual
+✅ Escala a múltiples usuarios
+
+═══════════════════════════════════════════════════════════════════════════════
+
+¡LISTO PARA EMPEZAR! 🚀
+
+Próximo paso: Actualizar .env y ejecutar: npm run dev

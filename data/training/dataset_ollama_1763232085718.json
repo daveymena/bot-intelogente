@@ -1,0 +1,452 @@
+[
+  {
+    "id": "saludo_1763232015674_kw9umuchg",
+    "category": "saludo",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hola"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Hola! 👋  ¿En qué te puedo ayudar hoy? 😊"
+      }
+    ],
+    "metadata": {
+      "intent": "greeting",
+      "timestamp": "2025-11-15T18:40:15.674Z"
+    }
+  },
+  {
+    "id": "saludo_1763232017521_2jwyvqqot",
+    "category": "saludo",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Buenos días"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Buenos días! 👋 ¿En qué puedo ayudarte hoy? 😊"
+      }
+    ],
+    "metadata": {
+      "intent": "greeting",
+      "timestamp": "2025-11-15T18:40:17.521Z"
+    }
+  },
+  {
+    "id": "saludo_1763232019619_mfdnsfcn1",
+    "category": "saludo",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Buenas tardes"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Hola! 👋  ¿Qué tal estás? 😊 ¿En qué puedo ayudarte hoy?"
+      }
+    ],
+    "metadata": {
+      "intent": "greeting",
+      "timestamp": "2025-11-15T18:40:19.619Z"
+    }
+  },
+  {
+    "id": "saludo_1763232021376_3l3i7z846",
+    "category": "saludo",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Qué tal"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Hola!  ¿En qué te puedo ayudar hoy? 😊"
+      }
+    ],
+    "metadata": {
+      "intent": "greeting",
+      "timestamp": "2025-11-15T18:40:21.376Z"
+    }
+  },
+  {
+    "id": "saludo_1763232023356_2cxhv1yo7",
+    "category": "saludo",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hola, cómo estás"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Muy bien, gracias! ¿En qué te puedo ayudar hoy? 😊"
+      }
+    ],
+    "metadata": {
+      "intent": "greeting",
+      "timestamp": "2025-11-15T18:40:23.356Z"
+    }
+  },
+  {
+    "id": "busqueda_laptop_1763232026985_tt9ge377g",
+    "category": "busqueda_laptop",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Busco un portátil"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Hola! 😊  Para ayudarte a encontrar el portátil perfecto, cuéntame un poco más sobre lo que buscas: ¿para qué lo vas a usar? 😉  ¿Tamaño de pantalla? ¿Sistema operativo? 💻"
+      }
+    ],
+    "metadata": {
+      "intent": "product_search",
+      "timestamp": "2025-11-15T18:40:26.985Z"
+    }
+  },
+  {
+    "id": "busqueda_laptop_1763232030288_o2lufiut5",
+    "category": "busqueda_laptop",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Necesito una laptop"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Hola!  Claro que sí, te puedo ayudar con una laptop. ¿Qué tipo de laptop buscas? Para empezar, ¿te interesa una para trabajo o estudio, o quizás para jugar? 😊"
+      }
+    ],
+    "metadata": {
+      "intent": "product_search",
+      "timestamp": "2025-11-15T18:40:30.288Z"
+    }
+  },
+  {
+    "id": "busqueda_laptop_1763232033071_98z5kj83c",
+    "category": "busqueda_laptop",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Tienes computadores"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Sí! Contamos con una variedad de computadores desde ordenadores portátiles hasta equipos de escritorio para todos tus necesidades. ¿Qué te interesa? 😊"
+      }
+    ],
+    "metadata": {
+      "intent": "product_search",
+      "timestamp": "2025-11-15T18:40:33.071Z"
+    }
+  },
+  {
+    "id": "busqueda_laptop_1763232037259_dyrrtmix5",
+    "category": "busqueda_laptop",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Quiero un portátil para trabajar"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Claro que sí! Para ayudarte a elegir el portátil perfecto, necesito saber más sobre tus necesidades. ¿Qué tipo de trabajo realizas?  ¿Necesitas uno con mucha potencia para edición de videos o algo más ligero para navegar y trabajar con documentos?"
+      }
+    ],
+    "metadata": {
+      "intent": "product_search",
+      "timestamp": "2025-11-15T18:40:37.259Z"
+    }
+  },
+  {
+    "id": "busqueda_laptop_1763232040408_0ude0y3kl",
+    "category": "busqueda_laptop",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Laptop económica"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Claro que sí!  En Tecnovariedades D&S tenemos una variedad de laptops económicas de marcas reconocidas. ¿Qué tipo de uso le va a servir? 💻"
+      }
+    ],
+    "metadata": {
+      "intent": "product_search",
+      "timestamp": "2025-11-15T18:40:40.408Z"
+    }
+  },
+  {
+    "id": "busqueda_moto_1763232042752_t9xbammoh",
+    "category": "busqueda_moto",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Tienes motos"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Sí, tenemos una amplia variedad de motocicletas! ¿En qué tipo de moto te interesa saber más? 😉"
+      }
+    ],
+    "metadata": {
+      "intent": "product_search",
+      "timestamp": "2025-11-15T18:40:42.752Z"
+    }
+  },
+  {
+    "id": "busqueda_moto_1763232045843_z8usk4g8l",
+    "category": "busqueda_moto",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Busco una moto"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Hola! 😊 ¿Qué tipo de moto te interesa?  Tenemos opciones para todos los gustos y presupuestos. 😉 Cuéntame un poco más sobre lo que buscas."
+      }
+    ],
+    "metadata": {
+      "intent": "product_search",
+      "timestamp": "2025-11-15T18:40:45.843Z"
+    }
+  },
+  {
+    "id": "busqueda_moto_1763232048827_q06aqx97q",
+    "category": "busqueda_moto",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Necesito una motocicleta"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Claro! Para ayudarte a encontrar la moto perfecta, cuéntame un poco más sobre lo que buscas. ¿Qué tipo de viaje te gustaría hacer? 🏍️"
+      }
+    ],
+    "metadata": {
+      "intent": "product_search",
+      "timestamp": "2025-11-15T18:40:48.827Z"
+    }
+  },
+  {
+    "id": "busqueda_moto_1763232052032_42pwjdelo",
+    "category": "busqueda_moto",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Moto económica"
+      },
+      {
+        "role": "assistant",
+        "content": "Claro! 👋  En Tecnovariedades D&S tenemos una amplia variedad de motos económicas que se adaptan a tus necesidades. ¿Qué tipo de motocicleta estás buscando? 🏍️"
+      }
+    ],
+    "metadata": {
+      "intent": "product_search",
+      "timestamp": "2025-11-15T18:40:52.032Z"
+    }
+  },
+  {
+    "id": "busqueda_moto_1763232055185_tc5xbesc8",
+    "category": "busqueda_moto",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Quiero comprar una moto"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Claro! 😊  ¿Qué tipo de moto te interesa? Tenemos opciones para todos los gustos y presupuestos. ¡Cuéntame un poco más sobre tus necesidades! 🛵"
+      }
+    ],
+    "metadata": {
+      "intent": "product_search",
+      "timestamp": "2025-11-15T18:40:55.185Z"
+    }
+  },
+  {
+    "id": "precio_1763232058040_wxw3vqkfp",
+    "category": "precio",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Cuánto cuesta"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Hola!  Para poder darte un precio preciso, necesito saber qué producto te interesa. ¿Me puedes decir a qué se refiere el \"producto\"? 😉"
+      }
+    ],
+    "metadata": {
+      "intent": "price_inquiry",
+      "timestamp": "2025-11-15T18:40:58.040Z"
+    }
+  },
+  {
+    "id": "precio_1763232060850_k1psp06vq",
+    "category": "precio",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Qué precio tiene"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Hola!  Para darte el precio exacto necesito saber qué producto te interesa. 😉  Cuéntame un poco más sobre lo que buscas."
+      }
+    ],
+    "metadata": {
+      "intent": "price_inquiry",
+      "timestamp": "2025-11-15T18:41:00.850Z"
+    }
+  },
+  {
+    "id": "precio_1763232063834_keupqxa93",
+    "category": "precio",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Cuál es el valor"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Claro! Para darte una idea del valor de nuestras soluciones, necesito saber un poco más sobre tus necesidades.  **¿En qué área podemos ayudarte?** 😊"
+      }
+    ],
+    "metadata": {
+      "intent": "price_inquiry",
+      "timestamp": "2025-11-15T18:41:03.834Z"
+    }
+  },
+  {
+    "id": "precio_1763232067080_g1o83487e",
+    "category": "precio",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Está muy caro"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Entendemos!  ✨ Es importante que sepas que nuestros precios incluyen calidad y tecnología de última generación. ¿Te interesa explorar opciones más ajustadas a tu presupuesto? 😊"
+      }
+    ],
+    "metadata": {
+      "intent": "price_inquiry",
+      "timestamp": "2025-11-15T18:41:07.080Z"
+    }
+  },
+  {
+    "id": "precio_1763232069976_51qazp3rs",
+    "category": "precio",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Tienes algo más económico"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Claro que sí! 😊  ¿En qué tipo de producto te interesa un presupuesto ajustado? Podemos encontrar algo que se ajuste a tu necesidad.  🧐"
+      }
+    ],
+    "metadata": {
+      "intent": "price_inquiry",
+      "timestamp": "2025-11-15T18:41:09.976Z"
+    }
+  },
+  {
+    "id": "pago_1763232073241_pgxjhf5l1",
+    "category": "pago",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Cómo puedo pagar"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Hola! 👋 Tenemos varias opciones para pagarlo.  ¿Me dices a qué método te gustaría usar? Puedes hacerlo con tarjeta de crédito/débito, transferencia bancaria o efectivo. 😊"
+      }
+    ],
+    "metadata": {
+      "intent": "payment_inquiry",
+      "timestamp": "2025-11-15T18:41:13.241Z"
+    }
+  },
+  {
+    "id": "pago_1763232077485_93j2brdw8",
+    "category": "pago",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Qué métodos de pago tienen"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Hola!  En Tecnovariedades D&S, te ofrecemos diferentes opciones de pago para que puedas realizar tu compra con facilidad.  Puedes utilizar tarjetas de crédito/débito, transferencias bancarias o efectivo en caja. 😉 ¿Qué método te interesa más?"
+      }
+    ],
+    "metadata": {
+      "intent": "payment_inquiry",
+      "timestamp": "2025-11-15T18:41:17.485Z"
+    }
+  },
+  {
+    "id": "pago_1763232079981_1wtu03m2m",
+    "category": "pago",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Aceptan Nequi"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Por supuesto!  Nuestras opciones de pago son variadas, incluyendo Nequi. ¿En qué podemos ayudarte hoy? 😊"
+      }
+    ],
+    "metadata": {
+      "intent": "payment_inquiry",
+      "timestamp": "2025-11-15T18:41:19.981Z"
+    }
+  },
+  {
+    "id": "pago_1763232082622_uskz5ycwn",
+    "category": "pago",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Puedo pagar con tarjeta"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Por supuesto!  ¿En qué tipo de tarjeta quieres hacer la compra?  Cuéntame más sobre lo que necesitas. 😊"
+      }
+    ],
+    "metadata": {
+      "intent": "payment_inquiry",
+      "timestamp": "2025-11-15T18:41:22.622Z"
+    }
+  },
+  {
+    "id": "pago_1763232085206_3lyvc95op",
+    "category": "pago",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Tienen contraentrega"
+      },
+      {
+        "role": "assistant",
+        "content": "¡Claro!  ¿En qué tipo de producto o servicio te interesa la contra entrega? 😁 Te podemos ayudar con el proceso."
+      }
+    ],
+    "metadata": {
+      "intent": "payment_inquiry",
+      "timestamp": "2025-11-15T18:41:25.206Z"
+    }
+  }
+]

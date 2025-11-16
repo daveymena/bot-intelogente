@@ -1,0 +1,1687 @@
+{
+  "generatedAt": "2025-11-16T01:58:56.999Z",
+  "totalProducts": 68,
+  "products": [
+    {
+      "id": 0,
+      "nombre": "Tablet Acer Iconia M10 Wifi 10.1 Wxga Ips 4gb-64gb Champagne",
+      "categoria": "PHYSICAL",
+      "precio": 498900,
+      "descripcion": "Descubre la Tablet Acer Iconia M10 Wifi, una experiencia de entretenimiento multimedia sin igual. Con una pantalla de 10,1 pulgadas Full HD de 1920 x 1200 píxeles, disfruta de una visualización nítida y clara para ver videos, jugar o navegar por internet. Equipada con un procesador MediaTek de 4 núcleos, 4 GB de RAM y una capacidad de almacenamiento de 64 GB, realiza tareas cotidianas con fluidez. Con altavoces frontales y una batería de 6000mAh, disfruta de contenido multimedia durante horas. La Tablet Acer Iconia M10 es la opción perfecta",
+      "keywords": [
+        "tablet",
+        "acer",
+        "iconia",
+        "m10",
+        "wifi"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es la autonomía de la batería de la Tablet Acer Iconia M10 Wifi en uso continuo de aplicaciones?",
+        "¿Puedo expandir la memoria de almacenamiento de la Tablet Acer Iconia M10 Wifi más allá de los 64 GB iniciales?",
+        "¿La Tablet Acer Iconia M10 Wifi es compatible con redes 5G?"
+      ]
+    },
+    {
+      "id": 1,
+      "nombre": "Impresora Hp Laserjet M111W Monocromática",
+      "categoria": "PHYSICAL",
+      "precio": 585900,
+      "descripcion": "\"Imprime con precisión y velocidad. La impresora HP Laserjet M111W es una opción inteligente para empresas y hogares que buscan un dispositivo fiable y eficiente. Gracias a su tecnología de impresión láser monocromática, puede imprimir documentos y textos con una calidad excepcional y una tasa de impresión rápida. Con una garantía oficial y envío a toda Colombia, esta impresora es una inversión segura para cualquier necesidad de impresión. Precio: 585.900\"",
+      "keywords": [
+        "impresora",
+        "hp",
+        "laserjet",
+        "monocromática",
+        "oferta"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es la diferencia entre la tecnología de impresión láser monocromática de esta impresora y otras tecnologías de impresión disponibles en el mercado?",
+        "¿Cuál es la velocidad máxima de impresión que puede alcanzar la impresora HP Laserjet M111W?",
+        "¿La impresora es compatible con impresión en color o solo se puede utilizar para imprimir en blanco y negro?"
+      ]
+    },
+    {
+      "id": 2,
+      "nombre": "Impresora Epson Ecotank L1250 Imprime (Copia y Scanea Desde La App) Usb y Wifi",
+      "categoria": "PHYSICAL",
+      "precio": 719900,
+      "descripcion": "\"Imagina imprimir, copiar y escanear desde tu teléfono con la comodidad de tu hogar. La impresora Ecotank L1250 de Epson es la solución perfecta para ti. Con su sistema de impresión a tinta continua, puedes ahorrar dinero y reducir el desperdicio de cartuchos. Disfruta de imprimir hasta 8.200 páginas en blanco y negro y 6.000 páginas en color con solo un llenado de tinta. Con Wi-Fi y USB, conecta tu dispositivo con facilidad y disfruta de una impresión de alta calidad. ¡Comprala ahora por 719,900 COP!\"",
+      "keywords": [
+        "impresora",
+        "epson",
+        "ecotank",
+        "l1250",
+        "impresión"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es el rango de impresión en color y blanco y negro que puedo esperar con la impresora Ecotank L1250?",
+        "¿Es posible conectar la impresora a mi router de Wi-Fi sin necesidad de cables adicionales?",
+        "¿Cuál es el precio exacto del producto y si hay algún descuento o promoción disponible en la actualidad?"
+      ]
+    },
+    {
+      "id": 3,
+      "nombre": "Impresora Canon Multifuncional  G3170 Tinta Continua Wifi",
+      "categoria": "PHYSICAL",
+      "precio": 789900,
+      "descripcion": "\"Accede a una productividad sin límites con la impresora multifuncional Canon G3170. Con tecnología de tinta continua y conexión Wi-Fi, imprime, escanea, fotocopia y conecta de manera rápida y fácil. Su diseño compacto y ligero la hace ideal para cualquier espacio de trabajo. Gracias a su garantía original, puedes confiar en su durabilidad y rendimiento óptimo. Adquiere hoy y maximiza la eficiencia en tu hogar o oficina.\"",
+      "keywords": [
+        "impresora",
+        "multifuncional",
+        "canon",
+        "tinta continua",
+        "wifi"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es la vida útil de los cartuchos de tinta continua de la impresora Canon G3170?",
+        "¿Puede la impresora G3170 funcionar sin conexión a Internet para imprimir y escanear documentos?",
+        "¿Es compatible la impresora Canon G3170 con diferentes sistemas operativos como Windows y macOS?"
+      ]
+    },
+    {
+      "id": 4,
+      "nombre": "Impresora Epson Multifuncional Wifi Ecotank L3251",
+      "categoria": "PHYSICAL",
+      "precio": 990000,
+      "descripcion": "\"Revolutioniza tu productividad con la Impresora Epson Multifuncional Wifi Ecotank L3251, una solución versátil y sostenible para imprimir, escanear y copiar. Con Wi-Fi integrado, puedes imprimir desde cualquier dispositivo con conectividad a Internet. El sistema de cartuchos Ecotank ofrece un ahorro de hasta 90% en tinta y toner, reduciendo así el impacto ambiental. Diseñada para ser fácil de usar y mantener, esta impresora es ideal para hogares, pequeñas oficinas y estudios. ¡Compre con confianza gracias a la garantía original y entrega a toda Colombia!\"",
+      "keywords": [
+        "epson",
+        "multifuncional",
+        "wifi",
+        "ecotank",
+        "impresora"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es la capacidad máxima de almacenamiento de tinta en el sistema Ecotank de esta impresora?",
+        "¿Puede imprimir desde dispositivos móviles sin necesidad de conexión a Wi-Fi?",
+        "¿Cuál es la garantía oficial de la impresora Epson Multifuncional Wifi Ecotank L3251 en Colombia?"
+      ]
+    },
+    {
+      "id": 5,
+      "nombre": "Impresora Hp Smart Tank 530 Multifuncional Wi-Fi Adf",
+      "categoria": "PHYSICAL",
+      "precio": 1059900,
+      "descripcion": "\"Impresora líder en tecnología, la HP Smart Tank 530 es una solución integral para tu hogar y oficina. Esta impresora multifuncional Wi-Fi con ADf cuenta con una capacidad de impresión y escaneo de hasta 4800 x 1200 dpi, velocidad de impresión de hasta 20 ppm y un tanque de tinta de 1350 hojas. Con su conexión Wi-Fi y aplicación móvil, puedes imprimir desde cualquier lugar. ¡Descubre la comodidad y eficiencia de la HP Smart Tank 530 en tu vida cotidiana!\"",
+      "keywords": [
+        "impresora",
+        "multifuncional",
+        "wi-fi",
+        "adf",
+        "hp"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es la capacidad real de impresión y escaneo del HP Smart Tank 530 en comparación con la tasa de 4800 x 1200 dpi mencionada?",
+        "¿El tanque de tinta de 1350 hojas se puede recargar o reemplazar fácilmente, y cuál es el costo de los suministros de tinta?",
+        "¿La aplicación móvil mencionada es compatible con diferentes sistemas operativos, como Android e iOS,"
+      ]
+    },
+    {
+      "id": 6,
+      "nombre": "Portatil Asus Vivobook Go 15 E1504fa-Nj1961 Amd Ryzen 3 7320u Ram 8gb Ddr5 512 Ssd Pantalla 15.6 Fhd",
+      "categoria": "PHYSICAL",
+      "precio": 1329900,
+      "descripcion": "\"Sumérgete en la productividad con el portátil Asus Vivobook Go 15, equipado con un procesador AMD Ryzen 3 7320U y 8GB de RAM DDR5 para un rendimiento sin igual. Disfruta de una experiencia visual impresionante en la pantalla Full HD de 15.6 pulgadas. Con 512GB de SSD, accede a tus archivos y aplicaciones de manera rápida y eficiente. Este portátil original con garantía es perfecto para estudiantes, profesionales y creadores en movimiento. ¡Comienza a trabajar y crear con la confianza de un producto de alta calidad!\"",
+      "keywords": [
+        "portatil",
+        "asus",
+        "vivobook",
+        "ryzen",
+        "ssd"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es la duración de la batería del portátil Asus Vivobook Go 15?",
+        "¿El portátil puede ser actualizado con más memoria RAM o solo tiene la capacidad de 8GB?",
+        "¿El portátil tiene alguna característica de seguridad como sensores de huella dactilar o reconocimiento facial?"
+      ]
+    },
+    {
+      "id": 7,
+      "nombre": "Impresora Multifuncional Epson L5590 Wifi Ecotank",
+      "categoria": "PHYSICAL",
+      "precio": 1329900,
+      "descripcion": "\"Imagina una impresora que no solo se encarga de tus impresiones, sino que también te ayuda a reducir costos y proteger el medio ambiente. La impresora multifuncional Epson L5590 Wifi Ecotank es la solución que necesitas. Con tecnología Ecotank, reduce el consumo de cartuchos y empaque, y cuenta con conexión Wi-Fi para imprimir desde cualquier dispositivo. Original y con garantía, esta impresora es ideal para hogares y oficinas que buscan ser más sostenibles y productivas. ¡Descubre la diferencia con nuestra impresora L5590!\"",
+      "keywords": [
+        "impresora",
+        "multi",
+        "funcional",
+        "ecotank",
+        "wifi"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es la vida útil promedio de los tanques de tinta de la impresora Ecotank L5590?",
+        "¿Puedo conectar la impresora a mi red Wi-Fi y imprimir desde mi teléfono móvil o tableta?",
+        "¿La impresora Ecotank L5590 es compatible con impresión en color y escaneo de documentos?"
+      ]
+    },
+    {
+      "id": 8,
+      "nombre": "Portatil Asus Vivobook 15 X1502za-Ej2443 Intel core I5-12500h Ram 8gb Ddr4 512gb Ssd Pantalla 15.6",
+      "categoria": "PHYSICAL",
+      "precio": 1749900,
+      "descripcion": "\"Portatil Asus Vivobook 15 X1502za-Ej2443, la libertad en tus manos.\n\nAccede a una experiencia de trabajo y entretenimiento intensiva con nuestro portatil de gama alta, equipado con procesador Intel Core i5-12500H, 8GB de RAM DDR4 y un almacenamiento de 512GB SSD.\n\nCon una pantalla de 15.6 pulgadas y una autonomía prolongada, podrás trabajar y jugar sin límites. Incluye garantía original y entrega a toda Colombia. Disfruta la libertad de la tecnología con este portatil de última generación.\"",
+      "keywords": [
+        "asus",
+        "portatil",
+        "intel core i5",
+        "ssd",
+        "laptop"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es la duración promedio de la batería del portatil Asus Vivobook 15 X1502za-Ej2443?",
+        "¿Puedo actualizar la memoria RAM del portatil para aumentar la capacidad de almacenamiento?",
+        "¿El portatil Asus Vivobook 15 X1502za-Ej2443 es compatible con sistemas operativos como Windows 11 y Linux?"
+      ]
+    },
+    {
+      "id": 9,
+      "nombre": "Portátil Asus Vivobook Go 15 E1504FA-NJ1382 Amd Ryzen 5 7520u Pantalla 15.6 Ram 16gb Ddr5 512 Ssd",
+      "categoria": "PHYSICAL",
+      "precio": 1769900,
+      "descripcion": "\"Libérate a la libertad de la productividad con el Portátil Asus Vivobook Go 15 E1504FA-NJ1382, equipado con el potente procesador AMD Ryzen 5 7520U y 16GB de DDR5 de RAM. Su pantalla de 15.6 pulgadas brinda una experiencia visual inigualable, mientras que su unidad SSD de 512GB garantiza una velocidad y capacidad de almacenamiento excepcionales. Con su diseño elegante y ligero, este portátil es ideal para trabajar o estudiar en cualquier lugar. Disponible en Colombia con garantía original y envío rápido.\"",
+      "keywords": [
+        "asus",
+        "portátil",
+        "amd",
+        "ryzen",
+        "ssd"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuáles son las especificaciones completas del procesador AMD Ryzen 5 7520U y cómo afecta a la velocidad de procesamiento del portátil?",
+        "¿El portátil puede ser actualizado a futuras versiones de Windows o solo está disponible con la versión actual del sistema operativo?",
+        "¿La garantía original incluye servicio de soporte técnico en línea y reparación en caso de falla del dispositivo?"
+      ]
+    },
+    {
+      "id": 10,
+      "nombre": "Portátil Asus Vivobook 15 M1502ya-Nj694 Ryzen 7 5825u Ddr4 16Gb 1Tb Ssd 15.6 Fhd",
+      "categoria": "PHYSICAL",
+      "precio": 1819900,
+      "descripcion": "\"Conecta sin límites con el Portátil Asus Vivobook 15 M1502ya-Nj694, equipado con un procesador Ryzen 7 5825U de alta velocidad y 16GB de memoria DDR4 para un rendimiento impresionante. Su pantalla FHD de 15,6 pulgadas ofrece una visualización clara y detallada, mientras que su unidad SSD de 1TB garantiza una velocidad de carga rápida. Con una garantía de producto original, este portátil es ideal para profesionales y estudiantes que requieren una herramienta confiable y potente. ¡Adquiere ahora y aproveche la libertad de estar conectado a todas partes!\"",
+      "keywords": [
+        "asus",
+        "portátil",
+        "ryzen",
+        "ssd",
+        "15.6"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es el tipo de conexión Wi-Fi y Bluetooth que ofrece este portátil para las conexiones inalámbricas?",
+        "¿La pantalla FHD de 15,6 pulgadas se puede ajustar a diferentes ángulos y configuraciones para una comodidad óptima?",
+        "¿El portátil cuenta con alguna característica de seguridad como fingerprint o cámara de reconocimiento facial para proteger la información confidencial?"
+      ]
+    },
+    {
+      "id": 11,
+      "nombre": "Portatil Acer A15-51p-591e Intel 5 (Serie 1) 120u Ram 16gb Lpddr5 512gb Ssd Pantalla 15.6 Fhd Ips",
+      "categoria": "PHYSICAL",
+      "precio": 1899900,
+      "descripcion": "\"Conecta con la libertad: Portatil Acer A15-51p-591e, equipado con procesador Intel Core 5 (Serie 1) de 12ª generación, 16GB de RAM LPDDR5 y 512GB de almacenamiento SSD. Disfruta de una experiencia visual inigualable en su pantalla 15.6\" FHD IPS, perfecta para trabajo, estudio y entretenimiento. Con garantía original y envío a toda Colombia, este portátil es la solución ideal para aquellos que buscan una combinación de rendimiento y movilidad. ¡Aprovecha esta oportunidad y lleva la tecnología al siguiente nivel! Precio",
+      "keywords": [
+        "portatil",
+        "acer",
+        "intel",
+        "ssd",
+        "fhd"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "- ¿Cuál es el rendimiento de la batería del portátil Acer A15-51p-591e?",
+        "- ¿Puedo actualizar la memoria RAM del portátil para aumentar su capacidad?",
+        "- ¿El portátil Acer A15-51p-591e es compatible con Windows 11 y otros sistemas operativos?"
+      ]
+    },
+    {
+      "id": 12,
+      "nombre": "Portátil Asus Vivobook Go E1504fa-L1745 Amd Ryzen 5-7520u Ram 16gb Ddr5 512 Ssd Pantalla 15.6 Oled Fhd",
+      "categoria": "PHYSICAL",
+      "precio": 1899900,
+      "descripcion": "\"Descubre la libertad de trabajar o jugar en cualquier lugar con el portátil Asus Vivobook Go E1504fa-L1745. Equipado con el procesador AMD Ryzen 5-7520U, 16GB de RAM DDR5 y un disco SSD de 512GB, este laptop ofrece una experiencia de rendimiento excepcional. Su pantalla OLED de 15,6 pulgadas en alta resolución FHD te sumergirá en una visión impresionante. Con garantía original y envío a toda Colombia, este portátil es la opción perfecta para profesionales y gamers en busca de una experiencia de cómputo premium. ¡Precio: COP 1.899.900",
+      "keywords": [
+        "asus",
+        "vivobook",
+        "ryzen",
+        "oled",
+        "ssd"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "- ¿Cuál es la garantía oficial para este portátil y qué cubre?",
+        "- ¿Es posible personalizar o aumentar la capacidad del disco SSD de 512GB?",
+        "- ¿El portátil viene con software de seguridad y protección contra malware incluido?"
+      ]
+    },
+    {
+      "id": 13,
+      "nombre": "Escáner Epson DS-C490 Automático a Color Dúplex",
+      "categoria": "PHYSICAL",
+      "precio": 2139900,
+      "descripcion": "\"Transforma tu archivo en minutos con el Escáner Epson DS-C490 Automático a Color Dúplex, un herramienta innovadora que ofrece velocidad y precisión en la digitalización de documentos. Con capacidad para escanear a dualidad de color y un rendimiento de hasta 40 páginas por minuto, este escáner es ideal para oficinas y empresas que buscan automatizar su proceso de archivo. Disponible en stock y con garantía, recibe el mejor servicio en Colombia y comienza a aprovechar todas las ventajas de la digitalización.\"",
+      "keywords": [
+        "epson",
+        "escáner",
+        "automático",
+        "dúplex",
+        "digitalización"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es la velocidad máxima de escaneo del Epson DS-C490 Automático a Color Dúplex?",
+        "¿Puede el escáner funcionar en modalidad de escaneo de ambos lados de un documento de una sola vez?",
+        "¿Cuál es la garantía que ofrece Epson para el escáner DS-C490 Automático a Color Dúplex?"
+      ]
+    },
+    {
+      "id": 14,
+      "nombre": "Impresora Epson EcoTank L6490",
+      "categoria": "PHYSICAL",
+      "precio": 2169900,
+      "descripcion": "\"Imagina imprimir sin límites y sin gastos adicionales. La impresora Epson EcoTank L6490 es la solución ideal para tus necesidades de impresión. Con un diseño compacto y un sistema de tinta a granel, esta impresora ofrece una impresión de alta calidad y una economía de costos significativa. Puedes imprimir hasta 4500 páginas en blanco y negro y 6500 en color sin necesidad de reponer tinta. Compra ahora y disfruta de la libertad de imprimir sin fin.\"",
+      "keywords": [
+        "impresora",
+        "ecotank",
+        "l6490",
+        "epson",
+        "tinta a granel"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cómo funciona el sistema de tinta a granel de la impresora Epson EcoTank L6490?",
+        "¿Cuál es el costo total de los cartuchos de tinta cuando se necesitan reponer?",
+        "¿Puedo imprimir en diferentes formatos de papel con esta impresora, como papel fotográfico o papel de carta?"
+      ]
+    },
+    {
+      "id": 15,
+      "nombre": "Portatil Acer Al15-41p-R8f7 Amd Ryzen 7 7500u Ram 16gb Ddr4 1tb Ssd Pantalla 15.6 Fhd Ips",
+      "categoria": "PHYSICAL",
+      "precio": 2179900,
+      "descripcion": "Portatil Acer Al15-41p-R8f7: La libertad de crear sin límites. \n\nEquípado con el procesador AMD Ryzen 7 7500U, ofrece una potencia sin igual para tareas intensivas. Con 16GB de RAM DDR4 y un almacenamiento de 1TB en SSD, te permite almacenar y acceder a tus archivos de manera rápida y eficiente. Una pantalla de 15.6\" FHD IPS ofrece una experiencia visual inmersiva. Con garantía original y envío a toda Colombia, este portátil es la herramienta perfecta para profesionales y creativos.",
+      "keywords": [
+        "portatil",
+        "acer",
+        "amd",
+        "ryzen",
+        "laptop"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "- ¿Cuál es el tiempo de respuesta del procesador AMD Ryzen 7 7500U en comparación con otros procesadores similares?",
+        "- ¿Es posible actualizar la memoria RAM DDR4 del portátil Acer Al15-41p-R8f7 a una versión más alta?",
+        "- ¿La pantalla FHD IPS del portátil es capacitiva y permite la interacción con dedos o solo con un ratón y teclado?"
+      ]
+    },
+    {
+      "id": 16,
+      "nombre": "Impresora Epson Multifuncional EcoTank L6270",
+      "categoria": "PHYSICAL",
+      "precio": 2189900,
+      "descripcion": "\"Imagina tener a tu alcance una impresora de alta calidad, sin comprometer tu presupuesto ni el medio ambiente. La Impresora Epson Multifuncional EcoTank L6270 es la solución perfecta para ti. Con su diseño compacto y funcionalidad avanzada, imprime, acaba, escanea y fotocopia con facilidad. Su tecnología EcoTank reduce el impacto ambiental y te ahorra dinero en costos de impresión. Disfruta de una impresión de hasta 8,500 páginas sin necesidad de rellenar, todo esto a un precio increíble de $2,189,900. ¡No te pierdas esta oportunidad",
+      "keywords": [
+        "epson",
+        "multifuncional",
+        "ecotank",
+        "impresora",
+        "oficina"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "- ¿Cuál es el rango de tamaños de papel que puedo imprimir con la Impresora Epson Multifuncional EcoTank L6270?",
+        "- ¿Cuánto tiempo tarda en recargar el tanque de tinta y poder volver a imprimir?",
+        "- ¿La impresora viene con software de edición de imágenes para poder personalizar mis impresiones?"
+      ]
+    },
+    {
+      "id": 17,
+      "nombre": "Portatil Asus Vivobook 15 X1502va-Nj929 Intel Ci7-13620h 15,6 Fhd 16gb 512gb Ssd",
+      "categoria": "PHYSICAL",
+      "precio": 2249900,
+      "descripcion": "\"Encuentra el equilibrio perfecto entre rendimiento y estilo con el Portatil Asus Vivobook 15 X1502va-Nj929. Equipado con el procesador Intel Core i7-13620H y 16GB de RAM, este portátil ofrece una experiencia de trabajo y entretenimiento sin igual. Con una pantalla 15,6\" Full HD y un almacenamiento de 512GB SSD, podrás cargar tus aplicaciones favoritas en un abrir y cerrar de ojos. Disponible en stock y con garantía, este portátil es ideal para profesionales y estudiantes que buscan una herramienta confiable y versátil. ¡Compre ahora y descubra la",
+      "keywords": [
+        "asus",
+        "portatil",
+        "intel",
+        "ci7",
+        "ssd"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es la velocidad de carga y renderizado de video en este portátil?",
+        "¿El portátil viene con algún software o aplicación preinstalado para proteger la seguridad de los datos?",
+        "¿La pantalla Full HD del portátil es LED o TN, y qué características tiene en cuanto a brillo y gama de colores?"
+      ]
+    },
+    {
+      "id": 18,
+      "nombre": "Portatil Asus Vivobook 16 X1605va-Mb1235 Intel Ci7-13620h Ram 16gb Ddr5 512gb Ssd Pantalla 16.0",
+      "categoria": "PHYSICAL",
+      "precio": 2449900,
+      "descripcion": "\"Encuentra la libertad de crear con el Portatil Asus Vivobook 16 X1605va-Mb1235. Equipado con un procesador Intel Core i7-13620H, 16GB de RAM DDR5 y un almacenamiento rápido de 512GB SSD, este laptop es ideal para tareas intensivas como videoedición, programación y más. Con una pantalla de 16 pulgadas de alta definición y un diseño compacto, puedes trabajar en cualquier lugar mientras disfrutas de una experiencia de usuario intuitiva y elegante. Disfruta de la seguridad de una garantía original y un envío rápido a cualquier parte de Colombia.\"",
+      "keywords": [
+        "asus",
+        "portatil",
+        "intel",
+        "ssd",
+        "ddr5"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es el tiempo de carga del procesador Intel Core i7-13620H?",
+        "¿La pantalla de 16 pulgadas es táctil o tradicional?",
+        "¿El laptop incluye algún software o aplicación de videoedición de alta calidad?"
+      ]
+    },
+    {
+      "id": 19,
+      "nombre": "Portátil Asus Vivobook 15 X1502va-Nj893 Intel Core I7-13620h Ram 16gb Ddr4 1tb Ssd Pantalla 15.6 Fhd",
+      "categoria": "PHYSICAL",
+      "precio": 2499900,
+      "descripcion": "\"¡Descubre el poder en movimiento!\n\nEl Portátil Asus Vivobook 15 X1502va-Nj893 es la opción perfecta para los profesionales y estudiantes en busca de una computadora portátil versátil y potente. Con el procesador Intel Core i7-13620h, 16GB de RAM DDR4 y un almacenamiento SSD de 1TB, puedes ejecutar múltiples tareas sin problemas y disfrutar de una velocidad de carga instantánea.\n\nLa pantalla de 15,6 pulgadas en resolución FHD te brinda una experiencia visual inmersiva. Y con una batería de larga duración, puedes trabajar o jugar sin interrupciones",
+      "keywords": [
+        "asus",
+        "portatil",
+        "intel",
+        "core",
+        "ssd"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es la velocidad de carga del SSD de 1TB en este portátil Asus Vivobook 15 X1502va-Nj893?",
+        "¿Puede el procesador Intel Core i7-13620h manejar tareas intensivas como editar videos o jugar juegos en alta definición?",
+        "¿El portátil Asus Vivobook 15 X1502va-Nj893 cuenta con alguna característica de seguridad adicional como fingerprint o facial recognition?"
+      ]
+    },
+    {
+      "id": 20,
+      "nombre": "Portatil Asus Vivobook S16 M3607ha-Rp111 Amd Ryzen™ 9 270 Ddr5 16gb + Slot Adic 512gb Ssd 16″ Wuxga",
+      "categoria": "PHYSICAL",
+      "precio": 3019900,
+      "descripcion": "\"Transforma tus productividad y entretenimiento con el Portatil Asus Vivobook S16 M3607ha-Rp111. Equipado con el procesador AMD Ryzen 9 270 y 16 GB de DDR5, ofrece una velocidad y eficiencia excepcionales. Un almacenamiento adicional de 512 GB SSD garantiza que tus archivos estén siempre a mano. Con una pantalla de 16 pulgadas en resolución WUXGA, disfruta de una experiencia visual inmersiva. Disponible con garantía y envío a toda Colombia, este portátil es la mejor opción para aquellos que buscan equilibrio entre trabajo y diversión.\"",
+      "keywords": [
+        "asus",
+        "portatil",
+        "amd",
+        "ryzen",
+        "ssd"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es el tiempo de garantía del portátil Asus Vivobook S16 M3607ha-Rp111?",
+        "¿El procesador AMD Ryzen 9 270 es compatible con juegos y aplicaciones pesadas?",
+        "¿Se puede actualizar la memoria RAM del portátil Asus Vivobook S16 M3607ha-Rp111 a más de 16 GB?"
+      ]
+    },
+    {
+      "id": 21,
+      "nombre": "Impresora Brother Multifuncional MFC-T4500DW",
+      "categoria": "PHYSICAL",
+      "precio": 3049900,
+      "descripcion": "\"Imagina tener todo en una sola máquina. La impresora Brother Multifuncional MFC-T4500DW es la solución perfecta para tu oficina o hogar. Esta impresora multifuncional ofrece impresión, escaneo, copia y fax en un solo dispositivo, con una velocidad de impresión de hasta 40 ppm y una calidad de impresión de 1200 x 1200 dpi. Con tecnología Wi-Fi y conectividad USB, puedes imprimir desde cualquier dispositivo. Su diseño compacto y fácil de usar te permitirá trabajar de manera eficiente y productiva. Compra ahora y descubre la comodidad de una sola máquina.\"",
+      "keywords": [
+        "impresora",
+        "multifuncional",
+        "brother",
+        "mfc-t4500dw",
+        "oficina"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es la garantía de la impresora Brother Multifuncional MFC-T4500DW?",
+        "¿Puede la impresora Brother Multifuncional MFC-T4500DW imprimir desde dispositivos móviles?",
+        "¿Hay una opción de impresión en blanco y negro o solo impresión en color con la impresora Brother Multifuncional MFC-T4500DW?"
+      ]
+    },
+    {
+      "id": 22,
+      "nombre": "Escáner Epson Dúplex a Color DS-770 ll",
+      "categoria": "PHYSICAL",
+      "precio": 3289900,
+      "descripcion": "\"Mejora tu productividad con el escáner Epson Dúplex a Color DS-770 ll, un dispositivo de alta calidad y versatilidad. Con tecnología de doble banda, escanea documentos y imágenes de manera rápida y precisa en color. Su diseño compacto y ligero lo hace ideal para cualquier espacio de trabajo. Además, incluye garantía y servicio de envío a toda Colombia. Investiga en la innovación con el Epson DS-770 ll. Disponible a precio de $3.289.900.\"",
+      "keywords": [
+        "epson",
+        "escáner",
+        "dúplex",
+        "color",
+        "productividad"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es el rango de velocidad de escaneo del Epson Dúplex a Color DS-770 ll?",
+        "¿Puede el escáner Epson DS-770 ll manejar documentos de gran tamaño o únicamente documentos estándar?",
+        "¿El precio de $3.289.900 incluye impuestos y otros cargos adicionales?"
+      ]
+    },
+    {
+      "id": 23,
+      "nombre": "Impresora Multifuncional Epson Workforce Pro WF-m5799 monocromática de sistema bolsas de tinta",
+      "categoria": "PHYSICAL",
+      "precio": 3839900,
+      "descripcion": "\"Transforma tu oficina con la impresora multifuncional Epson Workforce Pro WF-m5799, un dispositivo de última generación que ofrece impresión, escaneo, copia y fax en una sola máquina. Con su sistema de bolsas de tinta, reduce costos y minimiza el mantenimiento. Su diseño compacto y fiable le permite imprimir documentos y materiales en alta calidad, sin comprometer la productividad. ¡Adquiere la versión monocromática ahora y mejora la eficiencia de tu trabajo!\"",
+      "keywords": [
+        "impresora",
+        "multifuncional",
+        "epson",
+        "tinta",
+        "oficina"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es la capacidad máxima de impresión de la Epson Workforce Pro WF-m5799?",
+        "¿Es compatible con impresión en color en la versión monocromática de la máquina?",
+        "¿Cuál es el tiempo estimado de vida útil de las bolsas de tinta en la Epson Workforce Pro WF-m5799?"
+      ]
+    },
+    {
+      "id": 24,
+      "nombre": "Moto Bajaj Pulsar NS 160 FI1 (2020)",
+      "categoria": "PHYSICAL",
+      "precio": 6500000,
+      "descripcion": "¡Descubre la emoción de conducir con la Bajaj Pulsar NS 160 FI1!\n\nModelo 2020 en excelentes condiciones, lista para rodar. \n\n- Motor 160cc Inyección Electrónica (FI1) \n- Papeles al día (+ Traspaso disponible)\n- Mantenimiento reciente, todo al día\n- Estado impecable y muy cuidada\n- SOAT y Tecnomecánica vigentes\n\nUbicación: Centro Comercial El Diamante 2, San Nicolás, Cali\nPrecio inicial: $6.500.000 COP (con rebaja: $6.300.000 COP, final negociable: $",
+      "keywords": [
+        "moto",
+        "bajaj",
+        "pulsar",
+        "ns 160",
+        "cali"
+      ],
+      "intent": "recommendation",
+      "ejemplos": [
+        "¿Cuál es el kilometraje actual del vehículo y si hay algún problema con el motor o la transmisión?",
+        "¿Por qué tiene un precio inicial de $6.500.000 COP y qué beneficios ofrece con la rebaja de $6.300.000 COP?",
+        "¿El vehículo tiene alguna característica o opción adicional que no está mencionada en la descripción, como aire acondicionado o luces LED?"
+      ]
+    },
+    {
+      "id": 25,
+      "nombre": "Macbook Pro M4 Pro Max 24gb Ram 512gb Ssd Pantalla 14” Retina Xdr Mac os Space Black",
+      "categoria": "PHYSICAL",
+      "precio": 10899900,
+      "descripcion": "\"Revolutioniza tu productividad con el MacBook Pro M4 Pro Max, la potencia en tu mano. Dotado de 24GB de RAM y 512GB de almacenamiento SSD, este ultraproyector te permite ejecutar múltiples aplicaciones simultáneamente sin que se ralentice. La pantalla de 14 pulgadas Retina XDR te sumergirá en experiencias visuales inigualables. Con el sistema operativo macOS, podrás aprovechar al máximo la tecnología Apple. Disponible en negro Space Black, este modelo original viene con garantía y se envía a toda Colombia.\"",
+      "keywords": [
+        "macbook",
+        "pro",
+        "m4",
+        "mac os",
+        "retina"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Es posible actualizar el almacenamiento del MacBook Pro M4 Pro Max a un tamaño mayor que 512GB?",
+        "¿Cuál es la duración de la batería del MacBook Pro M4 Pro Max?",
+        "¿Está el MacBook Pro M4 Pro Max compatible con la función de carga rápida a través de USB-C?"
+      ]
+    },
+    {
+      "id": 26,
+      "nombre": "Mega Pack 26: Macros",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Mezcla potencia y eficiencia con Mega Pack 26: Macros. Automatiza tareas complejas en Excel y Office con las herramientas de macro más avanzadas del mercado. Ahorra tiempo y reduce errores con nuestra solución intuitiva y fácil de usar. Con Mega Pack 26: Macros, puedes liberar tu potencial creativo y enfocarte en lo que realmente importa. Invierte en tu productividad y compre ahora por 20000.\"",
+      "keywords": [
+        "mega pack 26",
+        "macros",
+        "excel",
+        "office",
+        "productividad"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuáles son las herramientas de macro más avanzadas incluidas en Mega Pack 26: Macros y cómo pueden ayudar a automatizar tareas complejas en Excel y Office?",
+        "¿Qué tipo de errores puedo esperar reducir con la solución intuitiva y fácil de usar de Mega Pack 26: Macros y cómo puede mejorar mi productividad?",
+        "¿Hay alguna posibilidad de obtener un descuento o promoción para comprar Mega Pack 26: Macros, especialmente consider"
+      ]
+    },
+    {
+      "id": 27,
+      "nombre": "Mega Pack 27: Cursos MultiProfesiones",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Desbloquea tu potencial laboral con Mega Pack 27: Cursos MultiProfesiones. Por solo 20000, accede a una amplia gama de oficios y profesiones en un solo pack. Aprende y crece en diferentes áreas, desde la tecnología hasta la creatividad, y descubre nuevas oportunidades laborales. Con Mega Pack 27, puedes personalizar tu carrera y alcanzar tus objetivos con confianza y éxito. ¡No te pierdas esta oportunidad única para transformar tu futuro profesional!\"",
+      "keywords": [
+        "cursos",
+        "profesionales",
+        "desarrollo",
+        "carrera",
+        "empleo"
+      ],
+      "intent": "recommendation",
+      "ejemplos": [
+        "¿Cuál es el contenido específico de los cursos incluidos en Mega Pack 27 y qué áreas de estudio se cubren?",
+        "¿Cómo funciona el proceso de aprendizaje y qué recursos están disponibles para los usuarios que adquieren este pack?",
+        "¿Hay alguna garantía o política de devolución en caso de que no esté satisfecho con los resultados obtenidos en los cursos del Mega Pack 27?"
+      ]
+    },
+    {
+      "id": 28,
+      "nombre": "Mega Pack 28: PreUniversitario-Psicología",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Accede a las mejores oportunidades universitarias con Mega Pack 28: PreUniversitario-Psicología. Este paquete de preparación universitaria especializado en psicología te brinda un enfoque integral para superar los desafíos de la admisión y asegurar tu futuro académico. Con una inversión de 20.000, aprovecha la oportunidad de destacarte en el mundo de la psicología y alcanzar tus objetivos. Prepárate para triunfar en la universidad y abrir las puertas del éxito.\"",
+      "keywords": [
+        "preuniversitario",
+        "psicología",
+        "admisión",
+        "preparación",
+        "universidad"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuáles son los contenidos específicos que incluye el paquete Mega Pack 28: PreUniversitario-Psicología?",
+        "¿Cómo funciona el proceso de preparación y qué beneficios se obtienen al completar este paquete?",
+        "¿Qué tipo de apoyo y recursos adicionales se ofrecen a los estudiantes que compran el Mega Pack 28: PreUniversitario-Psicología?"
+      ]
+    },
+    {
+      "id": 29,
+      "nombre": "Mega Pack 29: Curso Resina",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Con el Mega Pack 29: Curso Resina, transforma tu creatividad en obras maestras. Aprende a trabajar con resinas y manualidades profesionales a un nivel experto. Este curso integral te brinda acceso a conocimientos y herramientas para crear piezas únicas y llamativas. Desde principiantes hasta expertos, este pack es ideal para aquellos que buscan mejorar sus habilidades y descubrir nuevos mundos de creatividad. Invierte en ti mismo y lleva tu arte a un nuevo nivel con el Mega Pack 29: Curso Resina.\"",
+      "keywords": [
+        "resina",
+        "manualidades",
+        "creatividad",
+        "arte",
+        "curso"
+      ],
+      "intent": "recommendation",
+      "ejemplos": [
+        "¿Qué habilidades específicas puedo aprender con el Mega Pack 29: Curso Resina?",
+        "¿Cuál es el nivel de experticia requerido para poder aprovechar al máximo este curso?",
+        "¿Qué tipo de materiales y herramientas están incluidos en el curso para trabajar con resinas?"
+      ]
+    },
+    {
+      "id": 30,
+      "nombre": "Mega Pack 30: BODA Bartender y Producción Musical",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Conecta tus pasiones con el Mega Pack 30, la solución completa para convertirte en un experto en eventos y música. Este paquete incluye un poderoso BODA Bartender para gestionar con facilidad tus celebraciones y un motor de producción musical para crear experiencias inolvidables. Con Mega Pack 30, puedes diseñar, organizar y producir eventos y música de alta calidad, impulsando tus habilidades y aumentando tus oportunidades de éxito. ¡Adquiere el poder de crear momentos inolvidables con el Mega Pack 30!\"",
+      "keywords": [
+        "boda",
+        "bartender",
+        "producción",
+        "musical",
+        "eventos"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es el alcance de las funciones del BODA Bartender incluido en el Mega Pack 30?",
+        "¿Puedo personalizar la música producida con el motor de producción musical para adaptarla a mis eventos específicos?",
+        "¿Existe soporte técnico disponible para ayudarme a resolver problemas o mejorar mi habilidad con el Mega Pack 30?"
+      ]
+    },
+    {
+      "id": 31,
+      "nombre": "Mega Pack 31: 550 Planos de Muebles de Melamina",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Transforma tu espacio con estilo y creatividad con el Mega Pack 31. ¡Obtén 550 planos detallados de muebles de melamina para fabricar en casa! Desde sofás y mesas de comedor hasta estanterías y cajas de almacenamiento, nuestros planos te brindan la libertad de diseñar y construir tus propios muebles perfectos. Aprovecha esta oportunidad única y revoluciona tu hogar con tu toque personalizado. ¡Compre ahora el Mega Pack 31 por solo 20.000!\"",
+      "keywords": [
+        "muebles de melamina",
+        "planos",
+        "muebles para casa",
+        "diseño",
+        "construcción."
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es el material utilizado para la fabricación de los muebles que se pueden construir con los planos del Mega Pack 31?",
+        "¿Los planos incluyen instrucciones detalladas para cada tipo de mueble, o solo son esquemas generales?",
+        "¿Hay algún límite de tiempo o vencimiento para utilizar los planos del Mega Pack 31 una vez que se realiza la compra?"
+      ]
+    },
+    {
+      "id": 32,
+      "nombre": "Mega Pack 32: Universitario",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Obtén la excelencia académica con Mega Pack 32: Universitario, tu herramienta indispensable para estudios universitarios. Accede a recursos completos y de alta calidad que te ayudarán a alcanzar tus objetivos académicos. Desde notas de clase hasta tutoriales y ejercicios prácticos, este paquete te brinda todo lo que necesitas para dominar tus materias y obtener excelentes notas. Con Mega Pack 32, ¡no te dejes nada al azar! Investe en tu futuro y recibe el soporte que mereces. Precio: 20.000\"",
+      "keywords": [
+        "estudios universitarios",
+        "recursos educativos",
+        "tutoriales",
+        "excelencia académica",
+        "materiales de estudio."
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es el alcance de los recursos incluidos en Mega Pack 32: Universitario y cómo puedo acceder a ellos?",
+        "¿Cuáles son las materias específicas cubiertas por este paquete y si se ajustan a mis necesidades académicas?",
+        "¿Hay algún soporte adicional ofrecido con la compra de Mega Pack 32: Universitario, como tutoría o asesoramiento personalizado?"
+      ]
+    },
+    {
+      "id": 33,
+      "nombre": "Mega Pack 33: Filmora 9",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Desbloquea tu creatividad con el Mega Pack 33: Filmora 9. Obtén acceso a recursos y tutoriales completos para dominar la edición de video con Filmora 9. Aprende técnicas avanzadas, mejora tus habilidades y crea contenido profesional de alta calidad. Con este paquete, podrás explorar la totalidad de las capacidades de Filmora 9 y tomar tus proyectos a un nuevo nivel. Compra ahora y comienza a crear videos impresionantes que te dejarán sin aliento. Precio: 20.000\"",
+      "keywords": [
+        "filmora",
+        "edición de video",
+        "recursos",
+        "tutoriales",
+        "creatividad."
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuáles son los recursos y tutoriales específicos que se incluyen en el Mega Pack 33: Filmora 9?",
+        "¿Qué nivel de habilidad en edición de video es necesario para aprovechar al máximo los recursos de este paquete?",
+        "¿Hay alguna forma de acceder a actualizaciones futuras o nuevos recursos adicionales después de comprar el Mega Pack 33: Filmora 9?"
+      ]
+    },
+    {
+      "id": 34,
+      "nombre": "Mega Pack 35: Álbumes digitales de colección",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Descubre la colección perfecta con Mega Pack 35. Comprende 35 álbumes digitales exclusivos y de alta calidad, diseñados para satisfacer a los amantes de la música y la cultura. Desde clásicos del rock hasta éxitos contemporáneos, disfruta de la variedad y la emoción que estos álbumes digitales ofrecen. Con Mega Pack 35, puedes crear tu propia biblioteca musical personalizada y llevar la música a cualquier lugar. Compra ahora y sumérgete en la música que te apasiona.\"",
+      "keywords": [
+        "álbumes digitales",
+        "colección",
+        "música",
+        "rock",
+        "descarga digital"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Qué tipo de géneros musicales están incluidos en los 35 álbumes digitales del Mega Pack 35?",
+        "¿Cómo puedo acceder a los álbumes digitales después de realizar la compra?",
+        "¿Hay alguna forma de descargar solo los álbumes que me gustan y no tener que descargar todo el Mega Pack 35?"
+      ]
+    },
+    {
+      "id": 35,
+      "nombre": "Mega Pack 36: Libros de Pedagogía",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "**Mega Pack 36: Libros de Pedagogía**\n\nDescubre el secreto para mejorar tus habilidades docentes con nuestro Mega Pack 36: Libros de Pedagogía. Este paquete inigualable reúne 36 recursos pedagógicos y educativos profesionales que te ayudarán a superar los desafíos de la enseñanza y a alcanzar el máximo potencial de tus estudiantes. Con una variedad de temas y enfoques, este paquete es ideal para maestros y educadores que buscan innovar y mejorar su práctica docente. ¡Comienza a transformar la educación con Mega Pack 36!",
+      "keywords": [
+        "pedagogía",
+        "educación",
+        "enseñanza",
+        "aprendizaje",
+        "desarrollo"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuáles son los temas específicos que se cubren en los 36 recursos pedagógicos incluidos en el paquete?",
+        "¿Cómo puedo asegurarme de que los recursos incluidos en el Mega Pack 36 sean relevantes y adaptados a la edad y nivel de mis estudiantes?",
+        "¿Qué tipo de soporte o recursos adicionales están disponibles para ayudar a los educadores a implementar y utilizar efectivamente los recursos incluidos en el paquete?"
+      ]
+    },
+    {
+      "id": 36,
+      "nombre": "Mega Pack 37: Marketing & Ventas",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Eleve tus habilidades en marketing y ventas con el Mega Pack 37, la herramienta completa para transformar tu negocio. Aprende las últimas estrategias de marketing y adquieres técnicas efectivas de ventas para aumentar tus ventas y establecer una presencia destacada en el mercado. Con este paquete de oro, tendrás acceso a una amplia gama de recursos y conocimientos para impulsar el crecimiento de tu negocio. ¡Está a tu alcance el éxito comercial! Precio: 20.000\"",
+      "keywords": [
+        "marketing",
+        "ventas",
+        "estrategias",
+        "negocio",
+        "emprendimiento"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es el contenido específico del Mega Pack 37 y qué recursos de marketing y ventas se incluyen?",
+        "¿Cuál es el nivel de experiencia requerido para aprovechar al máximo el contenido del Mega Pack 37?",
+        "¿Qué tipo de resultados puedo esperar obtener después de utilizar el Mega Pack 37 y ¿cómo puedo medir su efectividad?"
+      ]
+    },
+    {
+      "id": 37,
+      "nombre": "Mega Pack 38: Redes Sociales",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"¡Maximiza tu presencia en línea con nuestro Mega Pack 38: Redes Sociales!\n\nCon este paquete de alto nivel, gestionarás tus redes sociales de manera profesional y efectiva. Aumenta tu alcance, aumenta tu influencia y conecta con tus seguidores de manera más personalizada. Nuestro Mega Pack 38 te brinda las herramientas y estrategias necesarias para dominar el juego de las redes sociales y alcanzar tus objetivos de marketing. ¡Invierte en tu futuro digital y compra ahora por 20.000!\"",
+      "keywords": [
+        "mega pack",
+        "redes sociales",
+        "presencia en línea",
+        "marketing digital",
+        "influencia en línea"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuáles son las herramientas específicas que se incluyen en el Mega Pack 38 para gestionar las redes sociales de manera profesional?",
+        "¿Cómo puedo asegurarme de que el Mega Pack 38 sea adecuado para mis necesidades y objetivos de marketing en particular?",
+        "¿Hay alguna garantía o servicio al cliente disponible en caso de que no esté satisfecho con los resultados del uso del Mega Pack 38?"
+      ]
+    },
+    {
+      "id": 38,
+      "nombre": "Mega Pack 39: Trading",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Mezcla la estrategia y la habilidad en el mundo del Trading Forex con Mega Pack 39: Trading. Accede a herramientas de análisis técnico profesional y aumenta tus oportunidades de éxito en el mercado. Con este paquete completo, podrás tomar decisiones informadas y gestionar tus posiciones con confianza. ¡Invierte con seguridad y alcanza tus objetivos financieros! Precio: 20,000.\"",
+      "keywords": [
+        "trading",
+        "forex",
+        "análisis técnico",
+        "estrategia",
+        "inversión"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Qué herramientas de análisis técnico se incluyen en el Mega Pack 39: Trading para ayudar a tomar decisiones informadas?",
+        "¿Cómo puedo estar seguro de que el Mega Pack 39: Trading es adecuado para mi nivel de experiencia en trading Forex?",
+        "¿Qué soporte y recursos de ayuda están disponibles para los clientes que compran el Mega Pack 39: Trading?"
+      ]
+    },
+    {
+      "id": 39,
+      "nombre": "Mega Pack 40: Educación",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"¡Revolutioniza tu educación con Mega Pack 40!\nDescubre un vasto arsenal de recursos educativos de alto nivel, diseñados para satisfacer tus necesidades más exigentes. Desde materiales de aprendizaje especializados hasta herramientas de enseñanza innovadoras, este paquete incluye todo lo que necesitas para impulsar el crecimiento intelectual de tus estudiantes. Con un enfoque en la calidad y la efectividad, Mega Pack 40 es la opción ideal para educadores, estudiantes y profesionales de la educación que buscan resultados excepcionales. ¡Invierte en tu futuro con Mega Pack 40!\"",
+      "keywords": [
+        "educación",
+        "recursos",
+        "enseñanza",
+        "aprendizaje",
+        "educadores"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Qué tipo de recursos educativos específicos incluye Mega Pack 40 para satisfacer las necesidades de mis estudiantes?",
+        "¿Cómo puedo asegurar que los materiales y herramientas incluidos en Mega Pack 40 sean compatibles con mi enfoque de enseñanza actual?",
+        "¿Puedes proporcionarme ejemplos de resultados que otros educadores han logrado con la ayuda de Mega Pack 40?"
+      ]
+    },
+    {
+      "id": 40,
+      "nombre": "Mega Pack 34: Plantillas Canva MEGA Pro",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Descubre el poder del diseño de alta calidad con Mega Pack 34: Plantillas Canva MEGA Pro. Esta colección exclusiva de 1000+ plantillas profesionales premium para Canva te brinda el acceso a diseños impresionantes y personalizables en minutos. Desde presentaciones a tarjetas de presentación, flyers a carteles, y mucho más, esta herramienta te permite destacarte en cualquier proyecto. Con Mega Pack 34, puedes crear contenido visual impresionante y aumentar tu presencia en la web. ¡Comienza a impresionar a tus clientes y colegas con diseño de alta calidad a tu alcance!\"",
+      "keywords": [
+        "plantillas",
+        "canva",
+        "diseño",
+        "presentaciones",
+        "marketing"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "- ¿Cuánto tiempo tardaría en recibir acceso a las plantillas de Mega Pack 34 después de realizar la compra?",
+        "- ¿Puedo personalizar completamente las plantillas de Mega Pack 34 según mis necesidades y preferencias?",
+        "- ¿Hay alguna forma de obtener una versión gratuita o de prueba de las plantillas de Mega Pack 34 antes de hacer una compra?"
+      ]
+    },
+    {
+      "id": 41,
+      "nombre": "Mega Pack 01: Cursos Diseño Gráfico",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Desbloquea tu creatividad con el Mega Pack 01: Cursos Diseño Gráfico. Este paquete de cursos completos te enseñará a dominar las herramientas profesionales de Photoshop, Illustrator y InDesign. Aprende técnicas avanzadas de diseño gráfico y desafía tus habilidades creativas. Con este Mega Pack, podrás crear proyectos impresionantes y llevar tu carrera a un nuevo nivel. ¡Invierte en tu futuro y adquiere el Mega Pack 01 hoy mismo por solo 20.000!\"",
+      "keywords": [
+        "diseño gráfico",
+        "photoshop",
+        "illustrator",
+        "indesign",
+        "creatividad"
+      ],
+      "intent": "recommendation",
+      "ejemplos": [
+        "¿Qué nivel de experiencia se requiere para aprovechar al máximo los cursos incluidos en el Mega Pack 01?",
+        "¿Cómo puedo acceder a los cursos una vez que haya adquirido el paquete si tengo problemas con la descarga?",
+        "¿Es posible obtener una garantía de satisfacción o un reembolso si no estoy satisfecho con los cursos del Mega Pack 01?"
+      ]
+    },
+    {
+      "id": 42,
+      "nombre": "Mega Pack 02: Cursos Microsoft Office",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Mejora tus habilidades profesionales con el Mega Pack 02: Cursos Microsoft Office. Este paquete completo de cursos te enseñará a dominar Word, Excel, PowerPoint y Access desde cero hasta experto. Aprende a crear documentos, hojas de cálculo, presentaciones y bases de datos de manera efectiva. Con nuestro curso, podrás aumentar tu productividad y aumentar tus oportunidades laborales. Invierte en tu futuro y compra ahora el Mega Pack 02 por solo 20.000 pesos.\"",
+      "keywords": [
+        "mega pack",
+        "cursos microsoft office",
+        "productividad",
+        "habilidades profesionales",
+        "microsoft office"
+      ],
+      "intent": "recommendation",
+      "ejemplos": [
+        "- ¿Qué nivel de experiencia es necesario para comenzar a utilizar el Mega Pack 02: Cursos Microsoft Office?",
+        "- ¿Cuál es la duración aproximada de cada curso incluido en el paquete y cuántas horas de contenido hay en total?",
+        "- ¿Se proporciona algún soporte o asistencia técnica después de completar los cursos para ayudar a resolver cualquier duda o problema que pueda surgir?"
+      ]
+    },
+    {
+      "id": 43,
+      "nombre": "Mega Pack 03: Cursos Inglés",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Desbloquea tus habilidades en inglés con el Mega Pack 03: Cursos Inglés. Este paquete de aprendizaje incluye una completa gama de cursos desde básico hasta avanzado, cubriendo temas como conversación fluida y negocios efectivos. Mejora tus habilidades lingüísticas y aumenta tus oportunidades en el mundo global. Con el Mega Pack 03, podrás comunicarte con confianza en cualquier situación, desde reuniones de trabajo hasta viajes internacionales. Invierte en tu futuro y adquiere el Mega Pack 03 hoy mismo por sólo 20.000.\"",
+      "keywords": [
+        "cursos inglés",
+        "aprendizaje",
+        "idioma",
+        "comunicación",
+        "negocios"
+      ],
+      "intent": "recommendation",
+      "ejemplos": [
+        "¿Cuál es el nivel de dificultad de los cursos incluidos en el Mega Pack 03 y si son adecuados para principiantes?",
+        "¿Cuántas horas de contenido hay en total en el Mega Pack 03 y si es posible acceder a ellos desde cualquier dispositivo?",
+        "¿Hay alguna opción de evaluación o retroalimentación para asegurarme de que estoy progresando en mi aprendizaje del inglés con el Mega Pack 03?"
+      ]
+    },
+    {
+      "id": 44,
+      "nombre": "Mega Pack 04: Cursos Excel",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Desbloquea el poder de Excel con nuestro Mega Pack 04. Aprende desde cero y llega a experto en solo un curso. Cubrimos todo, desde fórmulas y funciones básicas hasta tablas dinámicas y macros avanzados. Nuestro curso integral te hará capaz de manipular datos con eficiencia, crear modelos y visualizaciones impactantes y automatizar tareas rutinarias. ¡Compra ya y transforma tu habilidad en Excel en un superpoder profesional!\"",
+      "keywords": [
+        "excel",
+        "cursos",
+        "fórmulas",
+        "tablas dinámicas",
+        "macros"
+      ],
+      "intent": "recommendation",
+      "ejemplos": [
+        "¿Cuál es el nivel de experiencia requerido para comenzar a tomar este curso de Excel?",
+        "¿Puedo acceder a los cursos de Excel de forma individual o solo están disponibles en el Mega Pack 04?",
+        "¿Cuál es el formato de entrega de los cursos y si hay una opción de soporte técnico disponible en caso de preguntas."
+      ]
+    },
+    {
+      "id": 45,
+      "nombre": "Mega Pack 05: Cursos Hacking Ético",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Desbloquea tu potencial como experto en seguridad informática con el Mega Pack 05: Cursos Hacking Ético. Aprovecha la oportunidad de aprender sobre Seguridad Informática, Pentesting y Auditorías de Sistemas de manera integral y profunda. Con este paquete, podrás adquirir habilidades prácticas y teoría para proteger a tu organización y desarrollar una carrera exitosa en este campo en constante evolución. Invierte en tus habilidades y asegúrate de estar siempre un paso adelante en la seguridad informática. ¡Comienza hoy mismo!\"",
+      "keywords": [
+        "seguridad informática",
+        "pentesting",
+        "auditorías",
+        "hacking ético",
+        "cursos en línea"
+      ],
+      "intent": "recommendation",
+      "ejemplos": [
+        "¿Cuál es el nivel de experiencia requerido para completar los cursos de seguridad informática en el Mega Pack 05: Cursos Hacking Ético?",
+        "¿Qué tipo de soporte y recursos adicionales se ofrecen a los estudiantes que compran el Mega Pack 05: Cursos Hacking Ético?",
+        "¿Puedo acceder a los cursos de manera continua o si hay un plazo de vigencia para aprovechar los recursos del Mega Pack 05: C"
+      ]
+    },
+    {
+      "id": 46,
+      "nombre": "Mega Pack 06: Mega Pack Infografías",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Desbloquea el poder de la comunicación visual con Mega Pack 06: Mega Pack Infografías. Obtén acceso a una amplia gama de plantillas y técnicas avanzadas para crear infografías profesionales que cautiven la atención de tu audiencia. Con Mega Pack 06, puedes crear gráficos atractivos y fáciles de leer que transiten información compleja de manera clara y concisa. Perfecciona tus habilidades y aumenta la efectividad de tus mensajes con este recurso imprescindible para cualquier profesional de la comunicación visual.\"",
+      "keywords": [
+        "infografías",
+        "comunicación visual",
+        "plantillas",
+        "técnicas avanzadas",
+        "mensajes efectivos"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "- ¿Cuáles son las características principales de las plantillas de infografías incluidas en Mega Pack 06?",
+        "- ¿Puedo personalizar las plantillas con mis propios diseños y colores, o están limitadas a opciones predefinidas?",
+        "- ¿Hay alguna forma de obtener soporte técnico o ayuda para aprender a utilizar las herramientas y técnicas incluidas en el paquete?"
+      ]
+    },
+    {
+      "id": 47,
+      "nombre": "Mega Pack 07: Archivos editables de diseño gráfico",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Desbloquea la creatividad infinita con el Mega Pack 07: Archivos editables de diseño gráfico. Este completo conjunto de recursos incluye archivos fuente editables para crear diseños profesionales de alta calidad. Con una amplia variedad de estilos y elementos, podrás diseñar desde logotipos a carteles, tarjetas de presentación y más. Con el Mega Pack 07, tu imaginación se convertirá en realidad. ¡Comienza a crear hoy mismo! Precio: 20.000\"",
+      "keywords": [
+        "diseño gráfico",
+        "recursos",
+        "logotipos",
+        "carteles",
+        "tarjetas de presentación."
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es el formato de archivo de los archivos editables que se incluyen en el Mega Pack 07?",
+        "¿Puedo personalizar cada elemento del Mega Pack 07 para adaptarlo a mis necesidades específicas?",
+        "¿Hay alguna limitación en la cantidad de veces que puedo utilizar los archivos del Mega Pack 07 para diferentes proyectos?"
+      ]
+    },
+    {
+      "id": 48,
+      "nombre": "Mega Pack 08: Instaladores",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Maximice su productividad con Mega Pack 08: Instaladores. Este kit exclusivo incluye software y herramientas de instalación profesionales de alta gama, diseñadas para satisfacer las demandas más exigentes. Con Mega Pack 08, puede instalar proyectos complejos con precisión y eficiencia, ahorrando tiempo y recursos. Ideal para profesionales y empresas que buscan la mejor solución para sus necesidades de instalación. Compre ahora y descubra la diferencia que hace la calidad.\"",
+      "keywords": [
+        "instalación",
+        "productividad",
+        "herramientas",
+        "software",
+        "eficiencia"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es el alcance de la licencia para utilizar el software incluido en Mega Pack 08: Instaladores?",
+        "¿Puedo personalizar las herramientas y software incluidos en el kit para adaptarlas a las necesidades específicas de mi proyecto?",
+        "¿Hay una versión gratuita o de prueba de Mega Pack 08: Instaladores que pueda descargar para evaluar su funcionalidad antes de hacer una compra?"
+      ]
+    },
+    {
+      "id": 49,
+      "nombre": "Mega Pack 09: Curso Memoria Poderosa",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Desbloquea tu potencial mental con Mega Pack 09: Curso Memoria Poderosa. Aprende a memorizar y aprender de manera acelerada con técnicas probadas y efectivas. Amplía tu capacidad de retención y mejora tu rendimiento académico o profesional. Con este curso integral, podrás recordar listas, números, fechas y cualquier información con facilidad y rapidez. Investiga en tu cerebro y descubre la fuerza de la memoria. Precio: $20,000\"",
+      "keywords": [
+        "memoria",
+        "aprendizaje",
+        "rendimiento",
+        "cerebro",
+        "desarrollo"
+      ],
+      "intent": "recommendation",
+      "ejemplos": [
+        "¿Cuál es el nivel de complejidad de las técnicas de memoria que se enseñan en este curso?",
+        "¿Hay algún requisito previo o experiencia necesaria para aprovechar al máximo el curso Mega Pack 09?",
+        "¿Cómo puedo estar seguro de que este curso me ayudará a mejorar mi rendimiento académico o profesional, y no es solo un gasto de dinero?"
+      ]
+    },
+    {
+      "id": 50,
+      "nombre": "Mega Pack 10: 3700 Libros Digitales",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Accede a una biblioteca virtual inagotable con el Mega Pack 10. ¡Descubre un universo de conocimiento con más de 3700 libros digitales en una variedad de temas, desde la literatura clásica hasta la ciencia y la tecnología! Con este paquete, podrás leer en cualquier lugar y en cualquier momento, sin limitaciones. La calidad de la impresión digital garantiza una lectura cómoda y disfrutable. ¡Invierte en tu crecimiento intelectual y adquiere el Mega Pack 10 por solo 20.000!\"",
+      "keywords": [
+        "libros digitales",
+        "biblioteca virtual",
+        "conocimiento",
+        "lectura",
+        "crecimiento intelectual."
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es el proceso para acceder a los libros digitales después de realizar la compra?",
+        "¿Se incluyen actualizaciones periódicas de contenido en el paquete Mega Pack 10?",
+        "¿Es posible descargar los libros digitales en dispositivos móviles además de computadoras personales?"
+      ]
+    },
+    {
+      "id": 51,
+      "nombre": "Mega Pack 11: Cursos Marketing Digital",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Mega Pack 11: Cursos Marketing Digital - ¡Desbloquea tu potencial de crecimiento en línea!\n\nAccede a 4 cursos exhaustivos para dominar el marketing digital:\n\n - SEO: Optimiza tu sitio web para llegar a más clientes\n - SEM: Lleva tu marca a los primeros puestos de Google con SEM\n - Google Ads: Alcanza a tus clientes objetivo con publicidad en línea\n - Estrategias de redes sociales: Conecta con tus seguidores y aumenta la conversión\n\nInvierte solo 20.000 y transforma tu negocio con el poder del marketing digital.\"",
+      "keywords": [
+        "marketing digital",
+        "cursos",
+        "seo",
+        "sem",
+        "google ads"
+      ],
+      "intent": "recommendation",
+      "ejemplos": [
+        "¿Cuál es el tiempo de duración promedio para completar cada uno de los cursos incluidos en el Mega Pack 11?",
+        "¿Puedo acceder a los cursos desde cualquier dispositivo o son solo accesibles desde una computadora?",
+        "¿Qué tipo de soporte o asistencia técnica se ofrece en caso de que tenga alguna duda o problema al navegar por los cursos?"
+      ]
+    },
+    {
+      "id": 52,
+      "nombre": "Mega Pack 12: Gastronomía Internacional",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Descubre las delicias de la cocina mundial con Mega Pack 12: Gastronomía Internacional. ¡Aprende a preparar platos exóticos y sabores inolvidables de Italia, Francia, Japón, China y más! Con un conjunto de recetas y técnicas culinarias de alta calidad, podrás viajar por los cinco continentes sin dejar tu cocina. Desde cremas y sopas hasta platos picantes y deliciosos postres, este mega pack te ofrece todo lo que necesitas para convertirte en un chef internacional. ¡Comienza a cocinar y saborear la diversidad gastronómica del mundo! Precio: 20000.\"",
+      "keywords": [
+        "mega pack",
+        "gastronomía internacional",
+        "recetas",
+        "cocina",
+        "internacional"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Qué tipo de recetas incluye el Mega Pack 12: Gastronomía Internacional para cada país mencionado?",
+        "¿Es posible personalizar las recetas del Mega Pack 12 para adaptarlas a necesidades dietéticas especiales?",
+        "¿Hay alguna forma de acceder a actualizaciones o nuevos contenidos en el Mega Pack 12 después de la compra?"
+      ]
+    },
+    {
+      "id": 53,
+      "nombre": "Mega Pack 13: Ingeniería y Arquitectura",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Mezcla la creatividad con la tecnología y revoluciona tu carrera. El Mega Pack 13: Ingeniería y Arquitectura ofrece una experiencia integral de aprendizaje, con cursos especializados en este campo en constante evolución. Desde la planificación y diseño hasta la implementación y gestión, esta colección de cursos te brinda las habilidades y conocimientos necesarios para destacarte en el mundo de la ingeniería y la arquitectura. Invierte en tu futuro y aprovecha esta oportunidad única por solo $20,000.\"",
+      "keywords": [
+        "ingeniería",
+        "arquitectura",
+        "cursos en línea",
+        "desarrollo profesional",
+        "tecnología."
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "- ¿Qué tipo de cursos se incluyen en el Mega Pack 13: Ingeniería y Arquitectura?",
+        "- ¿Cuál es el alcance de la experiencia de aprendizaje que ofrece el Mega Pack 13 en comparación con otros programas similares?",
+        "- ¿Qué tipo de respaldo o asistencia se ofrece a los estudiantes que compran el Mega Pack 13 para ayudarles a aplicar sus nuevos conocimientos en la práctica?"
+      ]
+    },
+    {
+      "id": 54,
+      "nombre": "Mega Pack 14: Pack Plantillas 100% Editables",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Accede a un universo de creatividad sin límites con el Mega Pack 14. Este conjunto de plantillas 100% editables te brinda la libertad de personalizar cada detalle para tus proyectos más ambiciosos. Desde proyectos de trabajo hasta presentaciones profesionales, estas plantillas versátiles cubren todas tus necesidades. Con el Mega Pack 14, la posibilidad de crear algo único y memorable está en tus manos. Investiga en la creatividad y adquiere este pack de plantillas personalizables hoy mismo por solo $20,000.\"",
+      "keywords": [
+        "plantillas editables",
+        "creatividad",
+        "proyectos",
+        "presentaciones",
+        "personalizables"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es el tipo de software o herramienta que requiere el Mega Pack 14 para funcionar correctamente?",
+        "¿Puedo utilizar el Mega Pack 14 en dispositivos móviles o solo en computadoras?",
+        "¿Existe alguna posibilidad de obtener un descuento o promoción especial para la compra del Mega Pack 14?"
+      ]
+    },
+    {
+      "id": 55,
+      "nombre": "Mega Pack 15: FX Presets After Effects y Premiere",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Transforma tus producciones de video con el Mega Pack 15, una colección exclusiva de presets y efectos de alta calidad para After Effects y Premiere. Con más de 1000 opciones a tu disposición, puedes agregar profundidad, estilo y emoción a tus proyectos. Desde efectos de texturas y gradientes hasta transiciones y movimientos fluidos, este paquete te brinda todas las herramientas que necesitas para crear contenido impresionante y profesional. ¡Descubre el poder del Mega Pack 15 y eleva tu edición de video a un nuevo nivel!\"",
+      "keywords": [
+        "presets",
+        "after effects",
+        "premiere",
+        "efectos",
+        "video"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es el proceso para instalar y utilizar los presets y efectos incluidos en el Mega Pack 15?",
+        "¿Puedo personalizar o editar los presets y efectos incluidos en el paquete para adaptarlos a mis necesidades específicas?",
+        "¿Hay soporte técnico disponible para ayudarme a resolver cualquier problema o duda que surja al utilizar el Mega Pack 15?"
+      ]
+    },
+    {
+      "id": 56,
+      "nombre": "Mega Pack 16: Cursos Premium +900 GB",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Accede a un mundo de conocimientos ilimitados con el Mega Pack 16. Consigue cursos premium de desarrollo de software de alta calidad en Python, JavaScript, Java, C++ y más. Aprovecha contenido exclusivo de desarrollo web y móvil para dominar las últimas tendencias en tecnología. Con más de 900 GB de contenido a tu disposición, estarás siempre actualizado y listo para enfrentar los desafíos del mundo digital. ¡Invierte en tu futuro y compra el Mega Pack 16 por solo 20.000!\"",
+      "keywords": [
+        "desarrollo de software",
+        "cursos premium",
+        "contenido exclusivo",
+        "tecnología",
+        "desarrollo web"
+      ],
+      "intent": "recommendation",
+      "ejemplos": [
+        "¿Cuál es el contenido específico que se incluye en el curso de desarrollo de software en Python?",
+        "¿Puedo acceder a los cursos y contenido desde cualquier dispositivo o solo desde un ordenador?",
+        "¿Hay alguna forma de cancelar o suspender el servicio si no estoy satisfecho con el contenido del Mega Pack 16?"
+      ]
+    },
+    {
+      "id": 57,
+      "nombre": "Mega Pack 17: Apps Android Premium",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "**Mega Pack 17: Apps Android Premium**\n\nAccede a una colección exclusiva de plantillas de aplicación Android premium, diseñadas para satisfacer las necesidades de proyectos profesionales. Cada plantilla cuenta con características avanzadas y una interfaz intuitiva para facilitar el desarrollo de aplicaciones de alta calidad. Con Mega Pack 17, puedes crear aplicaciones que destacan en la plataforma Android y aumentar tu visibilidad en el mercado. Incluye 100+ plantillas, 500+ elementos y un soporte técnico experto. ¡Comienza a crear aplicaciones impresionantes con Mega Pack 17! (20000)",
+      "keywords": [
+        "apps android",
+        "plantillas",
+        "desarrollo",
+        "android premium",
+        "aplicaciones"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es el número total de plantillas de aplicación incluidas en Mega Pack 17?",
+        "¿Cómo puedo acceder a la documentación y el soporte técnico para las plantillas incluidas en el paquete?",
+        "¿Puedo personalizar las plantillas de aplicación para adaptarlas a mis necesidades específicas de proyecto?"
+      ]
+    },
+    {
+      "id": 58,
+      "nombre": "Mega Pack 18: Reparación de teléfonos y tablets",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Transforma tu habilidad para reparar dispositivos móviles con el Mega Pack 18. Aprende las últimas técnicas y estrategias para reparar con éxito teléfonos y tablets. Este completo paquete de capacitación incluye todo lo necesario para convertirte en un experto en reparación de dispositivos móviles. Conoce los secretos para reparar pantallas rotas, baterías defectuosas y hardware dañado. ¡Aprovecha la oportunidad de aumentar tus habilidades y generar ingresos extras! Precio: 20000\"",
+      "keywords": [
+        "reparación",
+        "dispositivos móviles",
+        "capacitación",
+        "teléfonos",
+        "tablets"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Qué habilidades específicas se enseñan en el Mega Pack 18 para reparar dispositivos móviles?",
+        "¿El paquete incluye acceso a tutoriales en video o solo a teoría escrita?",
+        "¿El precio de 20000 dólares incluye cualquier equipo o herramienta necesaria para empezar a reparar dispositivos móviles?"
+      ]
+    },
+    {
+      "id": 59,
+      "nombre": "Mega Pack 19: WordPress",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Obtén todo lo que necesitas para dominar WordPress con Mega Pack 19. Este completo conjunto de herramientas incluye Landing Pages, Plugins y Themes para crear sitios web profesionales en minutos. Con Mega Pack 19, podrás crear experiencias únicas para tu audiencia, optimizar la conversión y aumentar tus ventas. ¡Descubre el poder de WordPress con esta increíble oferta a sólo $20.000! No te pierdas la oportunidad de impulsar tu negocio a nuevos niveles de éxito.\"",
+      "keywords": [
+        "sitios web",
+        "wordpress",
+        "landing pages",
+        "plugins",
+        "themes"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Qué características especiales incluye el plugin de Landing Pages para mejorar la conversión de mis sitios web?",
+        "¿Cuáles son los beneficios de utilizar los temas incluidos en Mega Pack 19 para crear sitios web profesionales?",
+        "¿Puedo utilizar Mega Pack 19 en múltiples sitios web o es un producto solo para un sitio web?"
+      ]
+    },
+    {
+      "id": 60,
+      "nombre": "Mega Pack 20: AudioLibros",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Descubre el universo de la lectura en movimiento con Mega Pack 20: AudioLibros. Una colección de audiolibros profesionales que te transportarán a mundos de aventuras, conocimiento y diversión. Con temas variados y narraciones inmersivas, este paquete es ideal para viajeros, amantes de la lectura, estudiantes y cualquier persona que busque expandir su horizonte cultural y emocional. Con 20 audiolibros de alta calidad, puedes sumergirte en historias épicas, aprender nuevas habilidades o simplemente relajarte y disfrutar de un buen libro. ¡Comienza tu aventura auditiva con Mega Pack 20!\"",
+      "keywords": [
+        "audiolibros",
+        "lectura",
+        "aventuras",
+        "conocimiento",
+        "relajación"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es el contenido específico de los 20 audiolibros que se incluyen en el paquete Mega Pack 20: AudioLibros?",
+        "¿Cómo puedo acceder a los audiolibros una vez que compré el paquete Mega Pack 20: AudioLibros?",
+        "¿Hay alguna forma de descargar o reproducir los audiolibros en dispositivos electrónicos como tabletas o reproductores de música?"
+      ]
+    },
+    {
+      "id": 61,
+      "nombre": "Mega Pack 21: Pack Sublimado",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Descubre el secreto para crear obras de arte impresionantes con el Mega Pack 21: Pack Sublimado. Este paquete completo de técnicas y recursos profesionales te brinda todo lo necesario para dominar la sublimación y crear impresiones sublimadas de alta calidad. Con el Mega Pack 21, puedes transformar tus proyectos en obras maestras únicas y emocionantes. ¡Invierte solo en el mejor y comienza a crear arte que impresiona! Precio: 20.000\"",
+      "keywords": [
+        "mega pack",
+        "sublimación",
+        "técnicas",
+        "recursos",
+        "impresiones"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es el contenido específico del Mega Pack 21: Pack Sublimado que me permite crear obras de arte impresionantes?",
+        "¿Cómo puedo asegurarme de que puedo crear impresiones sublimadas de alta calidad con este paquete?",
+        "¿Qué tipo de proyectos puedo realizar con el Mega Pack 21: Pack Sublimado y qué tipo de resultados puedo esperar?"
+      ]
+    },
+    {
+      "id": 62,
+      "nombre": "Mega Pack 22: Curso Crecimiento Personal",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Transforma tu vida en tan solo un mes con el Mega Pack 22: Curso Crecimiento Personal. Aprovecha un paquete integral de desarrollo personal y profesional que incluye herramientas prácticas, estrategias efectivas y mentores expertos. Con 22 módulos de alta calidad, abordamos todos los aspectos de tu crecimiento: liderazgo, comunicación, emprendimiento, bienestar y mucho más. ¡No te pierdas la oportunidad de alcanzar tu máximo potencial! Precio especial de $20,000. ¡Inscríbete ahora y comienza a cambiar tu vida!\"",
+      "keywords": [
+        "crecimiento personal",
+        "desarrollo profesional",
+        "liderazgo",
+        "emprendimiento",
+        "bienestar"
+      ],
+      "intent": "recommendation",
+      "ejemplos": [
+        "¿Cuál es el nivel de experiencia requerido para completar el curso y obtener resultados efectivos?",
+        "¿Cuánto tiempo se recomienda dedicar a cada módulo para obtener el máximo beneficio del curso?",
+        "¿Qué tipo de apoyo adicional se ofrece a los estudiantes después de completar el curso para mantener el progreso y el crecimiento?"
+      ]
+    },
+    {
+      "id": 63,
+      "nombre": "Mega Pack 23: Ensamblaje y Mantenimiento",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Transforma tu habilidad en un experto en tecnología con el Mega Pack 23. Este completo kit de ensamblaje y mantenimiento de computadores incluye todo lo necesario para reparar, personalizar y mantener tus dispositivos con confianza. Con herramientas de alta calidad y un manual de instrucciones detallado, podrás abordar cualquier desafío técnicamente. Investiga en tu futuro profesional y adquiere el Mega Pack 23 hoy mismo. ¡Un valor de 20000!\"",
+      "keywords": [
+        "ensamblaje",
+        "mantenimiento",
+        "computadores",
+        "tecnología",
+        "herramientas"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es el alcance de las herramientas incluidas en el Mega Pack 23 y si son compatibles con diferentes marcas de computadores?",
+        "¿El manual de instrucciones incluido es en español y si hay apoyo técnico disponible en caso de dudas o problemas?",
+        "¿El precio de 20000 es un precio único o hay promociones o descuentos disponibles para clientes que ya han comprado productos similares?"
+      ]
+    },
+    {
+      "id": 64,
+      "nombre": "Mega Pack 24: Recursos para diseño Arquitectura",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Mega Pack 24: Recursos para diseño Arquitectura\"\n\nRevuelve la creatividad y la innovación con nuestro Mega Pack 24, una colección exclusiva de recursos especializados en diseño arquitectónico. Con una variedad de elementos y herramientas a tu disposición, podrás crear proyectos de arquitectura únicos y complejos. Descubre nuevos estilos, técnicas y elementos para dar vida a tus ideas. Comienza a crear sin límites con nuestro Mega Pack 24, una herramienta imprescindible para cualquier profesional o creador de diseño arquitectónico.",
+      "keywords": [
+        "diseño arquitectónico",
+        "recursos",
+        "herramientas",
+        "proyectos",
+        "arquitectura"
+      ],
+      "intent": "recommendation",
+      "ejemplos": [
+        "¿Cuál es el formato de los recursos incluidos en el Mega Pack 24?",
+        "¿Puedo personalizar los elementos y herramientas del Mega Pack 24 según mis necesidades?",
+        "¿Está disponible una versión gratuita o de prueba del Mega Pack 24 para que pueda probarlo antes de comprarlo?"
+      ]
+    },
+    {
+      "id": 65,
+      "nombre": "Mega Pack 25: Construcción en Drywall",
+      "categoria": "DIGITAL",
+      "precio": 20000,
+      "descripcion": "\"Construye estructuras duraderas y seguras con el Mega Pack 25: Construcción en Drywall. Aprende técnicas profesionales de montaje y acabado de drywall con nuestro curso exhaustivo. Desde la preparación del espacio hasta el acabado final, este paquete de formación te brinda los conocimientos y habilidades necesarias para dominar el arte de la construcción en drywall. ¡Aprovecha la oportunidad de mejorar tus habilidades y aumentar tus posibilidades de éxito en el mercado de la construcción!\"",
+      "keywords": [
+        "construcción",
+        "drywall",
+        "montaje",
+        "acabado",
+        "formación"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Cuál es el nivel de experiencia requerido para completar el curso Mega Pack 25: Construcción en Drywall?",
+        "¿Qué contenidos específicos se incluyen en el paquete de formación para la construcción en drywall?",
+        "¿Cuánto tiempo se estima que tomará completar el curso y qué tipo de certificación o reconocimiento de competencia se ofrecerá al finalizar?"
+      ]
+    },
+    {
+      "id": 66,
+      "nombre": "Curso Completo de Piano Online",
+      "categoria": "DIGITAL",
+      "precio": 60000,
+      "descripcion": "\"Desbloquea tus habilidades musicales con nuestro Curso Completo de Piano Online. Aprende a tocar piano desde cero con 50+ lecciones en video detalladas y partituras descargables para que puedas practicar en cualquier momento. Nuestro equipo experto te brinda soporte personalizado y acceso de por vida a tus lecciones. Con un precio de 60.000, este curso es la oportunidad perfecta para convertirte en un pianista talentoso y expresarte a través de la música.\"",
+      "keywords": [
+        "curso",
+        "piano",
+        "online",
+        "música",
+        "lecciones"
+      ],
+      "intent": "recommendation",
+      "ejemplos": [
+        "- ¿Cuál es el nivel de experiencia requerido para comenzar con el curso?",
+        "- ¿Cómo funciona el soporte personalizado y en qué momentos puedo comunicarme con el equipo experto?",
+        "- ¿Puedo cancelar o reembolsar el curso si no estoy satisfecho con los resultados?"
+      ]
+    },
+    {
+      "id": 67,
+      "nombre": "PACK COMPLETO 40 Mega Packs",
+      "categoria": "DIGITAL",
+      "precio": 60000,
+      "descripcion": "\"Accede a la emoción sin límites con el PACK COMPLETO 40 Mega Packs. ¡La oferta de los sueños! \n\nUn contenido invaluable valorado en $800.000 COP, ahora disponible solo por $60.000. ¡Ahorra $740.000 COP! Accede de por vida con actualizaciones incluidas. ¡No pierdas esta oportunidad única!\"",
+      "keywords": [
+        "pack completo",
+        "mega packs",
+        "emoción",
+        "actualizaciones",
+        "oferta"
+      ],
+      "intent": "search",
+      "ejemplos": [
+        "¿Qué tipo de contenido incluye el PACK COMPLETO 40 Mega Packs y por qué es tan valioso?",
+        "¿Cómo funciona el acceso de por vida con actualizaciones incluidas y qué tipo de contenido se actualizará?",
+        "¿Es posible cancelar o cambiar el plan después de comprar el PACK COMPLETO 40 Mega Packs si no me gusta?"
+      ]
+    }
+  ],
+  "categories": [
+    "PHYSICAL",
+    "DIGITAL"
+  ],
+  "keywords": [
+    "tablet",
+    "acer",
+    "iconia",
+    "m10",
+    "wifi",
+    "impresora",
+    "hp",
+    "laserjet",
+    "monocromática",
+    "oferta",
+    "epson",
+    "ecotank",
+    "l1250",
+    "impresión",
+    "multifuncional",
+    "canon",
+    "tinta continua",
+    "wi-fi",
+    "adf",
+    "portatil",
+    "asus",
+    "vivobook",
+    "ryzen",
+    "ssd",
+    "multi",
+    "funcional",
+    "intel core i5",
+    "laptop",
+    "portátil",
+    "amd",
+    "15.6",
+    "intel",
+    "fhd",
+    "oled",
+    "escáner",
+    "automático",
+    "dúplex",
+    "digitalización",
+    "l6490",
+    "tinta a granel",
+    "oficina",
+    "ci7",
+    "ddr5",
+    "core",
+    "brother",
+    "mfc-t4500dw",
+    "color",
+    "productividad",
+    "tinta",
+    "moto",
+    "bajaj",
+    "pulsar",
+    "ns 160",
+    "cali",
+    "macbook",
+    "pro",
+    "m4",
+    "mac os",
+    "retina",
+    "mega pack 26",
+    "macros",
+    "excel",
+    "office",
+    "cursos",
+    "profesionales",
+    "desarrollo",
+    "carrera",
+    "empleo",
+    "preuniversitario",
+    "psicología",
+    "admisión",
+    "preparación",
+    "universidad",
+    "resina",
+    "manualidades",
+    "creatividad",
+    "arte",
+    "curso",
+    "boda",
+    "bartender",
+    "producción",
+    "musical",
+    "eventos",
+    "muebles de melamina",
+    "planos",
+    "muebles para casa",
+    "diseño",
+    "construcción.",
+    "estudios universitarios",
+    "recursos educativos",
+    "tutoriales",
+    "excelencia académica",
+    "materiales de estudio.",
+    "filmora",
+    "edición de video",
+    "recursos",
+    "creatividad.",
+    "álbumes digitales",
+    "colección",
+    "música",
+    "rock",
+    "descarga digital",
+    "pedagogía",
+    "educación",
+    "enseñanza",
+    "aprendizaje",
+    "marketing",
+    "ventas",
+    "estrategias",
+    "negocio",
+    "emprendimiento",
+    "mega pack",
+    "redes sociales",
+    "presencia en línea",
+    "marketing digital",
+    "influencia en línea",
+    "trading",
+    "forex",
+    "análisis técnico",
+    "estrategia",
+    "inversión",
+    "educadores",
+    "plantillas",
+    "canva",
+    "presentaciones",
+    "diseño gráfico",
+    "photoshop",
+    "illustrator",
+    "indesign",
+    "cursos microsoft office",
+    "habilidades profesionales",
+    "microsoft office",
+    "cursos inglés",
+    "idioma",
+    "comunicación",
+    "negocios",
+    "fórmulas",
+    "tablas dinámicas",
+    "seguridad informática",
+    "pentesting",
+    "auditorías",
+    "hacking ético",
+    "cursos en línea",
+    "infografías",
+    "comunicación visual",
+    "técnicas avanzadas",
+    "mensajes efectivos",
+    "logotipos",
+    "carteles",
+    "tarjetas de presentación.",
+    "instalación",
+    "herramientas",
+    "software",
+    "eficiencia",
+    "memoria",
+    "rendimiento",
+    "cerebro",
+    "libros digitales",
+    "biblioteca virtual",
+    "conocimiento",
+    "lectura",
+    "crecimiento intelectual.",
+    "seo",
+    "sem",
+    "google ads",
+    "gastronomía internacional",
+    "recetas",
+    "cocina",
+    "internacional",
+    "ingeniería",
+    "arquitectura",
+    "desarrollo profesional",
+    "tecnología.",
+    "plantillas editables",
+    "proyectos",
+    "personalizables",
+    "presets",
+    "after effects",
+    "premiere",
+    "efectos",
+    "video",
+    "desarrollo de software",
+    "cursos premium",
+    "contenido exclusivo",
+    "tecnología",
+    "desarrollo web",
+    "apps android",
+    "android premium",
+    "aplicaciones",
+    "reparación",
+    "dispositivos móviles",
+    "capacitación",
+    "teléfonos",
+    "tablets",
+    "sitios web",
+    "wordpress",
+    "landing pages",
+    "plugins",
+    "themes",
+    "audiolibros",
+    "aventuras",
+    "relajación",
+    "sublimación",
+    "técnicas",
+    "impresiones",
+    "crecimiento personal",
+    "liderazgo",
+    "bienestar",
+    "ensamblaje",
+    "mantenimiento",
+    "computadores",
+    "diseño arquitectónico",
+    "construcción",
+    "drywall",
+    "montaje",
+    "acabado",
+    "formación",
+    "piano",
+    "online",
+    "lecciones",
+    "pack completo",
+    "mega packs",
+    "emoción",
+    "actualizaciones"
+  ],
+  "intents": {
+    "search": [
+      "Tablet Acer Iconia M10 Wifi 10.1 Wxga Ips 4gb-64gb Champagne",
+      "Impresora Hp Laserjet M111W Monocromática",
+      "Impresora Epson Ecotank L1250 Imprime (Copia y Scanea Desde La App) Usb y Wifi",
+      "Impresora Canon Multifuncional  G3170 Tinta Continua Wifi",
+      "Impresora Epson Multifuncional Wifi Ecotank L3251",
+      "Impresora Hp Smart Tank 530 Multifuncional Wi-Fi Adf",
+      "Portatil Asus Vivobook Go 15 E1504fa-Nj1961 Amd Ryzen 3 7320u Ram 8gb Ddr5 512 Ssd Pantalla 15.6 Fhd",
+      "Impresora Multifuncional Epson L5590 Wifi Ecotank",
+      "Portatil Asus Vivobook 15 X1502za-Ej2443 Intel core I5-12500h Ram 8gb Ddr4 512gb Ssd Pantalla 15.6",
+      "Portátil Asus Vivobook Go 15 E1504FA-NJ1382 Amd Ryzen 5 7520u Pantalla 15.6 Ram 16gb Ddr5 512 Ssd",
+      "Portátil Asus Vivobook 15 M1502ya-Nj694 Ryzen 7 5825u Ddr4 16Gb 1Tb Ssd 15.6 Fhd",
+      "Portatil Acer A15-51p-591e Intel 5 (Serie 1) 120u Ram 16gb Lpddr5 512gb Ssd Pantalla 15.6 Fhd Ips",
+      "Portátil Asus Vivobook Go E1504fa-L1745 Amd Ryzen 5-7520u Ram 16gb Ddr5 512 Ssd Pantalla 15.6 Oled Fhd",
+      "Escáner Epson DS-C490 Automático a Color Dúplex",
+      "Impresora Epson EcoTank L6490",
+      "Portatil Acer Al15-41p-R8f7 Amd Ryzen 7 7500u Ram 16gb Ddr4 1tb Ssd Pantalla 15.6 Fhd Ips",
+      "Impresora Epson Multifuncional EcoTank L6270",
+      "Portatil Asus Vivobook 15 X1502va-Nj929 Intel Ci7-13620h 15,6 Fhd 16gb 512gb Ssd",
+      "Portatil Asus Vivobook 16 X1605va-Mb1235 Intel Ci7-13620h Ram 16gb Ddr5 512gb Ssd Pantalla 16.0",
+      "Portátil Asus Vivobook 15 X1502va-Nj893 Intel Core I7-13620h Ram 16gb Ddr4 1tb Ssd Pantalla 15.6 Fhd",
+      "Portatil Asus Vivobook S16 M3607ha-Rp111 Amd Ryzen™ 9 270 Ddr5 16gb + Slot Adic 512gb Ssd 16″ Wuxga",
+      "Impresora Brother Multifuncional MFC-T4500DW",
+      "Escáner Epson Dúplex a Color DS-770 ll",
+      "Impresora Multifuncional Epson Workforce Pro WF-m5799 monocromática de sistema bolsas de tinta",
+      "Macbook Pro M4 Pro Max 24gb Ram 512gb Ssd Pantalla 14” Retina Xdr Mac os Space Black",
+      "Mega Pack 26: Macros",
+      "Mega Pack 28: PreUniversitario-Psicología",
+      "Mega Pack 30: BODA Bartender y Producción Musical",
+      "Mega Pack 31: 550 Planos de Muebles de Melamina",
+      "Mega Pack 32: Universitario",
+      "Mega Pack 33: Filmora 9",
+      "Mega Pack 35: Álbumes digitales de colección",
+      "Mega Pack 36: Libros de Pedagogía",
+      "Mega Pack 37: Marketing & Ventas",
+      "Mega Pack 38: Redes Sociales",
+      "Mega Pack 39: Trading",
+      "Mega Pack 40: Educación",
+      "Mega Pack 34: Plantillas Canva MEGA Pro",
+      "Mega Pack 06: Mega Pack Infografías",
+      "Mega Pack 07: Archivos editables de diseño gráfico",
+      "Mega Pack 08: Instaladores",
+      "Mega Pack 10: 3700 Libros Digitales",
+      "Mega Pack 12: Gastronomía Internacional",
+      "Mega Pack 13: Ingeniería y Arquitectura",
+      "Mega Pack 14: Pack Plantillas 100% Editables",
+      "Mega Pack 15: FX Presets After Effects y Premiere",
+      "Mega Pack 17: Apps Android Premium",
+      "Mega Pack 18: Reparación de teléfonos y tablets",
+      "Mega Pack 19: WordPress",
+      "Mega Pack 20: AudioLibros",
+      "Mega Pack 21: Pack Sublimado",
+      "Mega Pack 23: Ensamblaje y Mantenimiento",
+      "Mega Pack 25: Construcción en Drywall",
+      "PACK COMPLETO 40 Mega Packs"
+    ],
+    "recommendation": [
+      "Moto Bajaj Pulsar NS 160 FI1 (2020)",
+      "Mega Pack 27: Cursos MultiProfesiones",
+      "Mega Pack 29: Curso Resina",
+      "Mega Pack 01: Cursos Diseño Gráfico",
+      "Mega Pack 02: Cursos Microsoft Office",
+      "Mega Pack 03: Cursos Inglés",
+      "Mega Pack 04: Cursos Excel",
+      "Mega Pack 05: Cursos Hacking Ético",
+      "Mega Pack 09: Curso Memoria Poderosa",
+      "Mega Pack 11: Cursos Marketing Digital",
+      "Mega Pack 16: Cursos Premium +900 GB",
+      "Mega Pack 22: Curso Crecimiento Personal",
+      "Mega Pack 24: Recursos para diseño Arquitectura",
+      "Curso Completo de Piano Online"
+    ],
+    "price_inquiry": [],
+    "purchase_intent": []
+  },
+  "stats": {
+    "totalProducts": 68,
+    "totalCategories": 2,
+    "totalKeywords": 224,
+    "processed": 68,
+    "errors": 0,
+    "successRate": "100.00%",
+    "tokenStats": {
+      "totalTokensUsed": 53735,
+      "requestsCompleted": 204,
+      "requestsFailed": 0,
+      "averageTokensPerRequest": 263,
+      "executionTime": "503.32s"
+    }
+  }
+}

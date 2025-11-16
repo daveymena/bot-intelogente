@@ -1,0 +1,972 @@
+{
+  "generatedAt": "2025-11-15T23:03:46.664Z",
+  "totalProducts": 68,
+  "products": [
+    {
+      "id": 1,
+      "nombre": "Producto 1",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "electrónica",
+        "tecnología",
+        "innovación",
+        "diseño",
+        "eficiencia"
+      ]
+    },
+    {
+      "id": 2,
+      "nombre": "Producto 2",
+      "categoria": "Accesorio",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre \"producto 2\" para generar palabras clave."
+      ]
+    },
+    {
+      "id": 3,
+      "nombre": "Producto 3",
+      "categoria": "Moto",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "desarrollo",
+        "innovación",
+        "tecnología",
+        "diseño",
+        "eficiencia"
+      ]
+    },
+    {
+      "id": 4,
+      "nombre": "Producto 4",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "desarrollo",
+        "innovación",
+        "tecnología",
+        "mercado",
+        "competitividad"
+      ]
+    },
+    {
+      "id": 5,
+      "nombre": "Producto 5",
+      "categoria": "Moto",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "electrónico",
+        "tecnología",
+        "innovador",
+        "inteligente",
+        "conectado"
+      ]
+    },
+    {
+      "id": 6,
+      "nombre": "Producto 6",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "producto",
+        "tecnología",
+        "innovación",
+        "diseño",
+        "eficiencia"
+      ]
+    },
+    {
+      "id": 7,
+      "nombre": "Producto 7",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "producto",
+        "7",
+        "innovador",
+        "tecnológico",
+        "revolucionario"
+      ]
+    },
+    {
+      "id": 8,
+      "nombre": "Producto 8",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "desarrollo",
+        "innovación",
+        "tecnología",
+        "diseño",
+        "eficiencia"
+      ]
+    },
+    {
+      "id": 9,
+      "nombre": "Producto 9",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre un \"producto 9\"."
+      ]
+    },
+    {
+      "id": 10,
+      "nombre": "Producto 10",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "mercado",
+        "tecnología",
+        "innovación",
+        "diseño",
+        "marketing"
+      ]
+    },
+    {
+      "id": 11,
+      "nombre": "Producto 11",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "fabricación",
+        "tecnología",
+        "innovación",
+        "calidad",
+        "eficiencia"
+      ]
+    },
+    {
+      "id": 12,
+      "nombre": "Producto 12",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "producto",
+        "12",
+        "innovación",
+        "tecnología",
+        "eficiencia"
+      ]
+    },
+    {
+      "id": 13,
+      "nombre": "Producto 13",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "producto",
+        "13",
+        "tecnología",
+        "innovación",
+        "eficiencia."
+      ]
+    },
+    {
+      "id": 14,
+      "nombre": "Producto 14",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre el \"producto 14\". ¿podrías proporcionar más contexto o detalles sobre qué se refiere?"
+      ]
+    },
+    {
+      "id": 15,
+      "nombre": "Producto 15",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "producto",
+        "15",
+        "tecnología",
+        "innovación",
+        "eficiencia"
+      ]
+    },
+    {
+      "id": 16,
+      "nombre": "Producto 16",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre el \"producto 16\". ¿podrías proporcionar más contexto o detalles sobre qué se refiere este término?"
+      ]
+    },
+    {
+      "id": 17,
+      "nombre": "Producto 17",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "electrónico",
+        "gadget",
+        "innovación",
+        "tecnología",
+        "avanzado"
+      ]
+    },
+    {
+      "id": 18,
+      "nombre": "Producto 18",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre un \"producto 18\" específico",
+        "pero puedo generar algunas palabras clave generales relacionadas con productos:\n\nelectrónica",
+        "tecnología",
+        "innovación",
+        "diseño",
+        "fabricación."
+      ]
+    },
+    {
+      "id": 19,
+      "nombre": "Producto 19",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre un \"producto 19\". ¿podrías proporcionar más contexto o detalles sobre qué se refiere?"
+      ]
+    },
+    {
+      "id": 20,
+      "nombre": "Producto 20",
+      "categoria": "Accesorio",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "producto",
+        "20",
+        "específico",
+        "innovador",
+        "tecnológico"
+      ]
+    },
+    {
+      "id": 21,
+      "nombre": "Producto 21",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "productividad",
+        "eficiencia",
+        "innovación",
+        "tecnología",
+        "automatización"
+      ]
+    },
+    {
+      "id": 22,
+      "nombre": "Producto 22",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "producto",
+        "22",
+        "tecnología",
+        "innovación",
+        "diseño"
+      ]
+    },
+    {
+      "id": 23,
+      "nombre": "Producto 23",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre el \"producto 23\". ¿podrías proporcionar más contexto o detalles sobre qué es el producto 23?"
+      ]
+    },
+    {
+      "id": 24,
+      "nombre": "Producto 24",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre un \"producto 24\". ¿podrías proporcionarme más contexto o detalles sobre qué se refiere a este producto?"
+      ]
+    },
+    {
+      "id": 25,
+      "nombre": "Producto 25",
+      "categoria": "Accesorio",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "producto",
+        "tecnología",
+        "innovación",
+        "mercado",
+        "lanzamiento"
+      ]
+    },
+    {
+      "id": 26,
+      "nombre": "Producto 26",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre un \"producto 26\". ¿podrías proporcionar más contexto o detalles sobre qué tipo de producto se refiere?"
+      ]
+    },
+    {
+      "id": 27,
+      "nombre": "Producto 27",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre el \"producto 27\"."
+      ]
+    },
+    {
+      "id": 28,
+      "nombre": "Producto 28",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre un \"producto 28\" específico. ¿podrías proporcionar más contexto o detalles sobre qué tipo de producto se refiere?"
+      ]
+    },
+    {
+      "id": 29,
+      "nombre": "Producto 29",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre el \"producto 29\"."
+      ]
+    },
+    {
+      "id": 30,
+      "nombre": "Producto 30",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "productos",
+        "consumo",
+        "mercado",
+        "inventario",
+        "gestión"
+      ]
+    },
+    {
+      "id": 31,
+      "nombre": "Producto 31",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo suficiente información para generar palabras clave. ¿puedes proporcionar más contexto sobre el \"producto 31\"?"
+      ]
+    },
+    {
+      "id": 32,
+      "nombre": "Producto 32",
+      "categoria": "Accesorio",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre un \"producto 32\" específico. puedes proporcionarme más contexto o detalles sobre qué tipo de producto es?"
+      ]
+    },
+    {
+      "id": 33,
+      "nombre": "Producto 33",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre el \"producto 33\". ¿podrías proporcionar más contexto o detalles sobre qué es el \"producto 33\"?"
+      ]
+    },
+    {
+      "id": 34,
+      "nombre": "Producto 34",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre el \"producto 34\". ¿podrías proporcionar más contexto o detalles sobre qué se refiere este producto?"
+      ]
+    },
+    {
+      "id": 35,
+      "nombre": "Producto 35",
+      "categoria": "Moto",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre un \"producto 35\" específico",
+        "pero puedo sugerir algunas palabras clave relacionadas:\n\nelectrónica",
+        "tecnología",
+        "innovación",
+        "diseño",
+        "productos electrónicos."
+      ]
+    },
+    {
+      "id": 36,
+      "nombre": "Producto 36",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre un \"producto 36\". ¿podrías proporcionar más contexto o detalles sobre qué tipo de producto es?"
+      ]
+    },
+    {
+      "id": 37,
+      "nombre": "Producto 37",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre el \"producto 37\". ¿puedes proporcionar más contexto o detalles sobre qué es el producto 37?"
+      ]
+    },
+    {
+      "id": 38,
+      "nombre": "Producto 38",
+      "categoria": "Moto",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "producto",
+        "38",
+        "innovación",
+        "tecnología",
+        "diseño"
+      ]
+    },
+    {
+      "id": 39,
+      "nombre": "Producto 39",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre el \"producto 39\". ¿podrías proporcionar más contexto o detalles sobre qué se refiere este producto?"
+      ]
+    },
+    {
+      "id": 40,
+      "nombre": "Producto 40",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "producto",
+        "40",
+        "tecnología",
+        "innovación",
+        "eficiencia"
+      ]
+    },
+    {
+      "id": 41,
+      "nombre": "Producto 41",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "dispositivo",
+        "electrónico",
+        "portátil",
+        "conectividad",
+        "innovador"
+      ]
+    },
+    {
+      "id": 42,
+      "nombre": "Producto 42",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "electrónica",
+        "tecnología",
+        "innovación",
+        "diseño",
+        "electrónica"
+      ]
+    },
+    {
+      "id": 43,
+      "nombre": "Producto 43",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre el \"producto 43\". ¿podrías proporcionar más contexto o detalles sobre qué es el producto 43?"
+      ]
+    },
+    {
+      "id": 44,
+      "nombre": "Producto 44",
+      "categoria": "Moto",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo suficiente información sobre el \"producto 44\". ¿podrías proporcionar más contexto o detalles sobre qué es el producto 44?"
+      ]
+    },
+    {
+      "id": 45,
+      "nombre": "Producto 45",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "producto",
+        "45",
+        "innovación",
+        "tecnología",
+        "eficiencia"
+      ]
+    },
+    {
+      "id": 46,
+      "nombre": "Producto 46",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo suficiente información sobre el \"producto 46\". ¿podrías proporcionar más contexto o detalles sobre qué tipo de producto es?"
+      ]
+    },
+    {
+      "id": 47,
+      "nombre": "Producto 47",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "electrónico",
+        "tecnológico",
+        "innovador",
+        "portátil",
+        "inteligente"
+      ]
+    },
+    {
+      "id": 48,
+      "nombre": "Producto 48",
+      "categoria": "Accesorio",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "electrónico",
+        "dispositivo",
+        "tecnología",
+        "innovación",
+        "herramienta"
+      ]
+    },
+    {
+      "id": 49,
+      "nombre": "Producto 49",
+      "categoria": "Moto",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre un \"producto 49\" específico. sin embargo",
+        "te puedo sugerir algunas palabras clave generales relacionadas con un producto desconocido:\n\nfabricación",
+        "diseño",
+        "tecnología",
+        "innovación",
+        "mercado"
+      ]
+    },
+    {
+      "id": 50,
+      "nombre": "Producto 50",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "producto",
+        "50",
+        "innovador",
+        "tecnológico",
+        "de alta calidad"
+      ]
+    },
+    {
+      "id": 51,
+      "nombre": "Producto 51",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "producto",
+        "51",
+        "innovador",
+        "tecnológico",
+        "eficiente"
+      ]
+    },
+    {
+      "id": 52,
+      "nombre": "Producto 52",
+      "categoria": "Accesorio",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "producto",
+        "52",
+        "lanzamiento",
+        "mercadotecnia",
+        "estrategia"
+      ]
+    },
+    {
+      "id": 53,
+      "nombre": "Producto 53",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "electrónico",
+        "tecnología",
+        "innovador",
+        "electrónico",
+        "portátil"
+      ]
+    },
+    {
+      "id": 54,
+      "nombre": "Producto 54",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "electrónico",
+        "electrónico",
+        "54",
+        "producto",
+        "tecnología"
+      ]
+    },
+    {
+      "id": 55,
+      "nombre": "Producto 55",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "electrónico",
+        "tecnológico",
+        "innovador",
+        "electrónico",
+        "portátil"
+      ]
+    },
+    {
+      "id": 56,
+      "nombre": "Producto 56",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "producto",
+        "56",
+        "innovación",
+        "tecnología",
+        "eficiencia."
+      ]
+    },
+    {
+      "id": 57,
+      "nombre": "Producto 57",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "producto",
+        "57",
+        "tecnología",
+        "innovación",
+        "mercado"
+      ]
+    },
+    {
+      "id": 58,
+      "nombre": "Producto 58",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre el \"producto 58\". ¿podrías proporcionar más contexto o detalles sobre qué se refiere?"
+      ]
+    },
+    {
+      "id": 59,
+      "nombre": "Producto 59",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre un \"producto 59\". ¿podrías proporcionar más contexto o detalles sobre qué es el producto 59?"
+      ]
+    },
+    {
+      "id": 60,
+      "nombre": "Producto 60",
+      "categoria": "Moto",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "electrónica",
+        "tecnología",
+        "innovación",
+        "diseño",
+        "electrónica"
+      ]
+    },
+    {
+      "id": 61,
+      "nombre": "Producto 61",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre \"producto 61\"."
+      ]
+    },
+    {
+      "id": 62,
+      "nombre": "Producto 62",
+      "categoria": "Moto",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "producto",
+        "62",
+        "innovación",
+        "tecnología",
+        "avanzado"
+      ]
+    },
+    {
+      "id": 63,
+      "nombre": "Producto 63",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre un \"producto 63\". ¿podrías proporcionar más contexto o detalles sobre qué se refiere?"
+      ]
+    },
+    {
+      "id": 64,
+      "nombre": "Producto 64",
+      "categoria": "Megapack",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "nanotecnología",
+        "materiales",
+        "avanzados",
+        "tecnología",
+        "innovación"
+      ]
+    },
+    {
+      "id": 65,
+      "nombre": "Producto 65",
+      "categoria": "Accesorio",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "electrodoméstico",
+        "cocina",
+        "horno",
+        "microondas",
+        "aplicación"
+      ]
+    },
+    {
+      "id": 66,
+      "nombre": "Producto 66",
+      "categoria": "Accesorio",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "producto 66",
+        "cosmética",
+        "cuidado personal",
+        "belleza",
+        "higiene"
+      ]
+    },
+    {
+      "id": 67,
+      "nombre": "Producto 67",
+      "categoria": "Otro",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "electrónica",
+        "innovación",
+        "tecnología",
+        "electrónica de consumo",
+        "gadget"
+      ]
+    },
+    {
+      "id": 68,
+      "nombre": "Producto 68",
+      "categoria": "Moto",
+      "precio": 0,
+      "descripcion": "Sin descripción",
+      "keywords": [
+        "no tengo información sobre el \"producto 68\"."
+      ]
+    }
+  ],
+  "categories": [
+    "Otro",
+    "Accesorio",
+    "Moto",
+    "Megapack"
+  ],
+  "keywords": [
+    "electrónica",
+    "tecnología",
+    "innovación",
+    "diseño",
+    "eficiencia",
+    "no tengo información sobre \"producto 2\" para generar palabras clave.",
+    "desarrollo",
+    "mercado",
+    "competitividad",
+    "electrónico",
+    "innovador",
+    "inteligente",
+    "conectado",
+    "producto",
+    "7",
+    "tecnológico",
+    "revolucionario",
+    "no tengo información sobre un \"producto 9\".",
+    "marketing",
+    "fabricación",
+    "calidad",
+    "12",
+    "13",
+    "eficiencia.",
+    "no tengo información sobre el \"producto 14\". ¿podrías proporcionar más contexto o detalles sobre qué se refiere?",
+    "15",
+    "no tengo información sobre el \"producto 16\". ¿podrías proporcionar más contexto o detalles sobre qué se refiere este término?",
+    "gadget",
+    "avanzado",
+    "no tengo información sobre un \"producto 18\" específico",
+    "pero puedo generar algunas palabras clave generales relacionadas con productos:\n\nelectrónica",
+    "fabricación.",
+    "no tengo información sobre un \"producto 19\". ¿podrías proporcionar más contexto o detalles sobre qué se refiere?",
+    "20",
+    "específico",
+    "productividad",
+    "automatización",
+    "22",
+    "no tengo información sobre el \"producto 23\". ¿podrías proporcionar más contexto o detalles sobre qué es el producto 23?",
+    "no tengo información sobre un \"producto 24\". ¿podrías proporcionarme más contexto o detalles sobre qué se refiere a este producto?",
+    "lanzamiento",
+    "no tengo información sobre un \"producto 26\". ¿podrías proporcionar más contexto o detalles sobre qué tipo de producto se refiere?",
+    "no tengo información sobre el \"producto 27\".",
+    "no tengo información sobre un \"producto 28\" específico. ¿podrías proporcionar más contexto o detalles sobre qué tipo de producto se refiere?",
+    "no tengo información sobre el \"producto 29\".",
+    "productos",
+    "consumo",
+    "inventario",
+    "gestión",
+    "no tengo suficiente información para generar palabras clave. ¿puedes proporcionar más contexto sobre el \"producto 31\"?",
+    "no tengo información sobre un \"producto 32\" específico. puedes proporcionarme más contexto o detalles sobre qué tipo de producto es?",
+    "no tengo información sobre el \"producto 33\". ¿podrías proporcionar más contexto o detalles sobre qué es el \"producto 33\"?",
+    "no tengo información sobre el \"producto 34\". ¿podrías proporcionar más contexto o detalles sobre qué se refiere este producto?",
+    "no tengo información sobre un \"producto 35\" específico",
+    "pero puedo sugerir algunas palabras clave relacionadas:\n\nelectrónica",
+    "productos electrónicos.",
+    "no tengo información sobre un \"producto 36\". ¿podrías proporcionar más contexto o detalles sobre qué tipo de producto es?",
+    "no tengo información sobre el \"producto 37\". ¿puedes proporcionar más contexto o detalles sobre qué es el producto 37?",
+    "38",
+    "no tengo información sobre el \"producto 39\". ¿podrías proporcionar más contexto o detalles sobre qué se refiere este producto?",
+    "40",
+    "dispositivo",
+    "portátil",
+    "conectividad",
+    "no tengo información sobre el \"producto 43\". ¿podrías proporcionar más contexto o detalles sobre qué es el producto 43?",
+    "no tengo suficiente información sobre el \"producto 44\". ¿podrías proporcionar más contexto o detalles sobre qué es el producto 44?",
+    "45",
+    "no tengo suficiente información sobre el \"producto 46\". ¿podrías proporcionar más contexto o detalles sobre qué tipo de producto es?",
+    "herramienta",
+    "no tengo información sobre un \"producto 49\" específico. sin embargo",
+    "te puedo sugerir algunas palabras clave generales relacionadas con un producto desconocido:\n\nfabricación",
+    "50",
+    "de alta calidad",
+    "51",
+    "eficiente",
+    "52",
+    "mercadotecnia",
+    "estrategia",
+    "54",
+    "56",
+    "57",
+    "no tengo información sobre el \"producto 58\". ¿podrías proporcionar más contexto o detalles sobre qué se refiere?",
+    "no tengo información sobre un \"producto 59\". ¿podrías proporcionar más contexto o detalles sobre qué es el producto 59?",
+    "no tengo información sobre \"producto 61\".",
+    "62",
+    "no tengo información sobre un \"producto 63\". ¿podrías proporcionar más contexto o detalles sobre qué se refiere?",
+    "nanotecnología",
+    "materiales",
+    "avanzados",
+    "electrodoméstico",
+    "cocina",
+    "horno",
+    "microondas",
+    "aplicación",
+    "producto 66",
+    "cosmética",
+    "cuidado personal",
+    "belleza",
+    "higiene",
+    "electrónica de consumo",
+    "no tengo información sobre el \"producto 68\"."
+  ],
+  "stats": {
+    "totalProducts": 68,
+    "processed": 68,
+    "errors": 0,
+    "successRate": "100.00%"
+  }
+}

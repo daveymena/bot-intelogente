@@ -1475,10 +1475,12 @@ let engineInstance: IntelligentConversationEngine | null = null;
 
 export function getIntelligentEngine(): IntelligentConversationEngine {
   if (!engineInstance) {
-    const apiKey = process.env.GROQ_API_KEY;
-    if (!apiKey) {
-      throw new Error('GROQ_API_KEY no está configurada');
+    const apiKey = process.env.GROQ_API_KEY || 'dummy';
+    
+    if (!process.env.GROQ_API_KEY && process.env.OLLAMA_ENABLED !== 'true') {
+      throw new Error('GROQ_API_KEY no está configurada y OLLAMA no está habilitado');
     }
+    
     engineInstance = new IntelligentConversationEngine(apiKey);
   }
   return engineInstance;

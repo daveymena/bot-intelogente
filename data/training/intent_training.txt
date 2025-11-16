@@ -1,0 +1,243 @@
+__label__compra Hola, busco un equipo para trabajar, ¿qué opciones tienes?
+__label__compra ¿Es nuevo o usado? No quiero problemas
+__label__compra ¿Me estafas? He oído historias de personas que compran equipos que no son lo que parecen
+__label__compra Vi uno más barato en otro lado, ¿por qué el tuyo es más caro?
+__label__compra ¿Cuánto demora en llegar si lo compro?
+__label__compra ¿Y si no me gusta cuando lo vea?
+__label__compra ¿Tiene garantía?
+__label__compra ¿Puedo verlo antes de comprar?
+__label__compra ¿Aceptan contraentrega?
+__label__compra ¿Me das descuento?
+__label__compra ¿Cómo sé que es real y no una estafa?
+__label__compra Está bien, creo que me gustaría comprar el ASUS Todo en Uno Intel Core i3-1115G4. ¿Cómo procedo?
+__label__buscar_producto Hola, estoy buscando un equipo para la oficina. ¿Qué opciones tienen?
+__label__buscar_producto Bueno, estoy dispuesto a gastar hasta $7.499.000 Pero ¿es nuevo o usado lo que me vas a ofrecer?
+__label__buscar_producto ¿Me estafas? ¿Cómo sé que es real y no me vas a vender algo que no existe?
+__label__buscar_producto Vi uno más barato en otro lado. ¿Por qué el tuyo es tan caro?
+__label__buscar_producto ¿Cuánto demora en llegar si lo compro?
+__label__buscar_producto ¿Y si no me gusta cuando lo vea?
+__label__buscar_producto ¿Tiene garantía?
+__label__buscar_producto ¿Puedo verlo antes de comprar?
+__label__buscar_producto ¿Aceptan contraentrega?
+__label__buscar_producto ¿Me das descuento?
+__label__buscar_producto ¿Cómo sé que es real y no me vas a estafar?
+__label__buscar_producto Está bien, me gustaría comprar el HP Todo en Uno Intel Core i3 N300. ¿Cuál es el paso siguiente?
+__label__consulta_producto Hola, estoy buscando un todo en uno para mi hogar. ¿Qué opciones tienes?
+__label__consulta_producto ¿Es nuevo o usado?
+__label__consulta_producto ¿Me estafas?
+__label__consulta_producto Vi uno más barato en otro lado
+__label__consulta_producto ¿Cuánto demora?
+__label__consulta_producto ¿Y si no me gusta?
+__label__consulta_producto ¿Tiene garantía?
+__label__consulta_producto ¿Puedo verlo antes?
+__label__consulta_producto ¿Aceptan contraentrega?
+__label__consulta_producto ¿Me das descuento?
+__label__consulta_producto ¿Cómo sé que es real?
+__label__consulta_producto Quiero comprar el ASUS Todo en Uno con Intel Core i3-1115G4. ¿Cómo procedo?
+__label__preguntar_producto Hola, estoy buscando un nuevo equipo de cómputo para el hogar. ¿Qué opciones tienes disponible?
+__label__preguntar_producto ¿Es nuevo o usado? No quiero nada que ya haya sido utilizado 🚫
+__label__preguntar_producto ¿Me estafas? He escuchado historias de personas que compran y no reciben nada 🤥
+__label__preguntar_producto Vi uno más barato en otro lado. ¿Por qué debería comprar contigo? 🤔
+__label__preguntar_producto ¿Cuánto demora en llegarme el producto? Necesito unourgentemente ⏰
+__label__preguntar_producto ¿Y si no me gusta? ¿Puedo devolverlo? 🤔
+__label__preguntar_producto ¿Tiene garantía? ¿Y si se daña? 🤕
+__label__preguntar_producto ¿Puedo verlo antes de comprar? Quiero asegurarme de que sea lo que necesito 📊
+__label__preguntar_producto ¿Aceptan contraentrega? No tengo forma de pagar de otra manera 📦
+__label__preguntar_producto ¿Me das descuento? Estoy comprando por primera vez 🎁
+__label__preguntar_producto ¿Cómo sé que es real? ¿No es un fraude? 🚫
+__label__preguntar_producto Está bien, creo que me gustaría proceder con la compra del ASUS Todo en Uno Intel Core i3-1115G4. ¿Cuál es el próximo paso? 🛍️
+__label__necesito_un_equipo Hola, necesito un equipo para trabajar, ¿qué opciones tienen disponibles?
+__label__necesito_un_equipo ¿Es nuevo o usado? No quiero problemas con el equipo
+__label__necesito_un_equipo ¿Me estafas? No quiero que me vendan algo que no sirva
+__label__necesito_un_equipo Vi uno más barato en otro lado, ¿por qué es más caro aquí?
+__label__necesito_un_equipo ¿Cuánto demora en llegar? No tengo tiempo para esperar
+__label__necesito_un_equipo ¿Y si no me gusta? ¿Puedo devolverlo?
+__label__necesito_un_equipo ¿Tiene garantía? No quiero problemas con el equipo
+__label__necesito_un_equipo ¿Puedo verlo antes de comprar? Quiero asegurarme de que sea lo que busco
+__label__necesito_un_equipo ¿Aceptan contraentrega? No tengo forma de pagar por adelantado
+__label__necesito_un_equipo ¿Me das descuento? Estoy comprando por primera vez
+__label__necesito_un_equipo ¿Cómo sé que es real? No quiero ser estafado
+__label__necesito_un_equipo Está bien, creo que me gustaría comprar el ASUS Todo en Uno Intel Core i5-13420H. ¿Cuál es el próximo paso?
+__label__consulta_producto Hola, estoy buscando un todo en uno para mi hogar, ¿qué opciones tienes?
+__label__consulta_producto Sí, ¿cuáles son y cuánto cuestan?
+__label__consulta_producto ¿Es nuevo o usado?
+__label__consulta_producto ¿Me estafas?
+__label__consulta_producto Vi uno más barato en otro lado
+__label__consulta_producto ¿Cuánto demora?
+__label__consulta_producto ¿Y si no me gusta?
+__label__consulta_producto ¿Tiene garantía?
+__label__consulta_producto ¿Puedo verlo antes?
+__label__consulta_producto ¿Aceptan contraentrega?
+__label__consulta_producto ¿Me das descuento?
+__label__consulta_producto ¿Cómo sé que es real?
+__label__consulta_producto Ok, creo que me gustaría comprar el ASUS Todo en Uno Intel Core i3-1115G4
+__label__buscar_producto Hola, estoy buscando un todo en uno para mi negocio. ¿Qué opciones tienen?
+__label__buscar_producto No tengo un presupuesto específico, pero quiero algo con buena calidad. ¿Cuáles son los precios?
+__label__buscar_producto ¿Es nuevo o usado?
+__label__buscar_producto ¿Me estafas? ¿Cómo sé que es real?
+__label__buscar_producto Vi uno más barato en otro lado. ¿Por qué el tuyo es más caro?
+__label__buscar_producto ¿Cuánto demora la entrega?
+__label__buscar_producto ¿Y si no me gusta?
+__label__buscar_producto ¿Tiene garantía?
+__label__buscar_producto ¿Puedo verlo antes de comprar?
+__label__buscar_producto ¿Aceptan contraentrega?
+__label__buscar_producto ¿Me das descuento?
+__label__buscar_producto Me gustaría el HP Todo en Uno Intel Core i3 N300. ¿Cuál es el precio con todo incluido?
+__label__buscar_producto Estoy de acuerdo, ¿cómo procedo para pagar?
+__label__pedido_de_producto Hola, estoy buscando un todo en uno, ¿qué opciones tienes?
+__label__pedido_de_producto ¿Es nuevo o usado?
+__label__pedido_de_producto ¿Me estafas? No quiero problemas
+__label__pedido_de_producto Vi uno más barato en otro lado, ¿por qué es más caro aquí?
+__label__pedido_de_producto ¿Cuánto demora?
+__label__pedido_de_producto ¿Y si no me gusta?
+__label__pedido_de_producto ¿Tiene garantía?
+__label__pedido_de_producto ¿Puedo verlo antes?
+__label__pedido_de_producto ¿Aceptan contraentrega?
+__label__pedido_de_producto ¿Me das descuento?
+__label__pedido_de_producto ¿Cómo sé que es real?
+__label__pedido_de_producto Está bien, creo que me gustaría el ASUS Todo en Uno Intel Core i3-1115G4. ¿Cómo puedo pagar?
+__label__pedido_de_producto Sí, por favor
+__label__consultar_productos Hola, estoy buscando un todo en uno para mi oficina. ¿Qué opciones hay?
+__label__consultar_productos ¿Es nuevo o usado?
+__label__consultar_productos ¿Me estafas? No quiero que me tomen el pelo
+__label__consultar_productos Vi uno más barato en otro lado. ¿Por qué es tan caro?
+__label__consultar_productos ¿Cuánto demora en llegar si lo compro?
+__label__consultar_productos ¿Y si no me gusta? ¿Puedo devolverlo?
+__label__consultar_productos ¿Tiene garantía?
+__label__consultar_productos ¿Puedo verlo antes de comprar?
+__label__consultar_productos ¿Aceptan contraentrega?
+__label__consultar_productos ¿Me das descuento?
+__label__consultar_productos ¿Cómo sé que es real?
+__label__consultar_productos Está bien, creo que voy a comprar el ASUS Todo en Uno Intel Core i3-1115G4. ¿Cuál es el próximo paso?
+__label__pregunta_producto Hola, estoy buscando un equipo para trabajar, ¿qué opciones tienes?
+__label__pregunta_producto ¿Es nuevo o usado?
+__label__pregunta_producto ¿Me estafas? ¿Cómo sé que es real?
+__label__pregunta_producto Vi uno más barato en otro lado
+__label__pregunta_producto ¿Cuánto demora?
+__label__pregunta_producto ¿Y si no me gusta?
+__label__pregunta_producto ¿Tiene garantía?
+__label__pregunta_producto ¿Puedo verlo antes?
+__label__pregunta_producto ¿Aceptan contraentrega?
+__label__pregunta_producto ¿Me das descuento?
+__label__pregunta_producto Me gustaría comprar el ASUS Todo en Uno Intel Core i3-1115G4
+__label__buscar_producto Hola, estoy buscando un Todo en Uno, ¿qué opciones tienes?
+__label__buscar_producto ¿Es nuevo o usado?
+__label__buscar_producto ¿Me estafas? ¿Cómo sé que es real?
+__label__buscar_producto Vi uno más barato en otro lado, ¿por qué es más caro aquí?
+__label__buscar_producto ¿Cuánto demora en llegar?
+__label__buscar_producto ¿Y si no me gusta?
+__label__buscar_producto ¿Tiene garantía?
+__label__buscar_producto ¿Puedo verlo antes de comprar?
+__label__buscar_producto ¿Aceptan contraentrega?
+__label__buscar_producto ¿Me das descuento?
+__label__buscar_producto Voy a comprar el ASUS Todo en Uno Intel Core i3-1115G4. ¿Cómo pago?
+__label__buscar_producto Me gustaría pagar con contraentrega
+__label__consulta_producto Hola, estoy buscando un todo en uno, ¿qué opciones tienes?
+__label__consulta_producto ¿Es nuevo o usado?
+__label__consulta_producto ¿Me estafas? No quiero que me engañen.
+__label__consulta_producto Vi uno más barato en otro lado, ¿por qué el tuyo es más caro?
+__label__consulta_producto ¿Cuánto demora en llegar?
+__label__consulta_producto ¿Y si no me gusta? ¿Puedo devolverlo?
+__label__consulta_producto ¿Tiene garantía?
+__label__consulta_producto ¿Puedo verlo antes de comprar?
+__label__consulta_producto ¿Aceptan contraentrega?
+__label__consulta_producto ¿Me das descuento?
+__label__consulta_producto ¿Cómo sé que es real?
+__label__consulta_producto Ok, creo que me gustaría comprar el ASUS Todo en Uno Intel Core i3-1115G4. ¿Qué debo hacer ahora?
+__label__comprar Hola, estoy buscando un todo en uno para mi hogar 🏠. ¿Qué opciones tienes disponibles?
+__label__comprar ¿Es nuevo o usado? No quiero algo que ya esté usado 🤑
+__label__comprar ¿Me estafas? He escuchado historias de gente que compra y no recibe nada 🙅‍♂️
+__label__comprar Vi uno más barato en otro lado 🤔. ¿Por qué el tuyo es más caro?
+__label__comprar ¿Cuánto demora el envío? Necesito esto lo antes posible ⏱️
+__label__comprar ¿Y si no me gusta? ¿Puedo devolverlo? 🤔
+__label__comprar ¿Tiene garantía? ¿Cuánto dura? 🔒
+__label__comprar ¿Puedo verlo antes de comprar? Quiero asegurarme de que sea lo que busco 👀
+__label__comprar ¿Aceptan contraentrega? No quiero pagar hasta que lo tenga en mis manos 📦
+__label__comprar ¿Me das descuento? Estoy comprando por primera vez 🤑
+__label__comprar ¿Cómo sé que es real? ¿No es un fraude? 🤔
+__label__comprar Ok, creo que me gustaría comprar el ASUS Todo en Uno Intel Core i3-1115G4. ¿Cuál es el próximo paso? 📈
+__label__preguntar_productos Hola, estoy buscando un todo en uno para mi hermano. ¿Qué opciones tienen?
+__label__preguntar_productos ¿Es nuevo o usado? No quiero comprarme algo que ya esté usado.
+__label__preguntar_productos ¿Me estafas? He escuchado que hay muchos estafadores por ahí.
+__label__preguntar_productos Vi uno más barato en otro lado. ¿Por qué el tuyo es más caro?
+__label__preguntar_productos ¿Cuánto demora en llegar?
+__label__preguntar_productos ¿Y si no me gusta? ¿Puedo devolverlo?
+__label__preguntar_productos ¿Tiene garantía?
+__label__preguntar_productos ¿Puedo verlo antes?
+__label__preguntar_productos ¿Aceptan contraentrega?
+__label__preguntar_productos ¿Me das descuento?
+__label__preguntar_productos ¿Cómo sé que es real?
+__label__preguntar_productos Ok, creo que me gusta el ASUS Todo en Uno Intel Core i3-1115G4. ¿Cómo compro?
+__label__precio Hola, estoy buscando un todo en uno, ¿qué opciones tienen?
+__label__precio ¿Es nuevo o usado?
+__label__precio ¿Me estafas? No quiero problemas
+__label__precio Vi uno más barato en otro lado, ¿por qué es más caro aquí?
+__label__precio ¿Cuánto demora en llegar?
+__label__precio ¿Y si no me gusta?
+__label__precio ¿Tiene garantía?
+__label__precio ¿Puedo verlo antes?
+__label__precio ¿Aceptan contraentrega?
+__label__precio ¿Me das descuento?
+__label__precio ¿Cómo sé que es real?
+__label__precio Me gustaría comprar el ASUS Todo en Uno Intel Core i3-1115G4, ¿cómo procedo?
+__label__ preguntar_producto Hola, estoy buscando un todo en uno para mi hogar. ¿Qué opciones tienes?
+__label__ preguntar_producto ¿Es nuevo o usado?
+__label__ preguntar_producto ¿Me estafas? No quiero problemas
+__label__ preguntar_producto Vi uno más barato en otro lado. ¿Por qué es más caro?
+__label__ preguntar_producto ¿Cuánto demora la entrega?
+__label__ preguntar_producto ¿Y si no me gusta? ¿Puedo devolverlo?
+__label__ preguntar_producto ¿Tiene garantía?
+__label__ preguntar_producto ¿Puedo verlo antes de comprar?
+__label__ preguntar_producto ¿Aceptan contraentrega?
+__label__ preguntar_producto ¿Me das descuento?
+__label__ preguntar_producto ¿Cómo sé que es real y no es un fraude?
+__label__ preguntar_producto Ok, acepto. ¿Cómo pago?
+__label__intent_preguntón Hola, estoy buscando un Todo en Uno para mi oficina, ¿qué opciones tengo?
+__label__intent_preguntón ¿Es nuevo o usado?
+__label__intent_preguntón ¿Me estafas? No quiero problemas
+__label__intent_preguntón Vi uno más barato en otro lado, ¿por qué es tan caro?
+__label__intent_preguntón ¿Cuánto demora en llegar?
+__label__intent_preguntón ¿Y si no me gusta?
+__label__intent_preguntón ¿Tiene garantía?
+__label__intent_preguntón ¿Puedo verlo antes de comprar?
+__label__intent_preguntón ¿Aceptan contraentrega?
+__label__intent_preguntón ¿Me das descuento?
+__label__intent_preguntón ¿Cómo sé que es real?
+__label__intent_preguntón Vale, me convenciste. ¿Cómo compro?
+__label__intent_preguntón COMPRAR ASUS Todo en Uno Intel Core i3-1115G4
+__label__preguntar_producto Hola, estoy buscando un todo en uno para mi hogar. ¿Qué opciones tienes?
+__label__preguntar_producto ¿Es nuevo o usado?
+__label__preguntar_producto ¿Me estafas? Vi uno más barato en otro lado
+__label__preguntar_producto ¿Cuánto demora?
+__label__preguntar_producto ¿Y si no me gusta?
+__label__preguntar_producto ¿Tiene garantía?
+__label__preguntar_producto ¿Puedo verlo antes?
+__label__preguntar_producto ¿Aceptan contraentrega?
+__label__preguntar_producto ¿Me das descuento?
+__label__preguntar_producto ¿Cómo sé que es real?
+__label__preguntar_producto Ok, me gustaría comprar el HP Todo en Uno Intel Core i3 N300. ¿Cuál es el procedimiento de pago?
+__label__preguntar_producto Hola, estoy buscando un todo en uno para mi hogar. ¿Qué opciones tienes?
+__label__preguntar_producto ¿Es nuevo o usado?
+__label__preguntar_producto ¿Me estafas? ¿Cómo sé que es real?
+__label__preguntar_producto Vi uno más barato en otro lado. ¿Por qué es más caro aquí?
+__label__preguntar_producto ¿Cuánto demora?
+__label__preguntar_producto ¿Y si no me gusta? ¿Puedo devolverlo?
+__label__preguntar_producto ¿Tiene garantía?
+__label__preguntar_producto ¿Puedo verlo antes?
+__label__preguntar_producto ¿Aceptan contraentrega?
+__label__preguntar_producto ¿Me das descuento?
+__label__preguntar_producto Sí, quiero comprarlo. ¿Cómo procedo?
+__label__buscar_producto Hola, estoy buscando un todo en uno para mi hermano. ¿Qué opciones tengo?
+__label__buscar_producto ¿Es nuevo o usado?
+__label__buscar_producto ¿Me estafas?
+__label__buscar_producto Vi uno más barato en otro lado
+__label__buscar_producto Vi un HP Todo en Uno Intel N100 por $3.989.000
+__label__buscar_producto ¿Cuánto demora?
+__label__buscar_producto ¿Y si no me gusta?
+__label__buscar_producto ¿Tiene garantía?
+__label__buscar_producto ¿Puedo verlo antes?
+__label__buscar_producto ¿Aceptan contraentrega?
+__label__buscar_producto ¿Me das descuento?
+__label__buscar_producto ¿Cómo sé que es real?
+__label__buscar_producto Voy a comprar el ASUS Todo en Uno Intel Core i3-1115G4
+__label__buscar_producto Voy a pagar con contraentrega

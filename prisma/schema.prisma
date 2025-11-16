@@ -757,9 +757,10 @@ enum BusinessType {
 }
 
 
-// 🧠 Base de Conocimiento Local - Sistema de Aprendizaje
+// 🧠 Base de Conocimiento Local - Sistema de Aprendizaje (Multi-Tenant)
 model ConversationKnowledge {
   id            String   @id @default(cuid())
+  userId        String?  // Usuario dueño del conocimiento (null = compartido)
   userQuery     String   // Pregunta del usuario (normalizada)
   botResponse   String   @db.Text // Respuesta del bot
   productId     String?  // ID del producto relacionado (opcional)
@@ -771,6 +772,7 @@ model ConversationKnowledge {
   createdAt     DateTime @default(now())
   lastUsedAt    DateTime @default(now())
   
+  @@index([userId])
   @@index([userQuery])
   @@index([productId])
   @@index([successRate])

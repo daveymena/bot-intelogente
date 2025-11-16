@@ -146,6 +146,59 @@ export class IntelligentBaileysIntegration {
           console.log('[IntelligentBot] ✅ Link generado:', paymentLink);
         }
 
+        // 🆕 NUEVA ACCIÓN: Enviar múltiples productos con fotos individuales
+        if (action.type === 'send_multiple_products') {
+          console.log('[IntelligentBot] 📦 Enviando múltiples productos con fotos...');
+          
+          try {
+            const { ProductFormatter } = await import('./product-formatter');
+            
+            // Mensaje inicial
+            const initialMsg = ProductFormatter.formatInitialMessage(
+              action.category || 'productos',
+              action.products.length
+            );
+            await sock.sendMessage(from, { text: initialMsg });
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Por cada producto
+            for (let i = 0; i < action.products.length; i++) {
+              const product = action.products[i];
+              
+              // 1. Enviar foto
+              if (product.images) {
+                const images = typeof product.images === 'string' 
+                  ? JSON.parse(product.images) 
+                  : product.images;
+                
+                if (images && images[0]) {
+                  await sock.sendMessage(from, {
+                    image: { url: images[0] },
+                    caption: `📸 ${product.name}`
+                  });
+                  await new Promise(resolve => setTimeout(resolve, 500));
+                }
+              }
+              
+              // 2. Enviar info formateada
+              const info = ProductFormatter.formatSingleProduct(product, i + 1);
+              await sock.sendMessage(from, { text: info });
+              await new Promise(resolve => setTimeout(resolve, 800));
+            }
+            
+            // Mensaje final
+            const finalMsg = ProductFormatter.formatFinalMessage();
+            await sock.sendMessage(from, { text: finalMsg });
+            
+            console.log('[IntelligentBot] ✅ Múltiples productos enviados correctamente');
+            
+            // NO enviar el texto de la IA, ya enviamos todo
+            finalText = '';
+          } catch (error) {
+            console.error('[IntelligentBot] ❌ Error enviando múltiples productos:', error);
+          }
+        }
+
         // Nueva acción: enviar texto simple
         if (action.type === 'send_text') {
           console.log('[IntelligentBot] 📝 Enviando texto adicional...');

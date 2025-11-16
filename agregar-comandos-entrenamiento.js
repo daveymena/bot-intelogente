@@ -15,7 +15,8 @@ const newCommands = {
   "train:test": "npx tsx scripts/test-sin-tokens.ts",
   "knowledge:export": "npx tsx scripts/exportar-conocimiento.ts",
   "knowledge:import": "IMPORT_MODE=add npx tsx scripts/importar-conocimiento.ts",
-  "knowledge:replace": "IMPORT_MODE=replace npx tsx scripts/importar-conocimiento.ts"
+  "knowledge:replace": "IMPORT_MODE=replace npx tsx scripts/importar-conocimiento.ts",
+  "ollama:test": "npx tsx scripts/test-ollama.ts"
 };
 
 // Agregar comandos si no existen

@@ -1,0 +1,169 @@
+================================================================================
+                         INICIO RÁPIDO - TESTS
+================================================================================
+
+🚀 OPCIÓN 1: EJECUTAR TODO AUTOMÁTICAMENTE
+================================================================================
+
+ejecutar-entrenamiento-y-tests.bat
+
+Esto ejecutará:
+  1. Test ejecutivo del bot
+  2. Test de preguntas y respuestas
+  3. Test de IA simple
+  4. Test de búsqueda inteligente
+  5. Test de flujo de pago
+
+Tiempo estimado: 5-10 minutos
+
+================================================================================
+🧪 OPCIÓN 2: EJECUTAR TESTS INDIVIDUALES
+================================================================================
+
+Test 1 - Ejecutivo (Estado general del sistema)
+  node test-ejecutivo-bot-local.js
+
+Test 2 - Preguntas y Respuestas (Simula conversaciones)
+  node test-bot-local-preguntas.js
+
+Test 3 - IA Simple (Prueba Groq API)
+  node test-ia-simple.js
+
+Test 4 - Búsqueda Inteligente (Búsqueda de productos)
+  node test-busqueda-inteligente.js
+
+Test 5 - Flujo de Pago (Validar compra)
+  node test-flujo-pago-completo.js
+
+================================================================================
+🔌 OPCIÓN 3: GESTIONAR PUERTOS
+================================================================================
+
+Ver puertos activos:
+  verificar-puertos-activos.bat
+
+Cerrar puertos innecesarios:
+  cerrar-puertos-innecesarios.bat
+
+Cerrar puerto específico (ejemplo puerto 3000):
+  netstat -ano | findstr :3000
+  taskkill /PID [PID] /F
+
+================================================================================
+📊 RESULTADOS ESPERADOS
+================================================================================
+
+✅ Test Exitoso:
+   ✓ Sistema listo para pruebas
+   ✓ 68 productos cargados
+   ✓ Servicios de IA disponibles
+   ✓ Base de datos configurada
+
+⚠️  Advertencia:
+   ⚠ Entrenamiento necesita actualización
+   ⚠ Productos sin clasificación
+   ⚠ Reporte de entrenamiento vacío
+
+❌ Error:
+   ✗ Archivo no encontrado
+   ✗ Conexión a IA fallida
+   ✗ Error de base de datos
+
+================================================================================
+📈 INTERPRETACIÓN DE RESULTADOS
+================================================================================
+
+BÚSQUEDA DE PRODUCTOS:
+  ✅ Detecta intención
+  ⚠️  Sin clasificación de productos
+  → Solución: Clasificar en la BD
+
+INTENCIÓN DE COMPRA:
+  ✅ Detecta correctamente
+  ✅ Ofrece métodos de pago
+  ✅ Genera links de pago
+
+CONVERSACIÓN NATURAL:
+  ✅ Responde saludos
+  ✅ Mantiene contexto
+  ✅ Lenguaje conversacional
+
+================================================================================
+🎯 PRÓXIMOS PASOS
+================================================================================
+
+1. Ejecutar tests
+2. Revisar resultados
+3. Clasificar productos por categoría
+4. Actualizar entrenamiento
+5. Ejecutar pruebas en vivo
+6. Desplegar en producción
+
+================================================================================
+⚡ COMANDOS RÁPIDOS
+================================================================================
+
+Iniciar desarrollo:
+  npm run dev
+
+Ver logs en tiempo real:
+  npm run dev
+
+Ejecutar todos los tests:
+  ejecutar-entrenamiento-y-tests.bat
+
+Cerrar todos los puertos:
+  taskkill /F /IM node.exe
+
+Verificar estado:
+  node test-ejecutivo-bot-local.js
+
+================================================================================
+📞 SOPORTE RÁPIDO
+================================================================================
+
+Problema: Puerto en uso
+Solución: cerrar-puertos-innecesarios.bat
+
+Problema: Tests fallando
+Solución: node test-ejecutivo-bot-local.js
+
+Problema: IA no responde
+Solución: Verificar GROQ_API_KEY en .env
+
+Problema: Productos no encontrados
+Solución: Clasificar productos en la BD
+
+Problema: Entrenamiento vacío
+Solución: Actualizar training-data.ts
+
+================================================================================
+✅ CHECKLIST RÁPIDO
+================================================================================
+
+[ ] Ejecutar test ejecutivo
+[ ] Ejecutar test de preguntas
+[ ] Revisar resultados
+[ ] Cerrar puertos innecesarios
+[ ] Clasificar productos
+[ ] Actualizar entrenamiento
+[ ] Ejecutar pruebas en vivo
+[ ] Desplegar en producción
+
+================================================================================
+📋 DOCUMENTACIÓN GENERADA
+================================================================================
+
+✓ RESUMEN_EJECUTIVO_TESTS_BOT_LOCAL.md
+✓ INSTRUCCIONES_TESTS_Y_ENTRENAMIENTO.md
+✓ RESUMEN_VISUAL_ESTADO_BOT.md
+✓ test-ejecutivo-bot-local.js
+✓ test-bot-local-preguntas.js
+✓ ejecutar-entrenamiento-y-tests.bat
+✓ verificar-puertos-activos.bat
+✓ cerrar-puertos-innecesarios.bat
+
+================================================================================
+Estado: ✅ LISTO PARA PRUEBAS
+Generado: 15 de Noviembre de 2025
+================================================================================

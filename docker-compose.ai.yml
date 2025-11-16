@@ -1,0 +1,92 @@
+# Docker Compose para agregar Core AI a tu proyecto existente
+# Uso: docker-compose -f docker-compose.yml -f docker-compose.ai.yml up -d
+
+version: '3.8'
+
+services:
+  # Qdrant Vector Database
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: tecnovariedades-qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    environment:
+      QDRANT__SERVICE__GRPC_PORT: 6334
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # Core AI Service (Python FastAPI)
+  core-ai:
+    build:
+      context: ./ai-local-system/core-ai
+      dockerfile: Dockerfile
+    container_name: tecnovariedades-core-ai
+    ports:
+      - "8000:8000"
+    environment:
+      # Database (usar la misma que tu proyecto)
+      DATABASE_URL: ${DATABASE_URL}
+      
+      # Vector DB
+      QDRANT_HOST: qdrant
+      QDRANT_PORT: 6333
+      
+      # AI Models
+      AI_MODEL: ${AI_MODEL:-Qwen/Qwen2.5-0.5B-Instruct}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-sentence-transformers/all-MiniLM-L6-v2}
+      INTENT_MODEL_PATH: /app/models/intent_ft.bin
+      
+      # Configuration
+      MAX_TOKENS: ${MAX_TOKENS:-512}
+      TEMPERATURE: ${TEMPERATURE:-0.7}
+      TOP_K_RETRIEVAL: ${TOP_K_RETRIEVAL:-5}
+      CONFIDENCE_THRESHOLD: ${CONFIDENCE_THRESHOLD:-0.75}
+      
+      # Training
+      AUTO_TRAIN_ENABLED: ${AUTO_TRAIN_ENABLED:-true}
+      AUTO_TRAIN_INTERVAL: ${AUTO_TRAIN_INTERVAL:-86400}
+      MIN_SAMPLES_FOR_TRAIN: ${MIN_SAMPLES_FOR_TRAIN:-100}
+      
+      # Logging
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      
+    volumes:
+      - ./ai-local-system/core-ai:/app
+      - ./data:/data
+      - ai_models:/app/models
+      - training_data:/app/training
+    depends_on:
+      qdrant:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - app-network
+    restart: unless-stopped
+
+volumes:
+  qdrant_data:
+    driver: local
+  ai_models:
+    driver: local
+  training_data:
+    driver: local
+
+networks:
+  app-network:
+    external: true
+    # Si tu proyecto no tiene esta red, créala con:
+    # docker network create app-network

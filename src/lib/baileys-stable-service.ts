@@ -152,6 +152,27 @@ export class BaileysStableService {
   /**
    * Configurar manejadores de eventos
    */
+  
+    /**
+     * Validar sesión antes de usar
+     */
+    private static async validateSession(userId: string): Promise<boolean> {
+      try {
+        const session = this.sessions.get(userId)
+        if (!session) return false
+        
+        if (!session.socket || !session.isReady) return false
+        
+        // Verificar que el socket tenga usuario
+        if (!session.socket.user) return false
+        
+        return true
+      } catch (error) {
+        console.error('[Baileys] ❌ Error validando sesión:', error)
+        return false
+      }
+    }
+    
   private static async setupEventHandlers(
     socket: WASocket,
     session: BaileysSession,
@@ -283,6 +304,9 @@ export class BaileysStableService {
           this.stopKeepAlive(userId)
           this.sessions.delete(userId)
           this.connectionLocks.delete(userId)
+          
+          // Esperar 5 segundos antes de permitir nueva conexión
+          await new Promise(resolve => setTimeout(resolve, 5000))
           return
         }
         
@@ -294,7 +318,7 @@ export class BaileysStableService {
           session.reconnectAttempts++
 
           // 🔒 Límite de reintentos para evitar bucle infinito
-          if (session.reconnectAttempts > 5) {
+          if (session.reconnectAttempts > 50) {
             console.log(`[Baileys] ❌ Máximo de reintentos alcanzado (5), deteniendo reconexión`)
             session.status = 'DISCONNECTED'
             await this.updateConnectionStatus(userId, 'DISCONNECTED', 'Máximo de reintentos alcanzado')
@@ -307,7 +331,10 @@ export class BaileysStableService {
           console.log(`[Baileys] 🔄 Intento de reconexión #${session.reconnectAttempts}`)
 
           // Reconexión exponencial con backoff
-          const delay = Math.min(2000 * Math.pow(2, session.reconnectAttempts - 1), 60000)
+          const delay = Math.min(
+        1000 * Math.pow(1.5, session.reconnectAttempts - 1),  // Backoff más suave
+        30000  // Máximo 30s entre intentos
+      )
           console.log(`[Baileys] ⏳ Esperando ${delay}ms antes de reconectar...`)
 
           // 🔓 Desbloquear antes de reconectar
@@ -410,21 +437,20 @@ export class BaileysStableService {
           //   continue
           // }
 
-          // 🧠 SISTEMA INTELIGENTE CON RAZONAMIENTO
-          console.log('[Baileys] 🧠 Usando SISTEMA INTELIGENTE')
+          // 🧠 SISTEMA IA LOCAL ÚNICAMENTE
+          console.log('[Baileys] 🧠 Usando IA LOCAL (Sin IAs Externas)')
           
-          const { handleMessageWithIntelligence } = await import('./intelligent-baileys-integration')
+          const { BaileysLocalAIIntegration } = await import('./baileys-local-ai-integration')
           
-          const result = await handleMessageWithIntelligence({
-            sock: socket,
+          const result = await BaileysLocalAIIntegration.processMessageWithLocalAI(
+            socket,
             userId,
             from,
             messageText,
-            conversationId: conversation.id,
-            userName: undefined // Extraer del mensaje si está disponible
-          })
+            conversation.id
+          )
           
-          console.log(`[Baileys] ✅ Procesado con confianza: ${(result.confidence || 0) * 100}%`)
+          console.log(`[Baileys] ✅ Procesado con confianza: ${(result.confidence * 100).toFixed(0)}%`)
 
         } catch (error) {
           console.error('[Baileys] ❌ Error procesando mensaje:', error)

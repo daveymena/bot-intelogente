@@ -1,0 +1,11 @@
+{
+  "stats": {
+    "totalGenerated": 1027,
+    "successfulResponses": 1006,
+    "failedResponses": 21,
+    "startTime": "2025-11-15T19:07:55.872Z",
+    "lastTrainingTime": "2025-11-15T22:39:41.396Z"
+  },
+  "timestamp": "2025-11-15T23:04:47.736Z",
+  "totalInDatabase": 518
+}
