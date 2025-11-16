@@ -9,6 +9,7 @@ import { ProductContextManager } from './product-context-manager'
 // import { TRAINING_SCENARIOS, BOT_RULES } from './sales-training-data' // Temporalmente desactivado
 import { IntelligentPersonalityService } from './intelligent-personality-service'
 import { ProfessionalConversationMemory } from './professional-conversation-memory'
+import { MegaflujoService } from './megaflujos-service'
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY || ''
@@ -660,13 +661,20 @@ Puedo ayudarte con:
 
       // 🎭 USAR SERVICIO DE PERSONALIDAD INTELIGENTE
       // Esto integra: personalidad del dashboard + base de datos + entrenamiento
-      const systemPrompt = await IntelligentPersonalityService.buildSystemPrompt(
+      let systemPrompt = await IntelligentPersonalityService.buildSystemPrompt(
         userId,
         businessContext,
         productsInfo
       )
       
+      // 📚 AGREGAR CONTEXTO DE MEGAFLUJOS
+      const megaflujoContexto = MegaflujoService.obtenerContextoParaPrompt(customerMessage)
+      if (megaflujoContexto) {
+        systemPrompt += '\n\n' + megaflujoContexto
+      }
+      
       console.log('[AI] 🎭 Prompt del sistema construido con personalidad configurada')
+      console.log('[AI] 📚 Contexto de megaflujos agregado')
 
       // Preparar mensajes para la IA
       // REDUCIR historial a solo 5 mensajes para evitar exceder límite de tokens
@@ -729,7 +737,24 @@ Puedo ayudarte con:
     } catch (error) {
       console.error('[AI] Error generando respuesta:', error)
 
-      // Respuesta de fallback
+      // 🧠 FALLBACK 1: Intentar usar respuestas entrenadas localmente
+      try {
+        const { trainedResponseService } = await import('./trained-response-service')
+        const trainedResponse = await trainedResponseService.findTrainedResponse(customerMessage)
+        
+        if (trainedResponse) {
+          console.log('✅ Usando respuesta entrenada local (sin IA externa)')
+          return {
+            message: trainedResponse,
+            confidence: 0.75,
+            intent: 'trained_response'
+          }
+        }
+      } catch (trainedError) {
+        console.error('[AI] Error buscando respuesta entrenada:', trainedError)
+      }
+
+      // FALLBACK 2: Respuesta genérica
       return {
         message: '👋 Hola ¡Bienvenido a Tecnovariedades D&S! 😄💻\n\nAquí encontrarás tecnología, soporte, cursos y herramientas digitales para potenciar tu día a día.\n\n📦 ¿Buscas algún producto, servicio o información en especial?',
         confidence: 0.5,
