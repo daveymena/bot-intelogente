@@ -5,8 +5,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Search, ShoppingCart, MessageCircle, Filter } from 'lucide-react'
+import { Search, ShoppingCart, MessageCircle, X, Plus, Minus } from 'lucide-react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 interface Product {
   id: string
@@ -21,21 +22,76 @@ interface Product {
   tags?: string
 }
 
+interface CartItem extends Product {
+  quantity: number
+}
+
 export default function TiendaProfesional() {
+  const router = useRouter()
   const [products, setProducts] = useState<Product[]>([])
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>('all')
   const [loading, setLoading] = useState(true)
+  const [cart, setCart] = useState<CartItem[]>([])
+  const [showCart, setShowCart] = useState(false)
 
   useEffect(() => {
     fetchProducts()
+    loadCartFromStorage()
   }, [])
 
   useEffect(() => {
     filterProducts()
   }, [searchTerm, selectedCategory, selectedSubcategory, products])
+
+  useEffect(() => {
+    saveCartToStorage()
+  }, [cart])
+
+  const addToCart = (product: Product) => {
+    const existingItem = cart.find(item => item.id === product.id)
+    if (existingItem) {
+      setCart(cart.map(item =>
+        item.id === product.id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      ))
+    } else {
+      setCart([...cart, { ...product, quantity: 1 }])
+    }
+  }
+
+  const removeFromCart = (productId: string) => {
+    setCart(cart.filter(item => item.id !== productId))
+  }
+
+  const updateQuantity = (productId: string, quantity: number) => {
+    if (quantity <= 0) {
+      removeFromCart(productId)
+    } else {
+      setCart(cart.map(item =>
+        item.id === productId ? { ...item, quantity } : item
+      ))
+    }
+  }
+
+  const saveCartToStorage = () => {
+    localStorage.setItem('cart', JSON.stringify(cart))
+  }
+
+  const loadCartFromStorage = () => {
+    const saved = localStorage.getItem('cart')
+    if (saved) setCart(JSON.parse(saved))
+  }
+
+  const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+
+  const handleCheckout = () => {
+    if (cart.length === 0) return
+    router.push('/tienda/checkout')
+  }
 
   const fetchProducts = async () => {
     try {
@@ -184,16 +240,30 @@ export default function TiendaProfesional() {
                 Explora nuestros productos y servicios
               </p>
             </div>
-            <Button
-              onClick={() => {
-                const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '573005560186'
-                window.open(`https://wa.me/${phone}`, '_blank')
-              }}
-              className="bg-green-600 hover:bg-green-700"
-            >
-              <MessageCircle className="mr-2 h-4 w-4" />
-              Contactar por WhatsApp
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={() => setShowCart(!showCart)}
+                variant="outline"
+                className="relative"
+              >
+                <ShoppingCart className="h-4 w-4" />
+                {cart.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {cart.length}
+                  </span>
+                )}
+              </Button>
+              <Button
+                onClick={() => {
+                  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '573005560186'
+                  window.open(`https://wa.me/${phone}`, '_blank')
+                }}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                <MessageCircle className="mr-2 h-4 w-4" />
+                WhatsApp
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -320,8 +390,16 @@ export default function TiendaProfesional() {
 
                   <CardFooter className="flex gap-2">
                     <Button
+                      onClick={() => addToCart(product)}
+                      className="flex-1 bg-blue-600 hover:bg-blue-700"
+                    >
+                      <ShoppingCart className="mr-2 h-4 w-4" />
+                      Agregar
+                    </Button>
+                    <Button
                       onClick={() => handleWhatsAppContact(product)}
-                      className="flex-1 bg-green-600 hover:bg-green-700"
+                      variant="outline"
+                      className="flex-1"
                     >
                       <MessageCircle className="mr-2 h-4 w-4" />
                       Consultar
@@ -333,6 +411,85 @@ export default function TiendaProfesional() {
           </div>
         )}
       </div>
+
+      {/* Carrito Lateral */}
+      {showCart && (
+        <div className="fixed right-0 top-0 h-full w-96 bg-white shadow-2xl z-50 flex flex-col">
+          <div className="p-4 border-b flex items-center justify-between">
+            <h2 className="text-xl font-bold">Carrito</h2>
+            <button onClick={() => setShowCart(false)}>
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            {cart.length === 0 ? (
+              <p className="text-gray-500 text-center py-8">Carrito vacío</p>
+            ) : (
+              cart.map(item => (
+                <div key={item.id} className="flex gap-3 pb-4 border-b">
+                  <Image
+                    src={getProductImages(item)[0] || '/placeholder-product.svg'}
+                    alt={item.name}
+                    width={60}
+                    height={60}
+                    className="rounded object-cover"
+                    unoptimized
+                  />
+                  <div className="flex-1">
+                    <p className="font-bold text-sm line-clamp-2">{item.name}</p>
+                    <p className="text-blue-600 font-bold">{formatPrice(item.price, item.currency)}</p>
+                    <div className="flex items-center gap-2 mt-2">
+                      <button
+                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        className="p-1 hover:bg-gray-200 rounded"
+                      >
+                        <Minus className="h-4 w-4" />
+                      </button>
+                      <span className="px-2">{item.quantity}</span>
+                      <button
+                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        className="p-1 hover:bg-gray-200 rounded"
+                      >
+                        <Plus className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => removeFromCart(item.id)}
+                        className="ml-auto text-red-600 hover:text-red-700"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {cart.length > 0 && (
+            <div className="p-4 border-t space-y-4">
+              <div className="flex justify-between text-lg font-bold">
+                <span>Total:</span>
+                <span className="text-blue-600">{formatPrice(cartTotal, 'COP')}</span>
+              </div>
+              <Button
+                onClick={handleCheckout}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white h-12"
+              >
+                Proceder al Pago
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Overlay */}
+      {showCart && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40"
+          onClick={() => setShowCart(false)}
+        />
+      )}
 
       {/* Footer */}
       <footer className="bg-white border-t mt-12">
