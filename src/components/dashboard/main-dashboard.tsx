@@ -1,4 +1,4 @@
-'use client'
+ 'use client'
 
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/use-auth'
@@ -230,6 +230,7 @@ export function MainDashboard() {
             {activeTab === 'whatsapp' && <WhatsAppConnection />}
             {activeTab === 'products' && <ProductsManagement />}
             {activeTab === 'store' && <StoreSettingsTab />}
+            {activeTab === 'megaflujos' && <MegaflujosDashboard />}
             {activeTab === 'personality' && <BotPersonalityGenerator />}
             {activeTab === 'prompts' && <AIPromptsManagement />}
             {activeTab === 'customers' && <CustomersTab />}
