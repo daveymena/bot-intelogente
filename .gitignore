@@ -93,6 +93,11 @@ test-*.ts
 !scripts/test-megaflujos-bot.ts
 !scripts/*megaflujos*.ts
 
+# Archivos de resumen que pueden contener información sensible
+*_COMPLETO_FINAL.md
+*_TRABAJO_COMPLETO*.md
+RESUMEN_TRABAJO_*.md
+
 # Logs y temporales
 *.log
 logs/
