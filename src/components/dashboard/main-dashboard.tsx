@@ -35,6 +35,7 @@ import { DemoSection } from '@/components/dashboard/DemoSection'
 import { StoreSettingsTab } from '@/components/dashboard/store-settings-tab'
 import { SubscriptionStatus } from '@/components/SubscriptionStatus'
 import { MegaflujosDashboard } from '@/components/MegaflujosDashboard'
+import AntiBanMonitor from '@/components/AntiBanMonitor'
 
 export function MainDashboard() {
   const { user, subscription, logout } = useAuth()
@@ -428,6 +429,13 @@ function OverviewTab() {
 
       {/* Import/Export */}
       <ImportExportManager />
+
+      {/* Anti-Ban Monitor - Solo para Admin */}
+      {user && user.email === 'daveymena16@gmail.com' && (
+        <div className="mt-6">
+          <AntiBanMonitor userId={user.id} />
+        </div>
+      )}
     </div>
   )
 }

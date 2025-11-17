@@ -81,24 +81,17 @@ export const metadata: Metadata = {
     description: "Bot inteligente de WhatsApp con IA avanzada. Automatiza ventas, gestiona productos y atiende clientes 24/7. Múltiples modelos de IA, análisis en tiempo real y respuestas personalizadas.",
     images: [
       {
-        url: '/opengraph-image',
+        url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://smartsalesbot.com'}/opengraph-image`,
         width: 1200,
         height: 630,
         alt: "Smart Sales Bot Pro - Automatización de Ventas con IA",
         type: "image/png",
       },
       {
-        url: '/og-image.png',
+        url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://smartsalesbot.com'}/og-image.png`,
         width: 1200,
         height: 630,
         alt: "Smart Sales Bot Pro - Automatización de Ventas con IA",
-        type: "image/png",
-      },
-      {
-        url: '/logo.png',
-        width: 512,
-        height: 512,
-        alt: "Smart Sales Bot Pro Logo",
         type: "image/png",
       },
     ],

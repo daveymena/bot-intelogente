@@ -1,0 +1,38 @@
+========================================
+EJECUTAR TEST DE CORRECCIÓN AHORA
+========================================
+
+El problema de selección de producto específico ha sido CORREGIDO.
+
+PROBLEMA RESUELTO:
+- Antes: Bot mostraba productos irrelevantes (horno cafetera, etc.)
+- Ahora: Bot selecciona SOLO el producto específico que el usuario menciona
+
+PARA PROBAR LA CORRECCIÓN:
+
+Opción 1 (Windows):
+   PROBAR_CORRECCION_PRODUCTO.bat
+
+Opción 2 (Comando directo):
+   npx tsx scripts/test-seleccion-producto-especifico.ts
+
+FLUJO QUE SE PRUEBA:
+1. Usuario: "Me interesa un curso de piano"
+   → Bot muestra solo curso de piano (no otros productos)
+
+2. Usuario: "El curso de piano completo"
+   → Bot selecciona ese específico
+
+3. Usuario: "Me envías el método de pago por nequi?"
+   → Bot genera link para el producto correcto
+
+ARCHIVOS MODIFICADOS:
+✅ src/agents/search-agent.ts (búsqueda inteligente)
+✅ Sistema de scoring implementado
+✅ Detección de selección específica
+
+DOCUMENTACIÓN:
+📄 CORRECCION_SELECCION_PRODUCTO_ESPECIFICO.md (detallada)
+📄 RESUMEN_CORRECCION_PRODUCTO_ESPECIFICO.md (resumen)
+
+========================================

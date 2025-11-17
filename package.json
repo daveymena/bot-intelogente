@@ -6,7 +6,7 @@
     "dev": "nodemon --exec \"npx tsx server.ts\" --watch server.ts --watch src --ext ts,tsx,js,jsx",
     "build": "npx prisma generate && next build",
     "build:server": "npx tsc --project tsconfig.server.json",
-    "start": "NODE_ENV=production npx tsx server.ts",
+    "start": "node .next/standalone/server.js",
     "start:prod": "bash scripts/start-production.sh",
     "lint": "next lint",
     "db:push": "prisma db push",

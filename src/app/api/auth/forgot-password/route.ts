@@ -1,84 +1,108 @@
 /**
- * API: Solicitar recuperación de contraseña
- * Envía un código de verificación por WhatsApp
+ * API Route: Solicitar recuperación de contraseña
+ * POST /api/auth/forgot-password
  */
 
-import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
-import { BaileysService } from '@/lib/baileys-service'
-import crypto from 'crypto'
+import { NextRequest, NextResponse } from 'next/server';
+import { db } from '@/lib/db';
+import crypto from 'crypto';
+import { EmailService } from '@/lib/email-service';
 
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const { email } = await request.json()
+    const { email } = await req.json();
 
     if (!email) {
       return NextResponse.json(
-        { error: 'Correo electrónico es requerido' },
+        { error: 'El correo electrónico es requerido' },
         { status: 400 }
-      )
+      );
     }
 
-    // Buscar usuario por email
-    const user = await db.user.findUnique({
-      where: { email: email.toLowerCase() }
-    })
-
-    // Por seguridad, siempre retornar éxito aunque el usuario no exista
-    if (!user) {
+    let user: any = null
+    try {
+      user = await db.user.findUnique({
+        where: { email: email.toLowerCase().trim() }
+      })
+    } catch (dbError) {
+      console.error('[ForgotPassword] Error de base de datos:', dbError)
       return NextResponse.json({
         success: true,
-        message: 'Si el correo existe, recibirás un código de verificación',
-        requiresCode: true
+        message: 'Si el correo existe, recibirás un enlace de recuperación'
       })
     }
 
-    // Generar código de 6 dígitos
-    const resetCode = Math.floor(100000 + Math.random() * 900000).toString()
-    const resetCodeExpiry = new Date(Date.now() + 600000) // 10 minutos
+    // Por seguridad, siempre devolver éxito (no revelar si el email existe)
+    if (!user) {
+      console.log('[ForgotPassword] Email no encontrado:', email);
+      return NextResponse.json({
+        success: true,
+        message: 'Si el correo existe, recibirás un enlace de recuperación'
+      });
+    }
 
-    // Guardar código en la base de datos
+    // Generar token seguro
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex');
+
+    // Expiración: 1 hora
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+
+    // Guardar token en la base de datos
     await db.user.update({
       where: { id: user.id },
       data: {
-        passwordResetToken: resetCode,
-        passwordResetExpires: resetCodeExpiry
+        passwordResetToken: hashedToken,
+        passwordResetExpires: expiresAt
       }
-    })
+    });
 
-    // Enviar código por EMAIL
+    // Construir URL de reset
+    const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`;
+
+    console.log('[ForgotPassword] Token generado para:', email);
+    console.log('[ForgotPassword] URL de reset:', resetUrl);
+
+    // Enviar email
     try {
-      const { EmailVerificationService } = await import('@/lib/email-verification-service')
-      
-      // Enviar por email
-      const emailSent = await EmailVerificationService.sendVerificationCode(
-        user.email,
-        resetCode,
-        user.name || undefined,
-        'password-reset'
-      )
+      await EmailService.sendPasswordResetEmail({
+        to: user.email,
+        userName: user.name || 'Usuario',
+        resetUrl
+      });
 
-      if (emailSent) {
-        console.log(`[Forgot Password] ✅ Código enviado por email a: ${user.email}`)
-      } else {
-        console.log(`[Forgot Password] ⚠️ Error enviando email, código: ${resetCode}`)
-      }
-    } catch (error) {
-      console.error('[Forgot Password] ❌ Error:', error)
-      console.log(`[Forgot Password] Código generado (usar manualmente): ${resetCode}`)
+      console.log('[ForgotPassword] Email enviado exitosamente');
+    } catch (emailError) {
+      console.error('[ForgotPassword] Error enviando email:', emailError);
+      
+      // Limpiar token si falla el envío
+      await db.user.update({
+        where: { id: user.id },
+        data: {
+          passwordResetToken: null,
+          passwordResetExpires: null
+        }
+      });
+
+      return NextResponse.json(
+        { error: 'Error al enviar el correo de recuperación' },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({
       success: true,
-      message: 'Si el correo existe, recibirás un código de verificación por email',
-      requiresCode: true
-    })
+      message: 'Si el correo existe, recibirás un enlace de recuperación'
+    });
 
   } catch (error) {
-    console.error('[Forgot Password] Error:', error)
+    console.error('[ForgotPassword] Error:', error);
     return NextResponse.json(
-      { error: 'Error procesando solicitud' },
+      { error: 'Error al procesar la solicitud' },
       { status: 500 }
-    )
+    );
   }
 }

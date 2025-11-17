@@ -1,0 +1,91 @@
+========================================
+  QUE HACER AHORA - Contexto Productos v2
+========================================
+
+✅ CORRECCIÓN v2 APLICADA
+- Ahora detecta "más información", "quiero más", etc.
+- Fallback mejorado en handleWithAI()
+
+PASO 1: PROBAR
+--------------
+Ejecuta este archivo:
+  PROBAR_CONTEXTO_CORREGIDO.bat
+
+Debe mostrar:
+  ✅ TEST PASADO: El contexto se mantuvo correctamente
+
+
+PASO 2: VERIFICAR EN WHATSAPP
+------------------------------
+Envía estos mensajes:
+
+1. "Hola, busco un curso de diseño gráfico"
+   → Debe mostrar cursos de diseño
+
+2. "Dame más información"
+   → Debe hablar del curso de diseño
+   → NO debe hablar de auriculares o piano
+
+
+PASO 3: SI TODO FUNCIONA
+-------------------------
+Hacer commit:
+  git add .
+  git commit -m "fix: mantener contexto de productos"
+  git push
+
+
+========================================
+  ARCHIVOS IMPORTANTES
+========================================
+
+Para probar:
+  PROBAR_CONTEXTO_CORREGIDO.bat
+
+Para entender:
+  EMPEZAR_AQUI_CONTEXTO.md
+  LISTO_CONTEXTO_PRODUCTOS_CORREGIDO.md
+
+Para detalles técnicos:
+  CORRECCIONES_CONTEXTO_APLICADAS.md
+  RESUMEN_CORRECCION_CONTEXTO_FINAL.md
+
+
+========================================
+  QUE SE CORRIGIO
+========================================
+
+ANTES:
+  Cliente: "Busco curso de diseño"
+  Bot: [Muestra cursos]
+  Cliente: "Más información"
+  Bot: [Busca de nuevo] ❌
+  Bot: "Encontré auriculares" ❌
+
+AHORA:
+  Cliente: "Busco curso de diseño"
+  Bot: [Muestra cursos]
+  Cliente: "Más información"
+  Bot: [Usa productos anteriores] ✅
+  Bot: "Te cuento del curso..." ✅
+
+
+========================================
+  ESTADO
+========================================
+
+✅ Implementación: COMPLETA
+✅ Tests: CREADOS
+✅ Documentación: COMPLETA
+⏳ Pruebas: PENDIENTE (tú)
+
+
+========================================
+  SIGUIENTE PASO
+========================================
+
+Ejecuta:
+  PROBAR_CONTEXTO_CORREGIDO.bat
+
+
+Fecha: 17 de noviembre de 2025

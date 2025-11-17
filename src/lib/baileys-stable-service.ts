@@ -1,6 +1,7 @@
+import { procesarMensaje } from '@/conversational-module';
 import makeWASocket, {
   DisconnectReason,
-  useMultiFileAuthState,
+  useMultiFileAuthState as getMultiFileAuthState,
   fetchLatestBaileysVersion,
   makeCacheableSignalKeyStore,
   WASocket,
@@ -20,6 +21,11 @@ import { AudioTranscriptionService } from './audio-transcription-service'
 import { VoiceGenerationService } from './voice-generation-service'
 import * as Personality from './conversational-personality'
 import { FlowIntegration } from './flow-integration'
+// 🛡️ Sistema Anti-Ban
+import { SafeBaileysSender } from './safe-baileys-sender'
+import { SafeReconnectManager } from './safe-reconnect-manager'
+// 🤖 Simulador de Escritura Humana
+import { HumanTypingSimulator } from './human-typing-simulator'
 
 interface BaileysSession {
   socket: WASocket | null
@@ -99,7 +105,7 @@ export class BaileysStableService {
       console.log(`[Baileys] 📁 Directorio de sesión: ${authDir}`)
 
       // Cargar estado de autenticación
-      const { state, saveCreds } = await useMultiFileAuthState(authDir)
+      const { state, saveCreds } = await getMultiFileAuthState(authDir)
       console.log(`[Baileys] ✅ Estado de autenticación cargado`)
 
       // Obtener versión más reciente de Baileys
@@ -291,34 +297,40 @@ export class BaileysStableService {
         console.log(`[Baileys] 🔌 Conexión cerrada. Código: ${statusCode}, Reconectar: ${shouldReconnect}`)
 
         if (shouldReconnect) {
+          // 🛡️ Registrar desconexión en SafeReconnectManager
+          SafeReconnectManager.recordDisconnect(userId)
           session.reconnectAttempts++
 
-          // 🔒 Límite de reintentos para evitar bucle infinito
-          if (session.reconnectAttempts > 5) {
-            console.log(`[Baileys] ❌ Máximo de reintentos alcanzado (5), deteniendo reconexión`)
+          // 🛡️ Verificar si puede reconectar (protección anti-ban)
+          if (!SafeReconnectManager.canReconnect(userId)) {
+            console.log(`[Baileys] ❌ Máximo de reintentos alcanzado (protección anti-ban)`)
             session.status = 'DISCONNECTED'
             await this.updateConnectionStatus(userId, 'DISCONNECTED', 'Máximo de reintentos alcanzado')
-            this.stopKeepAlive(userId) // 💓 Detener keep-alive
+            this.stopKeepAlive(userId)
             this.sessions.delete(userId)
-            this.connectionLocks.delete(userId) // 🔓 Desbloquear
+            this.connectionLocks.delete(userId)
             return
           }
 
           console.log(`[Baileys] 🔄 Intento de reconexión #${session.reconnectAttempts}`)
 
-          // Reconexión exponencial con backoff
-          const delay = Math.min(2000 * Math.pow(2, session.reconnectAttempts - 1), 60000)
-          console.log(`[Baileys] ⏳ Esperando ${delay}ms antes de reconectar...`)
-
           // 🔓 Desbloquear antes de reconectar
           this.connectionLocks.delete(userId)
 
-          const timer = setTimeout(async () => {
-            console.log(`[Baileys] 🔄 Reconectando...`)
+          // 🛡️ Usar SafeReconnectManager para reconexión segura
+          const success = await SafeReconnectManager.startReconnect(userId, async () => {
+            console.log(`[Baileys] 🔄 Reconectando con protección anti-ban...`)
             await this.initializeConnection(userId)
-          }, delay)
+          })
 
-          this.reconnectTimers.set(userId, timer)
+          if (!success) {
+            console.log(`[Baileys] ❌ Reconexión fallida`)
+            session.status = 'DISCONNECTED'
+            await this.updateConnectionStatus(userId, 'DISCONNECTED', 'Reconexión fallida')
+            this.stopKeepAlive(userId)
+            this.sessions.delete(userId)
+            this.connectionLocks.delete(userId)
+          }
         } else {
           console.log(`[Baileys] 🚪 Usuario cerró sesión (logged out), no reconectar`)
           session.status = 'DISCONNECTED'
@@ -410,21 +422,60 @@ export class BaileysStableService {
           //   continue
           // }
 
-          // 🧠 SISTEMA INTELIGENTE CON RAZONAMIENTO
-          console.log('[Baileys] 🧠 Usando SISTEMA INTELIGENTE')
+          // 🎯 SISTEMA 24/7 CON ENTRENAMIENTO COMPLETO
+          console.log('[Baileys] 🎯 Usando SISTEMA 24/7 ENTRENADO')
           
-          const { handleMessageWithIntelligence } = await import('./intelligent-baileys-integration')
-          
-          const result = await handleMessageWithIntelligence({
-            sock: socket,
-            userId,
-            from,
-            messageText,
-            conversationId: conversation.id,
-            userName: undefined // Extraer del mensaje si está disponible
-          })
-          
-          console.log(`[Baileys] ✅ Procesado con confianza: ${(result.confidence || 0) * 100}%`)
+          try {
+            const { Bot24_7Orchestrator } = await import('./bot-24-7-orchestrator')
+            
+            // Obtener historial de conversación
+            const historyMessages = await db.message.findMany({
+              where: { conversationId: conversation.id },
+              orderBy: { createdAt: 'desc' },
+              take: 10
+            })
+            
+            const history = historyMessages.reverse().map(msg => ({
+              role: msg.direction === 'INCOMING' ? 'user' as const : 'assistant' as const,
+              content: msg.content
+            }))
+            
+            // Procesar mensaje con AI Service (sistema original)
+            const { AIService } = await import('./ai-service')
+            const aiResponse = await AIService.generateResponse(
+              userId,
+              messageText,
+              from,
+              history
+            )
+            
+            console.log(`[Baileys] ✅ Respuesta generada (confianza: ${(aiResponse.confidence * 100).toFixed(0)}%)`)
+            
+            // Enviar respuesta
+            await socket.sendMessage(from, { text: aiResponse.message })
+            console.log('[Baileys] ✅ Mensaje enviado')
+            
+            // Guardar respuesta en DB
+            await this.saveOutgoingMessage(userId, from, aiResponse.message, conversation.id)
+            
+          } catch (error) {
+            console.error('[Baileys] ❌ Error con sistema 24/7:', error)
+            
+            // FALLBACK: Sistema inteligente anterior
+            console.log('[Baileys] 🔄 Usando sistema de fallback')
+            const { handleMessageWithIntelligence } = await import('./intelligent-baileys-integration')
+            
+            const result = await handleMessageWithIntelligence({
+              sock: socket,
+              userId,
+              from,
+              messageText,
+              conversationId: conversation.id,
+              userName: undefined
+            })
+            
+            console.log(`[Baileys] ✅ Procesado con fallback (confianza: ${(result.confidence || 0) * 100}%)`)
+          }
 
         } catch (error) {
           console.error('[Baileys] ❌ Error procesando mensaje:', error)
@@ -952,7 +1003,7 @@ export class BaileysStableService {
   }
 
   /**
-   * Enviar mensaje
+   * 🛡️ Enviar mensaje de forma segura (con protección anti-ban)
    */
   static async sendMessage(userId: string, to: string, content: string): Promise<boolean> {
     try {
@@ -963,12 +1014,50 @@ export class BaileysStableService {
         return false
       }
 
-      await session.socket.sendMessage(to, { text: content })
-      console.log(`[Baileys] ✅ Mensaje enviado a ${to}`)
+      // Usar SafeBaileysSender para protección anti-ban
+      const success = await SafeBaileysSender.sendText(session.socket, {
+        userId,
+        recipient: to,
+        message: content,
+        forceHumanize: true
+      })
 
-      return true
+      if (success) {
+        console.log(`[Baileys] ✅ Mensaje enviado de forma segura a ${to}`)
+      } else {
+        console.log(`[Baileys] ⚠️ Mensaje bloqueado por protección anti-ban`)
+      }
+
+      return success
     } catch (error) {
       console.error('[Baileys] ❌ Error enviando mensaje:', error)
+      return false
+    }
+  }
+
+  /**
+   * 🛡️ Enviar mensaje directo (sin humanización, para casos especiales)
+   */
+  static async sendMessageDirect(userId: string, to: string, content: string): Promise<boolean> {
+    try {
+      const session = this.sessions.get(userId)
+
+      if (!session || !session.socket || session.status !== 'CONNECTED') {
+        console.error('[Baileys] ❌ No hay sesión activa')
+        return false
+      }
+
+      // Usar SafeBaileysSender sin humanización
+      const success = await SafeBaileysSender.sendText(session.socket, {
+        userId,
+        recipient: to,
+        message: content,
+        forceHumanize: false
+      })
+
+      return success
+    } catch (error) {
+      console.error('[Baileys] ❌ Error enviando mensaje directo:', error)
       return false
     }
   }
@@ -1469,6 +1558,101 @@ Escríbeme para coordinar el pago 😊`
     } catch (error) {
       console.error('[Baileys] ❌ Error detectando/manejando pago:', error)
       return false // No manejado
+    }
+  }
+
+  /**
+   * 🚀 NUEVO SISTEMA CONVERSACIONAL MODULAR
+   */
+  private async handleNewConversationalSystem(
+    socket: WASocket,
+    from: string,
+    message: WAMessage
+  ) {
+    console.log(`[Baileys] 🚀 Usando SISTEMA CONVERSACIONAL COMPLETO`)
+    
+    try {
+      // Extraer texto del mensaje
+      const messageText = 
+        message.message?.conversation ||
+        message.message?.extendedTextMessage?.text ||
+        '';
+
+      if (!messageText) {
+        console.log('[Baileys] Mensaje sin texto, ignorando');
+        return;
+      }
+
+      // Obtener userId del dueño del bot
+      const conversation = await db.conversation.findFirst({
+        where: { customerPhone: from },
+        select: { userId: true }
+      });
+
+      if (!conversation) {
+        console.log('[Baileys] No se encontró conversación, creando...');
+        // Aquí podrías crear la conversación si es necesario
+        return;
+      }
+
+      const userId = conversation.userId;
+
+      // 🚀 PROCESAR CON SISTEMA CONVERSACIONAL COMPLETO
+      const respuesta = await procesarMensaje(userId, messageText);
+
+      // Enviar respuesta de texto con simulación humana
+      if (respuesta.texto) {
+        await BaileysStableService.sendHumanizedMessage(socket, from, respuesta.texto, messageText.length);
+      }
+
+      // 📸 Enviar fotos si las hay
+      if (respuesta.fotos && respuesta.fotos.length > 0) {
+        console.log(`[Baileys] 📸 Enviando ${respuesta.fotos.length} fotos`);
+        
+        for (const foto of respuesta.fotos) {
+          await socket.sendMessage(from, {
+            image: { url: foto.url },
+            caption: foto.caption || ''
+          });
+        }
+      }
+
+      // 💳 Links de pago ya están incluidos en respuesta.texto
+      // El sistema conversacional los genera automáticamente
+
+      console.log('[Baileys] ✅ Respuesta enviada exitosamente');
+
+    } catch (error) {
+      console.error('[Baileys] ❌ Error en sistema conversacional:', error);
+      
+      // Fallback: respuesta genérica
+      await socket.sendMessage(from, {
+        text: 'Disculpa, tuve un problema al procesar tu mensaje. ¿Podrías intentar de nuevo? 🙏'
+      });
+    }
+  }
+  
+  /**
+   * 🤖 Envía un mensaje con simulación de escritura humana
+   * Incluye retrasos naturales y estado "escribiendo..."
+   */
+  private static async sendHumanizedMessage(
+    socket: WASocket,
+    chatId: string,
+    message: string,
+    userMessageLength: number = 50
+  ): Promise<void> {
+    try {
+      // Decidir si usar envío rápido o normal
+      if (HumanTypingSimulator.shouldUseQuickSend(message)) {
+        await HumanTypingSimulator.quickHumanizedSend(socket, chatId, message);
+      } else {
+        await HumanTypingSimulator.humanizedSend(socket, chatId, message, userMessageLength);
+      }
+    } catch (error) {
+      console.error('[Baileys] Error en envío humanizado, usando fallback:', error);
+      // Fallback: enviar directamente sin simulación
+      await socket.sendMessage(chatId, { text: message });
     }
   }
 }

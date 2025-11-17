@@ -84,14 +84,18 @@ export class IntelligentBaileysIntegration {
         // 🎯 NUEVA ACCIÓN: Enviar link de método ESPECÍFICO (cuando el cliente selecciona uno)
         if (action.type === 'send_specific_payment_method') {
           console.log('[IntelligentBot] 💳 Cliente seleccionó método:', action.method);
-          console.log('[IntelligentBot] 📦 Producto:', action.product.name);
+          console.log('[IntelligentBot] 📦 Producto:', action.product?.name || 'desconocido');
+          console.log('[IntelligentBot] 📝 Texto formateado recibido:', action.formattedText?.substring(0, 200));
           
           // REEMPLAZAR COMPLETAMENTE el texto de la IA con el link real
           // La IA puede haber inventado texto, así que lo ignoramos
-          finalText = action.formattedText;
-          
-          console.log('[IntelligentBot] ✅ Link de pago específico generado');
-          console.log('[IntelligentBot] 📝 Texto final:', finalText.substring(0, 150));
+          if (action.formattedText) {
+            finalText = action.formattedText;
+            console.log('[IntelligentBot] ✅ Link de pago específico generado');
+            console.log('[IntelligentBot] 🔍 Contiene número de Nequi:', finalText.includes('3136174267'));
+          } else {
+            console.log('[IntelligentBot] ⚠️ No hay formattedText en la acción');
+          }
         }
 
         // Nueva acción: enviar TODOS los métodos de pago

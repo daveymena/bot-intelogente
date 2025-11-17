@@ -1,214 +1,288 @@
-# ✅ ARREGLO: Fotos y Formato de Respuestas
+# ✅ ARREGLO - Envío de Fotos y Formato de Respuestas
 
-## Problemas Solucionados
+## 🐛 Problemas Detectados
 
-### 1. 📸 Bot no enviaba fotos
-**Causa:** Falta de logs detallados y manejo de errores en descarga de imágenes
+### 1. No Envía Fotos Cuando se Solicitan
+```
+Usuario: "Me envías foto"
+Bot: "📸 Lo siento, pero no puedo enviar fotos directamente..."
+```
+❌ La IA dice que no puede enviar fotos cuando SÍ puede
 
-**Solución aplicada:**
-- ✅ Logs mejorados en cada paso del envío de fotos
-- ✅ Mejor manejo de URLs de Google Drive
-- ✅ Validación de imágenes antes de enviar
-- ✅ Fallback a texto si la foto falla
-- ✅ Parsing robusto del campo `images` (JSON)
+### 2. Información Sin Formato
+```
+Bot: "📸 Lo siento, pero no puedo enviar fotos directamente. Sin embargo, 
+puedo describirte el portátil **Asus Vivobook 16 X1605va-Mb1235**:* 
+Pantalla de 16.0 pulgadas con resolución FHD* Diseño delgado..."
+```
+❌ Sin emojis relevantes
+❌ Sin divisiones claras
+❌ Difícil de leer
 
-### 2. 📝 Respuestas muy largas y sin formato
-**Causa:** IA generaba respuestas extensas sin estructura visual
+### 3. Fotos No se Reenvían
+```
+[IntelligentEngine] ⏭️ Imagen ya enviada para este producto
+```
+❌ Si el usuario pide la foto de nuevo, no se envía
 
-**Solución aplicada:**
-- ✅ Acortamiento automático a máximo 400 caracteres
-- ✅ Formato con emojis y bullets (🔹)
-- ✅ Captions de productos más compactos
-- ✅ Specs en una línea con separadores (•)
+## ✅ Soluciones Implementadas
 
-## Cambios Realizados
+### 1. Detección de Solicitud Explícita de Fotos
 
-### `src/lib/conversational-personality.ts`
+**Archivo:** `src/lib/intelligent-conversation-engine.ts`
+
 ```typescript
-// NUEVAS FUNCIONES:
-
-// 1. Formatear con emojis y bullets
-export function formatForWhatsApp(text: string): string
-
-// 2. Acortar respuestas largas
-export function shortenResponse(text: string, maxLength: number = 400): string
+// 📸 DETECTAR SOLICITUD EXPLÍCITA DE FOTOS
+const isExplicitPhotoRequest = 
+  lastUserMessage.includes('foto') ||
+  lastUserMessage.includes('imagen') ||
+  lastUserMessage.includes('ver') && (lastUserMessage.includes('producto') || lastUserMessage.includes('como') || lastUserMessage.includes('cómo')) ||
+  lastUserMessage.includes('muestra') ||
+  lastUserMessage.includes('envía') && lastUserMessage.includes('foto') ||
+  lastUserMessage.includes('envia') && lastUserMessage.includes('foto') ||
+  lastUserMessage.includes('manda') && lastUserMessage.includes('foto') ||
+  lastUserMessage.includes('pasa') && lastUserMessage.includes('foto');
 ```
 
-### `src/lib/baileys-stable-service.ts`
+**Detecta:**
+- "Me envías foto"
+- "Muéstrame la imagen"
+- "Quiero ver el producto"
+- "Manda foto"
+- "Pasa la imagen"
+
+### 2. Reenvío de Fotos Cuando se Solicitan
+
 ```typescript
-// APLICAR FORMATO ANTES DE ENVIAR:
-
-// 📏 Acortar si es muy largo
-response = Personality.shortenResponse(response, 400);
-
-// 🎨 Formatear para WhatsApp
-response = Personality.formatForWhatsApp(response);
+const shouldSendImage = memory.context.currentProduct && 
+                       (!imageAlreadySent || isExplicitPhotoRequest) && 
+                       !isOnlyAskingForPaymentLink;
 ```
 
-### `src/lib/product-photo-sender.ts`
-```typescript
-// MEJORAS EN ENVÍO DE FOTOS:
+**Lógica:**
+- Si NO se ha enviado la foto → Enviar ✅
+- Si YA se envió PERO el usuario la solicita explícitamente → Reenviar ✅
+- Si el usuario solo pide link de pago → NO enviar foto ✅
 
-// 1. Logs detallados en cada paso
-console.log(`[ProductPhotoSender] 📸 Fotos encontradas: ${photos.length}`)
-console.log(`[ProductPhotoSender] 🔗 URLs convertidas: ${photos[0]}`)
-console.log(`[ProductPhotoSender] 🖼️ Intentando descargar foto...`)
+### 3. Instrucciones Mejoradas en el Prompt
 
-// 2. Caption más compacto
-// ANTES: 8-10 líneas
-// AHORA: 4-5 líneas con specs en una línea
+**Agregado al prompt del sistema:**
 
-// 3. Mejor manejo de errores
-try {
-  const imageBuffer = await this.downloadImage(photoUrl)
-  if (!imageBuffer) {
-    // Fallback a texto
-  }
-} catch (error) {
-  console.error('Stack:', error.stack)
-  // Fallback a texto
-}
+```
+📸 ENVÍO DE FOTOS:
+⚠️ IMPORTANTE: SÍ PUEDES ENVIAR FOTOS
+- Cuando el cliente pida fotos, di: "¡Claro! Te envío la foto del producto 📸"
+- NUNCA digas "no puedo enviar fotos" o "no tengo acceso a fotos"
+- El sistema enviará automáticamente las fotos del producto
+- Mantén tu respuesta corta y confirma que las fotos van en camino
+
+FORMATO DE RESPUESTAS:
+✅ USA emojis relevantes (💻 📱 🏍️ 💰 📦 ✅ 🎯)
+✅ USA negritas con * para destacar información importante
+✅ Separa secciones con saltos de línea
+✅ Usa viñetas o números para listas
+✅ Mantén párrafos cortos (máximo 2-3 líneas)
+
+Ejemplo de formato correcto:
+```
+¡Claro! 😊 Te cuento sobre el *Portátil Acer A15*
+
+💻 *Especificaciones:*
+• Procesador: Intel Core i5
+• RAM: 16GB
+• Almacenamiento: 512GB SSD
+• Pantalla: 15.6" Full HD
+
+💰 *Precio:* $2.500.000 COP
+
+¿Te gustaría más información? 🤔
+```
 ```
 
-## Cómo Probar
+## 🔄 Flujo Corregido
 
-### 1. Ejecutar test de formato
+### Antes (Incorrecto)
+
+```
+Usuario: "Me envías foto"
+        ↓
+Bot busca productos con "foto"
+        ↓
+Encuentra "Mega Pack 06: Cursos Fotografía"
+        ↓
+Cambia el producto en contexto ❌
+        ↓
+IA dice: "No puedo enviar fotos" ❌
+        ↓
+NO envía fotos ❌
+```
+
+### Ahora (Correcto)
+
+```
+Usuario: "Me envías foto"
+        ↓
+Detecta: solicitud explícita de fotos ✅
+        ↓
+Mantiene producto en contexto ✅
+        ↓
+IA dice: "¡Claro! Te envío la foto 📸" ✅
+        ↓
+Sistema envía fotos automáticamente ✅
+```
+
+## 📊 Casos Cubiertos
+
+### 1. Primera Solicitud de Foto
+```
+Usuario: "Me interesa el portátil Acer"
+Bot: [Muestra info del portátil]
+
+Usuario: "Me envías foto"
+Bot: "¡Claro! Te envío la foto del producto 📸"
+     [Envía foto automáticamente] ✅
+```
+
+### 2. Solicitud de Foto Nuevamente
+```
+Usuario: "Me envías la foto de nuevo"
+Bot: "¡Claro! Te envío la foto del producto 📸"
+     [Reenvía foto] ✅
+```
+
+### 3. Solicitud de Foto con Variaciones
+```
+Usuario: "Muéstrame la imagen"
+Usuario: "Quiero ver el producto"
+Usuario: "Manda foto"
+Usuario: "Pasa la imagen"
+```
+**Todas detectadas y envían foto** ✅
+
+## 🎨 Formato Mejorado
+
+### Antes (Sin Formato)
+```
+📸 Lo siento, pero no puedo enviar fotos directamente. Sin embargo, 
+puedo describirte el portátil **Asus Vivobook 16 X1605va-Mb1235**:* 
+Pantalla de 16.0 pulgadas con resolución FHD* Diseño delgado y ligero* 
+Procesador Intel Core i5* 8GB de RAM* 512GB de almacenamiento SSD* 
+Teclado retroiluminado* Batería de larga duración
+```
+
+### Ahora (Con Formato)
+```
+¡Claro! 😊 Te cuento sobre el *Portátil Asus Vivobook 16*
+
+💻 *Especificaciones:*
+• Pantalla: 16.0" Full HD
+• Procesador: Intel Core i5
+• RAM: 8GB
+• Almacenamiento: 512GB SSD
+• Teclado retroiluminado
+
+✨ *Características:*
+• Diseño delgado y ligero
+• Batería de larga duración
+• Ideal para trabajo y estudio
+
+💰 *Precio:* [Precio del producto]
+
+¿Te gustaría más información? 🤔
+```
+
+## 🧪 Probar la Solución
+
+### Escenario 1: Solicitud de Foto
+
 ```bash
-node test-formato-y-fotos.js
+# 1. Reiniciar servidor
+npm run dev
+
+# 2. Enviar por WhatsApp:
+"Me interesa el portátil Acer"
+
+# 3. Esperar respuesta
+
+# 4. Enviar:
+"Me envías foto"
+
+# 5. Verificar que:
+#    - Bot dice "¡Claro! Te envío la foto 📸"
+#    - Bot envía la foto automáticamente
+#    - Mantiene el producto correcto
 ```
 
-Esto verificará:
-- ✅ Productos con fotos en la BD
-- ✅ URLs de fotos válidas
-- ✅ Formato de respuestas (antes/después)
-- ✅ Acortamiento de texto
+### Escenario 2: Reenvío de Foto
 
-### 2. Probar en WhatsApp
+```bash
+# 1. Después de recibir la foto, enviar:
+"Me envías la foto de nuevo"
 
-**Consulta general (sin fotos):**
-```
-Usuario: "Qué laptops tienes?"
-Bot: Respuesta corta con lista de opciones (sin fotos)
+# 2. Verificar que:
+#    - Bot reenvía la foto
+#    - No dice "ya te la envié"
 ```
 
-**Consulta específica (con fotos):**
-```
-Usuario: "Quiero una laptop para diseño"
-Bot: Envía 1-3 productos CON FOTOS
-```
-
-**Pregunta de seguimiento:**
-```
-Usuario: "Cuéntame más del primero"
-Bot: Respuesta corta SIN reenviar foto
-```
-
-## Ejemplo de Respuesta Formateada
-
-### ANTES (sin formato):
-```
-Claro que sí, tenemos varios portátiles disponibles. Te puedo recomendar el HP Pavilion que tiene procesador Intel Core i5, 8GB de RAM y 256GB SSD. También tenemos el Lenovo IdeaPad con Ryzen 5, 16GB RAM y 512GB SSD. Ambos son excelentes opciones para trabajo y estudio. El HP cuesta $2,500,000 y el Lenovo $2,800,000. ¿Cuál te interesa más?
-```
-
-### DESPUÉS (con formato):
-```
-¡Claro que sí! 😎 Tengo opciones para ti:
-
-🔹 HP Pavilion
-   ⚙️ Core i5 • 💾 8GB • 💿 256GB SSD
-   💰 $2,500,000
-
-🔹 Lenovo IdeaPad
-   ⚙️ Ryzen 5 • 💾 16GB • 💿 512GB SSD
-   💰 $2,800,000
-
-¿Cuál te llama más la atención? 😊
-```
-
-## Ejemplo de Caption de Producto
-
-### ANTES (muy largo):
-```
-💻 HP Pavilion 15-eh2004la
-
-⚙️ Procesador: AMD Ryzen 5 5500U
-💾 RAM: 8GB DDR4
-💿 Almacenamiento: 256GB SSD
-🖥️ Pantalla: 15.6" FHD
-
-💰 Precio: $2,500,000
-
-📝 Portátil ideal para trabajo y estudio, con procesador AMD Ryzen 5 de última generación, 8GB de RAM para multitarea fluida y almacenamiento SSD rápido...
-
-¿Te interesa este producto? 😊
-Puedo darte más detalles o ayudarte con el proceso de compra 🛒
-```
-
-### DESPUÉS (compacto):
-```
-💻 HP Pavilion 15-eh2004la
-
-⚙️ Ryzen 5 5500U • 💾 8GB • 💿 256GB SSD
-
-💰 $2,500,000
-
-¿Te gusta? 😊 Puedo darte más info
-```
-
-## Verificar en Logs
-
-Busca estos mensajes en la consola:
+### Logs Esperados
 
 ```
-[ProductPhotoSender] 📸 Fotos encontradas: 3
-[ProductPhotoSender] 🔗 URLs convertidas: https://drive.google.com/...
-[ProductPhotoSender] 🖼️ Intentando descargar foto...
-[ProductPhotoSender] ✅ Imagen descargada, enviando...
-[ProductPhotoSender] ✅ Producto enviado con foto exitosamente
+[IntelligentEngine] 📥 Procesando mensaje: "Me envías foto"
+[IntelligentEngine] 🔒 Pregunta sobre fotos - MANTENIENDO producto actual
+[IntelligentEngine] Producto en contexto: Portatil Acer A15-51p-591e
+[IntelligentEngine] 📸 Verificando envío de imagen:
+  solicitudExplicita: true
+[IntelligentEngine] 📤 Enviando imagen del producto: Portatil Acer A15-51p-591e
+[IntelligentEngine] ⚡ Acciones generadas: 1
 ```
 
+## ✅ Checklist de Verificación
+
+- [x] Detección de solicitud explícita de fotos
+- [x] Reenvío de fotos cuando se solicitan
+- [x] Instrucciones en el prompt sobre fotos
+- [x] Instrucciones de formato en el prompt
+- [x] Mantiene producto en contexto
+- [x] Documentación creada
+- [ ] Probar en desarrollo
+- [ ] Verificar logs
+- [ ] Probar en producción
+
+## 📝 Archivos Modificados
+
+1. **`src/lib/intelligent-conversation-engine.ts`**
+   - Línea ~1260: Agregada detección de solicitud explícita de fotos
+   - Línea ~1280: Modificada lógica de envío de fotos
+   - Línea ~180: Agregadas instrucciones de fotos y formato en el prompt
+
+## 🎉 Resultado
+
 ```
-[Baileys] ✅ Respuesta híbrida enviada (formateada y acortada)
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│  ✅ ENVÍO DE FOTOS CORREGIDO                               │
+│                                                             │
+│  📸 Detecta solicitudes explícitas de fotos                │
+│  🔄 Reenvía fotos cuando se solicitan                      │
+│  🎨 Respuestas con formato mejorado                        │
+│  💬 IA confirma envío de fotos correctamente               │
+│  ✅ Experiencia de usuario mejorada                        │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-## Variables de Entorno Necesarias
+---
 
-```env
-PHOTOS_ENABLED=true
-AUDIO_ENABLED=true
-HOT_RELOAD_ENABLED=true
+## 🚀 Próximo Paso
+
+```bash
+# Reiniciar servidor
+npm run dev
+
+# Probar con WhatsApp
+# 1. "Me interesa el portátil Acer"
+# 2. "Me envías foto"
+# 3. Verificar que envía la foto correctamente
 ```
 
-## Próximos Pasos
-
-1. ✅ Reiniciar servidor: `npm run dev`
-2. ✅ Ejecutar test: `node test-formato-y-fotos.js`
-3. ✅ Probar en WhatsApp con consultas reales
-4. ✅ Verificar logs para confirmar envío de fotos
-5. ✅ Ajustar `maxLength` si las respuestas siguen siendo largas
-
-## Notas Importantes
-
-- Las fotos solo se envían en **consultas específicas** (ej: "laptop para diseño")
-- En **consultas generales** (ej: "qué laptops tienes") solo se envía lista de texto
-- Las respuestas se acortan automáticamente a **400 caracteres máximo**
-- El formato con emojis se aplica automáticamente
-- Si una foto falla, se envía el texto sin foto (no falla todo)
-
-## Troubleshooting
-
-### Si las fotos no se envían:
-1. Verificar que los productos tengan el campo `images` con URLs válidas
-2. Revisar logs para ver dónde falla la descarga
-3. Verificar que las URLs de Google Drive estén en formato directo
-4. Ejecutar: `node test-formato-y-fotos.js` para ver productos con fotos
-
-### Si las respuestas siguen siendo largas:
-1. Ajustar `maxLength` en `baileys-stable-service.ts` (línea con `shortenResponse`)
-2. Reducir de 400 a 300 caracteres si es necesario
-3. Verificar que `formatForWhatsApp` se esté aplicando
-
-### Si el formato no se aplica:
-1. Verificar que las funciones estén exportadas en `conversational-personality.ts`
-2. Reiniciar el servidor completamente
-3. Limpiar caché: `rm -rf .next` y `npm run dev`
+**¡El envío de fotos y formato están corregidos!** 🎯✨

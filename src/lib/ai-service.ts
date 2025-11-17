@@ -125,8 +125,8 @@ export class AIService {
       // Crear clave única para esta conversación
       const conversationKey = `${userId}:${_customerPhone}`
 
-      // 🧠 INICIALIZAR MEMORIA PROFESIONAL
       ProfessionalConversationMemory.initMemory(conversationKey)
+      await ProfessionalConversationMemory.hydrateFromStore(conversationKey)
       ProfessionalConversationMemory.incrementMessageCount(conversationKey)
 
       // 🚨 PRIORIDAD 1: Detectar limitación de presupuesto

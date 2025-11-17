@@ -1,52 +1,144 @@
-========================================
-  VER LOGO SSB - INSTRUCCIONES RÁPIDAS
-========================================
+╔════════════════════════════════════════════════════════════════╗
+║  ✅ LOGO PARA COMPARTIR ENLACES - LISTO                        ║
+╚════════════════════════════════════════════════════════════════╝
 
-OPCIÓN 1: HARD REFRESH (30 segundos)
--------------------------------------
-1. Abrir tu navegador
-2. Ir a: http://localhost:3000
-3. Presionar: Ctrl + Shift + R
-4. ¡Listo! Deberías ver "SSB" en el header
+🎯 PROBLEMA RESUELTO:
+   Ahora cuando compartas enlaces, se verá tu logo/imagen
 
-OPCIÓN 2: MODO INCÓGNITO (1 minuto)
-------------------------------------
-1. Presionar: Ctrl + Shift + N
-2. Ir a: http://localhost:3000
-3. Login al dashboard
-4. Ver el logo SSB
+📁 ARCHIVOS CREADOS:
+   ✅ src/app/opengraph-image.tsx  (Imagen de vista previa)
+   ✅ src/app/icon.tsx              (Icono de la app)
+   ✅ src/app/layout.tsx            (Metadatos actualizados)
 
-OPCIÓN 3: REINICIAR TODO (3 minutos)
--------------------------------------
-1. Cerrar el servidor (Ctrl + C)
-2. Ejecutar: reiniciar-ver-cambios.bat
-3. Esperar que inicie
-4. Abrir: http://localhost:3000
-5. Hard refresh: Ctrl + Shift + R
+🔧 TU CONFIGURACIÓN ACTUAL:
+   URL Local:      http://localhost:4000
+   URL Producción: https://bot-whatsapp-botauyomaizado.sqaoeo.easypanel.host
 
-========================================
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-QUÉ DEBERÍAS VER:
+🚀 PASOS PARA PROBAR (ELIGE UNO):
 
-ANTES:
-[☰] [🟢] Smart Sales
-          Bot Pro
+┌─────────────────────────────────────────────────────────────┐
+│ OPCIÓN 1: PROBAR EN LOCAL (Desarrollo)                      │
+└─────────────────────────────────────────────────────────────┘
 
-AHORA:
-[☰] [SSB]
+1. Reinicia el servidor:
+   npm run dev
 
-========================================
+2. Abre en tu navegador:
+   http://localhost:4000/opengraph-image
 
-SI NO SE VE:
-1. F12 (abrir consola)
-2. Click derecho en recargar
-3. "Empty Cache and Hard Reload"
+3. Deberías ver una imagen morada con "SSB" y texto
 
-========================================
+┌─────────────────────────────────────────────────────────────┐
+│ OPCIÓN 2: PROBAR EN PRODUCCIÓN (Easypanel)                 │
+└─────────────────────────────────────────────────────────────┘
 
-VERIFICAR EN CÓDIGO:
-El cambio está en:
-src/components/dashboard/main-dashboard.tsx
-Línea 92: SSB
+1. Sube los cambios a Git:
+   git add .
+   git commit -m "Agregar imagen Open Graph para compartir"
+   git push
 
-========================================
+2. Espera que Easypanel despliegue (2-3 minutos)
+
+3. Abre en tu navegador:
+   https://bot-whatsapp-botauyomaizado.sqaoeo.easypanel.host/opengraph-image
+
+┌─────────────────────────────────────────────────────────────┐
+│ OPCIÓN 3: VALIDAR CON FACEBOOK/WHATSAPP                    │
+└─────────────────────────────────────────────────────────────┘
+
+1. Ve a: https://developers.facebook.com/tools/debug/
+
+2. Pega tu URL:
+   https://bot-whatsapp-botauyomaizado.sqaoeo.easypanel.host/dashboard
+
+3. Haz clic en "Scrape Again"
+
+4. Verás la vista previa con tu imagen
+
+┌─────────────────────────────────────────────────────────────┐
+│ OPCIÓN 4: COMPARTIR EN WHATSAPP DIRECTAMENTE               │
+└─────────────────────────────────────────────────────────────┘
+
+1. Copia tu enlace:
+   https://bot-whatsapp-botauyomaizado.sqaoeo.easypanel.host/dashboard
+
+2. Pégalo en cualquier chat de WhatsApp
+
+3. Espera 2-3 segundos
+
+4. Verás la vista previa con imagen
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎨 CÓMO SE VERÁ:
+
+┌──────────────────────────────────────────────────────────┐
+│                                                           │
+│   ┌───┐                                                  │
+│   │SSB│  Smart Sales Bot                                │
+│   └───┘  Pro                                             │
+│                                                           │
+│   Bot inteligente de WhatsApp con IA avanzada           │
+│                                                           │
+│   Automatiza ventas • Gestiona productos •              │
+│   Atiende clientes 24/7                                  │
+│                                                           │
+│   bot-whatsapp-botauyomaizado.sqaoeo.easypanel.host     │
+└──────────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ IMPORTANTE:
+
+Si ya compartiste enlaces antes, las plataformas tienen CACHÉ:
+
+1. Facebook/WhatsApp:
+   - Ve a: https://developers.facebook.com/tools/debug/
+   - Pega tu URL
+   - Haz clic en "Scrape Again" para limpiar caché
+
+2. Twitter:
+   - Ve a: https://cards-dev.twitter.com/validator
+   - Pega tu URL
+   - Haz clic en "Preview card"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎨 PERSONALIZAR LA IMAGEN:
+
+Si quieres cambiar colores o texto, edita:
+src/app/opengraph-image.tsx
+
+Ejemplo - Cambiar color:
+background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+                                      ↑ Color 1    ↑ Color 2
+
+Ejemplo - Cambiar texto:
+<div>Tu Texto Aquí</div>
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 VERIFICACIÓN RÁPIDA:
+
+Ejecuta este comando para verificar todo:
+verificar-og-image.bat
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ TODO LISTO!
+
+Ahora cuando compartas tu enlace en:
+- WhatsApp ✅
+- Facebook ✅
+- Twitter ✅
+- LinkedIn ✅
+- Telegram ✅
+
+Se verá con una imagen profesional y atractiva! 🎉
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+¿Necesitas ayuda?
+Lee: CONFIGURAR_LOGO_COMPARTIR.md

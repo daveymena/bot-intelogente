@@ -1,0 +1,235 @@
+{
+  "timestamp": "2025-11-17T19:34:54.548Z",
+  "summary": {
+    "ok": 44,
+    "warnings": 1,
+    "errors": 0
+  },
+  "results": [
+    {
+      "component": "ENV",
+      "status": "OK",
+      "message": "DATABASE_URL: Configurado"
+    },
+    {
+      "component": "ENV",
+      "status": "OK",
+      "message": "GROQ_API_KEY: Configurado"
+    },
+    {
+      "component": "ENV",
+      "status": "OK",
+      "message": "MERCADO_PAGO_ACCESS_TOKEN: Configurado"
+    },
+    {
+      "component": "ENV",
+      "status": "OK",
+      "message": "PAYPAL_CLIENT_ID: Configurado"
+    },
+    {
+      "component": "ENV",
+      "status": "OK",
+      "message": "PAYPAL_CLIENT_SECRET: Configurado"
+    },
+    {
+      "component": "ENV",
+      "status": "OK",
+      "message": "NEQUI_NUMBER: Configurado"
+    },
+    {
+      "component": "ENV",
+      "status": "OK",
+      "message": "BUSINESS_PHONE: Configurado"
+    },
+    {
+      "component": "ENV",
+      "status": "OK",
+      "message": "BUSINESS_EMAIL: Configurado"
+    },
+    {
+      "component": "DATABASE",
+      "status": "OK",
+      "message": "Conexión exitosa"
+    },
+    {
+      "component": "DATABASE",
+      "status": "OK",
+      "message": "Tabla User: 5 registros"
+    },
+    {
+      "component": "DATABASE",
+      "status": "OK",
+      "message": "Tabla Product: 289 registros"
+    },
+    {
+      "component": "DATABASE",
+      "status": "OK",
+      "message": "Tabla Conversation: 3 registros"
+    },
+    {
+      "component": "DATABASE",
+      "status": "OK",
+      "message": "Tabla Message: 575 registros"
+    },
+    {
+      "component": "DATABASE",
+      "status": "OK",
+      "message": "Tabla BotSettings: 4 registros"
+    },
+    {
+      "component": "DATABASE",
+      "status": "OK",
+      "message": "Productos disponibles: 282"
+    },
+    {
+      "component": "FILES",
+      "status": "OK",
+      "message": "server.ts: Existe (3069 bytes)"
+    },
+    {
+      "component": "FILES",
+      "status": "OK",
+      "message": "src/lib/ai-service.ts: Existe (83994 bytes)"
+    },
+    {
+      "component": "FILES",
+      "status": "OK",
+      "message": "src/lib/baileys-stable-service.ts: Existe (58955 bytes)"
+    },
+    {
+      "component": "FILES",
+      "status": "OK",
+      "message": "src/lib/product-intelligence-service.ts: Existe (42730 bytes)"
+    },
+    {
+      "component": "FILES",
+      "status": "OK",
+      "message": "src/lib/intelligent-response-service.ts: Existe (11341 bytes)"
+    },
+    {
+      "component": "FILES",
+      "status": "OK",
+      "message": "src/lib/conversation-context-service.ts: Existe (6070 bytes)"
+    },
+    {
+      "component": "FILES",
+      "status": "OK",
+      "message": "src/lib/payment-link-generator.ts: Existe (17135 bytes)"
+    },
+    {
+      "component": "FILES",
+      "status": "OK",
+      "message": "src/agents/orchestrator.ts: Existe (9162 bytes)"
+    },
+    {
+      "component": "FILES",
+      "status": "OK",
+      "message": "prisma/schema.prisma: Existe (27096 bytes)"
+    },
+    {
+      "component": "FILES",
+      "status": "OK",
+      "message": "package.json: Existe (7812 bytes)"
+    },
+    {
+      "component": "FILES",
+      "status": "OK",
+      "message": ".env: Existe (3815 bytes)"
+    },
+    {
+      "component": "AI",
+      "status": "OK",
+      "message": "Groq configurado"
+    },
+    {
+      "component": "AI",
+      "status": "OK",
+      "message": "Ollama configurado"
+    },
+    {
+      "component": "AI",
+      "status": "OK",
+      "message": "entrenamiento-completo-todos-productos.json: 0 ejemplos"
+    },
+    {
+      "component": "AI",
+      "status": "OK",
+      "message": "entrenamiento-flujos-conversacionales.json: 0 ejemplos"
+    },
+    {
+      "component": "AI",
+      "status": "WARNING",
+      "message": "entrenamiento-megaflujos-8-completo.json: Vacío"
+    },
+    {
+      "component": "PAYMENT",
+      "status": "OK",
+      "message": "MercadoPago configurado"
+    },
+    {
+      "component": "PAYMENT",
+      "status": "OK",
+      "message": "PayPal configurado"
+    },
+    {
+      "component": "PAYMENT",
+      "status": "OK",
+      "message": "Nequi configurado"
+    },
+    {
+      "component": "PAYMENT",
+      "status": "OK",
+      "message": "Daviplata configurado"
+    },
+    {
+      "component": "WHATSAPP",
+      "status": "OK",
+      "message": "Teléfono configurado"
+    },
+    {
+      "component": "WHATSAPP",
+      "status": "OK",
+      "message": "Directorio de sesiones existe"
+    },
+    {
+      "component": "AGENTS",
+      "status": "OK",
+      "message": "Todos los agentes existen"
+    },
+    {
+      "component": "DEPENDENCIES",
+      "status": "OK",
+      "message": "@whiskeysockets/baileys instalado"
+    },
+    {
+      "component": "DEPENDENCIES",
+      "status": "OK",
+      "message": "groq-sdk instalado"
+    },
+    {
+      "component": "DEPENDENCIES",
+      "status": "OK",
+      "message": "@prisma/client instalado"
+    },
+    {
+      "component": "DEPENDENCIES",
+      "status": "OK",
+      "message": "next instalado"
+    },
+    {
+      "component": "DEPENDENCIES",
+      "status": "OK",
+      "message": "socket.io instalado"
+    },
+    {
+      "component": "DEPENDENCIES",
+      "status": "OK",
+      "message": "express instalado"
+    },
+    {
+      "component": "PRODUCTION",
+      "status": "OK",
+      "message": "URL pública configurada"
+    }
+  ]
+}

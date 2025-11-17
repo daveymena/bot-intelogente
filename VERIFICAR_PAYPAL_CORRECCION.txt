@@ -1,0 +1,45 @@
+VERIFICACIÓN DE CORRECCIÓN PAYPAL
+==================================
+
+ESTADO ACTUAL:
+--------------
+✅ Corrección 1 aplicada: Link ncp/payment eliminado
+⏳ Pendiente: Quitar "USD" del link PayPal.me
+
+PROBLEMA DETECTADO:
+-------------------
+En la búsqueda se ve:
+❌ const paypalLink = `https://www.paypal.me/${paypalUsername}/${priceUSD}USD`;
+
+Debe ser:
+✅ const paypalLink = `https://www.paypal.me/${paypalUsername}/${priceUSD}`;
+
+COMANDO PARA CORREGIR:
+----------------------
+(Get-Content "src/lib/payment-link-generator.ts" -Raw) -replace '\$\{priceUSD\}USD', '${priceUSD}' | Set-Content "src/lib/payment-link-generator.ts"
+
+VERIFICAR DESPUÉS:
+------------------
+Get-Content "src/lib/payment-link-generator.ts" | Select-String -Pattern "paypal.me" -Context 0,1
+
+RESULTADO ESPERADO:
+-------------------
+Debe mostrar:
+const paypalLink = `https://www.paypal.me/${paypalUsername}/${priceUSD}`;
+
+NO debe tener "USD" al final.
+
+DESPUÉS DE CORREGIR:
+--------------------
+1. Verificar que no quede "USD":
+   Get-Content "src/lib/payment-link-generator.ts" | Select-String "USD\`"
+
+2. Si no muestra nada, la corrección está completa
+
+3. Configurar en .env:
+   PAYPAL_ME_USERNAME=tu_username
+
+4. Reiniciar bot:
+   npm run dev
+
+5. Probar en WhatsApp

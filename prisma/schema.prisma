@@ -64,6 +64,8 @@ model User {
   appointments          Appointment[]
   salesFlowConfig       SalesFlowConfig?
   
+  notificationTokens    NotificationToken[]
+  
   @@map("users")
 }
 
@@ -343,6 +345,8 @@ model Payment {
   // Relations
   user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  notificationTokens NotificationToken[]
+  
   @@map("payments")
 }
 
@@ -775,4 +779,67 @@ model ConversationKnowledge {
   @@index([productId])
   @@index([successRate])
   @@map("conversation_knowledge")
+}
+
+// 🔔 Sistema Universal de Notificaciones con Tokens
+model NotificationToken {
+  id            String              @id @default(cuid())
+  token         String              @unique // Token hasheado (SHA-256)
+  type          NotificationTokenType // Tipo de notificación
+  purpose       String              // Descripción del propósito
+  
+  // Relaciones
+  userId        String?
+  user          User?               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  paymentId     String?
+  payment       Payment?            @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  
+  // Datos adicionales (JSON flexible)
+  metadata      Json?               // Datos específicos del tipo de notificación
+  
+  // Estado y expiración
+  status        TokenStatus         @default(PENDING)
+  expiresAt     DateTime
+  usedAt        DateTime?
+  
+  // Tracking
+  viewCount     Int                 @default(0)
+  lastViewedAt  DateTime?
+  ipAddress     String?
+  userAgent     String?
+  
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  
+  @@index([token])
+  @@index([userId, type])
+  @@index([paymentId])
+  @@index([expiresAt])
+  @@index([status])
+  @@map("notification_tokens")
+}
+
+// Enum para tipos de tokens de notificación
+enum NotificationTokenType {
+  PAYMENT_CONFIRMATION    // Confirmación de pago recibido
+  PAYMENT_REMINDER        // Recordatorio de pago pendiente
+  PAYMENT_INVOICE         // Ver factura/recibo
+  PAYMENT_STATUS          // Ver estado de pago
+  ORDER_TRACKING          // Seguimiento de pedido
+  DELIVERY_NOTIFICATION   // Notificación de entrega
+  APPOINTMENT_CONFIRMATION // Confirmación de cita
+  APPOINTMENT_REMINDER    // Recordatorio de cita
+  ACCOUNT_VERIFICATION    // Verificación de cuenta
+  EMAIL_CHANGE            // Cambio de email
+  TEMPORARY_ACCESS        // Acceso temporal
+  CUSTOM                  // Personalizado
+}
+
+// Enum para estado de tokens
+enum TokenStatus {
+  PENDING     // Pendiente de uso
+  USED        // Ya fue usado
+  EXPIRED     // Expirado
+  CANCELLED   // Cancelado
 }

@@ -1,6 +1,7 @@
 /**
  * 💳 GENERADOR DE LINKS DE PAGO
  * Genera links dinámicos de MercadoPago y PayPal según el producto
+ * PayPal ahora usa API REST v2 para crear órdenes reales
  */
 
 import { db } from './db'
@@ -43,11 +44,10 @@ export class PaymentLinkGenerator {
   private static readonly MERCADOPAGO_ACCESS_TOKEN = process.env.MERCADO_PAGO_ACCESS_TOKEN || ''
   private static readonly MERCADOPAGO_PUBLIC_KEY = process.env.MERCADO_PAGO_PUBLIC_KEY || ''
   
-  // Credenciales de PayPal (desde .env)
-  private static readonly PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID || ''
-  private static readonly PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET || ''
-  private static readonly PAYPAL_MODE = process.env.PAYPAL_MODE || 'sandbox'
-  private static readonly PAYPAL_API_URL = process.env.PAYPAL_API_URL || 'https://api-m.paypal.com'
+  // Configuración de PayPal
+  private static readonly PAYPAL_EMAIL = process.env.PAYPAL_EMAIL
+  private static readonly PAYPAL_ME_USERNAME = process.env.PAYPAL_ME_USERNAME || process.env.PAYPAL_USERNAME
+  private static readonly COP_TO_USD_RATE = parseFloat(process.env.COP_TO_USD_RATE || '4000')
 
   /**
    * Generar link de MercadoPago
@@ -98,7 +98,8 @@ export class PaymentLinkGenerator {
   }
 
   /**
-   * Generar link de PayPal
+   * Generar link de PayPal DINÁMICO usando API REST v2
+   * Crea una orden real en PayPal y devuelve el link de aprobación
    */
   static async generatePayPalLink(
     productName: string,
@@ -106,72 +107,145 @@ export class PaymentLinkGenerator {
     productId: string
   ): Promise<string | null> {
     try {
-      if (!this.PAYPAL_CLIENT_ID || !this.PAYPAL_CLIENT_SECRET) {
-        console.log('[PaymentLink] PayPal no configurado')
-        return null
+      const clientId = process.env.PAYPAL_CLIENT_ID
+      const clientSecret = process.env.PAYPAL_CLIENT_SECRET
+      
+      // Si no hay credenciales de API, intentar fallback a email/username
+      if (!clientId || !clientSecret) {
+        console.log('[PaymentLink] ⚠️ PayPal API no configurado, usando fallback...')
+        return this.generatePayPalFallbackLink(productName, price)
       }
+
+      console.log('[PaymentLink] 💰 Generando link PayPal dinámico con API:')
+      console.log(`   Producto: ${productName}`)
+      console.log(`   Precio COP: ${price.toLocaleString('es-CO')}`)
 
       // 1. Obtener token de acceso
-      const authResponse = await fetch(`${this.PAYPAL_API_URL}/v1/oauth2/token`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': `Basic ${Buffer.from(`${this.PAYPAL_CLIENT_ID}:${this.PAYPAL_CLIENT_SECRET}`).toString('base64')}`
-        },
-        body: 'grant_type=client_credentials'
-      })
+      const accessToken = await this.getPayPalAccessToken(clientId, clientSecret)
+      
+      // 2. Convertir COP a USD
+      const exchangeRate = parseFloat(process.env.COP_TO_USD_RATE || '4000')
+      const priceUSD = (price / exchangeRate).toFixed(2)
+      
+      console.log(`   Precio USD: ${priceUSD}`)
+      console.log(`   Tasa: 1 USD = ${exchangeRate} COP`)
 
-      if (!authResponse.ok) {
-        console.error('[PaymentLink] Error auth PayPal:', await authResponse.text())
-        return null
+      // 3. Crear orden en PayPal
+      const mode = process.env.PAYPAL_MODE || 'live'
+      const orderUrl = mode === 'live'
+        ? 'https://api-m.paypal.com/v2/checkout/orders'
+        : 'https://api-m.sandbox.paypal.com/v2/checkout/orders'
+
+      const orderData = {
+        intent: 'CAPTURE',
+        purchase_units: [
+          {
+            reference_id: productId,
+            description: productName,
+            amount: {
+              currency_code: 'USD',
+              value: priceUSD
+            }
+          }
+        ],
+        application_context: {
+          return_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/payment/success`,
+          cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/payment/cancel`,
+          brand_name: 'Tecnovariedades D&S',
+          shipping_preference: 'NO_SHIPPING',
+          user_action: 'PAY_NOW'
+        }
       }
 
-      const authData = await authResponse.json()
-      const accessToken = authData.access_token
-
-      // 2. Crear orden de pago
-      const priceUSD = (price / 4000).toFixed(2) // Convertir COP a USD (aproximado)
-
-      const orderResponse = await fetch(`${this.PAYPAL_API_URL}/v2/checkout/orders`, {
+      const response = await fetch(orderUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`
         },
-        body: JSON.stringify({
-          intent: 'CAPTURE',
-          purchase_units: [
-            {
-              reference_id: productId,
-              description: productName,
-              amount: {
-                currency_code: 'USD',
-                value: priceUSD
-              }
-            }
-          ],
-          application_context: {
-            return_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment/success?product=${productId}`,
-            cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment/failure?product=${productId}`
-          }
-        })
+        body: JSON.stringify(orderData)
       })
 
-      if (!orderResponse.ok) {
-        console.error('[PaymentLink] Error orden PayPal')
-        return null
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('[PaymentLink] ❌ Error PayPal API:', errorText)
+        return this.generatePayPalFallbackLink(productName, price)
       }
 
-      const orderData = await orderResponse.json()
+      const data = await response.json()
       
-      // Obtener link de aprobación
-      const approveLink = orderData.links.find((link: any) => link.rel === 'approve')
-      return approveLink?.href || null
+      // 4. Buscar el link de aprobación
+      const approveLink = data.links?.find((link: any) => link.rel === 'approve')?.href
+
+      if (!approveLink) {
+        console.error('[PaymentLink] ❌ No se encontró link de aprobación')
+        return this.generatePayPalFallbackLink(productName, price)
+      }
+
+      console.log(`[PaymentLink] ✅ Link PayPal dinámico generado: ${approveLink}`)
+      console.log(`[PaymentLink] 📦 Order ID: ${data.id}`)
+      
+      return approveLink
 
     } catch (error) {
-      console.error('[PaymentLink] Error generando link PayPal:', error)
-      return null
+      console.error('[PaymentLink] ❌ Error generando link PayPal:', error)
+      return this.generatePayPalFallbackLink(productName, price)
     }
+  }
+
+  /**
+   * Obtener token de acceso de PayPal
+   */
+  private static async getPayPalAccessToken(clientId: string, clientSecret: string): Promise<string> {
+    const mode = process.env.PAYPAL_MODE || 'live'
+    const authUrl = mode === 'live'
+      ? 'https://api-m.paypal.com/v1/oauth2/token'
+      : 'https://api-m.sandbox.paypal.com/v1/oauth2/token'
+
+    const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
+
+    const response = await fetch(authUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': `Basic ${auth}`
+      },
+      body: 'grant_type=client_credentials'
+    })
+
+    if (!response.ok) {
+      throw new Error(`PayPal Auth error: ${response.status}`)
+    }
+
+    const data = await response.json()
+    return data.access_token
+  }
+
+  /**
+   * Fallback: Generar link de PayPal con email o username
+   */
+  private static generatePayPalFallbackLink(productName: string, price: number): string | null {
+    const exchangeRate = parseFloat(process.env.COP_TO_USD_RATE || '4000')
+    const priceUSD = (price / exchangeRate).toFixed(2)
+    
+    // OPCIÓN 1: Email de PayPal
+    const paypalEmail = process.env.PAYPAL_EMAIL
+    if (paypalEmail) {
+      const paypalLink = `https://www.paypal.com/ncp/payment/${encodeURIComponent(paypalEmail)}`
+      console.log(`[PaymentLink] ✅ Link PayPal fallback (email): ${paypalLink}`)
+      return paypalLink
+    }
+    
+    // OPCIÓN 2: PayPal.me
+    const paypalUsername = process.env.PAYPAL_ME_USERNAME || process.env.PAYPAL_USERNAME
+    if (paypalUsername) {
+      const paypalLink = `https://www.paypal.me/${paypalUsername}/${priceUSD}`
+      console.log(`[PaymentLink] ✅ Link PayPal.me fallback: ${paypalLink}`)
+      return paypalLink
+    }
+    
+    console.log('[PaymentLink] ⚠️ PayPal no configurado')
+    return null
   }
 
   /**
@@ -179,7 +253,7 @@ export class PaymentLinkGenerator {
    */
   static async generatePaymentLinks(productId: string): Promise<PaymentLinks | null> {
     try {
-      console.log(`[PaymentLink] 🔍 Buscando producto con ID: ${productId}`);
+      console.log(`[PaymentLink] 🔍 Buscando producto con ID: ${productId}`)
 
       // Obtener producto
       const product = await db.product.findUnique({
@@ -191,8 +265,8 @@ export class PaymentLinkGenerator {
         return null
       }
 
-      console.log(`[PaymentLink] ✅ Producto encontrado: ${product.name} (ID: ${product.id})`);
-      console.log(`[PaymentLink] 💰 Precio: ${product.price.toLocaleString('es-CO')} COP`);
+      console.log(`[PaymentLink] ✅ Producto encontrado: ${product.name} (ID: ${product.id})`)
+      console.log(`[PaymentLink] 💰 Precio: ${product.price.toLocaleString('es-CO')} COP`)
       console.log(`[PaymentLink] 📦 Categoría: ${product.category || 'N/A'}`)
 
       // Generar links dinámicos
@@ -349,16 +423,21 @@ export class PaymentLinkGenerator {
 
       case 'paypal':
       case '3':
+        // Calcular monto en USD
+        const exchangeRate = parseFloat(process.env.COP_TO_USD_RATE || '4000')
+        const priceUSD = (paymentLinks.product.price / exchangeRate).toFixed(2)
+        
         if (paymentLinks.methods.paypal) {
+          // Si hay link de PayPal dinámico
           return `¡Perfecto! 💳 Aquí está tu link de pago:\n\n` +
                  `📦 *Producto:* ${productName}\n` +
-                 `💰 *Monto:* ${price} COP\n\n` +
+                 `💰 *Monto:* ${price} COP (~${priceUSD} USD)\n\n` +
                  `🔗 *Link de PayPal:*\n` +
                  `${paymentLinks.methods.paypal}\n\n` +
                  `*Pasos:*\n` +
                  `1️⃣ Haz clic en el link\n` +
                  `2️⃣ Inicia sesión en PayPal\n` +
-                 `3️⃣ Confirma el pago\n\n` +
+                 `3️⃣ Confirma el pago de ${priceUSD} USD\n\n` +
                  `👀 *Estaremos pendientes de la confirmación del pago para enviarte el producto inmediatamente* ✅`
         }
         return `⚠️ PayPal no disponible en este momento. Por favor elige otro método.`

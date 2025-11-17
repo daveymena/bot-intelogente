@@ -1,0 +1,36 @@
+✅ CORRECCIÓN COMPLETADA: Selección de Producto Específico
+
+PROBLEMA RESUELTO:
+❌ Antes: Bot mostraba horno cafetera cuando usuario pedía "curso de piano completo"
+✅ Ahora: Bot muestra SOLO el producto específico que el usuario menciona
+
+CAMBIOS REALIZADOS:
+✅ Sistema de scoring inteligente (0-20+ puntos)
+✅ Detección de selección específica
+✅ Búsqueda mejorada con ranking por relevancia
+✅ Penalización de productos irrelevantes
+
+ARCHIVOS MODIFICADOS:
+- src/agents/search-agent.ts (búsqueda inteligente)
+
+PROBAR AHORA:
+1. npx tsx scripts/test-seleccion-producto-especifico.ts
+2. O ejecutar: PROBAR_CORRECCION_PRODUCTO.bat
+
+APLICAR AL BOT:
+1. Reiniciar bot: npm run dev
+2. Probar en WhatsApp:
+   - "Me interesa un curso de piano"
+   - "El curso de piano completo"
+   - "Me envías el método de pago por nequi?"
+
+DOCUMENTACIÓN:
+📄 CORRECCION_SELECCION_PRODUCTO_ESPECIFICO.md (detallada)
+📄 RESUMEN_CORRECCION_PRODUCTO_ESPECIFICO.md (resumen)
+📄 APLICAR_CORRECCION_BOT_AHORA.md (instrucciones)
+
+RESULTADO:
+✅ Selección precisa de productos
+✅ Sin productos irrelevantes
+✅ Flujo conversacional natural
+✅ Mejor experiencia de usuario

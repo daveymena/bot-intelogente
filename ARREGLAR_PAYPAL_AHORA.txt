@@ -1,0 +1,101 @@
+✅ ARREGLAR LINK DE PAYPAL - INSTRUCCIONES
+
+PROBLEMA:
+❌ Link incorrecto: https://www.paypal.com/ncp/payment/email
+❌ Error: "No podemos encontrar tu perfil"
+
+SOLUCIÓN:
+✅ Usar PayPal.me: https://www.paypal.me/username/amount
+
+OPCIÓN 1: SCRIPT AUTOMÁTICO (RECOMENDADO)
+==========================================
+
+Ejecutar en PowerShell:
+   .\corregir-paypal-link.ps1
+
+Esto hará:
+✓ Backup automático
+✓ Corregir formato de link
+✓ Cambiar prioridades
+✓ Actualizar logs
+
+OPCIÓN 2: MANUAL
+================
+
+1. Abrir: src/lib/payment-link-generator.ts
+
+2. Buscar línea ~127:
+   const paypalLink = `https://www.paypal.com/ncp/payment/${encodeURIComponent(paypalEmail)}`;
+
+3. Reemplazar con:
+   // Email solo se usa en instrucciones, no genera link
+   return null; // El email se mostrará en generateMethodResponse
+
+4. Buscar línea ~142:
+   const paypalLink = `https://www.paypal.me/${paypalUsername}/${priceUSD}USD`;
+
+5. Reemplazar con:
+   const paypalLink = `https://www.paypal.me/${paypalUsername}/${priceUSD}`;
+
+6. Guardar archivo
+
+CONFIGURACIÓN NECESARIA
+=======================
+
+Agregar en .env:
+
+# Opción 1: PayPal.me (RECOMENDADO)
+PAYPAL_ME_USERNAME=tu_username
+
+# Opción 2: Solo email (fallback)
+PAYPAL_EMAIL=tu_email@paypal.com
+
+# Tasa de cambio
+COP_TO_USD_RATE=4000
+
+CÓMO OBTENER TU PAYPAL.ME USERNAME
+===================================
+
+1. Ve a: https://www.paypal.me/
+2. Inicia sesión
+3. Si no tienes, créalo (gratis)
+4. Tu link será: paypal.me/TU_USERNAME
+5. Usa TU_USERNAME en .env
+
+PROBAR LA CORRECCIÓN
+=====================
+
+1. Reiniciar bot:
+   npm run dev
+
+2. Probar en WhatsApp:
+   Usuario: "Quiero pagar con PayPal"
+   
+3. Verificar link:
+   ✅ Debe ser: https://www.paypal.me/username/16.25
+   ❌ NO debe ser: https://www.paypal.com/ncp/payment/...
+
+RESULTADO ESPERADO
+==================
+
+Con PayPal.me:
+   🔗 Link de PayPal:
+   https://www.paypal.me/username/16.25
+   
+   ✅ Link funcional
+   ✅ Monto incluido
+   ✅ Un solo clic
+
+Sin PayPal.me (solo email):
+   💰 PayPal:
+   Email de pago: email@paypal.com
+   Monto a enviar: $16.25 USD
+   
+   ✅ Instrucciones claras
+   ✅ Email visible
+   ⚠️ Usuario envía manualmente
+
+DOCUMENTACIÓN
+=============
+
+Ver: CORRECCION_PAYPAL_LINK.md

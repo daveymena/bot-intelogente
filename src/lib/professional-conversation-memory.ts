@@ -58,11 +58,72 @@ interface ConversationMemory {
   summary: string
 }
 
+import Redis from 'ioredis'
+
 export class ProfessionalConversationMemory {
   private static memories = new Map<string, ConversationMemory>()
-  
-  // Tiempo de expiración: 24 horas
   private static MEMORY_TIMEOUT = 24 * 60 * 60 * 1000
+  private static redis: Redis | null = null
+  private static redisEnabled = false
+  private static redisKeyPrefix = 'conversation:memory:'
+
+  private static initRedis() {
+    if (this.redisEnabled) return
+    const url = process.env.REDIS_URL || process.env.UPSTASH_REDIS_REST_URL
+    if (!url) return
+    this.redis = new Redis(url as string)
+    this.redisEnabled = true
+  }
+
+  private static async saveToRedis(key: string, memory: ConversationMemory) {
+    this.initRedis()
+    if (!this.redis) return
+    const fullKey = `${this.redisKeyPrefix}${key}`
+    await this.redis.set(fullKey, JSON.stringify(memory), 'EX', Math.floor(this.MEMORY_TIMEOUT / 1000))
+  }
+
+  private static async loadFromRedis(key: string): Promise<ConversationMemory | null> {
+    this.initRedis()
+    if (!this.redis) return null
+    const fullKey = `${this.redisKeyPrefix}${key}`
+    let data: string | null = null
+    try {
+      data = await this.redis.get(fullKey)
+    } catch {
+      return null
+    }
+    if (!data) return null
+    try {
+      const parsed = JSON.parse(data)
+      if (parsed.currentProduct && parsed.currentProduct.mentionedAt) {
+        parsed.currentProduct.mentionedAt = new Date(parsed.currentProduct.mentionedAt)
+      }
+      if (Array.isArray(parsed.productHistory)) {
+        parsed.productHistory = parsed.productHistory.map((p: any) => ({
+          ...p,
+          mentionedAt: p.mentionedAt ? new Date(p.mentionedAt) : new Date()
+        }))
+      }
+      if (parsed.budget && parsed.budget.mentionedAt) {
+        parsed.budget.mentionedAt = new Date(parsed.budget.mentionedAt)
+      }
+      if (parsed.state && parsed.state.lastInteraction) {
+        parsed.state.lastInteraction = new Date(parsed.state.lastInteraction)
+      }
+      return parsed as ConversationMemory
+    } catch {
+      return null
+    }
+  }
+
+  static async hydrateFromStore(conversationKey: string): Promise<void> {
+    const exists = this.memories.get(conversationKey)
+    if (exists) return
+    const loaded = await this.loadFromRedis(conversationKey)
+    if (loaded) {
+      this.memories.set(conversationKey, loaded)
+    }
+  }
   
   /**
    * Inicializar memoria para una conversación nueva
@@ -86,6 +147,8 @@ export class ProfessionalConversationMemory {
       })
       
       console.log(`[Memory] 🆕 Memoria inicializada para ${conversationKey}`)
+      const mem = this.memories.get(conversationKey)!
+      this.saveToRedis(conversationKey, mem).catch(() => {})
     }
   }
   
@@ -130,6 +193,7 @@ export class ProfessionalConversationMemory {
     
     console.log(`[Memory] 💾 Producto actual: ${productName}`)
     console.log(`[Memory] 📚 Historial: ${memory.productHistory.length} productos`)
+    this.saveToRedis(conversationKey, memory).catch(() => {})
   }
   
   /**
@@ -140,6 +204,7 @@ export class ProfessionalConversationMemory {
     const memory = this.memories.get(conversationKey)!
     memory.productHistory = []
     console.log(`[Memory] 🗑️ Historial de productos limpiado`)
+    this.saveToRedis(conversationKey, memory).catch(() => {})
   }
   
   /**
@@ -163,6 +228,7 @@ export class ProfessionalConversationMemory {
     if (memory.productHistory.length > 10) {
       memory.productHistory = memory.productHistory.slice(0, 10)
     }
+    this.saveToRedis(conversationKey, memory).catch(() => {})
   }
   
   /**
@@ -186,6 +252,7 @@ export class ProfessionalConversationMemory {
     this.updateStage(conversationKey, intentionType)
     
     console.log(`[Memory] 🎯 Intención registrada: ${intentionType}`)
+    this.saveToRedis(conversationKey, memory).catch(() => {})
   }
   
   /**
@@ -210,6 +277,7 @@ export class ProfessionalConversationMemory {
     if (newStage && newStage !== memory.state.stage) {
       memory.state.stage = newStage
       console.log(`[Memory] 📊 Etapa actualizada: ${newStage}`)
+      this.saveToRedis(conversationKey, memory).catch(() => {})
     }
   }
   
@@ -226,6 +294,7 @@ export class ProfessionalConversationMemory {
     }
     
     console.log(`[Memory] 💰 Presupuesto registrado: ${amount.toLocaleString('es-CO')} COP`)
+    this.saveToRedis(conversationKey, memory).catch(() => {})
   }
   
   /**
@@ -247,6 +316,7 @@ export class ProfessionalConversationMemory {
     }
     
     console.log(`[Memory] ⚠️ Objeción registrada: ${type}`)
+    this.saveToRedis(conversationKey, memory).catch(() => {})
   }
   
   /**
@@ -265,16 +335,15 @@ export class ProfessionalConversationMemory {
     }
     
     console.log(`[Memory] ⚙️ Preferencias actualizadas`)
+    this.saveToRedis(conversationKey, memory).catch(() => {})
   }
   
   /**
    * Obtener memoria completa
    */
   static getMemory(conversationKey: string): ConversationMemory | null {
-    const memory = this.memories.get(conversationKey)
-    
+    let memory = this.memories.get(conversationKey)
     if (!memory) {
-      console.log(`[Memory] ❌ No hay memoria para ${conversationKey}`)
       return null
     }
     
@@ -395,6 +464,7 @@ export class ProfessionalConversationMemory {
     if (memory) {
       memory.state.messageCount++
       memory.state.lastInteraction = new Date()
+      this.saveToRedis(conversationKey, memory).catch(() => {})
     }
   }
   
@@ -404,6 +474,11 @@ export class ProfessionalConversationMemory {
   static clearMemory(conversationKey: string): void {
     this.memories.delete(conversationKey)
     console.log(`[Memory] 🗑️ Memoria limpiada para ${conversationKey}`)
+    this.initRedis()
+    if (this.redis) {
+      const fullKey = `${this.redisKeyPrefix}${conversationKey}`
+      this.redis.del(fullKey).catch(() => {})
+    }
   }
   
   /**

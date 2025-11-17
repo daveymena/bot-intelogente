@@ -88,6 +88,39 @@ export class IntelligentConversationEngine {
       usuario: userName || 'desconocido'
     });
 
+    // 🎯 NUEVO: Intentar usar el sistema de agentes primero
+    try {
+      const { Orchestrator } = await import('@/agents/orchestrator');
+      const orchestrator = new Orchestrator();
+      
+      console.log('[IntelligentEngine] 🤖 Usando sistema de agentes especializados');
+      
+      const agentResponse = await orchestrator.processMessage({
+        chatId,
+        userId,
+        message,
+        userName
+      });
+      
+      console.log('[IntelligentEngine] ✅ Respuesta de agentes:', {
+        confianza: (agentResponse.confidence * 100).toFixed(0) + '%',
+        acciones: agentResponse.actions?.length || 0
+      });
+      
+      // Convertir respuesta de agentes al formato esperado
+      return {
+        text: agentResponse.text,
+        actions: agentResponse.actions || [],
+        context: agentResponse.context || {},
+        confidence: agentResponse.confidence
+      };
+    } catch (error) {
+      console.error('[IntelligentEngine] ⚠️ Error con sistema de agentes, usando fallback:', error);
+    }
+
+    // FALLBACK: Sistema anterior con IA
+    console.log('[IntelligentEngine] 🔄 Usando sistema de fallback con IA');
+
     // Obtener o crear memoria de conversación
     const memory = this.getOrCreateMemory(chatId, userName);
 
@@ -101,10 +134,27 @@ export class IntelligentConversationEngine {
     // Agregar mensaje del usuario a la memoria
     this.addToMemory(memory, 'user', message);
 
-    // Buscar productos relevantes en la base de datos
-    const relevantProducts = await this.searchRelevantProducts(message, userId);
-
-    console.log('[IntelligentEngine] 🔍 Productos encontrados:', relevantProducts.length);
+    // 🎯 CRÍTICO: NO buscar productos si el usuario está preguntando por métodos de pago
+    // y ya tiene un producto en contexto
+    const lowerMessage = message.toLowerCase();
+    const isPaymentMethodQuestion = 
+      (lowerMessage.includes('método') || lowerMessage.includes('metodo')) &&
+      (lowerMessage.includes('pago') || lowerMessage.includes('pagar'));
+    
+    const hasProductInContext = !!memory.context.currentProduct;
+    
+    let relevantProducts: any[] = [];
+    
+    if (isPaymentMethodQuestion && hasProductInContext) {
+      // NO buscar productos, mantener el producto actual
+      console.log('[IntelligentEngine] 🔒 Pregunta sobre métodos de pago - MANTENIENDO producto actual');
+      console.log('[IntelligentEngine] Producto en contexto:', memory.context.currentProduct.name);
+      relevantProducts = [memory.context.currentProduct];
+    } else {
+      // Buscar productos relevantes en la base de datos
+      relevantProducts = await this.searchRelevantProducts(message, userId);
+      console.log('[IntelligentEngine] 🔍 Productos encontrados:', relevantProducts.length);
+    }
 
     // Construir contexto enriquecido para la IA
     const systemPrompt = this.buildSystemPrompt(memory, relevantProducts);
@@ -211,6 +261,30 @@ TU PERSONALIDAD Y ESTILO:
 - No pides información que ya tienes
 - Formateas las respuestas de forma clara y organizada
 
+📸 ENVÍO DE FOTOS:
+⚠️ IMPORTANTE: SÍ PUEDES ENVIAR FOTOS
+- Cuando el cliente pida fotos, di: "¡Claro! Te envío la foto del producto 📸"
+- NUNCA digas "no puedo enviar fotos" o "no tengo acceso a fotos"
+- El sistema enviará automáticamente las fotos del producto
+- Mantén tu respuesta corta y confirma que las fotos van en camino
+
+FORMATO DE RESPUESTAS:
+✅ USA emojis relevantes (💻 📱 🏍️ 💰 📦 ✅ 🎯)
+✅ USA negritas con * para destacar información importante
+✅ Separa secciones con saltos de línea
+✅ Usa viñetas o números para listas
+✅ Mantén párrafos cortos (máximo 2-3 líneas)
+
+Ejemplo de formato correcto:
+- Claro! 😊 Te cuento sobre el *Portátil Acer A15*
+- 💻 *Especificaciones:*
+- • Procesador: Intel Core i5
+- • RAM: 16GB
+- • Almacenamiento: 512GB SSD
+- • Pantalla: 15.6" Full HD
+- 💰 *Precio:* $2.500.000 COP
+- Te gustaría más información? 🤔
+
 🎓 CURSOS DIGITALES - REGLAS ESPECÍFICAS:
 
 1. IDENTIFICACIÓN DE PRODUCTOS:
@@ -239,9 +313,39 @@ TU PERSONALIDAD Y ESTILO:
    👉 Responder SOLO sobre ese producto, con su descripción, precio y foto. (NO ofrecer otros a menos que pregunte).
 
 2. Si el cliente pregunta de forma general (Ejemplo: "¿Tienes portátiles?", "¿Vendes mouses?", "¿Tienes impresoras?"):
-   👉 Preguntar brevemente qué tipo o características busca. Ejemplo: "¿Buscas algo económico o más potente?"
-   👉 Luego ofrecer 3 o 4 opciones: Cada una con nombre, foto, breve descripción y precio. Organizadas de la más económica a la más completa.
-   👉 Siempre debe intentar entender la necesidad antes de ofrecer productos.
+   👉 Confirmar disponibilidad brevemente
+   👉 Mostrar MÁXIMO 3-4 opciones en formato LIMPIO:
+   
+   Formato correcto para múltiples productos:
+   ---
+   Sí, tenemos portátiles disponibles! 💻
+   
+   Te muestro algunos modelos:
+   
+   📦 *Portátil Acer A15*
+   • Intel Core i5, 16GB RAM, 512GB SSD
+   • Pantalla 15.6" Full HD
+   💰 $1.899.900 COP
+   
+   📦 *Portátil Asus Vivobook*
+   • AMD Ryzen 7, 16GB RAM, 1TB SSD
+   • Pantalla 15.6" Full HD
+   💰 $2.179.900 COP
+   
+   📦 *Portátil Asus Vivobook 16*
+   • Intel Core i7, 16GB RAM, 1TB SSD
+   • Pantalla 16.0" Full HD
+   💰 $2.449.900 COP
+   
+   ¿Te gustaría saber más sobre alguno? 🤔
+   ---
+   
+   ⚠️ IMPORTANTE: Cuando muestres MÚLTIPLES productos:
+   - NO envíes fotos (confunde al cliente)
+   - Usa formato limpio con separadores
+   - Máximo 3-4 productos
+   - Información breve de cada uno
+   - Pregunta cuál le interesa
 
 🔧 SERVICIOS TÉCNICOS (reparación y mantenimiento):
    👉 Siempre preguntar: "¿Qué producto tiene o qué servicio necesita?"
@@ -287,6 +391,7 @@ CONTEXTO ACTUAL DE LA CONVERSACIÓN:`;
 
     if (contextInfo.currentProduct) {
       prompt += `\n- Producto en discusión: ${contextInfo.currentProduct.name} ($${contextInfo.currentProduct.price.toLocaleString('es-CO')} COP)`;
+      prompt += `\n- ⚠️ CRÍTICO: Este es el ÚNICO producto que debes mencionar. NO menciones otros productos ni sus precios.`;
     }
 
     if (contextInfo.interestedProducts && contextInfo.interestedProducts.length > 0) {
@@ -436,6 +541,15 @@ Una vez pagues, recibiras acceso inmediato
 - Solo: Saludo breve + Link + Confirmación de acceso
 
 **IMPORTANTE**: Si el cliente responde SOLO con el nombre del método (sin hacer pregunta), es una CONFIRMACIÓN - genera el link inmediatamente
+
+**🚨 REGLA CRÍTICA - NO MEZCLAR PRODUCTOS:**
+- NUNCA menciones información de un producto diferente al que está en contexto
+- Si el producto en contexto es "Curso Completo de Piano", SOLO habla de ese curso
+- Si el producto en contexto es "Mega Pack 09", SOLO habla de ese megapack
+- NO mezcles precios de diferentes productos
+- NO mezcles descripciones de diferentes productos
+- USA SOLO el nombre, precio y descripción del producto ACTUAL en contexto
+- Cuando muestres métodos de pago, USA SOLO el nombre y precio del producto ACTUAL
 
 Ejemplo 4 - SEGUNDA RESPUESTA (Informacion completa con formato):
 Claro! Te cuento todo sobre el curso:
@@ -1239,6 +1353,25 @@ USA ESTE FORMATO CON EMOJIS Y ORGANIZACIÓN CLARA.`;
       }
     }
 
+    // 📸 DETECTAR SOLICITUD EXPLÍCITA DE FOTOS
+    const isExplicitPhotoRequest = 
+      lastUserMessage.includes('foto') ||
+      lastUserMessage.includes('imagen') ||
+      lastUserMessage.includes('ver') && (lastUserMessage.includes('producto') || lastUserMessage.includes('como') || lastUserMessage.includes('cómo')) ||
+      lastUserMessage.includes('muestra') ||
+      lastUserMessage.includes('envía') && lastUserMessage.includes('foto') ||
+      lastUserMessage.includes('envia') && lastUserMessage.includes('foto') ||
+      lastUserMessage.includes('manda') && lastUserMessage.includes('foto') ||
+      lastUserMessage.includes('pasa') && lastUserMessage.includes('foto');
+
+    // 🎯 CRÍTICO: Detectar si la IA está mostrando MÚLTIPLES productos
+    const isShowingMultipleProducts = aiResponse.text.includes('*') && 
+                                      (aiResponse.text.match(/\*/g) || []).length > 4 && // Más de 2 productos con negritas
+                                      (aiResponse.text.includes('modelos') || 
+                                       aiResponse.text.includes('opciones') ||
+                                       aiResponse.text.includes('portátiles') ||
+                                       aiResponse.text.includes('productos'));
+
     // ENVÍO AUTOMÁTICO DE IMAGEN DEL PRODUCTO CORRECTO
     const currentProductId = memory.context.currentProduct?.id;
     const imageAlreadySent = memory.context.imageSent === currentProductId;
@@ -1247,14 +1380,17 @@ USA ESTE FORMATO CON EMOJIS Y ORGANIZACIÓN CLARA.`;
       productoActual: memory.context.currentProduct?.name || 'ninguno',
       productoID: currentProductId,
       imagenYaEnviada: imageAlreadySent,
-      tieneImagenes: !!memory.context.currentProduct?.images
+      tieneImagenes: !!memory.context.currentProduct?.images,
+      solicitudExplicita: isExplicitPhotoRequest,
+      mostrandoMultiples: isShowingMultipleProducts
     });
     
-    // 🎯 DETECTAR SI DEBE ENVIAR IMAGEN
-    // Enviar imagen si:
-    // 1. Hay un producto en contexto
-    // 2. No se ha enviado antes para ESTE producto
-    // 3. El usuario NO está SOLO preguntando por link de pago (ya tiene toda la info)
+    // 🎯 REGLA CRÍTICA: NO enviar foto si está mostrando MÚLTIPLES productos
+    // Solo enviar foto si:
+    // 1. Hay UN SOLO producto en contexto
+    // 2. NO está mostrando múltiples productos en el texto
+    // 3. No se ha enviado antes O el usuario la solicita explícitamente
+    // 4. El usuario NO está SOLO preguntando por link de pago
     
     const isOnlyAskingForPaymentLink = (
       (lastUserMessage.includes('link') || lastUserMessage.includes('enlace')) &&
@@ -1263,7 +1399,8 @@ USA ESTE FORMATO CON EMOJIS Y ORGANIZACIÓN CLARA.`;
     );
     
     const shouldSendImage = memory.context.currentProduct && 
-                           !imageAlreadySent && 
+                           !isShowingMultipleProducts && // 🎯 NO enviar si muestra múltiples
+                           (!imageAlreadySent || isExplicitPhotoRequest) && 
                            !isOnlyAskingForPaymentLink;
     
     if (shouldSendImage) {
@@ -1282,8 +1419,10 @@ USA ESTE FORMATO CON EMOJIS Y ORGANIZACIÓN CLARA.`;
         });
         memory.context.imageSent = currentProductId; // Marcar con el ID del producto
       } else {
-        console.log('[IntelligentEngine] ⚠️ Producto sin imágenes:', product.name);
+        console.log('[IntelligentEngine] ⚠️ Producto sin imágenes disponibles');
       }
+    } else if (isShowingMultipleProducts) {
+      console.log('[IntelligentEngine] 🚫 NO enviando foto - mostrando múltiples productos');
     } else if (imageAlreadySent) {
       console.log('[IntelligentEngine] ⏭️ Imagen ya enviada para este producto');
     } else if (isOnlyAskingForPaymentLink) {

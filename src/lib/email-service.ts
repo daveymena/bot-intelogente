@@ -219,8 +219,12 @@ export class EmailService {
     })
   }
 
-  static async sendPasswordResetEmail(email: string, token: string, name?: string): Promise<boolean> {
-    const resetUrl = `${process.env.NEXTAUTH_URL}/reset-password?token=${token}`
+  static async sendPasswordResetEmail(params: {
+    to: string;
+    userName: string;
+    resetUrl: string;
+  }): Promise<boolean> {
+    const { to, userName, resetUrl } = params;
     
     const html = `
       <!DOCTYPE html>
@@ -243,7 +247,7 @@ export class EmailService {
               <h1>🔐 Restablecer Contraseña</h1>
             </div>
             <div class="content">
-              <h2>Hola ${name || 'Usuario'},</h2>
+              <h2>Hola ${userName},</h2>
               <p>Recibimos una solicitud para restablecer la contraseña de tu cuenta de Smart Sales Bot.</p>
               
               <p style="text-align: center;">
@@ -274,10 +278,10 @@ export class EmailService {
     `
 
     return this.sendEmail({
-      to: email,
+      to,
       subject: '🔐 Restablecer contraseña - Smart Sales Bot',
       html,
-      text: `Hola ${name || 'Usuario'}, para restablecer tu contraseña visita: ${resetUrl}. Este enlace expirará en 1 hora.`
+      text: `Hola ${userName}, para restablecer tu contraseña visita: ${resetUrl}. Este enlace expirará en 1 hora.`
     })
   }
 
