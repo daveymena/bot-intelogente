@@ -379,9 +379,11 @@ export class SearchAgent extends BaseAgent {
   private extractSpecificKeywords(query: string): string[] {
     const specificWords: string[] = [];
     
-    // Idiomas
-    const languages = ['ingles', 'inglés', 'english', 'frances', 'francés', 'aleman', 'alemán', 
-                      'italiano', 'portugues', 'portugués', 'chino', 'japones', 'japonés'];
+    // Idiomas (IMPORTANTE: incluir "idiomas" como palabra clave)
+    const languages = ['idiomas', 'idioma', 'language', 'languages',
+                      'ingles', 'inglés', 'english', 'frances', 'francés', 'aleman', 'alemán', 
+                      'italiano', 'portugues', 'portugués', 'chino', 'japones', 'japonés',
+                      'coreano', 'ruso', 'arabe', 'árabe', 'hindi'];
     languages.forEach(lang => {
       if (query.includes(lang)) {
         specificWords.push(lang);
