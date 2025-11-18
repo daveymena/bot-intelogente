@@ -62,14 +62,15 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
+      { url: "/smart-sales-bot-logo.png", type: "image/png" },
       { url: "/favicon.ico", sizes: "any" },
       { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
       { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
     apple: [
-      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+      { url: "/smart-sales-bot-logo.png", sizes: "180x180", type: "image/png" },
     ],
-    shortcut: "/favicon.ico",
+    shortcut: "/smart-sales-bot-logo.png",
   },
   manifest: "/manifest.json",
   openGraph: {
@@ -81,7 +82,7 @@ export const metadata: Metadata = {
     description: "Bot inteligente de WhatsApp con IA avanzada. Automatiza ventas, gestiona productos y atiende clientes 24/7. Múltiples modelos de IA, análisis en tiempo real y respuestas personalizadas.",
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://smartsalesbot.com'}/opengraph-image`,
+        url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://smartsalesbot.com'}/smart-sales-bot-logo.png`,
         width: 1200,
         height: 630,
         alt: "Smart Sales Bot Pro - Automatización de Ventas con IA",
@@ -100,7 +101,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Smart Sales Bot Pro - Automatización de Ventas con IA",
     description: "Bot inteligente de WhatsApp con IA avanzada. Automatiza ventas 24/7 con múltiples modelos de IA.",
-    images: [`${process.env.NEXT_PUBLIC_APP_URL || 'https://smartsalesbot.com'}/og-image.png`],
+    images: [`${process.env.NEXT_PUBLIC_APP_URL || 'https://smartsalesbot.com'}/smart-sales-bot-logo.png`],
     creator: "@smartsalesbot",
   },
   alternates: {

@@ -34,7 +34,6 @@ import ShareStoreButton from '@/components/ShareStoreButton'
 import { DemoSection } from '@/components/dashboard/DemoSection'
 import { StoreSettingsTab } from '@/components/dashboard/store-settings-tab'
 import { SubscriptionStatus } from '@/components/SubscriptionStatus'
-import { MegaflujosDashboard } from '@/components/MegaflujosDashboard'
 import AntiBanMonitor from '@/components/AntiBanMonitor'
 
 export function MainDashboard() {
@@ -68,7 +67,6 @@ export function MainDashboard() {
     { id: 'whatsapp', label: 'WhatsApp', icon: MessageSquare },
     { id: 'products', label: 'Productos', icon: Package },
     { id: 'store', label: 'Mi Tienda', icon: Store },
-    { id: 'megaflujos', label: '📚 Megaflujos', icon: Bot },
     { id: 'personality', label: 'Personalidad Bot', icon: Bot },
     { id: 'prompts', label: 'IA & Prompts', icon: Bot },
     { id: 'customers', label: 'Clientes', icon: Users },
@@ -231,7 +229,6 @@ export function MainDashboard() {
             {activeTab === 'whatsapp' && <WhatsAppConnection />}
             {activeTab === 'products' && <ProductsManagement />}
             {activeTab === 'store' && <StoreSettingsTab />}
-            {activeTab === 'megaflujos' && <MegaflujosDashboard />}
             {activeTab === 'personality' && <BotPersonalityGenerator />}
             {activeTab === 'prompts' && <AIPromptsManagement />}
             {activeTab === 'customers' && <CustomersTab />}
@@ -517,22 +514,30 @@ function CustomersTab() {
                       }`}
                   >
                     <div className="flex items-center gap-3">
-                      <Avatar>
-                        <AvatarFallback className="bg-green-600 text-white">
-                          {conv.customerName?.charAt(0) || conv.customerPhone.charAt(0)}
+                      <Avatar className="h-12 w-12">
+                        <AvatarFallback className="bg-green-600 text-white text-lg">
+                          {conv.customerName?.charAt(0)?.toUpperCase() || '👤'}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-gray-900 truncate">
-                          {conv.customerName || conv.customerPhone}
+                        <p className="font-semibold text-gray-900 truncate">
+                          {conv.customerName || 'Cliente'}
                         </p>
-                        <p className="text-sm text-gray-500 truncate">
+                        <p className="text-sm text-green-600 font-medium">
+                          📱 {conv.customerPhone}
+                        </p>
+                        <p className="text-xs text-gray-500 truncate mt-1">
                           {conv.messages[0]?.content || 'Sin mensajes'}
                         </p>
                       </div>
-                      <Badge variant={conv.status === 'ACTIVE' ? 'default' : 'secondary'}>
-                        {conv._count.messages}
-                      </Badge>
+                      <div className="flex flex-col items-end gap-1">
+                        <Badge variant={conv.status === 'ACTIVE' ? 'default' : 'secondary'} className="bg-green-600">
+                          {conv._count.messages} msgs
+                        </Badge>
+                        <span className="text-xs text-gray-400">
+                          {new Date(conv.lastMessageAt || conv.createdAt).toLocaleDateString('es-CO')}
+                        </span>
+                      </div>
                     </div>
                   </button>
                 ))}
