@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://smartsalesbot.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://bot-whatsapp-bot-whatsapp-inteligente.sqaoeo.easypanel.host'),
   title: {
     default: "Smart Sales Bot Pro - Automatización de Ventas con IA para WhatsApp",
     template: "%s | Smart Sales Bot Pro"
