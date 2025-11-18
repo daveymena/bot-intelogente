@@ -1,0 +1,258 @@
+═══════════════════════════════════════════════════════════════════════════════
+🎯 PASOS FINALES - AUDITORÍA Y CORRECCIÓN DEL BOT
+═══════════════════════════════════════════════════════════════════════════════
+
+PROBLEMA IDENTIFICADO (de la imagen):
+  1. Bot pierde contexto del producto
+  2. Envía email de PayPal en vez de link
+  3. Muestra productos irrelevantes
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ PASO 1: EJECUTAR AUDITORÍA (5 minutos)
+───────────────────────────────────────────────────────────────────────────────
+
+    ejecutar-auditoria-completa.bat
+
+Esto ejecutará automáticamente:
+  ✓ Auditoría completa del sistema
+  ✓ Test específico del problema de la imagen
+  ✓ Correcciones automáticas de base de datos
+
+Resultado: Archivo auditoria-reporte.json con todos los problemas
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ PASO 2: REVISAR REPORTE (2 minutos)
+───────────────────────────────────────────────────────────────────────────────
+
+Abrir y leer:
+  📄 auditoria-reporte.json
+  📄 RESUMEN_AUDITORIA_COMPLETA.md
+
+Identificar problemas críticos marcados en ROJO 🔴
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ PASO 3: MODIFICAR ARCHIVOS (2 horas)
+───────────────────────────────────────────────────────────────────────────────
+
+Archivo 1: src/agents/shared-memory.ts
+──────────────────────────────────────
+
+Agregar al interface Memory:
+
+    selectedProduct?: {
+      id: number;
+      name: string;
+      price: number;
+      timestamp: Date;
+    };
+
+Agregar métodos:
+
+    static setSelectedProduct(userId: string, product: any) {
+      const memory = this.getMemory(userId);
+      memory.selectedProduct = {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        timestamp: new Date()
+      };
+    }
+
+    static getSelectedProduct(userId: string) {
+      const memory = this.getMemory(userId);
+      if (memory.selectedProduct) {
+        const elapsed = Date.now() - memory.selectedProduct.timestamp.getTime();
+        if (elapsed < 30 * 60 * 1000) {
+          return memory.selectedProduct;
+        }
+      }
+      return null;
+    }
+
+───────────────────────────────────────────────────────────────────────────────
+
+Archivo 2: src/agents/payment-agent.ts
+──────────────────────────────────────
+
+ELIMINAR:
+    const paypalEmail = process.env.PAYPAL_EMAIL;
+    response = `Puedes pagar a: ${paypalEmail}`;
+
+AGREGAR:
+    import { generatePaymentLink } from '@/lib/payment-link-generator';
+    import { SharedMemory } from './shared-memory';
+
+    const product = SharedMemory.getSelectedProduct(userId);
+    
+    if (!product) {
+      return "¿Qué producto te interesa? Así genero el link correcto 😊";
+    }
+
+    const paypalLink = await generatePaymentLink({
+      productId: product.id,
+      productName: product.name,
+      amount: product.price,
+      method: 'PAYPAL',
+      userId: userId
+    });
+
+    response = `¡Perfecto! Para el ${product.name} 💳
+
+💰 Precio: $${product.price.toLocaleString()} COP
+
+🔗 Link de pago PayPal:
+${paypalLink}
+
+Haz clic, paga y envíame el comprobante 📸`;
+
+───────────────────────────────────────────────────────────────────────────────
+
+Archivo 3: src/lib/product-intelligence-service.ts
+──────────────────────────────────────────────────
+
+CAMBIAR:
+    const MIN_SCORE = 0.3;  // ❌ Muy bajo
+
+POR:
+    const MIN_SCORE = 0.6;  // ✅ Más estricto
+
+AGREGAR filtro de tags:
+    .filter(r => {
+      if (r.score < MIN_SCORE) return false;
+      
+      const queryWords = query.toLowerCase().split(' ');
+      const productTags = r.producto.tags || [];
+      const hasMatchingTag = queryWords.some(word => 
+        productTags.some(tag => tag.toLowerCase().includes(word))
+      );
+      
+      return hasMatchingTag || r.score > 0.8;
+    })
+
+───────────────────────────────────────────────────────────────────────────────
+
+Archivo 4: src/agents/search-agent.ts
+─────────────────────────────────────
+
+AGREGAR al inicio del método search():
+
+    const selected = SharedMemory.getSelectedProduct(userId);
+    
+    if (selected) {
+      return {
+        products: [selected],
+        message: `Hablamos del ${selected.name}. ¿Qué más quieres saber? 😊`
+      };
+    }
+
+───────────────────────────────────────────────────────────────────────────────
+
+Archivo 5: src/agents/orchestrator.ts
+─────────────────────────────────────
+
+MODIFICAR para NO limpiar contexto hasta que se complete la venta:
+
+    // NO hacer esto hasta que venta esté completa:
+    // SharedMemory.clearMemory(userId);
+    
+    // Solo limpiar si usuario cambia de tema explícitamente
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ PASO 4: VERIFICAR .ENV (1 minuto)
+───────────────────────────────────────────────────────────────────────────────
+
+Abrir .env y verificar:
+
+    ✅ DEBE TENER:
+    PAYPAL_LINK_TEMPLATE=https://www.paypal.com/ncp/payment/YOUR_ID
+    PAYPAL_BUSINESS_ID=tu_business_id
+
+    ❌ ELIMINAR (obsoleto):
+    PAYPAL_EMAIL=tu@email.com
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ PASO 5: EJECUTAR TESTS (10 minutos)
+───────────────────────────────────────────────────────────────────────────────
+
+    npx tsx scripts/test-contexto-producto-corregido.ts
+    npx tsx scripts/test-paypal-dinamico.ts
+    npx tsx scripts/test-busqueda-simple.ts
+    npx tsx scripts/test-bot-conversacion-real.js
+
+Todos deben pasar ✅
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ PASO 6: PROBAR CON WHATSAPP REAL (5 minutos)
+───────────────────────────────────────────────────────────────────────────────
+
+Iniciar bot:
+    npm run dev
+
+Probar esta conversación EXACTA:
+
+    Tú: "MegaPack de idiomas"
+    
+    Bot debe:
+    ✅ Dar información del MegaPack de idiomas
+    ✅ Guardar producto en contexto
+    
+    ───────────────────────────────────────
+    
+    Tú: "mercado libre"
+    
+    Bot debe:
+    ✅ Recordar que hablabas del MegaPack de idiomas
+    ✅ Decir "Para el MegaPack de Idiomas..."
+    ✅ Enviar LINK de PayPal (no email)
+    ✅ NO mostrar Curso de Piano ni Auriculares
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📊 CHECKLIST FINAL
+───────────────────────────────────────────────────────────────────────────────
+
+Antes de dar por terminado, verificar:
+
+  ☐ Auditoría ejecutada
+  ☐ Reporte revisado
+  ☐ shared-memory.ts modificado
+  ☐ payment-agent.ts modificado
+  ☐ product-intelligence-service.ts modificado
+  ☐ search-agent.ts modificado
+  ☐ orchestrator.ts modificado
+  ☐ .env actualizado (sin PAYPAL_EMAIL)
+  ☐ Todos los tests pasan
+  ☐ Prueba real con WhatsApp exitosa
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 RESULTADO ESPERADO
+───────────────────────────────────────────────────────────────────────────────
+
+Después de todas las correcciones:
+
+  ✅ Bot mantiene contexto del producto
+  ✅ Bot envía links dinámicos de PayPal
+  ✅ Bot muestra solo productos relevantes
+  ✅ Bot confirma producto antes de pago
+  ✅ Bot no confunde productos similares
+
+═══════════════════════════════════════════════════════════════════════════════
+
+⏱️ TIEMPO TOTAL: 3 horas
+🔴 PRIORIDAD: CRÍTICA
+📅 DEADLINE: HOY
+
+═══════════════════════════════════════════════════════════════════════════════
+
+EMPEZAR AHORA:
+
+    ejecutar-auditoria-completa.bat
+
+═══════════════════════════════════════════════════════════════════════════════

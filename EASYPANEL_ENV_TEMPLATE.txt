@@ -1,0 +1,146 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# 🚀 PLANTILLA DE CONFIGURACIÓN PARA EASYPANEL - PRODUCCIÓN
+# Smart Sales Bot Pro - Tecnovariedades D&S
+# Última actualización: 2025-11-18
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# === CORE APPLICATION ===
+NODE_ENV=production
+PORT=3000
+NEXT_PUBLIC_APP_URL=https://bot-whatsapp-bot-whatsapp-inteligente.sqaoeo.easypanel.host
+NEXTAUTH_URL=https://bot-whatsapp-bot-whatsapp-inteligente.sqaoeo.easypanel.host
+NEXTAUTH_SECRET=tu-secret-key-aqui-cambiar-en-produccion-2025
+JWT_SECRET=tu-jwt-secret-key-aqui-2025
+
+# === AI CONFIGURATION ===
+# 🔥 GROQ - PRINCIPAL (Ultra rápido y preciso)
+GROQ_API_KEY=tu_groq_api_key_aqui
+GROQ_API_KEY_2=tu_groq_api_key_2_aqui
+GROQ_API_KEY_6=tu_groq_api_key_6_aqui
+GROQ_MODEL=llama-3.1-8b-instant
+GROQ_FALLBACK_MODELS=llama-3.1-8b-instant,gemma2-9b-it
+GROQ_MAX_TOKENS=300
+GROQ_TIMEOUT=60000
+GROQ_ENABLED=true
+ENABLE_GROQ_ROTATION=true
+
+# 🔄 Ollama - FALLBACK (cuando Groq falla)
+OLLAMA_BASE_URL=https://bot-whatsapp-ollama.sqaoeo.easypanel.host
+OLLAMA_BASE_URL_EXTERNAL=https://bot-whatsapp-ollama.sqaoeo.easypanel.host
+OLLAMA_MODEL=gemma:2b
+OLLAMA_TIMEOUT=30000
+OLLAMA_MAX_TOKENS=600
+OLLAMA_ENABLED=true
+ENABLE_OLLAMA_FALLBACK=true
+
+# Sistema de IA
+AI_PROVIDER=groq
+DEFAULT_AI_PROVIDER=groq
+AI_FALLBACK_ENABLED=true
+AI_FALLBACK_ORDER=groq,ollama
+AI_AUTO_MODEL_DETECTION=true
+AI_USE_REASONING=true
+
+# === WHATSAPP CONFIGURATION ===
+WHATSAPP_PROVIDER=baileys
+SESSION_PATH=/data/whatsapp-sessions
+NEXT_PUBLIC_WHATSAPP_NUMBER=573005560186
+
+# Connection Monitoring (Optimizado para estabilidad)
+HEARTBEAT_INTERVAL=10000
+RECONNECT_ATTEMPTS_MAX=100
+RECONNECT_DELAY_BASE=500
+RECONNECT_DELAY_MAX=60000
+MAX_CONSECUTIVE_FAILURES=5
+CONNECTION_HEALTH_THRESHOLD=80
+ENABLE_CONNECTION_MONITOR=true
+ENABLE_SESSION_RECOVERY=true
+ENABLE_SOFT_RESET=true
+ENABLE_AGGRESSIVE_RESET=true
+ENABLE_CONSERVATIVE_MODE=true
+SESSION_BACKUP_COUNT=3
+SESSION_RECOVERY_TIMEOUT=30000
+CONNECTION_TIMEOUT=60000
+MESSAGE_QUEUE_SIZE=100
+
+# 🚨 ANTI-BAN: Delays humanos (3-13 segundos)
+ENABLE_TYPING_SIMULATION=true
+TYPING_SPEED_MIN=40
+TYPING_SPEED_MAX=100
+TYPING_DELAY_MIN=2000
+TYPING_DELAY_MAX=4000
+ENABLE_HUMAN_DELAYS=true
+
+# === DATABASE ===
+DATABASE_URL=postgresql://postgres:password@host:5432/database
+DATABASE_PROVIDER=postgresql
+
+# === EMAIL CONFIGURATION ===
+# 📧 Gmail SMTP (para recuperación de contraseña)
+EMAIL_USER=tu_email@gmail.com
+EMAIL_PASS=tu_app_password_aqui
+EMAIL_FROM=tu_email@gmail.com
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+
+# === BUSINESS INFORMATION ===
+BUSINESS_NAME=Tecnovariedades D&S
+BUSINESS_ADDRESS=Colombia
+BOT_NAME=Tecnovariedades D&S Bot
+BOT_PHONE=+57 300 556 0186
+BUSINESS_PHONE=+57 300 556 0186
+BUSINESS_EMAIL=tu_email@gmail.com
+BOT_LANGUAGE=es
+
+# === PAYMENT METHODS ===
+# 💳 Nequi & Daviplata
+NEQUI_NUMBER=3136174267
+DAVIPLATA_NUMBER=3136174267
+
+# 💰 MercadoPago (Links dinámicos ACTIVADOS)
+MERCADO_PAGO_ACCESS_TOKEN=tu_mercadopago_access_token
+MERCADO_PAGO_PUBLIC_KEY=tu_mercadopago_public_key
+MERCADO_PAGO_CLIENT_ID=tu_mercadopago_client_id
+MERCADOPAGO_ENABLED=true
+
+# 🌎 PayPal (Links dinámicos ACTIVADOS)
+PAYPAL_CLIENT_ID=tu_paypal_client_id
+PAYPAL_CLIENT_SECRET=tu_paypal_client_secret
+PAYPAL_MODE=live
+PAYPAL_API_URL=https://api-m.paypal.com
+PAYPAL_EMAIL=tu_paypal_email@gmail.com
+COP_TO_USD_RATE=4000
+
+# === FEATURE FLAGS ===
+PHOTOS_ENABLED=true
+AUDIO_ENABLED=true
+VOICE_ENABLED=false
+HOT_RELOAD_ENABLED=true
+AI_ENABLED=true
+DYNAMIC_PRICING_ENABLED=true
+WEB_ENABLED=true
+WEB_AUTH=false
+SMART_PHOTOS_ENABLED=true
+DYNAMIC_PAYMENT_LINKS_ENABLED=true
+
+# === LOGGING ===
+LOG_LEVEL=info
+LOG_CONNECTION_EVENTS=true
+LOG_HEARTBEAT_EVENTS=false
+LOG_RECONNECTION_EVENTS=true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# ✅ PLANTILLA COMPLETA
+# 
+# IMPORTANTE: Reemplazar todos los valores "tu_xxx_aqui" con tus credenciales reales
+# 
+# Características activadas:
+# - ✅ Links dinámicos de MercadoPago
+# - ✅ Links dinámicos de PayPal
+# - ✅ Email de recuperación (Gmail SMTP)
+# - ✅ Delays anti-ban (3-13 segundos)
+# - ✅ Búsqueda mejorada de productos
+# - ✅ Rotación automática de APIs Groq
+# - ✅ Fallback a Ollama
+# 
+# ═══════════════════════════════════════════════════════════════════════════════

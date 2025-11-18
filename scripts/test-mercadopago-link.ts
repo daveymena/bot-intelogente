@@ -1,92 +1,270 @@
 /**
- * 🧪 Test de Generación de Link de MercadoPago
+ * 🧪 TEST: Generación de Links de MercadoPago
+ * Verifica que los links dinámicos se estén creando correctamente
  */
 
+import { PaymentLinkGenerator } from '../src/lib/payment-link-generator'
 import { BotPaymentLinkGenerator } from '../src/lib/bot-payment-link-generator'
 import { db } from '../src/lib/db'
 
-async function testMercadoPagoLink() {
-  console.log('🧪 Probando generación de link de MercadoPago\n')
+async function testMercadoPagoLinks() {
+  console.log('🧪 INICIANDO TEST DE LINKS DE MERCADOPAGO\n')
+  console.log('═'.repeat(80))
 
   try {
-    // Verificar variables de entorno
-    console.log('📋 Verificando configuración...')
-    const MERCADOPAGO_ACCESS_TOKEN = process.env.MERCADOPAGO_ACCESS_TOKEN || process.env.MERCADO_PAGO_ACCESS_TOKEN
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // 1. VERIFICAR CONFIGURACIÓN
+    // ═══════════════════════════════════════════════════════════════════════════════
+    console.log('\n📋 1. VERIFICANDO CONFIGURACIÓN')
+    console.log('─'.repeat(80))
     
-    if (!MERCADOPAGO_ACCESS_TOKEN) {
-      console.log('❌ MERCADOPAGO_ACCESS_TOKEN no configurado')
-      console.log('   Verifica tu archivo .env')
+    const config = {
+      MERCADO_PAGO_ACCESS_TOKEN: process.env.MERCADO_PAGO_ACCESS_TOKEN ? '✅ Configurado' : '❌ NO configurado',
+      MERCADO_PAGO_PUBLIC_KEY: process.env.MERCADO_PAGO_PUBLIC_KEY ? '✅ Configurado' : '❌ NO configurado',
+      MERCADOPAGO_ACCESS_TOKEN: process.env.MERCADOPAGO_ACCESS_TOKEN ? '✅ Configurado' : '❌ NO configurado',
+      NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || '❌ NO configurado',
+      NEXTAUTH_URL: process.env.NEXTAUTH_URL || '❌ NO configurado'
+    }
+    
+    console.table(config)
+    
+    // Determinar qué variable usar
+    const accessToken = process.env.MERCADO_PAGO_ACCESS_TOKEN || process.env.MERCADOPAGO_ACCESS_TOKEN
+    
+    if (!accessToken) {
+      console.log('\n❌ ERROR: No hay Access Token de MercadoPago configurado')
+      console.log('\n📝 SOLUCIÓN:')
+      console.log('   Agregar en .env o Easypanel:')
+      console.log('   MERCADO_PAGO_ACCESS_TOKEN=APP_USR-...')
       return
     }
     
-    console.log('✅ MERCADOPAGO_ACCESS_TOKEN configurado')
-    console.log(`   Token: ${MERCADOPAGO_ACCESS_TOKEN.substring(0, 20)}...`)
+    console.log('\n✅ Access Token encontrado')
+    console.log(`   Variable usada: ${process.env.MERCADO_PAGO_ACCESS_TOKEN ? 'MERCADO_PAGO_ACCESS_TOKEN' : 'MERCADOPAGO_ACCESS_TOKEN'}`)
+    console.log(`   Longitud: ${accessToken.length} caracteres`)
+    console.log(`   Prefijo: ${accessToken.substring(0, 15)}...`)
 
-    // Buscar un producto de prueba
-    console.log('\n📦 Buscando producto de prueba...')
-    const product = await db.product.findFirst({
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // 2. OBTENER PRODUCTO DE PRUEBA
+    // ═══════════════════════════════════════════════════════════════════════════════
+    console.log('\n📦 2. OBTENIENDO PRODUCTO DE PRUEBA')
+    console.log('─'.repeat(80))
+    
+    const producto = await db.product.findFirst({
       where: {
-        status: 'AVAILABLE'
+        status: 'AVAILABLE',
+        category: 'DIGITAL' // Preferir productos digitales
+      },
+      orderBy: {
+        price: 'asc' // El más barato para pruebas
       }
     })
-
-    if (!product) {
-      console.log('❌ No hay productos disponibles')
+    
+    if (!producto) {
+      console.log('❌ No hay productos disponibles para probar')
       return
     }
+    
+    console.log('✅ Producto encontrado:')
+    console.log(`   ID: ${producto.id}`)
+    console.log(`   Nombre: ${producto.name}`)
+    console.log(`   Precio: ${producto.price.toLocaleString('es-CO')} COP`)
+    console.log(`   Categoría: ${producto.category}`)
 
-    console.log(`✅ Producto encontrado: ${product.name}`)
-    console.log(`   Precio: ${product.price.toLocaleString('es-CO')} COP`)
-
-    // Generar links de pago
-    console.log('\n💳 Generando links de pago...')
-    const result = await BotPaymentLinkGenerator.generatePaymentLinks(
-      product.id,
-      product.userId,
-      1
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // 3. PROBAR PaymentLinkGenerator
+    // ═══════════════════════════════════════════════════════════════════════════════
+    console.log('\n🔧 3. PROBANDO PaymentLinkGenerator.generateMercadoPagoLink()')
+    console.log('─'.repeat(80))
+    
+    console.log('Llamando a la API de MercadoPago...')
+    const startTime1 = Date.now()
+    
+    const mercadoPagoLink1 = await PaymentLinkGenerator.generateMercadoPagoLink(
+      producto.name,
+      producto.price,
+      producto.id
     )
-
-    if (result.success) {
-      console.log('✅ Links generados exitosamente\n')
+    
+    const duration1 = Date.now() - startTime1
+    
+    if (mercadoPagoLink1) {
+      console.log(`✅ Link generado exitosamente (${duration1}ms)`)
+      console.log(`   ${mercadoPagoLink1}`)
       
-      if (result.mercadoPagoLink) {
-        console.log('💳 MercadoPago:')
-        console.log(`   ${result.mercadoPagoLink}`)
+      // Verificar formato del link
+      if (mercadoPagoLink1.includes('mercadopago.com')) {
+        console.log('   ✅ Formato correcto (contiene mercadopago.com)')
       } else {
-        console.log('⚠️  MercadoPago: No generado')
+        console.log('   ⚠️ Formato inesperado')
       }
-
-      if (result.payPalLink) {
-        console.log('\n💙 PayPal:')
-        console.log(`   ${result.payPalLink}`)
-      } else {
-        console.log('\n⚠️  PayPal: No generado')
+      
+      if (mercadoPagoLink1.includes('init_point') || mercadoPagoLink1.includes('checkout')) {
+        console.log('   ✅ Es un link de checkout válido')
       }
-
-      if (result.nequiInfo) {
-        console.log('\n📱 Nequi:')
-        console.log(`   ${result.nequiInfo}`)
-      }
-
-      if (result.daviplataInfo) {
-        console.log('\n📱 Daviplata:')
-        console.log(`   ${result.daviplataInfo}`)
-      }
-
-      console.log('\n📝 Mensaje completo:')
-      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-      console.log(result.message)
-      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-
     } else {
-      console.log('❌ Error generando links:', result.message)
+      console.log('❌ No se pudo generar el link')
+      console.log('   Revisar logs anteriores para ver el error')
     }
 
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // 4. PROBAR BotPaymentLinkGenerator
+    // ═══════════════════════════════════════════════════════════════════════════════
+    console.log('\n🤖 4. PROBANDO BotPaymentLinkGenerator.generatePaymentLinks()')
+    console.log('─'.repeat(80))
+    
+    console.log('Generando todos los métodos de pago...')
+    const startTime2 = Date.now()
+    
+    const paymentLinks = await BotPaymentLinkGenerator.generatePaymentLinks(
+      producto.id,
+      producto.userId,
+      1
+    )
+    
+    const duration2 = Date.now() - startTime2
+    
+    if (paymentLinks.success) {
+      console.log(`✅ Links generados exitosamente (${duration2}ms)`)
+      console.log('\n📋 Métodos disponibles:')
+      
+      if (paymentLinks.mercadoPagoLink) {
+        console.log(`   ✅ MercadoPago: ${paymentLinks.mercadoPagoLink}`)
+      } else {
+        console.log('   ❌ MercadoPago: No generado')
+      }
+      
+      if (paymentLinks.payPalLink) {
+        console.log(`   ✅ PayPal: ${paymentLinks.payPalLink}`)
+      } else {
+        console.log('   ⚠️ PayPal: No configurado')
+      }
+      
+      if (paymentLinks.nequiInfo) {
+        console.log(`   ✅ Nequi: ${paymentLinks.nequiInfo}`)
+      }
+      
+      if (paymentLinks.daviplataInfo) {
+        console.log(`   ✅ Daviplata: ${paymentLinks.daviplataInfo}`)
+      }
+      
+      console.log('\n📝 Mensaje generado:')
+      console.log('─'.repeat(80))
+      console.log(paymentLinks.message)
+      console.log('─'.repeat(80))
+    } else {
+      console.log('❌ Error generando links')
+      console.log(`   Mensaje: ${paymentLinks.message}`)
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // 5. PROBAR LLAMADA DIRECTA A API DE MERCADOPAGO
+    // ═══════════════════════════════════════════════════════════════════════════════
+    console.log('\n🌐 5. PROBANDO LLAMADA DIRECTA A API DE MERCADOPAGO')
+    console.log('─'.repeat(80))
+    
+    console.log('Creando preferencia de pago...')
+    
+    const preference = {
+      items: [
+        {
+          title: producto.name,
+          quantity: 1,
+          unit_price: producto.price,
+          currency_id: 'COP'
+        }
+      ],
+      external_reference: producto.id,
+      statement_descriptor: 'Tecnovariedades',
+      payment_methods: {
+        installments: 12
+      }
+    }
+    
+    console.log('Preferencia:')
+    console.log(JSON.stringify(preference, null, 2))
+    
+    const startTime3 = Date.now()
+    
+    const response = await fetch('https://api.mercadopago.com/checkout/preferences', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      },
+      body: JSON.stringify(preference)
+    })
+    
+    const duration3 = Date.now() - startTime3
+    
+    console.log(`\nRespuesta de MercadoPago (${duration3}ms):`)
+    console.log(`   Status: ${response.status} ${response.statusText}`)
+    
+    if (response.ok) {
+      const data = await response.json()
+      console.log('   ✅ Preferencia creada exitosamente')
+      console.log(`   ID: ${data.id}`)
+      console.log(`   Init Point: ${data.init_point}`)
+      console.log(`   Sandbox Init Point: ${data.sandbox_init_point || 'N/A'}`)
+      
+      console.log('\n📊 Detalles de la preferencia:')
+      console.log(`   Collector ID: ${data.collector_id}`)
+      console.log(`   Client ID: ${data.client_id}`)
+      console.log(`   Date Created: ${data.date_created}`)
+      console.log(`   Expires: ${data.expires ? 'Sí' : 'No'}`)
+      
+    } else {
+      const errorText = await response.text()
+      console.log('   ❌ Error en la API')
+      console.log(`   Respuesta: ${errorText}`)
+      
+      try {
+        const errorJson = JSON.parse(errorText)
+        console.log('\n📋 Detalles del error:')
+        console.log(JSON.stringify(errorJson, null, 2))
+      } catch (e) {
+        // No es JSON
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // RESUMEN FINAL
+    // ═══════════════════════════════════════════════════════════════════════════════
+    console.log('\n' + '═'.repeat(80))
+    console.log('📊 RESUMEN DEL TEST')
+    console.log('═'.repeat(80))
+    
+    console.log('\n✅ Tests completados:')
+    console.log(`   1. Configuración: ${accessToken ? '✅' : '❌'}`)
+    console.log(`   2. Producto de prueba: ${producto ? '✅' : '❌'}`)
+    console.log(`   3. PaymentLinkGenerator: ${mercadoPagoLink1 ? '✅' : '❌'}`)
+    console.log(`   4. BotPaymentLinkGenerator: ${paymentLinks.success ? '✅' : '❌'}`)
+    console.log(`   5. API directa: ${response.ok ? '✅' : '❌'}`)
+    
+    if (mercadoPagoLink1 && paymentLinks.success && response.ok) {
+      console.log('\n🎉 TODOS LOS TESTS PASARON')
+      console.log('   El sistema de links dinámicos está funcionando correctamente')
+    } else {
+      console.log('\n⚠️ ALGUNOS TESTS FALLARON')
+      console.log('   Revisar los logs anteriores para identificar el problema')
+    }
+    
   } catch (error) {
-    console.error('❌ Error en la prueba:', error)
-  } finally {
-    await db.$disconnect()
+    console.error('\n❌ ERROR EN EL TEST:', error)
+    if (error instanceof Error) {
+      console.error('   Mensaje:', error.message)
+      console.error('   Stack:', error.stack)
+    }
   }
 }
 
-testMercadoPagoLink()
+// Ejecutar
+testMercadoPagoLinks()
+  .then(() => {
+    console.log('\n✅ Test completado')
+    process.exit(0)
+  })
+  .catch((error) => {
+    console.error('\n❌ Error ejecutando test:', error)
+    process.exit(1)
+  })

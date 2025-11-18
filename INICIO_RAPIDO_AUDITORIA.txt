@@ -1,0 +1,73 @@
+═══════════════════════════════════════════════════════════════════════════════
+🚀 INICIO RÁPIDO - AUDITORÍA Y CORRECCIÓN DEL BOT
+═══════════════════════════════════════════════════════════════════════════════
+
+PROBLEMA: Bot pierde contexto, envía email PayPal, muestra productos irrelevantes
+
+SOLUCIÓN: 3 horas de trabajo
+
+═══════════════════════════════════════════════════════════════════════════════
+
+⚡ OPCIÓN 1: AUTOMÁTICO (RECOMENDADO)
+───────────────────────────────────────────────────────────────────────────────
+
+    ejecutar-auditoria-completa.bat
+
+Luego seguir instrucciones en pantalla.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+⚡ OPCIÓN 2: MANUAL
+───────────────────────────────────────────────────────────────────────────────
+
+1. Auditoría:
+   npx tsx scripts/auditoria-bot-completa.ts
+
+2. Test específico:
+   npx tsx scripts/test-problema-imagen.ts
+
+3. Correcciones automáticas:
+   npx tsx scripts/corregir-problemas-criticos.ts
+
+4. Modificar archivos (ver PASOS_FINALES_AUDITORIA.txt)
+
+5. Tests:
+   npx tsx scripts/test-contexto-producto-corregido.ts
+   npx tsx scripts/test-paypal-dinamico.ts
+   npx tsx scripts/test-busqueda-simple.ts
+
+6. Probar:
+   npm run dev
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📚 ARCHIVOS DE AYUDA
+───────────────────────────────────────────────────────────────────────────────
+
+Nivel Básico:
+  📄 HACER_ESTO_AHORA.txt              ← Empieza aquí
+  📄 RESUMEN_FINAL_TODO.md             ← Resumen ejecutivo
+
+Nivel Intermedio:
+  📄 PASOS_FINALES_AUDITORIA.txt       ← Pasos con código
+  📄 DIAGRAMA_FLUJO_PROBLEMA.txt       ← Diagramas visuales
+
+Nivel Avanzado:
+  📄 RESUMEN_AUDITORIA_COMPLETA.md     ← Análisis completo
+  📄 EJECUTAR_AUDITORIA_AHORA.md       ← Guía técnica detallada
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 RESULTADO ESPERADO
+───────────────────────────────────────────────────────────────────────────────
+
+✅ Bot mantiene contexto del producto
+✅ Bot envía links dinámicos de PayPal
+✅ Bot muestra solo productos relevantes
+
+═══════════════════════════════════════════════════════════════════════════════
+
+⏱️ TIEMPO: 3 horas
+🔴 PRIORIDAD: CRÍTICA
+
+═══════════════════════════════════════════════════════════════════════════════

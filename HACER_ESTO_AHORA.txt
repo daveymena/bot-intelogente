@@ -1,0 +1,134 @@
+═══════════════════════════════════════════════════════════════════════════════
+🔥 HACER ESTO AHORA - AUDITORÍA COMPLETA DEL BOT
+═══════════════════════════════════════════════════════════════════════════════
+
+PROBLEMA: El bot pierde contexto, envía email de PayPal y muestra productos 
+          irrelevantes (como viste en la imagen)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+PASO 1: EJECUTAR AUDITORÍA (5 minutos)
+───────────────────────────────────────────────────────────────────────────────
+
+Opción A - Script Automático (RECOMENDADO):
+    
+    ejecutar-auditoria-completa.bat
+
+
+Opción B - Comandos Manuales:
+
+    npx tsx scripts/auditoria-bot-completa.ts
+    npx tsx scripts/test-problema-imagen.ts
+    npx tsx scripts/corregir-problemas-criticos.ts
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+PASO 2: REVISAR REPORTE (2 minutos)
+───────────────────────────────────────────────────────────────────────────────
+
+Abrir y leer:
+    
+    auditoria-reporte.json
+    RESUMEN_AUDITORIA_COMPLETA.md
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+PASO 3: APLICAR CORRECCIONES MANUALES (2 horas)
+───────────────────────────────────────────────────────────────────────────────
+
+Modificar estos archivos en este orden:
+
+1. src/agents/shared-memory.ts
+   → Agregar campo selectedProduct
+   → Agregar métodos setSelectedProduct() y getSelectedProduct()
+
+2. src/agents/payment-agent.ts
+   → Eliminar uso de PAYPAL_EMAIL
+   → Usar generatePaymentLink()
+   → Validar producto en contexto
+
+3. src/lib/product-intelligence-service.ts
+   → Cambiar MIN_SCORE de 0.3 a 0.6
+   → Mejorar filtrado por categoría
+
+4. src/agents/search-agent.ts
+   → Verificar contexto antes de buscar
+   → No buscar si ya hay producto seleccionado
+
+5. src/agents/orchestrator.ts
+   → No limpiar contexto hasta venta completa
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+PASO 4: VERIFICAR VARIABLES DE ENTORNO (1 minuto)
+───────────────────────────────────────────────────────────────────────────────
+
+Abrir .env y verificar:
+
+    ✅ PAYPAL_LINK_TEMPLATE=https://www.paypal.com/ncp/payment/YOUR_ID
+    ✅ PAYPAL_BUSINESS_ID=tu_business_id
+    
+    ❌ ELIMINAR: PAYPAL_EMAIL (ya no se usa)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+PASO 5: EJECUTAR TESTS (10 minutos)
+───────────────────────────────────────────────────────────────────────────────
+
+    npx tsx scripts/test-contexto-producto-corregido.ts
+    npx tsx scripts/test-paypal-dinamico.ts
+    npx tsx scripts/test-busqueda-simple.ts
+    npx tsx scripts/test-bot-conversacion-real.js
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+PASO 6: PROBAR CON WHATSAPP REAL (5 minutos)
+───────────────────────────────────────────────────────────────────────────────
+
+Iniciar el bot:
+
+    npm run dev
+
+Probar esta conversación exacta:
+
+    Tú: "MegaPack de idiomas"
+    Bot: [Debe dar info del producto]
+    
+    Tú: "mercado libre"
+    Bot: [Debe recordar que hablabas del MegaPack de idiomas]
+         [Debe enviar LINK de PayPal, NO email]
+         [NO debe mostrar Curso de Piano ni Auriculares]
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+ARCHIVOS DE AYUDA CREADOS:
+───────────────────────────────────────────────────────────────────────────────
+
+📄 EJECUTAR_AUDITORIA_AHORA.md       → Instrucciones detalladas
+📄 RESUMEN_AUDITORIA_COMPLETA.md     → Resumen ejecutivo completo
+📄 auditoria-reporte.json            → Reporte técnico (se genera)
+🔧 scripts/auditoria-bot-completa.ts → Script de auditoría
+🧪 scripts/test-problema-imagen.ts   → Test específico del problema
+🔧 scripts/corregir-problemas-criticos.ts → Correcciones automáticas
+⚡ ejecutar-auditoria-completa.bat   → Script automático Windows
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+TIEMPO TOTAL ESTIMADO: 3 horas
+PRIORIDAD: 🔴 CRÍTICA
+DEADLINE: HOY
+
+═══════════════════════════════════════════════════════════════════════════════
+
+EMPEZAR AHORA:
+
+    ejecutar-auditoria-completa.bat
+
+═══════════════════════════════════════════════════════════════════════════════

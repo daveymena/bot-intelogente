@@ -245,6 +245,11 @@ export class ProductIntelligenceService {
                 { keywords: ['guitarra'], name: 'guitarra', searchIn: 'name', priority: 100 },
                 { keywords: ['bateria', 'batería'], name: 'bateria', searchIn: 'name', priority: 100 },
                 
+                // 📚 CURSOS Y MEGAPACKS (ALTA PRIORIDAD - ANTES DE PRODUCTOS FÍSICOS)
+                { keywords: ['curso', 'cursos', 'capacitacion', 'capacitación', 'aprender'], name: 'curso', searchIn: 'name', priority: 98 },
+                { keywords: ['mega pack', 'megapack', 'pack completo'], name: 'mega pack', searchIn: 'name', priority: 98 },
+                { keywords: ['diseño grafico', 'diseño gráfico', 'photoshop', 'illustrator', 'indesign'], name: 'diseño', searchIn: 'name', priority: 97 },
+                
                 // 🌍 IDIOMAS ESPECÍFICOS
                 { keywords: ['ingles', 'inglés', 'english'], name: 'idiomas', searchIn: 'both', priority: 90 },
                 { keywords: ['frances', 'francés', 'french'], name: 'idiomas', searchIn: 'both', priority: 90 },
@@ -261,8 +266,8 @@ export class ProductIntelligenceService {
                 { keywords: ['hp'], name: 'hp', searchIn: 'name', priority: 95 },
                 { keywords: ['lenovo'], name: 'lenovo', searchIn: 'name', priority: 95 },
                 
-                // 📦 MEGAPACKS
-                { keywords: ['mega', 'pack', 'megapack'], name: 'mega pack', searchIn: 'name', priority: 80 },
+                // 🎧 ACCESORIOS (BAJA PRIORIDAD - DESPUÉS DE CURSOS)
+                { keywords: ['auricular', 'auriculares', 'tws', 'bluetooth'], name: 'auricular', searchIn: 'name', priority: 70 },
                 
                 // 💻 GENÉRICOS (ÚLTIMA PRIORIDAD)
                 { keywords: ['laptop', 'laptops', 'portatil', 'computador', 'computadora'], name: 'laptop', searchIn: 'name', priority: 50 }
@@ -293,9 +298,10 @@ export class ProductIntelligenceService {
                                    descLower.includes('laptop')
                         }
                         
-                        // 🎯 CRÍTICO: Para instrumentos musicales, buscar SOLO en nombre
-                        // NO en descripción (para evitar confusión con megapacks)
-                        if (match.priority === 100) {
+                        // 🎯 CRÍTICO: Para productos de ALTA PRIORIDAD (>= 95), buscar SOLO en nombre
+                        // NO en descripción (para evitar confusión)
+                        // Esto incluye: instrumentos musicales, cursos, megapacks, diseño
+                        if (match.priority >= 95) {
                             return nameLower.includes(match.name)
                         }
                         
