@@ -232,8 +232,18 @@ export class SearchAgent extends BaseAgent {
         }
       }
       
-      // Devolver top 3 (reducido de 5 para menos confusión)
-      const topProducts = productsWithScore.slice(0, 3);
+      // Filtrar productos con score mínimo de 4 (evita productos irrelevantes)
+      const MIN_SCORE = 4;
+      const relevantProducts = productsWithScore.filter(p => p.score >= MIN_SCORE);
+      
+      // Si no hay productos relevantes, devolver los top 3 originales
+      if (relevantProducts.length === 0) {
+        const topProducts = productsWithScore.slice(0, 3);
+        return topProducts.map(p => this.mapProduct(p.product));
+      }
+      
+      // Devolver top 3 productos relevantes (score >= 4)
+      const topProducts = relevantProducts.slice(0, 3);
       
       return topProducts.map(p => this.mapProduct(p.product));
     } catch (error) {
