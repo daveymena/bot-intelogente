@@ -114,8 +114,14 @@ Puedo ayudarte a buscar lo que necesitas.`,
     // Generar descripción formateada
     const description = this.formatProductInfo(product);
     
-    // Decidir si enviar foto
-    const shouldSendPhoto = !memory.photoSent && product.images && product.images.length > 0;
+    // 📸 SIEMPRE enviar foto cuando se muestra un producto por primera vez
+    // El flag photoSent se resetea cuando cambia el producto
+    const shouldSendPhoto = product.images && product.images.length > 0;
+    
+    // Marcar que se envió foto de este producto
+    if (shouldSendPhoto) {
+      memory.photoSent = true;
+    }
     
     return {
       text: description,

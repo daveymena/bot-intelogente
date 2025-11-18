@@ -31,11 +31,14 @@ export class PhotoAgent extends BaseAgent {
    */
   async handleLocally(message: string, memory: SharedMemory): Promise<AgentResponse> {
     this.log('Manejando solicitud de foto localmente');
+    this.log(`📦 Producto en memoria: ${memory.currentProduct?.name || 'ninguno'}`);
+    this.log(`📦 Productos interesados: ${memory.interestedProducts?.length || 0}`);
     
     const product = memory.currentProduct;
     
     // Si no hay producto en contexto
     if (!product) {
+      this.log('❌ No hay producto en contexto, pidiendo clarificación');
       return {
         text: `¿De qué producto quieres ver la foto? 🤔
 

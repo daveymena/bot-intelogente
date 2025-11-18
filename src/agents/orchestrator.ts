@@ -6,9 +6,8 @@
 import { BaseAgent, AgentResponse } from './base-agent';
 import { SharedMemory, SharedMemoryService } from './shared-memory';
 import { IntentDetector, Intent } from './utils/intent-detector';
-import { ConversationFlowManager, FlowDecision } from './conversation-flow-manager';
-import { QuestionGenerator } from './question-generator';
 import { ObjectionHandler } from './objection-handler';
+import { DeepReasoningAgent } from './deep-reasoning-agent';
 
 // Importar agentes
 import { GreetingAgent } from './greeting-agent';
@@ -74,17 +73,80 @@ export class Orchestrator {
       messageCount: memory.messageCount,
     });
     
-    // 🎯 NUEVO: Analizar flujo conversacional
-    const flowDecision = ConversationFlowManager.analyzeFlow(memory, message);
+    // 🧠 PASO 1: RAZONAMIENTO PROFUNDO (SIEMPRE PRIMERO)
+    console.log('\n🧠 ========================================');
+    console.log('🧠 INICIANDO RAZONAMIENTO PROFUNDO');
+    console.log('🧠 ========================================\n');
     
-    console.log('[Orchestrator] 🎯 Decisión de flujo:', {
-      currentStage: flowDecision.currentStage,
-      nextStage: flowDecision.nextStage,
-      shouldAskQuestion: flowDecision.shouldAskQuestion,
-      reasoning: flowDecision.reasoning,
-    });
+    const reasoningResult = await DeepReasoningAgent.analyzeContext(
+      chatId,
+      message,
+      memory
+    );
     
-    // 🛡️ NUEVO: Detectar y manejar objeciones
+    console.log('\n🎯 RESULTADO DEL RAZONAMIENTO:');
+    console.log('✅ Entendido:', reasoningResult.understood);
+    console.log('🎯 Intención:', reasoningResult.userIntent.primary);
+    console.log('📦 Producto actual:', reasoningResult.currentProduct?.name || 'Ninguno');
+    console.log('💡 Razonamiento:', reasoningResult.reasoning);
+    console.log('📋 Recomendaciones:', reasoningResult.recommendations);
+    console.log('\n🧠 ========================================\n');
+    
+    // Si el razonamiento recomienda enviar foto, hacerlo directamente
+    if (reasoningResult.recommendations.shouldSendPhoto && reasoningResult.recommendations.productId) {
+      console.log('📸 [REASONING] Enviando foto del producto según razonamiento');
+      
+      // Usar PhotoAgent para enviar la foto
+      const photoAgent = this.agents.get('photo')!;
+      const photoResponse = await photoAgent.handleLocally(message, memory);
+      
+      // Marcar que se envió la foto
+      memory.photoSent = true;
+      
+      // Agregar respuesta al historial
+      this.memoryService.addMessage(chatId, 'assistant', photoResponse.text);
+      
+      return {
+        ...photoResponse,
+        context: {
+          currentProduct: memory.currentProduct,
+          paymentIntent: memory.paymentIntent,
+          preferredPaymentMethod: memory.preferredPaymentMethod,
+          salesStage: memory.salesStage,
+          reasoning: reasoningResult.reasoning
+        }
+      };
+    }
+    
+    // Si necesita clarificación, pedirla
+    if (reasoningResult.recommendations.shouldAskClarification) {
+      console.log('❓ [REASONING] Solicitando clarificación');
+      
+      const clarificationResponse = reasoningResult.recommendations.clarificationNeeded || 
+        '¿Podrías darme más detalles sobre lo que necesitas? 😊';
+      
+      this.memoryService.addMessage(chatId, 'assistant', clarificationResponse);
+      
+      return {
+        text: clarificationResponse,
+        confidence: 0.8,
+        context: {
+          currentProduct: memory.currentProduct,
+          paymentIntent: memory.paymentIntent,
+          preferredPaymentMethod: memory.preferredPaymentMethod,
+          salesStage: memory.salesStage,
+          reasoning: reasoningResult.reasoning
+        }
+      };
+    }
+    
+    // Actualizar memoria con el producto identificado por el razonamiento
+    if (reasoningResult.currentProduct && !memory.currentProduct) {
+      memory.currentProduct = reasoningResult.currentProduct;
+      console.log('📦 [REASONING] Producto actualizado en memoria:', reasoningResult.currentProduct.name);
+    }
+    
+    // 🛡️ Detectar y manejar objeciones
     const objectionResponse = ObjectionHandler.handleObjection(
       message,
       memory,
@@ -139,25 +201,14 @@ export class Orchestrator {
       };
     }
     
-    // 🎯 NUEVO: Agregar pregunta de seguimiento si es necesario
-    if (flowDecision.shouldAskQuestion && flowDecision.suggestedQuestion) {
-      response.text += `\n\n${flowDecision.suggestedQuestion}`;
-    }
-    
     // 6. Agregar respuesta al historial
     this.memoryService.addMessage(chatId, 'assistant', response.text);
     
-    // 7. Actualizar stage según la decisión del flujo
-    if (flowDecision.nextStage !== flowDecision.currentStage) {
-      this.memoryService.update(chatId, { salesStage: flowDecision.nextStage });
-      console.log('[Orchestrator] 🔄 Stage actualizado:', flowDecision.nextStage);
-    }
-    
-    // 8. Actualizar stage si el agente lo indica (fallback)
+    // 7. Actualizar stage si el agente lo indica
     if (response.nextAgent) {
       const newStage = this.agentToStage(response.nextAgent);
       if (newStage) {
-        this.memoryService.update(chatId, { salesStage: newStage });
+        this.memoryService.update(chatId, { salesStage: newStage as any });
       }
     }
     

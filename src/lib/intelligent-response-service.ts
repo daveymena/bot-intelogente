@@ -143,13 +143,13 @@ export class IntelligentResponseService {
 
   /**
    * Calcular demora humana realista según complejidad
-   * AJUSTADO para parecer más natural y humano
+   * REFORZADO para parecer mucho más natural y humano
    */
   private static getHumanDelay(complexity: 'simple' | 'medium' | 'complex'): number {
     const delays = {
-      simple: { min: 2000, max: 4000 },    // 2-4 segundos (natural)
-      medium: { min: 4000, max: 7000 },    // 4-7 segundos (pensando)
-      complex: { min: 7000, max: 10000 },  // 7-10 segundos (analizando)
+      simple: { min: 3000, max: 6000 },     // 3-6 segundos (lectura + respuesta rápida)
+      medium: { min: 6000, max: 12000 },    // 6-12 segundos (pensando + escribiendo)
+      complex: { min: 12000, max: 20000 },  // 12-20 segundos (analizando + escribiendo largo)
     }
 
     const range = delays[complexity]
@@ -157,27 +157,47 @@ export class IntelligentResponseService {
   }
 
   /**
-   * Simular escritura humana (burbujas de "escribiendo...")
+   * Simular escritura humana (burbujas de "escribiendo...") de forma MUY REALISTA
+   * Incluye pausas aleatorias para simular que el humano está pensando
    */
   static async simulateTyping(
     phoneNumber: string,
     duration: number
   ): Promise<void> {
     try {
-      console.log(`[Typing] Simulando escritura por ${duration}ms para ${phoneNumber}`)
+      console.log(`[Typing] 💬 Simulando escritura REALISTA por ${duration}ms para ${phoneNumber}`)
       
-      // Enviar estado de "escribiendo" a WhatsApp
-      // await BaileysService.sendPresenceUpdate(phoneNumber, 'composing')
+      // Dividir el tiempo en múltiples segmentos con pausas
+      // Esto simula que el humano escribe, pausa para pensar, y sigue escribiendo
+      const segments = Math.floor(duration / 3000) + 1 // Un segmento cada 3 segundos
+      const segmentDuration = duration / segments
       
-      // Esperar la duración
-      await new Promise(resolve => setTimeout(resolve, duration))
+      for (let i = 0; i < segments; i++) {
+        // Enviar estado de "escribiendo" a WhatsApp
+        // await BaileysService.sendPresenceUpdate(phoneNumber, 'composing')
+        console.log(`[Typing] ✍️  Escribiendo... (segmento ${i + 1}/${segments})`)
+        
+        // Escribir por un tiempo
+        const writingTime = segmentDuration * 0.7 // 70% del tiempo escribiendo
+        await new Promise(resolve => setTimeout(resolve, writingTime))
+        
+        // Pausa para "pensar" (excepto en el último segmento)
+        if (i < segments - 1) {
+          // await BaileysService.sendPresenceUpdate(phoneNumber, 'paused')
+          console.log(`[Typing] 🤔 Pensando...`)
+          const pauseTime = segmentDuration * 0.3 // 30% del tiempo pensando
+          await new Promise(resolve => setTimeout(resolve, pauseTime))
+        }
+      }
       
       // Detener estado de "escribiendo"
       // await BaileysService.sendPresenceUpdate(phoneNumber, 'paused')
       
-      console.log(`[Typing] Escritura completada para ${phoneNumber}`)
+      console.log(`[Typing] ✅ Escritura completada para ${phoneNumber}`)
     } catch (error) {
-      console.error('[Typing] Error simulando escritura:', error)
+      console.error('[Typing] ❌ Error simulando escritura:', error)
+      // Si falla, al menos esperar el tiempo completo
+      await new Promise(resolve => setTimeout(resolve, duration))
     }
   }
 
@@ -210,6 +230,13 @@ export class IntelligentResponseService {
       })
 
       // 2. Simular burbujas de "escribiendo..." antes de responder
+      // Agregar delay adicional basado en la longitud del mensaje del cliente
+      // (simula que el bot está leyendo el mensaje)
+      const readingDelay = Math.min(customerMessage.length * 30, 3000) // Max 3 segundos de lectura
+      console.log(`[Intelligence] 📖 Tiempo de lectura: ${readingDelay}ms`)
+      await new Promise(resolve => setTimeout(resolve, readingDelay))
+      
+      // Ahora simular escritura
       await this.simulateTyping(customerPhone, decision.estimatedDelay)
 
       // 3. Generar respuesta según la decisión
@@ -234,6 +261,13 @@ export class IntelligentResponseService {
           conversationHistory
         )
       }
+
+      // 4. Delay final basado en la longitud de la respuesta
+      // Simula el tiempo que toma "escribir" la respuesta
+      const responseLength = response.message.length
+      const writingDelay = Math.min(responseLength * 20, 5000) // Max 5 segundos adicionales
+      console.log(`[Intelligence] ✍️  Tiempo de escritura de respuesta: ${writingDelay}ms (${responseLength} caracteres)`)
+      await new Promise(resolve => setTimeout(resolve, writingDelay))
 
       const responseTime = Date.now() - startTime
 

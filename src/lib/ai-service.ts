@@ -1901,14 +1901,21 @@ INTENCIÓN DEL CLIENTE: ${intent.type}
       // 🧠 GENERAR RESUMEN DE MEMORIA CONTEXTUAL
       const memoryContext = ProfessionalConversationMemory.generateContextSummary(conversationKey)
       
-      const systemPrompt = `Eres un vendedor profesional experto de Tecnovariedades D&S en WhatsApp.
+      // 🎭 CARGAR PERSONALIDAD PERSONALIZADA (si existe)
+      const { AIPersonalityLoader } = await import('./ai-personality-loader')
+      const customPersonality = await AIPersonalityLoader.loadPersonality(userId)
+      
+      // Si hay personalidad personalizada, usarla; si no, usar la default
+      const personalitySection = customPersonality || `Eres un vendedor profesional experto de Tecnovariedades D&S en WhatsApp.
 
 TU PERSONALIDAD:
 - Profesional pero cercano y amigable
 - Entusiasta sobre los productos
 - Orientado a ayudar genuinamente al cliente
 - Conversacional y natural (no robótico)
-- Proactivo en cerrar ventas
+- Proactivo en cerrar ventas`
+      
+      const systemPrompt = `${personalitySection}
 
 ${memoryContext}
 

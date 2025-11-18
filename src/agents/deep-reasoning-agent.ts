@@ -1,0 +1,440 @@
+/**
+ * Deep Reasoning Agent
+ * 
+ * Agente de razonamiento profundo que analiza el contexto completo
+ * de la conversación antes de permitir que el bot responda.
+ * 
+ * Funciones:
+ * 1. Analizar el historial de conversación completo
+ * 2. Identificar el producto/tema actual de discusión
+ * 3. Detectar referencias implícitas (ej: "foto" = foto del producto mencionado)
+ * 4. Prevenir respuestas por inercia o fuera de contexto
+ * 5. Enriquecer el contexto para otros agentes
+ */
+
+import { ConversationContextService } from '@/lib/conversation-context-service';
+import { SharedMemory, Product } from './shared-memory';
+
+interface ReasoningResult {
+  understood: boolean;
+  contextSummary: string;
+  currentProduct: Product | null;
+  userIntent: {
+    primary: string; // 'request_photo', 'ask_price', 'confirm_purchase', etc.
+    confidence: number;
+    implicitReference: boolean; // true si el usuario se refiere a algo mencionado antes
+  };
+  recommendations: {
+    shouldSendPhoto: boolean;
+    productId: string | null;
+    shouldAskClarification: boolean;
+    clarificationNeeded: string | null;
+  };
+  reasoning: string; // Explicación del razonamiento
+}
+
+export class DeepReasoningAgent {
+  /**
+   * Analiza profundamente el contexto de la conversación
+   */
+  static async analyzeContext(
+    chatId: string,
+    currentMessage: string,
+    memory: SharedMemory
+  ): Promise<ReasoningResult> {
+    console.log('\n🧠 [DEEP REASONING] Iniciando análisis profundo...');
+    console.log(`📱 Chat: ${chatId}`);
+    console.log(`💬 Mensaje: "${currentMessage}"`);
+
+    // 1. Obtener contexto de conversación
+    const conversationContext = ConversationContextService.getProductContext(chatId);
+    
+    // 2. Identificar el producto actual en discusión
+    const currentProduct = this.identifyCurrentProduct(memory, conversationContext);
+    
+    // 3. Analizar la intención del usuario con contexto
+    const userIntent = this.analyzeUserIntent(currentMessage, memory, currentProduct);
+    
+    // 4. Generar recomendaciones basadas en el razonamiento
+    const recommendations = this.generateRecommendations(userIntent, currentProduct);
+    
+    // 5. Crear resumen del contexto
+    const contextSummary = this.createContextSummary(memory, currentProduct);
+    
+    // 6. Explicar el razonamiento
+    const reasoning = this.explainReasoning(currentMessage, currentProduct, userIntent);
+
+    const result: ReasoningResult = {
+      understood: userIntent.confidence > 0.6,
+      contextSummary,
+      currentProduct,
+      userIntent,
+      recommendations,
+      reasoning
+    };
+
+    console.log('\n🎯 [REASONING RESULT]');
+    console.log(`✅ Entendido: ${result.understood}`);
+    console.log(`🎯 Intención: ${result.userIntent.primary} (${(result.userIntent.confidence * 100).toFixed(0)}%)`);
+    console.log(`📦 Producto actual: ${currentProduct?.name || 'Ninguno'}`);
+    console.log(`💡 Razonamiento: ${reasoning}`);
+    console.log(`📋 Recomendaciones:`, recommendations);
+    console.log('\n🧠 ========================================\n');
+
+    return result;
+  }
+
+  /**
+   * Identifica el producto actual en discusión
+   */
+  private static identifyCurrentProduct(
+    memory: SharedMemory,
+    conversationContext: any
+  ): Product | null {
+    // 1. Primero verificar si hay producto en la memoria compartida
+    if (memory.currentProduct) {
+      console.log(`🔍 Producto en memoria: ${memory.currentProduct.name}`);
+      return memory.currentProduct;
+    }
+
+    // 2. Verificar productos interesados
+    if (memory.interestedProducts && memory.interestedProducts.length > 0) {
+      const lastProduct = memory.interestedProducts[memory.interestedProducts.length - 1];
+      console.log(`🔍 Último producto interesado: ${lastProduct.name}`);
+      return lastProduct;
+    }
+
+    // 3. Verificar contexto de conversación
+    if (conversationContext && conversationContext.lastProductId) {
+      console.log(`🔍 Producto en contexto de conversación: ${conversationContext.lastProductName}`);
+      return {
+        id: conversationContext.lastProductId,
+        name: conversationContext.lastProductName,
+        price: conversationContext.productDetails?.price || 0,
+        category: conversationContext.productDetails?.category || 'general',
+      };
+    }
+
+    // 4. Buscar en el historial de mensajes
+    const recentBotMessages = memory.messages
+      .filter(msg => msg.role === 'assistant')
+      .slice(-5);
+
+    for (const message of recentBotMessages.reverse()) {
+      const content = message.content.toLowerCase();
+      
+      // Buscar patrones de productos mencionados
+      const productPatterns = [
+        /encontré el (.+?)(?:\n|$)/i,
+        /perfecto.*?encontré el (.+?)(?:\n|$)/i,
+        /te presento el (.+?)(?:\n|$)/i,
+        /smartwatch (.+?)(?:\n|$)/i,
+        /mega pack \d+: (.+?)(?:\n|$)/i,
+        /curso de (.+?)(?:\n|$)/i,
+        /portátil (.+?)(?:\n|$)/i,
+        /laptop (.+?)(?:\n|$)/i,
+        /moto (.+?)(?:\n|$)/i
+      ];
+
+      for (const pattern of productPatterns) {
+        const match = content.match(pattern);
+        if (match) {
+          const productName = match[1].trim();
+          console.log(`🔍 Producto identificado en historial: "${productName}"`);
+          
+          // Retornar producto básico (será enriquecido después)
+          return {
+            id: 'temp-' + Date.now(),
+            name: productName,
+            price: 0,
+            category: 'general',
+          };
+        }
+      }
+    }
+
+    console.log('❌ No se identificó producto en contexto');
+    return null;
+  }
+
+  /**
+   * Analiza la intención del usuario considerando el contexto
+   */
+  private static analyzeUserIntent(
+    message: string,
+    memory: SharedMemory,
+    currentProduct: Product | null
+  ): {
+    primary: string;
+    confidence: number;
+    implicitReference: boolean;
+  } {
+    const lowerMessage = message.toLowerCase().trim();
+
+    // Detectar referencias implícitas a fotos
+    if (this.isPhotoRequest(lowerMessage)) {
+      if (currentProduct) {
+        // El usuario está pidiendo la foto del producto actual
+        return {
+          primary: 'request_photo_current_product',
+          confidence: 0.95,
+          implicitReference: true
+        };
+      } else {
+        // No hay contexto de producto, necesita clarificación
+        return {
+          primary: 'request_photo_unclear',
+          confidence: 0.7,
+          implicitReference: false
+        };
+      }
+    }
+
+    // Detectar solicitud de precio
+    if (this.isPriceRequest(lowerMessage)) {
+      if (currentProduct) {
+        return {
+          primary: 'request_price_current_product',
+          confidence: 0.95,
+          implicitReference: true
+        };
+      } else {
+        return {
+          primary: 'request_price_unclear',
+          confidence: 0.7,
+          implicitReference: false
+        };
+      }
+    }
+
+    // Detectar confirmación de compra
+    if (this.isPurchaseConfirmation(lowerMessage)) {
+      if (currentProduct) {
+        return {
+          primary: 'confirm_purchase',
+          confidence: 0.9,
+          implicitReference: true
+        };
+      } else {
+        return {
+          primary: 'purchase_unclear',
+          confidence: 0.6,
+          implicitReference: false
+        };
+      }
+    }
+
+    // Detectar solicitud de más información
+    if (this.isMoreInfoRequest(lowerMessage)) {
+      if (currentProduct) {
+        return {
+          primary: 'request_more_info',
+          confidence: 0.85,
+          implicitReference: true
+        };
+      } else {
+        return {
+          primary: 'general_inquiry',
+          confidence: 0.7,
+          implicitReference: false
+        };
+      }
+    }
+
+    // Detectar búsqueda de producto nuevo
+    if (this.isProductSearch(lowerMessage)) {
+      return {
+        primary: 'search_product',
+        confidence: 0.8,
+        implicitReference: false
+      };
+    }
+
+    // Detectar saludo
+    if (this.isGreeting(lowerMessage)) {
+      return {
+        primary: 'greeting',
+        confidence: 0.9,
+        implicitReference: false
+      };
+    }
+
+    // Intención no clara
+    return {
+      primary: 'unclear',
+      confidence: 0.3,
+      implicitReference: false
+    };
+  }
+
+  /**
+   * Genera recomendaciones basadas en el razonamiento
+   */
+  private static generateRecommendations(
+    userIntent: any,
+    currentProduct: Product | null
+  ): {
+    shouldSendPhoto: boolean;
+    productId: string | null;
+    shouldAskClarification: boolean;
+    clarificationNeeded: string | null;
+  } {
+    const recommendations = {
+      shouldSendPhoto: false,
+      productId: null as string | null,
+      shouldAskClarification: false,
+      clarificationNeeded: null as string | null
+    };
+
+    switch (userIntent.primary) {
+      case 'request_photo_current_product':
+        recommendations.shouldSendPhoto = true;
+        recommendations.productId = currentProduct?.id || null;
+        break;
+
+      case 'request_photo_unclear':
+        recommendations.shouldAskClarification = true;
+        recommendations.clarificationNeeded = '¿De qué producto te gustaría ver la foto?';
+        break;
+
+      case 'request_price_current_product':
+        // El precio ya debería estar en el contexto, solo confirmar
+        recommendations.productId = currentProduct?.id || null;
+        break;
+
+      case 'confirm_purchase':
+        recommendations.productId = currentProduct?.id || null;
+        break;
+
+      case 'request_more_info':
+        recommendations.productId = currentProduct?.id || null;
+        break;
+
+      case 'purchase_unclear':
+      case 'request_price_unclear':
+        recommendations.shouldAskClarification = true;
+        recommendations.clarificationNeeded = '¿Sobre qué producto te gustaría saber más?';
+        break;
+    }
+
+    return recommendations;
+  }
+
+  /**
+   * Crea un resumen del contexto para otros agentes
+   */
+  private static createContextSummary(
+    memory: SharedMemory,
+    currentProduct: Product | null
+  ): string {
+    const recentMessages = memory.messages.slice(-5);
+    const summary = recentMessages
+      .map(msg => `${msg.role === 'user' ? 'Cliente' : 'Bot'}: ${msg.content.substring(0, 100)}`)
+      .join('\n');
+
+    if (currentProduct) {
+      return `Producto en discusión: ${currentProduct.name}\n\nÚltimos mensajes:\n${summary}`;
+    }
+
+    return `Sin producto específico en discusión.\n\nÚltimos mensajes:\n${summary}`;
+  }
+
+  /**
+   * Explica el razonamiento realizado
+   */
+  private static explainReasoning(
+    message: string,
+    currentProduct: Product | null,
+    userIntent: any
+  ): string {
+    if (userIntent.primary === 'request_photo_current_product') {
+      return `El cliente preguntó "${message}". En el contexto reciente se mencionó "${currentProduct?.name}". Por lo tanto, el cliente está pidiendo la foto de ese producto específico, no buscando cursos de fotografía.`;
+    }
+
+    if (userIntent.primary === 'request_photo_unclear') {
+      return `El cliente preguntó por una foto pero no hay un producto específico en el contexto reciente. Se necesita clarificación.`;
+    }
+
+    if (userIntent.implicitReference && currentProduct) {
+      return `El cliente se refiere implícitamente a "${currentProduct.name}" que fue mencionado recientemente en la conversación.`;
+    }
+
+    return `Analizando el mensaje "${message}" sin contexto de producto específico.`;
+  }
+
+  // ============================================
+  // Métodos auxiliares de detección
+  // ============================================
+
+  private static isPhotoRequest(message: string): boolean {
+    const photoKeywords = [
+      'foto', 'fotos', 'imagen', 'imagenes', 'picture', 'pic',
+      'tienes foto', 'tiene foto', 'ver foto', 'muestra foto',
+      'envía foto', 'envia foto', 'manda foto', 'pasa foto',
+      'como se ve', 'cómo se ve', 'como es', 'cómo es'
+    ];
+    return photoKeywords.some(keyword => message.includes(keyword));
+  }
+
+  private static isPriceRequest(message: string): boolean {
+    const priceKeywords = [
+      'precio', 'costo', 'vale', 'valor', 'cuanto cuesta',
+      'cuánto cuesta', 'cuanto vale', 'cuánto vale',
+      'cuanto es', 'cuánto es', 'que precio', 'qué precio'
+    ];
+    return priceKeywords.some(keyword => message.includes(keyword));
+  }
+
+  private static isPurchaseConfirmation(message: string): boolean {
+    const purchaseKeywords = [
+      'comprar', 'comprarlo', 'lo compro', 'lo quiero',
+      'me interesa', 'lo llevo', 'dame', 'quiero',
+      'confirmar', 'confirmo', 'si lo quiero', 'sí lo quiero'
+    ];
+    return purchaseKeywords.some(keyword => message.includes(keyword));
+  }
+
+  private static isMoreInfoRequest(message: string): boolean {
+    const infoKeywords = [
+      'más información', 'mas informacion', 'más info', 'mas info',
+      'detalles', 'características', 'especificaciones',
+      'dime más', 'cuéntame más', 'que más', 'qué más'
+    ];
+    return infoKeywords.some(keyword => message.includes(keyword));
+  }
+
+  private static isProductSearch(message: string): boolean {
+    const searchKeywords = [
+      'busco', 'necesito', 'quiero', 'tienes', 'tienen',
+      'venden', 'hay', 'existe', 'me interesa'
+    ];
+    const productKeywords = [
+      'laptop', 'portátil', 'computador', 'pc', 'moto',
+      'curso', 'megapack', 'smartwatch', 'reloj'
+    ];
+    
+    const hasSearchKeyword = searchKeywords.some(k => message.includes(k));
+    const hasProductKeyword = productKeywords.some(k => message.includes(k));
+    
+    return hasSearchKeyword && hasProductKeyword;
+  }
+
+  private static isGreeting(message: string): boolean {
+    const greetings = [
+      'hola', 'buenos días', 'buenas tardes', 'buenas noches',
+      'buen día', 'saludos', 'hey', 'holi', 'ola'
+    ];
+    return greetings.some(g => message.includes(g));
+  }
+
+  private static extractProductNameFromLine(line: string): string | null {
+    // Remover emojis y caracteres especiales
+    const cleaned = line.replace(/[✅💰📦🎯🔥⚡]/g, '').trim();
+    
+    // Si la línea tiene más de 5 palabras, probablemente no es un nombre de producto
+    const words = cleaned.split(' ');
+    if (words.length > 10 || words.length < 2) return null;
+    
+    return cleaned;
+  }
+}

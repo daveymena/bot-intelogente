@@ -80,42 +80,18 @@ export class SearchAgent extends BaseAgent {
       return this.handleNoProducts(message);
     }
     
-    // Un solo producto
+    // Un solo producto - Delegar al ProductAgent para mostrar info completa con foto
     if (products.length === 1) {
       memory.currentProduct = products[0];
-      memory.photoSent = false; // Resetear flag de foto
+      memory.photoSent = false; // Resetear flag de foto para nuevo producto
+      memory.productInfoSent = false; // Resetear flag de info
       
-      // Generar descripción completa del producto
-      const product = products[0];
-      const price = this.formatPrice(product.price);
-      
-      let text = `¡Perfecto! 😊 Encontré el *${product.name}*\n\n`;
-      
-      // Descripción
-      if (product.description) {
-        const shortDesc = product.description.substring(0, 150);
-        text += `📝 ${shortDesc}${product.description.length > 150 ? '...' : ''}\n\n`;
-      }
-      
-      // Precio
-      text += `💰 *Precio:* ${price}\n\n`;
-      
-      // Disponibilidad
-      if (product.stock !== undefined && product.stock > 0) {
-        text += `✅ *Disponible* (${product.stock} unidades)\n\n`;
-      } else if (product.stock === undefined) {
-        text += `✅ *Disponible para entrega inmediata*\n\n`;
-      }
-      
-      // Call to action
-      text += `¿Te gustaría comprarlo? 🛒`;
+      this.log(`✅ Producto único encontrado: ${products[0].name} - Delegando a ProductAgent`);
       
       return {
-        text,
-        nextAgent: 'payment',
-        confidence: 0.9,
-        sendPhotos: !memory.photoSent && product.images && product.images.length > 0,
-        photos: product.images && product.images.length > 0 ? product.images : undefined,
+        text: `¡Perfecto! 😊 Encontré el *${products[0].name}*`,
+        nextAgent: 'product', // Delegar a ProductAgent para mostrar info completa
+        confidence: 0.95,
       };
     }
     

@@ -431,7 +431,7 @@ export class WhatsAppWebService {
       // 🚨 ANTI-BAN: Esperar delay humano ANTES de enviar
       // Los delays ya se aplicaron en generateResponseWithHumanTouch
       // pero agregamos un delay adicional aleatorio para parecer más humano
-      const extraDelay = Math.floor(Math.random() * 2000) + 1000 // 1-3 segundos extra
+      const extraDelay = Math.floor(Math.random() * 3000) + 2000 // 2-5 segundos extra
       console.log(`[WhatsApp Web] ⏱️  Esperando ${extraDelay}ms adicionales (anti-ban)...`)
       await new Promise(resolve => setTimeout(resolve, extraDelay))
 

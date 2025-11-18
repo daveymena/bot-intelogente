@@ -121,6 +121,13 @@ export class SharedMemoryService {
   update(chatId: string, updates: Partial<SharedMemory>): void {
     const memory = this.memories.get(chatId);
     if (memory) {
+      // Si se está actualizando el producto actual, resetear flags relacionados
+      if (updates.currentProduct && memory.currentProduct?.id !== updates.currentProduct.id) {
+        console.log(`[Memory] 🔄 Producto cambiado: ${memory.currentProduct?.name || 'ninguno'} → ${updates.currentProduct.name}`);
+        updates.photoSent = false; // Resetear flag de foto cuando cambia el producto
+        updates.productInfoSent = false; // Resetear flag de info
+      }
+      
       Object.assign(memory, updates);
       memory.lastUpdate = new Date();
     }
