@@ -53,7 +53,29 @@ export default function TiendaPage() {
   }
 
   const filteredProducts = products.filter(product => {
-    const matchesCategory = selectedCategory === 'Todos' || product.category === selectedCategory
+    // Mapear categorías de UI a categorías de productos
+    let matchesCategory = false
+    
+    if (selectedCategory === 'Todos') {
+      matchesCategory = true
+    } else if (selectedCategory === 'Computadores') {
+      matchesCategory = product.category === 'PHYSICAL' && 
+        (product.name.toLowerCase().includes('laptop') || 
+         product.name.toLowerCase().includes('computador') ||
+         product.name.toLowerCase().includes('pc'))
+    } else if (selectedCategory === 'Motos') {
+      matchesCategory = product.category === 'PHYSICAL' && 
+        product.name.toLowerCase().includes('moto')
+    } else if (selectedCategory === 'Cursos') {
+      matchesCategory = product.category === 'DIGITAL' && 
+        (product.name.toLowerCase().includes('curso') && 
+         !product.name.toLowerCase().includes('mega'))
+    } else if (selectedCategory === 'Megapacks') {
+      matchesCategory = product.category === 'DIGITAL' && 
+        (product.name.toLowerCase().includes('mega') || 
+         product.name.toLowerCase().includes('pack'))
+    }
+    
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          product.description.toLowerCase().includes(searchQuery.toLowerCase())
     return matchesCategory && matchesSearch
