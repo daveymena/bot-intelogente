@@ -24,6 +24,10 @@ RUN npx prisma generate
 # Build de Next.js (standalone mode para producción)
 RUN npm run build
 
+# Copiar archivos estáticos necesarios para standalone
+RUN cp -r .next/static .next/standalone/.next/ && \
+    cp -r public .next/standalone/
+
 # Limpiar caché de npm para reducir tamaño de imagen
 RUN npm cache clean --force
 
