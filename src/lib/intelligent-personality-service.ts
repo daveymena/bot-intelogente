@@ -9,7 +9,6 @@
  */
 
 import { db } from './db'
-import { TRAINING_SCENARIOS, BOT_RULES } from './sales-training-data'
 import { CONVERSATIONAL_EXAMPLES } from './conversational-training-examples'
 
 export class IntelligentPersonalityService {
@@ -39,8 +38,34 @@ export class IntelligentPersonalityService {
     productsInfo: string
   ): Promise<string> {
     // ⚠️ REGLA CRÍTICA AL INICIO
-    const criticalRule = `⚠️⚠️⚠️ REGLA CRÍTICA - LEE ESTO PRIMERO ⚠️⚠️⚠️
+    const criticalRule = `⚠️⚠️⚠️ REGLAS CRÍTICAS - LEE ESTO PRIMERO ⚠️⚠️⚠️
 
+🚨 REGLA #1: IDENTIFICACIÓN EXACTA DE PRODUCTOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CUANDO EL CLIENTE MENCIONE UN PRODUCTO:
+1. Lee CUIDADOSAMENTE el nombre exacto del producto que menciona
+2. Busca SOLO ese producto específico en la lista
+3. NO confundas productos similares
+4. NO respondas con información de otro producto
+
+EJEMPLO CORRECTO:
+Cliente: "El de diseño gráfico mega pack 1"
+✅ Buscar: "Mega Pack 01: Cursos Diseño Gráfico"
+❌ NO responder con: "Curso de Piano"
+
+Cliente: "Curso de piano"
+✅ Buscar: "Curso Completo de Piano"
+❌ NO responder con: "Mega Pack"
+
+SI NO ENCUENTRAS EL PRODUCTO EXACTO:
+- Di: "No encuentro ese producto específico. ¿Te refieres a [producto similar]?"
+- NO inventes información
+- NO uses información de otro producto
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚨 REGLA #2: INFORMACIÓN DE PAGOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 NUNCA INVENTES INFORMACIÓN SOBRE PAGOS:
 ❌ NO inventes pasos para pagar
 ❌ NO inventes instrucciones de MercadoPago
@@ -219,6 +244,40 @@ Además, puedes pagarlo en cuotas con Mercado Pago 💳
 5. Usa frases como: "¡Perfecto!" "Te cuento" "¿Qué te parece?"
 6. Máximo 10 líneas por respuesta
 7. COPIA el formato de los ejemplos de arriba
+
+🚨 IDENTIFICACIÓN EXACTA DE PRODUCTOS - MUY IMPORTANTE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CUANDO EL CLIENTE MENCIONE UN PRODUCTO ESPECÍFICO:
+
+1. LEE con ATENCIÓN el nombre exacto que menciona
+2. BUSCA ese producto específico en la lista de abajo
+3. USA SOLO la información de ESE producto
+4. NO confundas con productos similares
+5. NO uses información de otro producto
+
+EJEMPLO CORRECTO:
+Cliente: "El de diseño gráfico mega pack 1"
+→ Buscar en la lista: "Mega Pack 01: Cursos Diseño Gráfico"
+→ Usar precio y descripción de ESE producto
+✅ CORRECTO
+
+Cliente: "El de diseño gráfico mega pack 1"
+→ Responder con: "Curso Completo de Piano"
+❌ ERROR - Producto equivocado
+
+PASOS OBLIGATORIOS:
+1. Identificar palabras clave: "diseño gráfico", "mega pack", "1"
+2. Buscar en la lista el producto que contenga esas palabras
+3. Verificar que es el correcto
+4. Usar SOLO información de ese producto
+
+SI HAY DUDA:
+- Pregunta: "¿Te refieres a [Producto A] o [Producto B]?"
+- NO asumas
+- NO uses información de otro producto
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 INFORMACIÓN DE PRODUCTOS:
 ${productsInfo}
