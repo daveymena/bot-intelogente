@@ -1,72 +1,44 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import { ArrowLeft, ShoppingCart, Heart, Share2, Package, Truck, Shield, MessageCircle, Plus, Minus, Star } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { ArrowLeft, ShoppingCart, Share2 } from 'lucide-react'
 
 interface Product {
-  id: string
+  id: number
   name: string
   description: string
   price: number
-  currency: string
+  images: string[]
   category: string
-  subcategory?: string | null
-  status: string
-  images?: string | string[]
-  tags?: string
-  stock?: number
+  stock: number
+  paymentMethods?: {
+    mercadopago?: { enabled: boolean; link?: string }
+    paypal?: { enabled: boolean; email?: string }
+    nequi?: { enabled: boolean; phone?: string }
+  }
 }
 
-export default function ProductoDetalle() {
-  const params = useParams()
-  const router = useRouter()
+export default function ProductoPage({ params }: { params: { id: string } }) {
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
   const [selectedImage, setSelectedImage] = useState(0)
   const [quantity, setQuantity] = useState(1)
 
   useEffect(() => {
-    if (params.id) {
-      fetchProduct(params.id as string)
-    }
+    fetchProduct()
   }, [params.id])
 
-  const fetchProduct = async (id: string) => {
+  const fetchProduct = async () => {
     try {
-      const response = await fetch(`/api/products/${id}`)
-      if (response.ok) {
-        const data = await response.json()
-        setProduct(data)
-      } else {
-        router.push('/tienda')
-      }
+      const res = await fetch(`/api/products/${params.id}`)
+      const data = await res.json()
+      setProduct(data.product)
     } catch (error) {
-      console.error('Error:', error)
-      router.push('/tienda')
+      console.error('Error loading product:', error)
     } finally {
       setLoading(false)
-    }
-  }
-
-  const getProductImages = (product: Product): string[] => {
-    try {
-      if (!product.images) return []
-      if (Array.isArray(product.images)) return product.images
-      if (typeof product.images === 'string') {
-        try {
-          const parsed = JSON.parse(product.images)
-          if (Array.isArray(parsed)) return parsed
-          return product.images.split(',').map(img => img.trim()).filter(img => img.length > 0)
-        } catch {
-          return product.images.split(',').map(img => img.trim()).filter(img => img.length > 0)
-        }
-      }
-      return []
-    } catch {
-      return []
     }
   }
 
@@ -78,283 +50,188 @@ export default function ProductoDetalle() {
     }).format(price)
   }
 
-  const handleAddToCart = () => {
-    if (!product) return
-
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]')
-    const existingItem = cart.find((item: any) => item.id === product.id)
-
-    if (existingItem) {
-      existingItem.quantity += quantity
-    } else {
-      cart.push({ ...product, quantity })
+  const handlePayPal = () => {
+    if (product?.paymentMethods?.paypal?.email) {
+      const paypalLink = `https://www.paypal.com/paypalme/${product.paymentMethods.paypal.email}/${product.price * quantity}`
+      window.open(paypalLink, '_blank')
     }
-
-    localStorage.setItem('cart', JSON.stringify(cart))
-    alert('✅ Producto agregado al carrito')
   }
 
-  const handleBuyNow = () => {
-    handleAddToCart()
-    router.push('/tienda')
+  const handleMercadoPago = () => {
+    if (product?.paymentMethods?.mercadopago?.link) {
+      window.open(product.paymentMethods.mercadopago.link, '_blank')
+    }
   }
 
   const handleWhatsApp = () => {
-    if (!product) return
-    const phone = '573102345678'
-    const message = `Hola! Me interesa el producto:\n\n${product.name}\nPrecio: ${formatPrice(product.price)}\n\n¿Está disponible?`
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank')
+    const message = `Hola! Estoy interesado en: ${product?.name}\nPrecio: ${formatPrice(product?.price || 0)}\nCantidad: ${quantity}`
+    const whatsappLink = `https://wa.me/573136174267?text=${encodeURIComponent(message)}`
+    window.open(whatsappLink, '_blank')
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div>
+      </div>
+    )
+  }
+
+  if (!product) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Cargando producto...</p>
+          <h2 className="text-2xl font-bold mb-4">Producto no encontrado</h2>
+          <Link href="/tienda" className="text-pink-600 hover:underline">
+            Volver a la tienda
+          </Link>
         </div>
       </div>
     )
   }
 
-  if (!product) return null
-
-  const images = getProductImages(product)
-  const mainImage = images[selectedImage] || '/placeholder-product.svg'
-
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/tienda" className="flex items-center gap-2 hover:text-red-200 transition">
-              <ArrowLeft className="w-5 h-5" />
-              <span className="font-bold">Volver a la tienda</span>
+      {/* Header Negro */}
+      <header className="bg-black text-white sticky top-0 z-50 shadow-lg">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            <Link href="/tienda" className="flex items-center space-x-2">
+              <ArrowLeft className="w-6 h-6" />
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center font-bold text-xl">
+                SSB
+              </div>
+              <span className="font-bold text-lg hidden sm:block">Smart Sales Bot</span>
             </Link>
-            <h1 className="text-xl font-bold">TECNOVARIEDADES D&S</h1>
-            <button
-              onClick={handleWhatsApp}
-              className="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg font-bold flex items-center gap-2 transition"
-            >
-              <MessageCircle className="w-4 h-4" />
-              WhatsApp
+            <button className="relative p-2 hover:bg-gray-800 rounded-lg transition">
+              <ShoppingCart className="w-6 h-6" />
             </button>
           </div>
         </div>
       </header>
 
-      {/* Breadcrumb */}
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <div className="text-sm text-gray-600">
-            <Link href="/" className="hover:text-red-600">Inicio</Link>
-            {' / '}
-            <Link href="/tienda" className="hover:text-red-600">Tienda</Link>
-            {' / '}
-            <span className="text-gray-900">{product.name}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Product Detail */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Left: Images */}
-          <div>
-            <div className="flex gap-4">
-              {/* Thumbnails */}
-              {images.length > 1 && (
-                <div className="flex flex-col gap-2">
-                  {images.map((img, idx) => (
+      {/* Product Details */}
+      <main className="container mx-auto px-4 py-8">
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div className="grid md:grid-cols-2 gap-8 p-6">
+            {/* Images */}
+            <div>
+              <div className="relative h-96 bg-gray-100 rounded-lg overflow-hidden mb-4">
+                {product.images && product.images.length > 0 ? (
+                  <Image
+                    src={product.images[selectedImage]}
+                    alt={product.name}
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300">
+                    <span className="text-gray-400 text-6xl">📦</span>
+                  </div>
+                )}
+              </div>
+              {product.images && product.images.length > 1 && (
+                <div className="grid grid-cols-4 gap-2">
+                  {product.images.map((img, idx) => (
                     <button
                       key={idx}
                       onClick={() => setSelectedImage(idx)}
-                      className={`relative w-20 h-20 bg-white rounded-lg overflow-hidden border-2 transition ${
-                        selectedImage === idx ? 'border-red-600' : 'border-gray-200 hover:border-gray-300'
+                      className={`relative h-20 rounded-lg overflow-hidden ${
+                        selectedImage === idx ? 'ring-2 ring-pink-600' : ''
                       }`}
                     >
-                      <Image
-                        src={img}
-                        alt={`${product.name} ${idx + 1}`}
-                        fill
-                        className="object-cover"
-                        unoptimized
-                      />
+                      <Image src={img} alt={`${product.name} ${idx + 1}`} fill className="object-cover" />
                     </button>
                   ))}
                 </div>
               )}
-
-              {/* Main Image */}
-              <div className="flex-1 relative h-[500px] bg-white rounded-lg overflow-hidden shadow-lg">
-                <Image
-                  src={mainImage}
-                  alt={product.name}
-                  fill
-                  className="object-contain p-4"
-                  unoptimized
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement
-                    target.src = '/placeholder-product.svg'
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Right: Product Info */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="mb-4">
-              <span className="inline-block bg-green-500 text-white text-xs font-bold px-3 py-1 rounded">
-                {product.category === 'PHYSICAL' && '📦 Producto Físico'}
-                {product.category === 'DIGITAL' && '💾 Producto Digital'}
-                {product.category === 'SERVICE' && '🛠️ Servicio'}
-              </span>
             </div>
 
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">
-              {product.name}
-            </h1>
+            {/* Product Info */}
+            <div>
+              <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
+              <div className="flex items-center space-x-4 mb-6">
+                <span className="text-4xl font-bold text-pink-600">
+                  {formatPrice(product.price)}
+                </span>
+                <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  product.stock > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                }`}>
+                  {product.stock > 0 ? `${product.stock} disponibles` : 'Agotado'}
+                </span>
+              </div>
 
-            {/* Rating */}
-            <div className="flex items-center gap-2 mb-4">
-              <div className="flex">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star key={star} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              <span className="text-sm text-gray-600">(20 personas viendo este producto ahora)</span>
-            </div>
+              <p className="text-gray-700 mb-6 leading-relaxed">{product.description}</p>
 
-            {/* Price */}
-            <div className="mb-6">
-              <div className="text-sm text-gray-500 line-through mb-1">
-                {formatPrice(product.price * 1.3)}
+              {/* Quantity */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium mb-2">Cantidad</label>
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="w-10 h-10 rounded-lg bg-gray-200 hover:bg-gray-300 transition font-bold"
+                  >
+                    -
+                  </button>
+                  <span className="text-xl font-bold w-12 text-center">{quantity}</span>
+                  <button
+                    onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
+                    className="w-10 h-10 rounded-lg bg-gray-200 hover:bg-gray-300 transition font-bold"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
-              <div className="text-4xl font-bold text-red-600">
-                {formatPrice(product.price)}
-              </div>
-              <div className="text-sm text-green-600 font-semibold mt-1">
-                ✓ Hay existencias
-              </div>
-            </div>
 
-            {/* Description */}
-            <div className="mb-6 pb-6 border-b">
-              <p className="text-gray-700 leading-relaxed">
-                {product.description || 'Sin descripción disponible'}
-              </p>
-            </div>
+              {/* Payment Buttons */}
+              <div className="space-y-3 mb-6">
+                <h3 className="font-bold text-lg mb-3">Métodos de Pago</h3>
+                
+                {product.paymentMethods?.mercadopago?.enabled && (
+                  <button
+                    onClick={handleMercadoPago}
+                    className="w-full bg-[#00B1EA] hover:bg-[#009DD1] text-white py-3 px-6 rounded-lg font-bold transition flex items-center justify-center space-x-2"
+                  >
+                    <span>💳</span>
+                    <span>Pagar con MercadoPago</span>
+                  </button>
+                )}
 
-            {/* Benefits */}
-            <div className="grid grid-cols-3 gap-4 mb-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-              <div className="text-center">
-                <Package className="w-8 h-8 mx-auto text-red-600 mb-2" />
-                <p className="text-xs font-semibold text-gray-700">Entrega de 1 a 5 días hábiles*</p>
-                <p className="text-xs text-gray-500">*El tiempo de entrega puede variar</p>
-              </div>
-              <div className="text-center">
-                <Truck className="w-8 h-8 mx-auto text-red-600 mb-2" />
-                <p className="text-xs font-semibold text-gray-700">Envío gratis</p>
-                <p className="text-xs text-gray-500">Para compras superiores a $400.000*</p>
-              </div>
-              <div className="text-center">
-                <Shield className="w-8 h-8 mx-auto text-red-600 mb-2" />
-                <p className="text-xs font-semibold text-gray-700">Con garantía y opción de devolución</p>
-              </div>
-            </div>
+                {product.paymentMethods?.paypal?.enabled && (
+                  <button
+                    onClick={handlePayPal}
+                    className="w-full bg-[#0070BA] hover:bg-[#005A92] text-white py-3 px-6 rounded-lg font-bold transition flex items-center justify-center space-x-2"
+                  >
+                    <span>💰</span>
+                    <span>Pagar con PayPal</span>
+                  </button>
+                )}
 
-            {/* Quantity */}
-            <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Cantidad
-              </label>
-              <div className="flex items-center gap-3">
                 <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-10 h-10 bg-gray-200 hover:bg-gray-300 rounded-lg font-bold transition"
+                  onClick={handleWhatsApp}
+                  className="w-full bg-[#25D366] hover:bg-[#1EBE57] text-white py-3 px-6 rounded-lg font-bold transition flex items-center justify-center space-x-2"
                 >
-                  <Minus className="w-5 h-5 mx-auto" />
-                </button>
-                <span className="w-16 text-center font-bold text-xl">{quantity}</span>
-                <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="w-10 h-10 bg-gray-200 hover:bg-gray-300 rounded-lg font-bold transition"
-                >
-                  <Plus className="w-5 h-5 mx-auto" />
+                  <span>💬</span>
+                  <span>Comprar por WhatsApp</span>
                 </button>
               </div>
-            </div>
 
-            {/* Action Buttons */}
-            <div className="space-y-3 mb-6">
-              <button
-                onClick={handleAddToCart}
-                className="w-full bg-red-600 hover:bg-red-700 text-white py-4 rounded-lg font-bold text-lg flex items-center justify-center gap-2 transition shadow-lg"
-              >
-                <ShoppingCart className="w-5 h-5" />
-                Agregar al carrito
+              {/* Share */}
+              <button className="w-full border-2 border-gray-300 hover:border-pink-600 text-gray-700 hover:text-pink-600 py-3 px-6 rounded-lg font-bold transition flex items-center justify-center space-x-2">
+                <Share2 className="w-5 h-5" />
+                <span>Compartir producto</span>
               </button>
-
-              <button
-                onClick={handleBuyNow}
-                className="w-full bg-black hover:bg-gray-800 text-white py-4 rounded-lg font-bold text-lg transition"
-              >
-                Compra Rápida Contra Entrega
-              </button>
-
-              <div className="flex gap-3">
-                <button className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition">
-                  <Heart className="w-5 h-5" />
-                  Añadir a la lista de deseos
-                </button>
-                <button className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition">
-                  <Share2 className="w-5 h-5" />
-                  Comparar
-                </button>
-              </div>
-            </div>
-
-            {/* Payment Methods */}
-            <div className="border-t pt-6">
-              <p className="text-sm font-semibold text-gray-700 mb-3">Métodos de pago disponibles:</p>
-              <div className="flex items-center gap-3 flex-wrap">
-                <div className="px-3 py-2 bg-blue-50 border border-blue-200 rounded text-xs font-semibold text-blue-700">
-                  Crédito Fácil
-                </div>
-                <div className="px-3 py-2 bg-green-50 border border-green-200 rounded text-xs font-semibold text-green-700">
-                  PSE
-                </div>
-                <div className="px-3 py-2 bg-purple-50 border border-purple-200 rounded text-xs font-semibold text-purple-700">
-                  Tarjeta de Crédito
-                </div>
-                <div className="px-3 py-2 bg-red-50 border border-red-200 rounded text-xs font-semibold text-red-700">
-                  Addi
-                </div>
-                <div className="px-3 py-2 bg-yellow-50 border border-yellow-200 rounded text-xs font-semibold text-yellow-700">
-                  Sistecredito
-                </div>
-                <div className="px-3 py-2 bg-pink-50 border border-pink-200 rounded text-xs font-semibold text-pink-700">
-                  SuRed Pay
-                </div>
-              </div>
             </div>
           </div>
         </div>
-      </div>
+      </main>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-red-600 to-red-700 text-white mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center">
-            <p className="mb-2 text-lg font-bold">
-              💬 ¿Tienes preguntas? Contáctanos por WhatsApp
-            </p>
-            <p className="text-sm text-red-100">
-              Todos los precios incluyen IVA • Envío gratis en compras digitales • Soporte 24/7
-            </p>
-          </div>
+      <footer className="bg-black text-white mt-16 py-8">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-gray-400">
+            © 2024 Smart Sales Bot Pro - Todos los derechos reservados
+          </p>
         </div>
       </footer>
     </div>
