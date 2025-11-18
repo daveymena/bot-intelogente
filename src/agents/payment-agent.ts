@@ -187,7 +187,7 @@ export class PaymentAgent extends BaseAgent {
       const { BotPaymentLinkGenerator } = await import('@/lib/bot-payment-link-generator');
       const paymentResult = await BotPaymentLinkGenerator.generatePaymentLinks(
         product.id,
-        context.userId,
+        memory.userId,
         1
       );
       
