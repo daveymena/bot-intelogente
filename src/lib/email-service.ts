@@ -1,5 +1,5 @@
-// Email Service - Sistema de notificaciones por correo
-import { Resend } from 'resend'
+// Email Service - Sistema de notificaciones por correo con Nodemailer
+import nodemailer from 'nodemailer'
 
 export interface EmailOptions {
   to: string
@@ -9,54 +9,67 @@ export interface EmailOptions {
 }
 
 export class EmailService {
-  private static getResendClient() {
-    const apiKey = process.env.RESEND_API_KEY
-    return apiKey ? new Resend(apiKey) : null
+  private static getTransporter() {
+    const emailUser = process.env.EMAIL_USER
+    const emailPass = process.env.EMAIL_PASS
+    const emailHost = process.env.EMAIL_HOST || 'smtp.gmail.com'
+    const emailPort = parseInt(process.env.EMAIL_PORT || '587')
+    
+    if (!emailUser || !emailPass) {
+      return null
+    }
+    
+    return nodemailer.createTransport({
+      host: emailHost,
+      port: emailPort,
+      secure: emailPort === 465, // true para 465, false para otros puertos
+      auth: {
+        user: emailUser,
+        pass: emailPass,
+      },
+    })
   }
 
   private static async sendEmail(options: EmailOptions): Promise<boolean> {
     try {
-      const resend = this.getResendClient()
-      const apiKey = process.env.RESEND_API_KEY
+      const transporter = this.getTransporter()
       
-      // Si no hay API key de Resend, solo loguear
-      if (!resend || !apiKey) {
-        console.log('⚠️  RESEND_API_KEY no configurado - Email simulado:')
+      // Si no hay configuración, solo loguear
+      if (!transporter) {
+        console.log('⚠️  EMAIL no configurado - Email simulado:')
         console.log('📧 Para:', options.to)
         console.log('📧 Asunto:', options.subject)
         console.log('📧 Contenido:', options.text || 'Ver HTML')
         console.log('\n💡 Para enviar emails reales:')
-        console.log('   1. Crea cuenta en https://resend.com')
-        console.log('   2. Obtén tu API Key')
-        console.log('   3. Agrégala en .env: RESEND_API_KEY=tu_api_key')
-        console.log('   4. Configura tu dominio en Resend')
-        console.log('   5. Actualiza RESEND_FROM_EMAIL en .env\n')
+        console.log('   1. Ir a: https://myaccount.google.com/apppasswords')
+        console.log('   2. Crear contraseña de aplicación')
+        console.log('   3. Agregar a .env:')
+        console.log('      EMAIL_USER=tu_email@gmail.com')
+        console.log('      EMAIL_PASS=tu_app_password')
+        console.log('      EMAIL_FROM=tu_email@gmail.com')
+        console.log('      EMAIL_HOST=smtp.gmail.com')
+        console.log('      EMAIL_PORT=587\n')
         return true
       }
 
-      // Enviar email real con Resend
-      const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev'
+      // Enviar email real con Nodemailer
+      const fromEmail = process.env.EMAIL_FROM || process.env.EMAIL_USER || 'noreply@smartsalesbot.com'
       
       console.log(`📧 Enviando email a ${options.to}...`)
       
-      const { data, error } = await resend.emails.send({
-        from: fromEmail,
+      const info = await transporter.sendMail({
+        from: `"Smart Sales Bot Pro" <${fromEmail}>`,
         to: options.to,
         subject: options.subject,
         html: options.html,
-        text: options.text
+        text: options.text,
       })
 
-      if (error) {
-        console.error('❌ Error enviando email:', error)
-        return false
-      }
-
-      console.log('✅ Email enviado exitosamente:', data?.id)
+      console.log('✅ Email enviado exitosamente:', info.messageId)
       return true
 
-    } catch (error) {
-      console.error('❌ Error en sendEmail:', error)
+    } catch (error: any) {
+      console.error('❌ Error en sendEmail:', error.message)
       return false
     }
   }
