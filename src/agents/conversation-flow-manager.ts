@@ -17,7 +17,7 @@ export type ConversationStage =
   | 'closing'       // Cierre de venta
   | 'support';      // Soporte post-venta
 
-export interface FlowDecision {
+export interface FlowDecision {i
   currentStage: ConversationStage;
   nextStage: ConversationStage;
   shouldAskQuestion: boolean;
