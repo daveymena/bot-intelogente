@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import { X, MessageCircle, Send } from 'lucide-react'
 
 interface Message {
@@ -9,6 +10,7 @@ interface Message {
 }
 
 export default function PageAssistant() {
+  const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -230,6 +232,16 @@ export default function PageAssistant() {
            `💬 **Conversaciones:** Gestión de chats\n` +
            `🔧 **Problemas:** Solución de errores\n\n` +
            `¿Sobre qué tema específico necesitas ayuda?`
+  }
+
+  // Solo mostrar en rutas de administrador
+  const isAdminRoute = pathname?.startsWith('/dashboard') || 
+                       pathname?.startsWith('/admin') ||
+                       pathname?.startsWith('/kiro-assistant')
+  
+  // No renderizar nada si no es ruta de admin
+  if (!isAdminRoute) {
+    return null
   }
 
   return (
