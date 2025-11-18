@@ -428,19 +428,30 @@ export class ProductIntelligenceService {
             }
         }
 
-        // Intención: PRECIO
-        if (/(cuánto|cuanto|precio|cuesta|valor|vale|costo)/i.test(messageLower)) {
+        // Intención: PRECIO (cuando pregunta "cuánto cuesta X?")
+        // Si menciona un producto específico, debe buscar info del producto
+        if (/(cuánto|cuanto).*(cuesta|vale|precio|costo)/i.test(messageLower)) {
             return {
-                type: 'price',
+                type: 'info', // Cambiado a info para que muestre detalles del producto
                 confidence: 0.9,
                 keywords: ['precio', 'cuesta']
             }
         }
 
-        // Intención: DISPONIBILIDAD
-        if (/(disponible|stock|hay|tienen|tienes|queda|quedan)/i.test(messageLower)) {
+        // Intención: BÚSQUEDA DE PRODUCTOS (cuando pregunta "tienes X?")
+        // Esto debe ser product_list, no availability
+        if (/(tienes|tienen|hay|venden).+\?/i.test(messageLower)) {
             return {
-                type: 'availability',
+                type: 'general', // Cambiado a general para que busque productos
+                confidence: 0.85,
+                keywords: ['tienes', 'buscar']
+            }
+        }
+
+        // Intención: DISPONIBILIDAD (solo para preguntas específicas de stock)
+        if (/(disponible|stock|queda|quedan)/i.test(messageLower)) {
+            return {
+                type: 'general', // Cambiado a general para que busque productos
                 confidence: 0.85,
                 keywords: ['disponible', 'stock']
             }

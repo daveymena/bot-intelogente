@@ -410,15 +410,15 @@ export class AIMultiProvider {
     options: AICompletionOptions
   ): Promise<AICompletionResponse> {
     const ollamaUrl = process.env.OLLAMA_BASE_URL || process.env.OLLAMA_URL || 'http://localhost:11434'
-    const model = options.model || process.env.OLLAMA_MODEL || 'gemma:2b'
+    const model = options.model || process.env.OLLAMA_MODEL || 'gemma2:4b'
 
     // Verificar si Ollama está habilitado
     if (process.env.OLLAMA_ENABLED === 'false') {
       throw new Error('Ollama está deshabilitado en configuración')
     }
 
-    // Timeout aumentado para evitar errores (60 segundos)
-    const timeout = parseInt(process.env.OLLAMA_TIMEOUT || '60000')
+    // Timeout aumentado para evitar errores (5 minutos)
+    const timeout = parseInt(process.env.OLLAMA_TIMEOUT || '300000')
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), timeout)
 

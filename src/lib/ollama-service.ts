@@ -25,11 +25,11 @@ export class OllamaService {
   }
   
   private static get model() {
-    return process.env.OLLAMA_MODEL || 'gemma:2b';
+    return process.env.OLLAMA_MODEL || 'gemma3:4b';
   }
   
   private static get timeout() {
-    return parseInt(process.env.OLLAMA_TIMEOUT || '60000'); // 60 segundos para Easypanel
+    return parseInt(process.env.OLLAMA_TIMEOUT || '300000'); // 5 minutos para gemma2:4b
   }
   
   private static get enabled() {
