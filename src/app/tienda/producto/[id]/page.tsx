@@ -24,10 +24,22 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
   const [selectedImage, setSelectedImage] = useState(0)
   const [quantity, setQuantity] = useState(1)
   const [generatingPayment, setGeneratingPayment] = useState(false)
+  const [cartCount, setCartCount] = useState(0)
 
   useEffect(() => {
     fetchProduct()
+    updateCartCount()
+    
+    // Escuchar cambios en el carrito
+    window.addEventListener('cartUpdated', updateCartCount)
+    return () => window.removeEventListener('cartUpdated', updateCartCount)
   }, [params.id])
+
+  const updateCartCount = () => {
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]')
+    const total = cart.reduce((sum: number, item: any) => sum + item.quantity, 0)
+    setCartCount(total)
+  }
 
   const fetchProduct = async () => {
     try {
@@ -92,23 +104,31 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
   }
 
   const handleAddToCart = () => {
+    if (!product) return
+    
     // Agregar al carrito (localStorage)
     const cart = JSON.parse(localStorage.getItem('cart') || '[]')
-    const existingItem = cart.find((item: any) => item.id === product?.id)
+    const existingItem = cart.find((item: any) => item.id === product.id)
     
     if (existingItem) {
       existingItem.quantity += quantity
     } else {
       cart.push({
-        id: product?.id,
-        name: product?.name,
-        price: product?.price,
-        image: product?.images?.[0],
-        quantity
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.images?.[0] || '',
+        quantity,
+        category: product.category
       })
     }
     
     localStorage.setItem('cart', JSON.stringify(cart))
+    
+    // Actualizar contador del carrito
+    window.dispatchEvent(new Event('cartUpdated'))
+    
+    // Mostrar confirmación
     alert('✅ Producto agregado al carrito')
   }
 
@@ -148,9 +168,11 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
             </Link>
             <Link href="/tienda/carrito" className="relative p-2 hover:bg-gray-800 rounded-lg transition">
               <ShoppingCart className="w-6 h-6" />
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                0
-              </span>
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
             </Link>
           </div>
         </div>

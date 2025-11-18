@@ -52,24 +52,35 @@ export default function CheckoutPage() {
 
     try {
       if (paymentMethod === 'contraentrega') {
-        // Enviar pedido por WhatsApp
-        const message = `🛒 NUEVO PEDIDO\n\n` +
-          `👤 Cliente: ${formData.name}\n` +
-          `📧 Email: ${formData.email}\n` +
-          `📞 Teléfono: ${formData.phone}\n` +
-          `📍 Dirección: ${formData.address}, ${formData.city}\n\n` +
-          `📦 PRODUCTOS:\n` +
-          cart.map(item => `• ${item.name} x${item.quantity} - ${formatPrice(item.price * item.quantity)}`).join('\n') +
-          `\n\n💰 TOTAL: ${formatPrice(getTotal())}\n` +
-          `💳 Método: Contraentrega\n\n` +
-          `📝 Notas: ${formData.notes || 'Ninguna'}`
+        // Enviar pedido por API (email + WhatsApp)
+        const res = await fetch('/api/orders/contraentrega', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            customerData: formData,
+            cart,
+            total: getTotal()
+          })
+        })
 
-        const whatsappLink = `https://wa.me/573136174267?text=${encodeURIComponent(message)}`
-        window.open(whatsappLink, '_blank')
-        
-        // Limpiar carrito
-        localStorage.removeItem('cart')
-        router.push('/tienda?success=contraentrega')
+        const data = await res.json()
+
+        if (data.success) {
+          // Abrir WhatsApp
+          if (data.whatsappLink) {
+            window.open(data.whatsappLink, '_blank')
+          }
+          
+          // Limpiar carrito
+          localStorage.removeItem('cart')
+          
+          // Mostrar mensaje de éxito
+          alert('✅ Pedido enviado correctamente!\n\nRecibirás un email de confirmación y nos contactaremos contigo pronto.')
+          
+          router.push('/tienda?success=contraentrega')
+        } else {
+          alert('Error enviando pedido. Por favor intenta de nuevo.')
+        }
       } else {
         // Generar link de pago
         const res = await fetch('/api/payments/generate-link', {

@@ -39,6 +39,8 @@ export async function GET() {
     const parsedProducts = products.map(product => ({
       ...product,
       images: safeJSONParse(product.images),
+      // Si stock es null (productos digitales), mostrar como disponible (999)
+      stock: product.stock ?? 999,
       paymentMethods: {
         mercadopago: {
           enabled: !!product.paymentLinkMercadoPago,

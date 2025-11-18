@@ -21,12 +21,24 @@ export default function TiendaPage() {
   const [selectedCategory, setSelectedCategory] = useState('Todos')
   const [searchQuery, setSearchQuery] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
+  const [cartCount, setCartCount] = useState(0)
 
   const categories = ['Todos', 'Computadores', 'Motos', 'Cursos', 'Megapacks']
 
   useEffect(() => {
     fetchProducts()
+    updateCartCount()
+    
+    // Escuchar cambios en el carrito
+    window.addEventListener('cartUpdated', updateCartCount)
+    return () => window.removeEventListener('cartUpdated', updateCartCount)
   }, [])
+
+  const updateCartCount = () => {
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]')
+    const total = cart.reduce((sum: number, item: any) => sum + item.quantity, 0)
+    setCartCount(total)
+  }
 
   const fetchProducts = async () => {
     try {
@@ -85,12 +97,14 @@ export default function TiendaPage() {
 
             {/* Cart & Menu */}
             <div className="flex items-center space-x-4">
-              <button className="relative p-2 hover:bg-gray-800 rounded-lg transition">
+              <Link href="/tienda/carrito" className="relative p-2 hover:bg-gray-800 rounded-lg transition">
                 <ShoppingCart className="w-6 h-6" />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  0
-                </span>
-              </button>
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
               <button 
                 onClick={() => setMenuOpen(!menuOpen)}
                 className="md:hidden p-2 hover:bg-gray-800 rounded-lg transition"
