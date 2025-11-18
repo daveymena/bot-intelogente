@@ -19,8 +19,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://bot-whatsapp-bot-whatsapp-inteligente.sqaoeo.easypanel.host';
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://bot-whatsapp-bot-whatsapp-inteligente.sqaoeo.easypanel.host'),
+  metadataBase: new URL(APP_URL),
   title: {
     default: "Smart Sales Bot Pro - Automatización de Ventas con IA para WhatsApp",
     template: "%s | Smart Sales Bot Pro"
@@ -76,23 +78,16 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "es_CO",
-    url: process.env.NEXT_PUBLIC_APP_URL || 'https://smartsalesbot.com',
+    url: APP_URL,
     siteName: "Smart Sales Bot Pro",
     title: "Smart Sales Bot Pro - Automatización de Ventas con IA para WhatsApp",
     description: "Bot inteligente de WhatsApp con IA avanzada. Automatiza ventas, gestiona productos y atiende clientes 24/7. Múltiples modelos de IA, análisis en tiempo real y respuestas personalizadas.",
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://smartsalesbot.com'}/smart-sales-bot-logo.png`,
-        width: 1200,
-        height: 630,
-        alt: "Smart Sales Bot Pro - Automatización de Ventas con IA",
-        type: "image/png",
-      },
-      {
-        url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://smartsalesbot.com'}/og-image.png`,
-        width: 1200,
-        height: 630,
-        alt: "Smart Sales Bot Pro - Automatización de Ventas con IA",
+        url: `${APP_URL}/smart-sales-bot-logo.png`,
+        width: 512,
+        height: 512,
+        alt: "Smart Sales Bot Pro - Bot de WhatsApp con IA",
         type: "image/png",
       },
     ],
@@ -101,7 +96,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Smart Sales Bot Pro - Automatización de Ventas con IA",
     description: "Bot inteligente de WhatsApp con IA avanzada. Automatiza ventas 24/7 con múltiples modelos de IA.",
-    images: [`${process.env.NEXT_PUBLIC_APP_URL || 'https://smartsalesbot.com'}/smart-sales-bot-logo.png`],
+    images: [`${APP_URL}/smart-sales-bot-logo.png`],
     creator: "@smartsalesbot",
   },
   alternates: {
@@ -124,6 +119,49 @@ export default function RootLayout({
     <html lang="es" suppressHydrationWarning>
       <head>
         <StructuredData data={[organizationSchema, softwareApplicationSchema]} />
+        
+        {/* ========== OPEN GRAPH (Facebook, WhatsApp, LinkedIn) ========== */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={APP_URL} />
+        <meta property="og:title" content="Smart Sales Bot Pro - Automatización de Ventas con IA para WhatsApp" />
+        <meta property="og:description" content="Bot inteligente de WhatsApp con IA avanzada. Automatiza ventas, gestiona productos y atiende clientes 24/7." />
+        <meta property="og:site_name" content="Smart Sales Bot Pro" />
+        <meta property="og:locale" content="es_CO" />
+        
+        {/* Imagen principal - TODAS las variantes */}
+        <meta property="og:image" content={`${APP_URL}/smart-sales-bot-logo.png`} />
+        <meta property="og:image:url" content={`${APP_URL}/smart-sales-bot-logo.png`} />
+        <meta property="og:image:secure_url" content={`${APP_URL}/smart-sales-bot-logo.png`} />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:width" content="512" />
+        <meta property="og:image:height" content="512" />
+        <meta property="og:image:alt" content="Smart Sales Bot Pro - Bot de WhatsApp con IA" />
+        
+        {/* ========== TWITTER / X ========== */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@smartsalesbot" />
+        <meta name="twitter:creator" content="@smartsalesbot" />
+        <meta name="twitter:title" content="Smart Sales Bot Pro - Automatización de Ventas con IA" />
+        <meta name="twitter:description" content="Bot inteligente de WhatsApp con IA avanzada. Automatiza ventas 24/7 con múltiples modelos de IA." />
+        <meta name="twitter:image" content={`${APP_URL}/smart-sales-bot-logo.png`} />
+        <meta name="twitter:image:src" content={`${APP_URL}/smart-sales-bot-logo.png`} />
+        <meta name="twitter:image:alt" content="Smart Sales Bot Pro - Automatización de Ventas con IA" />
+        
+        {/* ========== WHATSAPP ESPECÍFICO ========== */}
+        <meta property="og:image" content={`${APP_URL}/smart-sales-bot-logo.png`} />
+        <meta property="og:image:width" content="512" />
+        <meta property="og:image:height" content="512" />
+        
+        {/* ========== TELEGRAM ========== */}
+        <meta name="telegram:channel" content="@smartsalesbot" />
+        
+        {/* ========== GENERAL ========== */}
+        <meta name="description" content="Bot inteligente de WhatsApp con IA avanzada. Automatiza ventas, gestiona productos y atiende clientes 24/7." />
+        <meta name="image" content={`${APP_URL}/smart-sales-bot-logo.png`} />
+        <link rel="image_src" href={`${APP_URL}/smart-sales-bot-logo.png`} />
+        
+        {/* ========== CANONICAL ========== */}
+        <link rel="canonical" href={APP_URL} />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}

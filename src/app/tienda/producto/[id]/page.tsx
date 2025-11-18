@@ -3,7 +3,9 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeft, ShoppingCart, Share2, Plus, Minus, Truck, Shield, CreditCard } from 'lucide-react'
+import { ArrowLeft, ShoppingCart, Share2, Plus, Minus, Truck, Shield, CreditCard, Info } from 'lucide-react'
+import { CurrencyService } from '@/lib/currency-service'
+import CurrencySelector from '@/components/CurrencySelector'
 
 interface Product {
   id: number
@@ -13,6 +15,7 @@ interface Product {
   images: string[]
   category: string
   stock: number
+  userId?: string
   paymentLinkMercadoPago?: string
   paymentLinkPayPal?: string
   paymentLinkCustom?: string
@@ -25,10 +28,17 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
   const [quantity, setQuantity] = useState(1)
   const [generatingPayment, setGeneratingPayment] = useState(false)
   const [cartCount, setCartCount] = useState(0)
+  const [userCurrency, setUserCurrency] = useState('COP')
+  const [showConversionInfo, setShowConversionInfo] = useState(false)
 
   useEffect(() => {
     fetchProduct()
     updateCartCount()
+    
+    // Detectar moneda del usuario
+    CurrencyService.detectUserCountry().then(info => {
+      setUserCurrency(info.currency.code)
+    })
     
     // Escuchar cambios en el carrito
     window.addEventListener('cartUpdated', updateCartCount)
@@ -53,12 +63,23 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
     }
   }
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('es-CO', {
-      style: 'currency',
-      currency: 'COP',
-      minimumFractionDigits: 0
-    }).format(price)
+  const formatPrice = (priceInCOP: number) => {
+    const convertedPrice = CurrencyService.convertFromCOP(priceInCOP, userCurrency)
+    return CurrencyService.formatPrice(convertedPrice, userCurrency)
+  }
+
+  const getPriceInUSD = (priceInCOP: number) => {
+    const convertedPrice = CurrencyService.convertFromCOP(priceInCOP, userCurrency)
+    const usd = CurrencyService.convertToUSD(convertedPrice, userCurrency)
+    return CurrencyService.formatPrice(usd, 'USD')
+  }
+
+  const getConversionInfo = () => {
+    if (!product) return null
+    const totalInLocal = product.price * quantity
+    const convertedPrice = CurrencyService.convertFromCOP(totalInLocal, userCurrency)
+    const payment = CurrencyService.calculatePaymentAmount(convertedPrice, userCurrency)
+    return payment
   }
 
   const isPhysicalProduct = () => {
@@ -78,7 +99,8 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
           productName: product.name,
           amount: product.price * quantity,
           quantity,
-          method
+          method,
+          userId: product.userId
         })
       })
       
@@ -166,14 +188,17 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
               </div>
               <span className="font-bold text-lg hidden sm:block">Smart Sales Bot</span>
             </Link>
-            <Link href="/tienda/carrito" className="relative p-2 hover:bg-gray-800 rounded-lg transition">
-              <ShoppingCart className="w-6 h-6" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
+            <div className="flex items-center gap-2">
+              <CurrencySelector onCurrencyChange={(currency) => setUserCurrency(currency.code)} />
+              <Link href="/tienda/carrito" className="relative p-2 hover:bg-gray-800 rounded-lg transition">
+                <ShoppingCart className="w-6 h-6" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+            </div>
           </div>
         </div>
       </header>
@@ -231,15 +256,40 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
               <h1 className="text-2xl md:text-3xl font-bold mb-3">{product.name}</h1>
               
               {/* Price and Stock */}
-              <div className="flex items-center gap-4 mb-4">
-                <span className="text-3xl md:text-4xl font-bold text-pink-600">
-                  {formatPrice(product.price)}
-                </span>
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  product.stock > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                }`}>
-                  {product.stock > 0 ? `${product.stock} disponibles` : 'Agotado'}
-                </span>
+              <div className="mb-4">
+                <div className="flex items-center gap-4 mb-2">
+                  <span className="text-3xl md:text-4xl font-bold text-pink-600">
+                    {formatPrice(product.price * quantity)}
+                  </span>
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    product.stock > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                  }`}>
+                    {product.stock > 0 ? `${product.stock} disponibles` : 'Agotado'}
+                  </span>
+                </div>
+                
+                {/* Conversion Info */}
+                {userCurrency !== 'USD' && (
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <div className="flex items-start gap-2">
+                      <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                      <div className="text-sm">
+                        <p className="font-medium text-blue-900 mb-1">
+                          Conversión de pago
+                        </p>
+                        <p className="text-blue-700">
+                          Precio en tu moneda: <span className="font-bold">{formatPrice(product.price * quantity)}</span>
+                        </p>
+                        <p className="text-blue-700">
+                          Al pagar se convertirá a: <span className="font-bold">{getPriceInUSD(product.price * quantity)}</span>
+                        </p>
+                        <p className="text-xs text-blue-600 mt-1">
+                          Tasa: 1 USD = {CurrencyService.getCurrencyInfo(userCurrency)?.rate.toLocaleString()} {userCurrency}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Description */}

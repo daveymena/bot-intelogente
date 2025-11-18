@@ -30,6 +30,7 @@ export async function GET(
         images: true,
         category: true,
         stock: true,
+        userId: true,
         paymentLinkMercadoPago: true,
         paymentLinkPayPal: true,
         paymentLinkCustom: true,

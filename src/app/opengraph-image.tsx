@@ -1,15 +1,13 @@
 import { ImageResponse } from 'next/og'
- 
+
 export const runtime = 'edge'
- 
 export const alt = 'Smart Sales Bot Pro - Automatización de Ventas con IA'
 export const size = {
   width: 1200,
   height: 630,
 }
- 
 export const contentType = 'image/png'
- 
+
 export default async function Image() {
   return new ImageResponse(
     (
@@ -24,71 +22,56 @@ export default async function Image() {
           alignItems: 'center',
           justifyContent: 'center',
           color: 'white',
-          fontFamily: 'system-ui, sans-serif',
-          padding: '40px',
+          fontWeight: 'bold',
+          textAlign: 'center',
+          padding: '60px',
         }}
       >
-        <div
-          style={{
+        {/* Logo/Icon */}
+        <div 
+          style={{ 
+            fontSize: 120, 
+            marginBottom: 30,
+            background: 'white',
+            borderRadius: '30px',
+            padding: '20px 40px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            marginBottom: '30px',
           }}
         >
-          <div
-            style={{
-              width: '120px',
-              height: '120px',
-              borderRadius: '30px',
-              background: 'white',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '70px',
-              fontWeight: 'bold',
-              color: '#667eea',
-              marginRight: '30px',
-            }}
-          >
-            SSB
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <div style={{ fontSize: '72px', fontWeight: 'bold', lineHeight: 1.1 }}>
-              Smart Sales Bot
-            </div>
-            <div style={{ fontSize: '48px', fontWeight: 'normal', opacity: 0.9 }}>
-              Pro
-            </div>
-          </div>
+          <span style={{ color: '#667eea' }}>🤖</span>
         </div>
         
-        <div
-          style={{
-            fontSize: '32px',
-            textAlign: 'center',
-            maxWidth: '900px',
-            lineHeight: 1.4,
-            opacity: 0.95,
-          }}
-        >
-          Bot inteligente de WhatsApp con IA avanzada
+        {/* Title */}
+        <div style={{ 
+          fontSize: 70, 
+          marginBottom: 20,
+          textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
+        }}>
+          Smart Sales Bot Pro
         </div>
         
-        <div
-          style={{
-            fontSize: '24px',
-            textAlign: 'center',
-            marginTop: '20px',
-            opacity: 0.85,
-          }}
-        >
-          Automatiza ventas • Gestiona productos • Atiende clientes 24/7
+        {/* Subtitle */}
+        <div style={{ 
+          fontSize: 40, 
+          fontWeight: 'normal',
+          opacity: 0.95,
+          marginBottom: 30,
+        }}>
+          Automatización de Ventas con IA
+        </div>
+        
+        {/* Features */}
+        <div style={{ 
+          fontSize: 32, 
+          display: 'flex',
+          gap: '30px',
+          opacity: 0.9,
+        }}>
+          <span>✅ WhatsApp</span>
+          <span>✅ IA Avanzada</span>
+          <span>✅ 24/7</span>
         </div>
       </div>
     ),

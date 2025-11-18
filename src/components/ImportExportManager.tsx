@@ -40,29 +40,47 @@ export default function ImportExportManager() {
   const [userId, setUserId] = useState<string>('')
 
   useEffect(() => {
-    // Obtener el usuario autenticado desde localStorage o API
+    // Obtener el usuario autenticado desde cookies o localStorage
     const getUserId = async () => {
       try {
-        // Intentar obtener de localStorage primero
+        // 1. Intentar obtener de cookies primero
+        const cookieUserId = document.cookie
+          .split('; ')
+          .find(row => row.startsWith('user-id='))
+          ?.split('=')[1]
+        
+        if (cookieUserId) {
+          console.log('✅ UserId obtenido de cookie:', cookieUserId)
+          setUserId(cookieUserId)
+          return
+        }
+
+        // 2. Intentar obtener de localStorage
         const storedUserId = localStorage.getItem('userId')
         if (storedUserId) {
+          console.log('✅ UserId obtenido de localStorage:', storedUserId)
           setUserId(storedUserId)
           return
         }
 
-        // Si no está en localStorage, intentar obtener de la API
-        const response = await fetch('/api/user/me')
+        // 3. Intentar obtener de la API de sesión
+        const response = await fetch('/api/auth/session')
         if (response.ok) {
           const data = await response.json()
-          if (data.id) {
-            setUserId(data.id)
-            localStorage.setItem('userId', data.id)
+          if (data.user?.id) {
+            console.log('✅ UserId obtenido de API:', data.user.id)
+            setUserId(data.user.id)
+            localStorage.setItem('userId', data.user.id)
+            return
           }
         }
+
+        // 4. Si todo falla, mostrar error
+        console.error('❌ No se pudo obtener userId')
+        toast.error('No se pudo obtener el ID de usuario. Por favor, recarga la página.')
       } catch (err) {
         console.error('Error obteniendo userId:', err)
-        // Usar un userId por defecto si falla
-        setUserId('default-user')
+        toast.error('Error al obtener información del usuario')
       }
     }
 
@@ -73,6 +91,16 @@ export default function ImportExportManager() {
     const file = event.target.files?.[0]
     if (!file) return
 
+    // Validar que tenemos userId
+    if (!userId) {
+      toast.error('No se pudo obtener el ID de usuario. Por favor, recarga la página.')
+      console.error('❌ No userId available for import')
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
+      return
+    }
+
     const isCSV = file.name.endsWith('.csv')
     const isJSON = file.name.endsWith('.json')
     
@@ -81,6 +109,7 @@ export default function ImportExportManager() {
       return
     }
 
+    console.log('🚀 Iniciando importación:', { userId, fileName: file.name })
     setIsImporting(true)
     setImportResult(null)
 
@@ -95,17 +124,18 @@ export default function ImportExportManager() {
       })
 
       const result = await response.json()
+      console.log('📥 Import result:', result)
 
       if (response.ok) {
         setImportResult(result)
-        toast.success(`Importación completada: ${result.imported} productos importados`)
+        toast.success(`✅ Importación completada: ${result.imported} productos importados`)
       } else {
         setImportResult(result)
-        toast.error(`Error en importación: ${result.error}`)
+        toast.error(`❌ Error en importación: ${result.error}`)
       }
     } catch (error) {
-      console.error('Error importing products:', error)
-      toast.error('Error al importar productos')
+      console.error('❌ Error importing products:', error)
+      toast.error('Error al importar productos. Revisa la consola para más detalles.')
     } finally {
       setIsImporting(false)
       if (fileInputRef.current) {
@@ -115,31 +145,54 @@ export default function ImportExportManager() {
   }
 
   const handleExport = async () => {
+    // Validar que tenemos userId
+    if (!userId) {
+      toast.error('No se pudo obtener el ID de usuario. Por favor, recarga la página.')
+      console.error('❌ No userId available for export')
+      return
+    }
+
+    console.log('🚀 Iniciando exportación:', { userId, format: exportFormat })
     setIsExporting(true)
 
     try {
-      const response = await fetch(`/api/import-export?userId=${userId}&format=${exportFormat}`)
+      const url = `/api/import-export?userId=${encodeURIComponent(userId)}&format=${exportFormat}`
+      console.log('📡 Fetching:', url)
+      
+      const response = await fetch(url)
+      
+      console.log('📥 Response status:', response.status)
       
       if (response.ok) {
         const blob = await response.blob()
-        const url = window.URL.createObjectURL(blob)
+        console.log('✅ Blob recibido:', blob.size, 'bytes')
+        
+        const downloadUrl = window.URL.createObjectURL(blob)
         const a = document.createElement('a')
         a.style.display = 'none'
-        a.href = url
+        a.href = downloadUrl
         a.download = `products-export-${new Date().toISOString().split('T')[0]}.${exportFormat}`
         document.body.appendChild(a)
         a.click()
-        window.URL.revokeObjectURL(url)
+        window.URL.revokeObjectURL(downloadUrl)
         document.body.removeChild(a)
         
-        toast.success(`Productos exportados en formato ${exportFormat.toUpperCase()}`)
+        toast.success(`✅ Productos exportados en formato ${exportFormat.toUpperCase()}`)
+        console.log('✅ Exportación completada')
       } else {
-        const error = await response.json()
-        toast.error(`Error al exportar: ${error.error}`)
+        const errorText = await response.text()
+        console.error('❌ Error response:', errorText)
+        
+        try {
+          const error = JSON.parse(errorText)
+          toast.error(`Error al exportar: ${error.error}`)
+        } catch {
+          toast.error(`Error al exportar: ${response.statusText}`)
+        }
       }
     } catch (error) {
-      console.error('Error exporting products:', error)
-      toast.error('Error al exportar productos')
+      console.error('❌ Error exporting products:', error)
+      toast.error('Error al exportar productos. Revisa la consola para más detalles.')
     } finally {
       setIsExporting(false)
     }
@@ -170,6 +223,14 @@ export default function ImportExportManager() {
       <div>
         <h3 className="text-lg font-medium text-gray-900">Importar/Exportar Productos</h3>
         <p className="text-sm text-gray-500">Gestiona tu catálogo mediante archivos CSV o JSON</p>
+        {!userId && (
+          <Alert className="mt-2">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              Cargando información del usuario...
+            </AlertDescription>
+          </Alert>
+        )}
       </div>
 
       <Tabs defaultValue="import" className="space-y-6">
@@ -213,16 +274,16 @@ export default function ImportExportManager() {
                   <Input
                     id="csv-file"
                     type="file"
-                    accept=".csv"
+                    accept=".csv,.json"
                     onChange={handleFileUpload}
-                    disabled={isImporting}
+                    disabled={isImporting || !userId}
                     ref={fileInputRef}
                     className="flex-1"
                   />
                   <Button 
                     variant="outline" 
                     onClick={downloadTemplate}
-                    disabled={isImporting}
+                    disabled={isImporting || !userId}
                   >
                     <FileSpreadsheet className="w-4 h-4 mr-2" />
                     Plantilla
@@ -348,13 +409,18 @@ export default function ImportExportManager() {
                   <Label>&nbsp;</Label>
                   <Button 
                     onClick={handleExport}
-                    disabled={isExporting}
+                    disabled={isExporting || !userId}
                     className="w-full"
                   >
                     {isExporting ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                         Exportando...
+                      </>
+                    ) : !userId ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Cargando...
                       </>
                     ) : (
                       <>
@@ -432,7 +498,7 @@ export default function ImportExportManager() {
             <Button 
               variant="outline" 
               onClick={handleExport}
-              disabled={isExporting}
+              disabled={isExporting || !userId}
               className="h-16 flex-col gap-2"
             >
               <Download className="w-6 h-6" />

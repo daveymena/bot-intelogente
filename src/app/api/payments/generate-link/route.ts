@@ -3,12 +3,16 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { productId, productName, amount, quantity, method } = body
+    const { productId, productName, amount, quantity, method, userId } = body
+
+    if (!userId) {
+      return NextResponse.json({ success: false, error: 'userId requerido' }, { status: 400 })
+    }
 
     if (method === 'mercadopago') {
-      return await generateMercadoPagoLink(productId, productName, amount, quantity)
+      return await generateMercadoPagoLink(productId, productName, amount, quantity, userId)
     } else if (method === 'paypal') {
-      return await generatePayPalLink(productId, productName, amount, quantity)
+      return await generatePayPalLink(productId, productName, amount, quantity, userId)
     }
 
     return NextResponse.json({ success: false, error: 'Método no soportado' }, { status: 400 })
@@ -18,12 +22,23 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function generateMercadoPagoLink(productId: string, productName: string, amount: number, quantity: number) {
+async function generateMercadoPagoLink(productId: string, productName: string, amount: number, quantity: number, userId: string) {
   try {
-    const MERCADOPAGO_ACCESS_TOKEN = process.env.MERCADOPAGO_ACCESS_TOKEN || process.env.MERCADO_PAGO_ACCESS_TOKEN
+    // Obtener credenciales del usuario
+    const { db } = await import('@/lib/db')
+    const integration = await db.paymentIntegration.findUnique({
+      where: { userId }
+    })
+
+    const MERCADOPAGO_ACCESS_TOKEN = integration?.mercadopagoAccessToken || 
+                                     process.env.MERCADOPAGO_ACCESS_TOKEN || 
+                                     process.env.MERCADO_PAGO_ACCESS_TOKEN
 
     if (!MERCADOPAGO_ACCESS_TOKEN) {
-      return NextResponse.json({ success: false, error: 'MercadoPago no configurado' }, { status: 500 })
+      return NextResponse.json({ 
+        success: false, 
+        error: 'MercadoPago no configurado. Por favor configura tus credenciales en el dashboard.' 
+      }, { status: 500 })
     }
 
     const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000'
@@ -77,13 +92,22 @@ async function generateMercadoPagoLink(productId: string, productName: string, a
   }
 }
 
-async function generatePayPalLink(productId: string, productName: string, amount: number, quantity: number) {
+async function generatePayPalLink(productId: string, productName: string, amount: number, quantity: number, userId: string) {
   try {
-    const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID
-    const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET
+    // Obtener credenciales del usuario
+    const { db } = await import('@/lib/db')
+    const integration = await db.paymentIntegration.findUnique({
+      where: { userId }
+    })
+
+    const PAYPAL_CLIENT_ID = integration?.paypalClientId || process.env.PAYPAL_CLIENT_ID
+    const PAYPAL_CLIENT_SECRET = integration?.paypalClientSecret || process.env.PAYPAL_CLIENT_SECRET
 
     if (!PAYPAL_CLIENT_ID || !PAYPAL_CLIENT_SECRET) {
-      return NextResponse.json({ success: false, error: 'PayPal no configurado' }, { status: 500 })
+      return NextResponse.json({ 
+        success: false, 
+        error: 'PayPal no configurado. Por favor configura tus credenciales en el dashboard.' 
+      }, { status: 500 })
     }
 
     // Obtener access token

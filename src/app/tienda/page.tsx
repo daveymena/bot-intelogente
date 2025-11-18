@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ShoppingCart, Search, Menu, X } from 'lucide-react'
+import CurrencySelector from '@/components/CurrencySelector'
+import { CurrencyService } from '@/lib/currency-service'
 
 interface Product {
   id: number
@@ -22,8 +24,16 @@ export default function TiendaPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
   const [cartCount, setCartCount] = useState(0)
+  const [userCurrency, setUserCurrency] = useState('COP')
 
-  const categories = ['Todos', 'Computadores', 'Motos', 'Cursos', 'Megapacks']
+  const categories = ['Todos', 'Físicos', 'Digitales', 'Servicios']
+
+  useEffect(() => {
+    // Detectar moneda del usuario
+    CurrencyService.detectUserCountry().then(info => {
+      setUserCurrency(info.currency.code)
+    })
+  }, [])
 
   useEffect(() => {
     fetchProducts()
@@ -53,27 +63,17 @@ export default function TiendaPage() {
   }
 
   const filteredProducts = products.filter(product => {
-    // Mapear categorías de UI a categorías de productos
+    // Filtrar por categorías reales del sistema
     let matchesCategory = false
     
     if (selectedCategory === 'Todos') {
       matchesCategory = true
-    } else if (selectedCategory === 'Computadores') {
-      matchesCategory = product.category === 'PHYSICAL' && 
-        (product.name.toLowerCase().includes('laptop') || 
-         product.name.toLowerCase().includes('computador') ||
-         product.name.toLowerCase().includes('pc'))
-    } else if (selectedCategory === 'Motos') {
-      matchesCategory = product.category === 'PHYSICAL' && 
-        product.name.toLowerCase().includes('moto')
-    } else if (selectedCategory === 'Cursos') {
-      matchesCategory = product.category === 'DIGITAL' && 
-        (product.name.toLowerCase().includes('curso') && 
-         !product.name.toLowerCase().includes('mega'))
-    } else if (selectedCategory === 'Megapacks') {
-      matchesCategory = product.category === 'DIGITAL' && 
-        (product.name.toLowerCase().includes('mega') || 
-         product.name.toLowerCase().includes('pack'))
+    } else if (selectedCategory === 'Físicos') {
+      matchesCategory = product.category === 'PHYSICAL'
+    } else if (selectedCategory === 'Digitales') {
+      matchesCategory = product.category === 'DIGITAL'
+    } else if (selectedCategory === 'Servicios') {
+      matchesCategory = product.category === 'SERVICE'
     }
     
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -81,12 +81,16 @@ export default function TiendaPage() {
     return matchesCategory && matchesSearch
   })
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('es-CO', {
-      style: 'currency',
-      currency: 'COP',
-      minimumFractionDigits: 0
-    }).format(price)
+  const formatPrice = (priceInCOP: number) => {
+    // Convertir de COP a la moneda del usuario
+    const convertedPrice = CurrencyService.convertFromCOP(priceInCOP, userCurrency)
+    return CurrencyService.formatPrice(convertedPrice, userCurrency)
+  }
+
+  const getPriceInUSD = (priceInCOP: number) => {
+    const convertedPrice = CurrencyService.convertFromCOP(priceInCOP, userCurrency)
+    const usd = CurrencyService.convertToUSD(convertedPrice, userCurrency)
+    return CurrencyService.formatPrice(usd, 'USD')
   }
 
   return (
@@ -117,8 +121,9 @@ export default function TiendaPage() {
               </div>
             </div>
 
-            {/* Cart & Menu */}
-            <div className="flex items-center space-x-4">
+            {/* Currency Selector, Cart & Menu */}
+            <div className="flex items-center space-x-2">
+              <CurrencySelector onCurrencyChange={(currency) => setUserCurrency(currency.code)} />
               <Link href="/tienda/carrito" className="relative p-2 hover:bg-gray-800 rounded-lg transition">
                 <ShoppingCart className="w-6 h-6" />
                 {cartCount > 0 && (
@@ -222,13 +227,22 @@ export default function TiendaPage() {
                   <p className="text-gray-600 text-sm mb-3 line-clamp-2">
                     {product.description}
                   </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold text-pink-600">
-                      {formatPrice(product.price)}
-                    </span>
-                    <button className="bg-gradient-to-r from-pink-600 to-red-600 text-white px-4 py-2 rounded-lg hover:shadow-lg transition font-medium">
-                      Ver más
-                    </button>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex flex-col">
+                        <span className="text-2xl font-bold text-pink-600">
+                          {formatPrice(product.price)}
+                        </span>
+                        {userCurrency !== 'USD' && (
+                          <span className="text-xs text-gray-500">
+                            ≈ {getPriceInUSD(product.price)} al pagar
+                          </span>
+                        )}
+                      </div>
+                      <button className="bg-gradient-to-r from-pink-600 to-red-600 text-white px-4 py-2 rounded-lg hover:shadow-lg transition font-medium whitespace-nowrap">
+                        Ver más
+                      </button>
+                    </div>
                   </div>
                 </div>
               </Link>
