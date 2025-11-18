@@ -79,9 +79,9 @@ export const generalInquiryPatterns: ConversationPattern[] = [
 - Transferencia bancaria
 
 🔗 **CÓMO PAGAR ONLINE:**
-1. Visita nuestra tienda: https://bot-whatsapp-bot-automatizado.sqaoeo.easypanel.host/tienda/cmhjgzsjl0000t526gou8b8x2
+1. Visita nuestra tienda: https://bot-whatsapp-bot-whatsapp-inteligente.sqaoeo.easypanel.host/tienda
 2. Selecciona el producto que te interesa
-3. Click en "Ver Producto"
+3. Click en "Ver más"
 4. Elige tu método de pago (MercadoPago o PayPal)
 5. Completa el pago de forma segura
 
@@ -100,7 +100,7 @@ export const generalInquiryPatterns: ConversationPattern[] = [
       `🛍️ **NUESTRA TIENDA ONLINE:**
 
 Aquí puedes ver todos nuestros productos y pagar de forma segura:
-👉 https://bot-whatsapp-bot-automatizado.sqaoeo.easypanel.host/tienda/cmhjgzsjl0000t526gou8b8x2
+👉 https://bot-whatsapp-bot-whatsapp-inteligente.sqaoeo.easypanel.host/tienda
 
 💳 **MÉTODOS DE PAGO DISPONIBLES:**
 - MercadoPago (tarjetas, PSE, efectivo)
@@ -649,12 +649,12 @@ export const faqResponses = {
 
 🔗 CÓMO PAGAR:
 1. Ve al producto en nuestra tienda online
-2. Click en "Ver Producto"
+2. Click en "Ver más"
 3. Elige tu método de pago preferido
 4. Completa el pago de forma segura
 
 🛍️ TIENDA ONLINE:
-https://bot-whatsapp-bot-automatizado.sqaoeo.easypanel.host/tienda/cmhjgzsjl0000t526gou8b8x2
+https://bot-whatsapp-bot-whatsapp-inteligente.sqaoeo.easypanel.host/tienda
 
 ✅ Todos los pagos son seguros y verificados
 ✅ Recibes confirmación inmediata

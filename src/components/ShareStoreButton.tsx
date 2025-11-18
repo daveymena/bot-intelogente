@@ -19,7 +19,8 @@ export default function ShareStoreButton({ userId, productCount = 0 }: ShareStor
     ? window.location.origin 
     : process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
   
-  const storeUrl = `${baseUrl}/tienda/${userId}`
+  // Usar la nueva ruta de tienda sin userId (catálogo general)
+  const storeUrl = `${baseUrl}/tienda`
 
   const handleCopy = async () => {
     try {
