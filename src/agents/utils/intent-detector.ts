@@ -204,20 +204,64 @@ export class IntentDetector {
   }
   
   private static isPaymentMethodsQuery(msg: string): boolean {
+    // Detectar TODAS las formas de preguntar por métodos de pago
     return (
+      // Métodos de pago
       (msg.includes('metodo') || msg.includes('método')) && msg.includes('pago') ||
+      msg.includes('metodos de pago') ||
+      msg.includes('métodos de pago') ||
+      msg.includes('metodo de pago') ||
+      msg.includes('método de pago') ||
+      
+      // Cómo pagar
       msg.includes('como pago') ||
+      msg.includes('cómo pago') ||
       msg.includes('como puedo pagar') ||
+      msg.includes('cómo puedo pagar') ||
+      msg.includes('como te pago') ||
+      msg.includes('cómo te pago') ||
+      msg.includes('como puedo pagarte') ||
+      msg.includes('cómo puedo pagarte') ||
+      msg.includes('como pagar') ||
+      msg.includes('cómo pagar') ||
+      
+      // Formas de pago
       msg.includes('formas de pago') ||
+      msg.includes('forma de pago') ||
+      msg.includes('opciones de pago') ||
+      msg.includes('opcion de pago') ||
+      msg.includes('opción de pago') ||
+      
+      // Qué métodos
       msg.includes('que metodos') ||
+      msg.includes('qué métodos') ||
       msg.includes('que método') ||
-      msg.includes('aceptan') ||
-      msg.includes('metodo de pago tienes') ||
-      msg.includes('método de pago tienes') ||
+      msg.includes('qué método') ||
       msg.includes('metodos tienes') ||
       msg.includes('métodos tienes') ||
-      msg.includes('como te pago') ||
-      msg.includes('como puedo pagarte')
+      msg.includes('metodo tienes') ||
+      msg.includes('método tienes') ||
+      
+      // Aceptan
+      msg.includes('aceptan') ||
+      msg.includes('aceptas') ||
+      msg.includes('reciben') ||
+      msg.includes('recibes') ||
+      
+      // Preguntas directas
+      msg === 'metodos' ||
+      msg === 'métodos' ||
+      msg === 'metodo' ||
+      msg === 'método' ||
+      msg === 'pago' ||
+      msg === 'pagos' ||
+      msg === 'como pago' ||
+      msg === 'cómo pago' ||
+      
+      // Variaciones comunes
+      msg.includes('metodos de pagos tienes') ||
+      msg.includes('que metodos de pago tienes') ||
+      msg.includes('qué métodos de pago tienes')
     );
   }
   
@@ -225,15 +269,54 @@ export class IntentDetector {
     // Limpiar mensaje
     const clean = msg.toLowerCase().trim();
     
-    // Detectar métodos específicos
-    if (clean.includes('mercadopago') || clean.includes('mercado pago')) return 'mercadopago';
-    if (clean.includes('paypal')) return 'paypal';
-    if (clean.includes('nequi')) return 'nequi';
-    if (clean.includes('daviplata')) return 'daviplata';
-    if (clean.includes('tarjeta')) return 'tarjeta';
+    // Detectar MercadoPago (TODAS las variaciones)
+    if (
+      clean.includes('mercadopago') ||
+      clean.includes('mercado pago') ||
+      clean.includes('mercadopago') ||
+      clean.includes('mercado-pago') ||
+      clean.includes('mercado_pago') ||
+      clean === 'mercado' ||
+      clean === 'mercadopago' ||
+      clean.includes('pagar por mercado') ||
+      clean.includes('quiero pagar por mercado') ||
+      clean.includes('parar por mercado') ||
+      clean.includes('pago por mercado')
+    ) {
+      return 'mercadopago';
+    }
+    
+    // Detectar PayPal (TODAS las variaciones)
+    if (
+      clean.includes('paypal') ||
+      clean.includes('pay pal') ||
+      clean.includes('pay-pal') ||
+      clean === 'paypal' ||
+      clean.includes('pagar por paypal') ||
+      clean.includes('quiero pagar por paypal')
+    ) {
+      return 'paypal';
+    }
+    
+    // Detectar Nequi
+    if (clean.includes('nequi') || clean === 'nequi') return 'nequi';
+    
+    // Detectar Daviplata
+    if (clean.includes('daviplata') || clean === 'daviplata') return 'daviplata';
+    
+    // Detectar tarjeta
+    if (clean.includes('tarjeta') || clean.includes('credito') || clean.includes('crédito') || clean.includes('debito') || clean.includes('débito')) return 'mercadopago';
+    
+    // Detectar efectivo
     if (clean.includes('efectivo')) return 'efectivo';
-    if (clean.includes('consignacion') || clean.includes('consignación') || clean.includes('bancaria')) return 'consignacion';
+    
+    // Detectar consignación
+    if (clean.includes('consignacion') || clean.includes('consignación') || clean.includes('bancaria') || clean.includes('banco')) return 'consignacion';
+    
+    // Detectar contraentrega
     if (clean.includes('contraentrega') || clean.includes('contra entrega')) return 'contraentrega';
+    
+    // Detectar PSE
     if (clean.includes('pse')) return 'mercadopago';
     
     return null;
