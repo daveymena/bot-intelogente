@@ -181,11 +181,25 @@ export class PaymentAgent extends BaseAgent {
       text += `3️⃣ En el concepto escribe: ${product.name}\n`;
       text += `4️⃣ Envíame captura del comprobante\n\n`;
     }
-    // Para MercadoPago, generar link
+    // Para MercadoPago, generar link DINÁMICO
     else if (method === 'mercadopago') {
-      const link = `https://www.mercadopago.com.co/checkout/v1/redirect?pref_id=PRODUCT_${product.id}`;
-      text += `🔗 *Link de MercadoPago:*\n${link}\n\n`;
-      text += `${instructions}\n\n`;
+      // Usar el generador de links dinámicos
+      const { BotPaymentLinkGenerator } = await import('@/lib/bot-payment-link-generator');
+      const paymentResult = await BotPaymentLinkGenerator.generatePaymentLinks(
+        product.id,
+        context.userId,
+        1
+      );
+      
+      if (paymentResult.success && paymentResult.mercadoPagoLink) {
+        text += `🔗 *Link de MercadoPago:*\n${paymentResult.mercadoPagoLink}\n\n`;
+        text += `${instructions}\n\n`;
+      } else {
+        // Fallback si falla la generación
+        text += `${instructions}\n\n`;
+        text += `⚠️ Por favor contacta con nosotros para procesar tu pago:\n`;
+        text += `📱 WhatsApp: +57 304 274 8687\n\n`;
+      }
     }
     // Para otros métodos, usar instrucciones
     else {
