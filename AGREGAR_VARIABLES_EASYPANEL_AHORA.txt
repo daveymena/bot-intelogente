@@ -1,0 +1,58 @@
+═══════════════════════════════════════════════════════════════════════════════
+  VARIABLES FALTANTES EN EASYPANEL - AGREGAR AHORA
+═══════════════════════════════════════════════════════════════════════════════
+
+🚨 CRÍTICAS PARA RAZONAMIENTO AVANZADO:
+
+AI_REASONING_DEPTH=deep
+AI_REASONING_TIMEOUT=30000
+ENABLE_PERSONALITY_SERVICE=true
+ENABLE_CONVERSATION_MEMORY=true
+CONVERSATION_MEMORY_TTL=86400000
+ENABLE_MEGAFLUJOS=true
+
+🔧 OLLAMA MEJORADO:
+
+OLLAMA_MODEL=gemma3:4b
+OLLAMA_TIMEOUT=300000
+
+📦 CONFIGURACIONES ADICIONALES:
+
+PAYMENT_LINK_TOKEN_SECRET=tu-secret-key-para-tokens-de-pago-2025
+SMART_PHOTOS_TEMP_DIR=./temp-images
+SMART_PHOTOS_CLEANUP_INTERVAL=86400000
+LOCAL_AI_ENABLED=false
+LOCAL_AI_MODEL_PATH=./data/local-ai-model.json
+LOCAL_AI_TRAINING_PATH=./data/training-data.json
+LOCAL_AI_CACHE_ENABLED=false
+LOCAL_AI_CACHE_TTL=3600000
+PAYMENT_LINK_EXPIRY_MINUTES=120
+
+═══════════════════════════════════════════════════════════════════════════════
+  CÓMO AGREGAR EN EASYPANEL
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Ir a Easypanel → Tu App → Environment Variables
+
+2. Copiar y pegar TODAS las variables de arriba
+
+3. Guardar cambios
+
+4. Restart de la aplicación
+
+5. Esperar 2-3 minutos
+
+6. Probar el bot
+
+═══════════════════════════════════════════════════════════════════════════════
+  QUÉ MEJORARÁ
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Razonamiento avanzado funcionando al 100%
+✅ Personalidad humanizada activada
+✅ Memoria de conversación (24 horas)
+✅ Respuestas más naturales y contextuales
+✅ Mejor identificación de productos
+✅ Megaflujos activados
+
+═══════════════════════════════════════════════════════════════════════════════

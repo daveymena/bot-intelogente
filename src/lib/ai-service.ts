@@ -17,8 +17,8 @@ const groq = new Groq({
 
 // Usar sistema multi-provider si está habilitado
 const USE_MULTI_PROVIDER = process.env.AI_FALLBACK_ENABLED === 'true'
-// Usar sistema de razonamiento avanzado (Ollama + Groq)
-const USE_ADVANCED_REASONING = process.env.AI_USE_REASONING === 'true'
+// FORZAR sistema de razonamiento avanzado SIEMPRE (Ollama + Groq)
+const USE_ADVANCED_REASONING = true // FORZADO: Siempre usar razonamiento avanzado
 
 interface AIResponse {
   message: string
@@ -565,7 +565,8 @@ export class AIService {
             productInfo,
             productIntent,
             fullHistory.length > 0 ? fullHistory : conversationHistory,
-            conversationKey
+            conversationKey,
+            userId
           )
 
           return {
@@ -739,8 +740,11 @@ Puedo ayudarte con:
 
       // 🧠 FALLBACK 1: Intentar usar respuestas entrenadas localmente
       try {
-        const { trainedResponseService } = await import('./trained-response-service')
-        const trainedResponse = await trainedResponseService.findTrainedResponse(customerMessage)
+        // TODO: Implementar trained-response-service
+        // const { trainedResponseService } = await import('./trained-response-service')
+        // const trainedResponse = await trainedResponseService.findTrainedResponse(customerMessage)
+        
+        const trainedResponse = null // Temporalmente deshabilitado
         
         if (trainedResponse) {
           console.log('✅ Usando respuesta entrenada local (sin IA externa)')
@@ -1810,7 +1814,8 @@ Responde SIEMPRE en español, de forma profesional y honesta.`
     productInfo: any,
     intent: any,
     conversationHistory: Array<{ role: 'user' | 'assistant'; content: string }>,
-    conversationKey: string
+    conversationKey: string,
+    userId?: string
   ): Promise<string> {
     try {
       // 🌐 VERIFICAR SI NECESITA INFORMACIÓN EXTERNA
@@ -1903,7 +1908,7 @@ INTENCIÓN DEL CLIENTE: ${intent.type}
       
       // 🎭 CARGAR PERSONALIDAD PERSONALIZADA (si existe)
       const { AIPersonalityLoader } = await import('./ai-personality-loader')
-      const customPersonality = await AIPersonalityLoader.loadPersonality(userId)
+      const customPersonality = userId ? await AIPersonalityLoader.loadPersonality(userId) : null
       
       // Si hay personalidad personalizada, usarla; si no, usar la default
       const personalitySection = customPersonality || `Eres un vendedor profesional experto de Tecnovariedades D&S en WhatsApp.
