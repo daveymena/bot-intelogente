@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { ArrowLeft, ShoppingCart, Share2, Plus, Minus, Truck, Shield, CreditCard, Info } from 'lucide-react'
 import { CurrencyService } from '@/lib/currency-service'
 import CurrencySelector from '@/components/CurrencySelector'
+import ContraentregaForm from '@/components/ContraentregaForm'
 
 interface Product {
   id: number
@@ -30,6 +31,7 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
   const [cartCount, setCartCount] = useState(0)
   const [userCurrency, setUserCurrency] = useState('COP')
   const [showConversionInfo, setShowConversionInfo] = useState(false)
+  const [showContraentregaForm, setShowContraentregaForm] = useState(false)
 
   useEffect(() => {
     fetchProduct()
@@ -370,8 +372,9 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
                 {/* Contraentrega (solo productos físicos) */}
                 {isPhysicalProduct() && (
                   <button
-                    onClick={handleWhatsApp}
-                    className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-3 px-6 rounded-xl font-bold transition flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+                    onClick={() => setShowContraentregaForm(true)}
+                    disabled={product.stock <= 0}
+                    className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-500 text-white py-3 px-6 rounded-xl font-bold transition flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
                   >
                     <span>🚚</span>
                     <span>Pago Contraentrega</span>
@@ -406,6 +409,20 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
           </p>
         </div>
       </footer>
+
+      {/* Contraentrega Form Modal */}
+      {showContraentregaForm && product && (
+        <ContraentregaForm
+          product={{
+            id: product.id,
+            name: product.name,
+            price: product.price
+          }}
+          quantity={quantity}
+          onClose={() => setShowContraentregaForm(false)}
+          formatPrice={formatPrice}
+        />
+      )}
     </div>
   )
 }

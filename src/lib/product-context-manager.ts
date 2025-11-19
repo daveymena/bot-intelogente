@@ -89,10 +89,12 @@ export class ProductContextManager {
 
   /**
    * Detectar si el cliente quiere cambiar de producto explícitamente
+   * CORREGIDO: Ahora detecta CUALQUIER mención de producto diferente
    */
   static detectExplicitProductChange(message: string): boolean {
     const messageLower = message.toLowerCase()
 
+    // Indicadores FUERTES de cambio de producto
     const changeIndicators = [
       'mejor muestrame',
       'prefiero',
@@ -103,12 +105,19 @@ export class ProductContextManager {
       'muéstrame',
       'info de',
       'información de',
-      'cuánto cuesta',
-      'precio de',
+      'cuánto cuesta',  // ← IMPORTANTE: Si pregunta precio de otro producto
+      'precio de',       // ← IMPORTANTE: Si pregunta precio de otro producto
+      'tienes',          // ← IMPORTANTE: Si pregunta "tienes X?"
+      'tienen',
+      'venden',
+      'hay',
       'tienes otro',
       'tienes otra',
       'algo diferente',
-      'otra opción'
+      'otra opción',
+      'cuéntame sobre',
+      'háblame de',
+      'qué tal'
     ]
 
     return changeIndicators.some(indicator => messageLower.includes(indicator))

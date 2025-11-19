@@ -95,6 +95,20 @@ export class AIService {
       const fullHistory = await this.loadFullConversationHistory(userId, _customerPhone)
       console.log(`[AI] 📚 Historial cargado: ${fullHistory.length} mensajes de las últimas 24h`)
 
+      // 🚨 PRIORIDAD -1: Detectar pregunta GENERAL sobre productos (ANTES de todo)
+      // Si pregunta "¿Qué productos tienes?" sin mencionar categoría específica
+      const isGeneralProductQuery = /(qué productos|que productos|productos tienes|que vendes|qué vendes|catálogo|catalogo|qué hay|que hay|qué tienen|que tienen)/i.test(customerMessage)
+      
+      if (isGeneralProductQuery && customerMessage.length < 50) {
+        console.log(`[AI] 📋 Pregunta GENERAL sobre productos detectada`)
+        
+        return {
+          message: `¡Hola! 😊 Tenemos varias categorías de productos:\n\n🏠 *Productos Físicos*\n• Tecnología y electrónica\n• Artículos para el hogar\n• Juguetes y entretenimiento\n\n📱 *Productos Digitales*\n• Cursos online\n• Megapacks de contenido\n• Recursos digitales\n\n🛠️ *Servicios*\n• Consultoría\n• Soporte técnico\n\n¿Qué tipo de producto te interesa? 🤔`,
+          confidence: 0.98,
+          intent: 'product_list'
+        }
+      }
+
       // 🚨 PRIORIDAD 0: Detectar si necesita escalamiento a humano
       const { HumanEscalationService } = await import('./human-escalation-service')
       const escalation = HumanEscalationService.needsHumanEscalation(customerMessage)
@@ -1750,32 +1764,7 @@ Responde SIEMPRE en español, de forma profesional y honesta.`
   private static detectIntent(message: string): string {
     const lowerMessage = message.toLowerCase()
 
-    // Solicitud de enlace/link
-    if (/(link|enlace|url|página|pagina|comprar|compra)/i.test(lowerMessage)) {
-      return 'link_request'
-    }
-
-    // Consulta de precio
-    if (/(cuánto|precio|cuesta|valor|cuanto|costo)/i.test(lowerMessage)) {
-      return 'price_inquiry'
-    }
-
-    // Solicitud de información
-    if (/(información|info|detalles|características|especificaciones|dime sobre|háblame de|que es)/i.test(lowerMessage)) {
-      return 'information_request'
-    }
-
-    // Intención de compra
-    if (/(quiero|comprar|pedir|ordenar|pedido|me interesa)/i.test(lowerMessage)) {
-      return 'purchase_intent'
-    }
-
-    // Consulta de disponibilidad
-    if (/(tienes|tienen|venden|hay|disponible|stock)/i.test(lowerMessage)) {
-      return 'availability_inquiry'
-    }
-
-    // Saludos
+    // Saludos (debe ir primero para detectar antes que otros)
     if (/^(hola|buenos días|buenas tardes|buenas noches|hey|hi|saludos)/i.test(lowerMessage)) {
       return 'greeting'
     }
@@ -1783,6 +1772,38 @@ Responde SIEMPRE en español, de forma profesional y honesta.`
     // Despedida
     if (/(gracias|chao|adiós|bye|hasta luego)/i.test(lowerMessage)) {
       return 'farewell'
+    }
+
+    // Consulta de precio (CORREGIDO: debe devolver "product_info" no "price_inquiry")
+    if (/(cuánto|precio|cuesta|valor|cuanto|costo)/i.test(lowerMessage)) {
+      return 'product_info'
+    }
+
+    // Solicitud de información (CORREGIDO: debe devolver "product_info" no "information_request")
+    if (/(información|info|detalles|características|especificaciones|dime sobre|háblame de|que es|cuéntame)/i.test(lowerMessage)) {
+      return 'product_info'
+    }
+
+    // Consulta de disponibilidad con producto específico (CORREGIDO: debe devolver "product_list" no "availability_inquiry")
+    // Si pregunta "tienes X?" donde X es un producto específico
+    if (/(tienes|tienen|venden|hay|disponible|stock)/i.test(lowerMessage)) {
+      // Si menciona un producto específico después, es product_list
+      return 'product_list'
+    }
+
+    // Pregunta general sobre productos (CORREGIDO: debe devolver "product_list")
+    if (/(qué productos|que productos|productos tienes|que vendes|qué vendes|catálogo|catalogo)/i.test(lowerMessage)) {
+      return 'product_list'
+    }
+
+    // Intención de compra
+    if (/(quiero|comprar|pedir|ordenar|pedido|me interesa)/i.test(lowerMessage)) {
+      return 'purchase_intent'
+    }
+
+    // Solicitud de enlace/link
+    if (/(link|enlace|url|página|pagina)/i.test(lowerMessage)) {
+      return 'link_request'
     }
 
     return 'general'

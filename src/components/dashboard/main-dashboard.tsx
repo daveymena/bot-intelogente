@@ -17,7 +17,8 @@ import {
   Search,
   ChevronDown,
   Loader2,
-  Store
+  Store,
+  Brain
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -30,6 +31,7 @@ import AIPromptsManagement from '@/components/AIPromptsManagement'
 import ImportExportManager from '@/components/ImportExportManager'
 import { WhatsAppConnection } from '@/components/dashboard/WhatsAppConnection'
 import BotPersonalityGenerator from '@/components/BotPersonalityGenerator'
+import BotTrainingPanel from '@/components/dashboard/BotTrainingPanel'
 import ShareStoreButton from '@/components/ShareStoreButton'
 import { DemoSection } from '@/components/dashboard/DemoSection'
 import { StoreSettingsTab } from '@/components/dashboard/store-settings-tab'
@@ -69,6 +71,7 @@ export function MainDashboard() {
     { id: 'store', label: 'Mi Tienda', icon: Store },
     { id: 'personality', label: 'Personalidad Bot', icon: Bot },
     { id: 'prompts', label: 'IA & Prompts', icon: Bot },
+    { id: 'training', label: 'Entrenamiento Bot', icon: Brain },
     { id: 'customers', label: 'Clientes', icon: Users },
     { id: 'settings', label: 'Configuración', icon: Settings },
   ]
@@ -231,6 +234,7 @@ export function MainDashboard() {
             {activeTab === 'store' && <StoreSettingsTab />}
             {activeTab === 'personality' && <BotPersonalityGenerator />}
             {activeTab === 'prompts' && <AIPromptsManagement />}
+            {activeTab === 'training' && <BotTrainingPanel />}
             {activeTab === 'customers' && <CustomersTab />}
             {activeTab === 'settings' && <SettingsTab />}
           </div>

@@ -1,0 +1,94 @@
+========================================
+  OLLAMA SOLO ACTIVADO - GROQ DESACTIVADO
+========================================
+
+✅ CAMBIOS APLICADOS:
+
+1. Groq DESACTIVADO (sin tokens)
+2. Ollama ACTIVADO como único proveedor
+3. Timeout aumentado a 5 MINUTOS
+4. Modelo: gemma2:4b (3.3 GB)
+
+========================================
+  CONFIGURACIÓN ACTUAL
+========================================
+
+AI Provider: OLLAMA (único)
+Modelo: gemma2:4b
+Timeout: 300 segundos (5 minutos)
+Límites: NINGUNO (100% local)
+
+Groq: DESACTIVADO ❌
+OpenAI: DESACTIVADO ❌
+Claude: DESACTIVADO ❌
+
+========================================
+  PROBAR AHORA
+========================================
+
+Ejecuta este comando:
+
+    probar-ollama-ahora.bat
+
+⏳ IMPORTANTE: La primera respuesta puede tomar
+   hasta 5 minutos. Ten paciencia.
+
+========================================
+  ENTRENAR EL BOT
+========================================
+
+Una vez que Ollama funcione:
+
+    npx tsx scripts/entrenar-bot.ts
+
+Esto entrenará el bot con 29 casos reales
+usando SOLO Ollama (sin límites de API).
+
+========================================
+  VENTAJAS
+========================================
+
+✅ Sin límites de API
+✅ Sin costos de tokens
+✅ 100% local
+✅ Timeout largo (5 minutos)
+✅ Modelo potente (gemma2:4b)
+
+========================================
+  SI ES MUY LENTO
+========================================
+
+Opción 1: Usar modelo más pequeño
+    Cambiar en .env:
+    OLLAMA_MODEL=gemma:2b
+
+Opción 2: Reducir tokens
+    Cambiar en .env:
+    OLLAMA_MAX_TOKENS=200
+
+========================================
+  ARCHIVOS MODIFICADOS
+========================================
+
+✅ .env
+   - GROQ_ENABLED=false
+   - OLLAMA_ENABLED=true
+   - OLLAMA_TIMEOUT=300000
+   - AI_PROVIDER=ollama
+
+✅ src/lib/ollama-service.ts
+   - Timeout: 5 minutos
+
+✅ src/lib/ai-multi-provider.ts
+   - Timeout: 5 minutos
+
+✅ test-ollama-gemma2.js
+   - Timeout: 5 minutos
+
+========================================
+  EJECUTA ESTO AHORA
+========================================
+
+    probar-ollama-ahora.bat
+
+¡Y espera hasta 5 minutos! ⏳

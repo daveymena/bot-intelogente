@@ -608,43 +608,68 @@ model StoreSettings {
   id          String   @id @default(cuid())
   userId      String   @unique
   
+  // URL única de la tienda
+  storeSlug   String   @unique // URL amigable: /tienda/mi-tienda-tech
+  customDomain String? @unique // Dominio personalizado opcional
+  
   // Información básica
   storeName   String   @default("Mi Tienda")
   storeSlogan String?
   description String?
   
   // Branding
-  logo        String?
-  favicon     String?
-  primaryColor String  @default("#10b981") // Verde
-  secondaryColor String @default("#3b82f6") // Azul
+  logo        String?  // URL del logo principal
+  logoSquare  String?  // Logo cuadrado para favicon/redes
+  favicon     String?  // Favicon personalizado
+  bannerImage String?  // Banner/Hero de la tienda
+  
+  // Colores personalizados
+  primaryColor String  @default("#10b981") // Color principal
+  secondaryColor String @default("#3b82f6") // Color secundario
+  accentColor String   @default("#f59e0b") // Color de acento
+  backgroundColor String @default("#ffffff") // Fondo
+  textColor   String   @default("#1f2937") // Texto principal
   
   // Contacto
   email       String?
   phone       String?
   whatsapp    String?
   address     String?
+  city        String?
+  country     String?  @default("Colombia")
   
   // Redes sociales
   facebook    String?
   instagram   String?
   twitter     String?
   tiktok      String?
+  youtube     String?
+  linkedin    String?
   
   // SEO
   metaTitle   String?
   metaDescription String?
   keywords    String?
+  ogImage     String?  // Imagen para compartir en redes
   
   // Configuración
   currency    String   @default("COP")
   language    String   @default("es")
   timezone    String   @default("America/Bogota")
   
+  // Visibilidad
+  isPublic    Boolean  @default(true) // Si la tienda es pública
+  isActive    Boolean  @default(true) // Si la tienda está activa
+  
   // Políticas
   termsUrl    String?
   privacyUrl  String?
   returnPolicy String?
+  shippingPolicy String?
+  
+  // Estadísticas
+  viewCount   Int      @default(0)
+  lastViewAt  DateTime?
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -652,6 +677,8 @@ model StoreSettings {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   @@index([userId])
+  @@index([storeSlug])
+  @@index([isPublic, isActive])
 }
 
 // Appointments / Citas

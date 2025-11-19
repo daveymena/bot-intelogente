@@ -1,0 +1,84 @@
+========================================
+  EJECUTAR ESTO AHORA - Ollama gemma2:4b
+========================================
+
+✅ CONFIGURACIÓN COMPLETADA
+
+Cambios aplicados:
+- Modelo: gemma2:4b (3.3 GB)
+- Timeout: 3 minutos
+- Fallback: Groq → Ollama
+- Sin límites de API
+
+========================================
+  PASO 1: PROBAR OLLAMA
+========================================
+
+Ejecuta este comando:
+
+    probar-ollama-ahora.bat
+
+Esto verificará que Ollama funcione correctamente.
+
+========================================
+  PASO 2: ENTRENAR EL BOT
+========================================
+
+Una vez que Ollama funcione, ejecuta:
+
+    npx tsx scripts/entrenar-bot.ts
+
+Esto entrenará el bot con 29 casos reales.
+
+========================================
+  RESULTADOS ESPERADOS
+========================================
+
+Antes:
+❌ Ollama HTTP 404
+❌ Precisión: 3.45% (1/29)
+⚠️ Rate limit constante
+
+Ahora:
+✅ Ollama funcionando
+✅ Timeout suficiente (3 min)
+✅ Fallback automático
+✅ Sin límites de API
+🎯 Precisión mejorada
+
+========================================
+  ARCHIVOS CREADOS
+========================================
+
+1. test-ollama-gemma2.js
+   → Prueba rápida de Ollama
+
+2. probar-ollama-ahora.bat
+   → Comando rápido para probar
+
+3. verificar-sistema-ia.bat
+   → Verificación completa del sistema
+
+4. EMPEZAR_AQUI_OLLAMA.md
+   → Guía completa de uso
+
+========================================
+  SI ALGO FALLA
+========================================
+
+Ollama no responde:
+    ollama serve
+
+Muy lento:
+    Cambiar a gemma:2b en .env
+
+Error 404:
+    ollama pull gemma2:4b
+
+========================================
+  EJECUTA AHORA
+========================================
+
+    probar-ollama-ahora.bat
+
+¡Y luego entrena el bot! 🚀

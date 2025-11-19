@@ -1,87 +1,92 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { auth } from '@/lib/auth-utils'
+import { verifyAuth } from '@/lib/auth'
 
-// GET - Obtener configuración de la tienda
+// GET /api/store/settings - Obtener configuración de tienda del usuario actual
 export async function GET(request: NextRequest) {
   try {
-    const userId = await auth()
-    
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'No autorizado' },
-        { status: 401 }
-      )
+    const user = await verifyAuth(request)
+    if (!user) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
     }
 
-    // Buscar configuración existente
-    let settings = await db.storeSettings.findUnique({
-      where: { userId }
+    let storeSettings = await db.storeSettings.findUnique({
+      where: { userId: user.id }
     })
 
-    // Si no existe, crear una por defecto
-    if (!settings) {
-      settings = await db.storeSettings.create({
+    // Si no existe, crear configuración por defecto
+    if (!storeSettings) {
+      const username = user.email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '-')
+      const baseSlug = username
+      let storeSlug = baseSlug
+      let counter = 1
+
+      // Asegurar que el slug sea único
+      while (await db.storeSettings.findUnique({ where: { storeSlug } })) {
+        storeSlug = `${baseSlug}-${counter}`
+        counter++
+      }
+
+      storeSettings = await db.storeSettings.create({
         data: {
-          userId,
-          storeName: 'Mi Tienda',
-          primaryColor: '#10b981',
-          secondaryColor: '#3b82f6',
-          currency: 'COP',
-          language: 'es',
-          timezone: 'America/Bogota'
+          userId: user.id,
+          storeSlug,
+          storeName: user.businessName || user.name || 'Mi Tienda',
+          email: user.email,
+          phone: user.phone,
+          whatsapp: user.whatsappNumber
         }
       })
     }
 
-    return NextResponse.json({
-      success: true,
-      settings
-    })
-  } catch (error: any) {
-    console.error('[Store Settings] Error:', error)
+    return NextResponse.json({ storeSettings })
+  } catch (error) {
+    console.error('Error fetching store settings:', error)
     return NextResponse.json(
-      { error: error.message || 'Error al obtener configuración' },
+      { error: 'Error al cargar configuración' },
       { status: 500 }
     )
   }
 }
 
-// PUT - Actualizar configuración
+// PUT /api/store/settings - Actualizar configuración de tienda
 export async function PUT(request: NextRequest) {
   try {
-    const userId = await auth()
-    
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'No autorizado' },
-        { status: 401 }
-      )
+    const user = await verifyAuth(request)
+    if (!user) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
     }
 
-    const body = await request.json()
+    const data = await request.json()
 
-    // Actualizar o crear configuración
-    const settings = await db.storeSettings.upsert({
-      where: { userId },
-      update: {
-        ...body,
-        updatedAt: new Date()
-      },
+    // Si se está cambiando el slug, verificar que sea único
+    if (data.storeSlug) {
+      const existing = await db.storeSettings.findUnique({
+        where: { storeSlug: data.storeSlug }
+      })
+
+      if (existing && existing.userId !== user.id) {
+        return NextResponse.json(
+          { error: 'Este nombre de tienda ya está en uso' },
+          { status: 400 }
+        )
+      }
+    }
+
+    const storeSettings = await db.storeSettings.upsert({
+      where: { userId: user.id },
+      update: data,
       create: {
-        userId,
-        ...body
+        userId: user.id,
+        ...data
       }
     })
 
-    return NextResponse.json({
-      success: true,
-      settings
-    })
-  } catch (error: any) {
-    console.error('[Store Settings] Error:', error)
+    return NextResponse.json({ storeSettings })
+  } catch (error) {
+    console.error('Error updating store settings:', error)
     return NextResponse.json(
-      { error: error.message || 'Error al actualizar configuración' },
+      { error: 'Error al actualizar configuración' },
       { status: 500 }
     )
   }
