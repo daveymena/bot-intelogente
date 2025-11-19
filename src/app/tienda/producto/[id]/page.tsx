@@ -254,30 +254,33 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
             </div>
 
             {/* Product Info Section */}
-            <div className="p-4 md:p-6 lg:p-8">
-              <h1 className="text-2xl md:text-3xl font-bold mb-3">{product.name}</h1>
+            <div className="p-6 md:p-8 lg:p-10 flex flex-col">
+              {/* Título */}
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 leading-tight">
+                {product.name}
+              </h1>
               
               {/* Price and Stock */}
-              <div className="mb-4">
-                <div className="flex items-center gap-4 mb-2">
-                  <span className="text-3xl md:text-4xl font-bold text-pink-600">
+              <div className="mb-6 pb-6 border-b border-gray-200">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-3">
+                  <span className="text-4xl md:text-5xl font-bold text-pink-600">
                     {formatPrice(product.price * quantity)}
                   </span>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  <span className={`px-4 py-2 rounded-full text-sm font-semibold inline-block ${
                     product.stock > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
                   }`}>
-                    {product.stock > 0 ? `${product.stock} disponibles` : 'Agotado'}
+                    {product.stock > 0 ? `✓ ${product.stock} disponibles` : '✗ Agotado'}
                   </span>
                 </div>
                 
                 {/* Conversion Info */}
                 {userCurrency !== 'USD' && (
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                    <div className="flex items-start gap-2">
-                      <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                      <div className="text-sm">
-                        <p className="font-medium text-blue-900 mb-1">
-                          Conversión de pago
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-3">
+                    <div className="flex items-start gap-3">
+                      <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-1" />
+                      <div className="text-sm space-y-2">
+                        <p className="font-semibold text-blue-900">
+                          💱 Conversión de pago
                         </p>
                         <p className="text-blue-700">
                           Precio en tu moneda: <span className="font-bold">{formatPrice(product.price * quantity)}</span>
@@ -285,7 +288,7 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
                         <p className="text-blue-700">
                           Al pagar se convertirá a: <span className="font-bold">{getPriceInUSD(product.price * quantity)}</span>
                         </p>
-                        <p className="text-xs text-blue-600 mt-1">
+                        <p className="text-xs text-blue-600">
                           Tasa: 1 USD = {CurrencyService.getCurrencyInfo(userCurrency)?.rate.toLocaleString()} {userCurrency}
                         </p>
                       </div>
@@ -295,42 +298,45 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
               </div>
 
               {/* Description */}
-              <p className="text-gray-700 mb-6 leading-relaxed">{product.description}</p>
+              <div className="mb-8">
+                <h2 className="text-lg font-bold mb-3 text-gray-900">📝 Descripción</h2>
+                <p className="text-gray-700 leading-relaxed text-base">{product.description}</p>
+              </div>
 
               {/* Benefits */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Truck className="w-5 h-5 text-pink-600" />
-                  <span>Envío rápido</span>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 pb-8 border-b border-gray-200">
+                <div className="flex items-center gap-3 text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">
+                  <Truck className="w-6 h-6 text-pink-600 flex-shrink-0" />
+                  <span className="font-medium">Envío rápido</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Shield className="w-5 h-5 text-pink-600" />
-                  <span>Compra segura</span>
+                <div className="flex items-center gap-3 text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">
+                  <Shield className="w-6 h-6 text-pink-600 flex-shrink-0" />
+                  <span className="font-medium">Compra segura</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <CreditCard className="w-5 h-5 text-pink-600" />
-                  <span>Pago fácil</span>
+                <div className="flex items-center gap-3 text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">
+                  <CreditCard className="w-6 h-6 text-pink-600 flex-shrink-0" />
+                  <span className="font-medium">Pago fácil</span>
                 </div>
               </div>
 
               {/* Quantity Selector */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium mb-2">Cantidad</label>
-                <div className="flex items-center gap-3">
+              <div className="mb-8">
+                <label className="block text-lg font-bold mb-4 text-gray-900">📦 Cantidad</label>
+                <div className="flex items-center gap-4">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-10 h-10 rounded-lg bg-gray-200 hover:bg-gray-300 transition font-bold flex items-center justify-center"
+                    className="w-12 h-12 rounded-xl bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition font-bold flex items-center justify-center shadow-sm"
                     disabled={quantity <= 1}
                   >
-                    <Minus className="w-4 h-4" />
+                    <Minus className="w-5 h-5" />
                   </button>
-                  <span className="text-xl font-bold w-16 text-center">{quantity}</span>
+                  <span className="text-2xl font-bold w-20 text-center bg-gray-50 py-2 rounded-lg">{quantity}</span>
                   <button
                     onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-                    className="w-10 h-10 rounded-lg bg-gray-200 hover:bg-gray-300 transition font-bold flex items-center justify-center"
+                    className="w-12 h-12 rounded-xl bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition font-bold flex items-center justify-center shadow-sm"
                     disabled={quantity >= product.stock}
                   >
-                    <Plus className="w-4 h-4" />
+                    <Plus className="w-5 h-5" />
                   </button>
                 </div>
               </div>
@@ -338,24 +344,24 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
               {/* Add to Cart Button */}
               <button
                 onClick={handleAddToCart}
-                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-4 px-6 rounded-xl font-bold text-lg transition shadow-lg hover:shadow-xl mb-4 flex items-center justify-center gap-2"
+                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 disabled:from-gray-400 disabled:to-gray-500 text-white py-5 px-6 rounded-xl font-bold text-lg transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-[1.02] mb-8 flex items-center justify-center gap-3"
                 disabled={product.stock <= 0}
               >
-                <ShoppingCart className="w-5 h-5" />
-                AGREGAR AL CARRITO
+                <ShoppingCart className="w-6 h-6" />
+                <span>AGREGAR AL CARRITO</span>
               </button>
 
               {/* Payment Methods */}
-              <div className="space-y-3 mb-6">
-                <h3 className="font-bold text-lg mb-3">Métodos de Pago</h3>
+              <div className="space-y-4 mb-8">
+                <h3 className="font-bold text-xl mb-4 text-gray-900">💳 Métodos de Pago</h3>
                 
                 {/* MercadoPago */}
                 <button
                   onClick={() => handleGeneratePaymentLink('mercadopago')}
                   disabled={generatingPayment || product.stock <= 0}
-                  className="w-full bg-[#00B1EA] hover:bg-[#009DD1] disabled:bg-gray-300 text-white py-3 px-6 rounded-xl font-bold transition flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+                  className="w-full bg-[#00B1EA] hover:bg-[#009DD1] disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-4 px-6 rounded-xl font-bold transition-all duration-200 flex items-center justify-center gap-3 shadow-md hover:shadow-lg hover:scale-[1.02]"
                 >
-                  <span>💳</span>
+                  <span className="text-xl">💳</span>
                   <span>{generatingPayment ? 'Generando...' : 'Pagar con MercadoPago'}</span>
                 </button>
 
@@ -363,9 +369,9 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
                 <button
                   onClick={() => handleGeneratePaymentLink('paypal')}
                   disabled={generatingPayment || product.stock <= 0}
-                  className="w-full bg-[#0070BA] hover:bg-[#005A92] disabled:bg-gray-300 text-white py-3 px-6 rounded-xl font-bold transition flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+                  className="w-full bg-[#0070BA] hover:bg-[#005A92] disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-4 px-6 rounded-xl font-bold transition-all duration-200 flex items-center justify-center gap-3 shadow-md hover:shadow-lg hover:scale-[1.02]"
                 >
-                  <span>💰</span>
+                  <span className="text-xl">💰</span>
                   <span>{generatingPayment ? 'Generando...' : 'Pagar con PayPal'}</span>
                 </button>
 
@@ -374,9 +380,9 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
                   <button
                     onClick={() => setShowContraentregaForm(true)}
                     disabled={product.stock <= 0}
-                    className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-500 text-white py-3 px-6 rounded-xl font-bold transition flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+                    className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed text-white py-4 px-6 rounded-xl font-bold transition-all duration-200 flex items-center justify-center gap-3 shadow-md hover:shadow-lg hover:scale-[1.02]"
                   >
-                    <span>🚚</span>
+                    <span className="text-xl">🚚</span>
                     <span>Pago Contraentrega</span>
                   </button>
                 )}
@@ -384,15 +390,15 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
                 {/* WhatsApp */}
                 <button
                   onClick={handleWhatsApp}
-                  className="w-full bg-[#25D366] hover:bg-[#1EBE57] text-white py-3 px-6 rounded-xl font-bold transition flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+                  className="w-full bg-[#25D366] hover:bg-[#1EBE57] text-white py-4 px-6 rounded-xl font-bold transition-all duration-200 flex items-center justify-center gap-3 shadow-md hover:shadow-lg hover:scale-[1.02]"
                 >
-                  <span>💬</span>
+                  <span className="text-xl">💬</span>
                   <span>Consultar por WhatsApp</span>
                 </button>
               </div>
 
               {/* Share Button */}
-              <button className="w-full border-2 border-gray-300 hover:border-pink-600 text-gray-700 hover:text-pink-600 py-3 px-6 rounded-xl font-bold transition flex items-center justify-center gap-2">
+              <button className="w-full border-2 border-gray-300 hover:border-pink-600 hover:bg-pink-50 text-gray-700 hover:text-pink-600 py-4 px-6 rounded-xl font-bold transition-all duration-200 flex items-center justify-center gap-3 shadow-sm hover:shadow-md">
                 <Share2 className="w-5 h-5" />
                 <span>Compartir producto</span>
               </button>

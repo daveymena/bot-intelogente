@@ -189,12 +189,12 @@ export default function TiendaPage() {
             <p className="text-gray-500 text-lg">No se encontraron productos</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {filteredProducts.map((product) => (
               <Link
                 key={product.id}
                 href={`/tienda/producto/${product.id}`}
-                className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group"
+                className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group flex flex-col"
               >
                 {/* Product Image */}
                 <div className="relative h-64 bg-gray-100 overflow-hidden">
@@ -220,26 +220,34 @@ export default function TiendaPage() {
                 </div>
 
                 {/* Product Info */}
-                <div className="p-4">
-                  <h3 className="font-bold text-lg mb-2 line-clamp-2 group-hover:text-pink-600 transition">
+                <div className="p-5 flex flex-col h-full">
+                  {/* Título del producto */}
+                  <h3 className="font-bold text-lg mb-3 line-clamp-2 group-hover:text-pink-600 transition min-h-[3.5rem]">
                     {product.name}
                   </h3>
-                  <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                  
+                  {/* Descripción */}
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
                     {product.description}
                   </p>
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between">
+                  
+                  {/* Precio y botón */}
+                  <div className="mt-auto pt-3 border-t border-gray-100">
+                    <div className="flex items-end justify-between gap-3">
+                      {/* Precio */}
                       <div className="flex flex-col">
-                        <span className="text-2xl font-bold text-pink-600">
+                        <span className="text-2xl font-bold text-pink-600 leading-tight">
                           {formatPrice(product.price)}
                         </span>
                         {userCurrency !== 'USD' && (
-                          <span className="text-xs text-gray-500">
-                            ≈ {getPriceInUSD(product.price)} al pagar
+                          <span className="text-xs text-gray-500 mt-1">
+                            ≈ {getPriceInUSD(product.price)}
                           </span>
                         )}
                       </div>
-                      <button className="bg-gradient-to-r from-pink-600 to-red-600 text-white px-4 py-2 rounded-lg hover:shadow-lg transition font-medium whitespace-nowrap">
+                      
+                      {/* Botón */}
+                      <button className="bg-gradient-to-r from-pink-600 to-red-600 text-white px-5 py-2.5 rounded-lg hover:shadow-lg transition-all duration-200 font-medium whitespace-nowrap hover:scale-105">
                         Ver más
                       </button>
                     </div>
