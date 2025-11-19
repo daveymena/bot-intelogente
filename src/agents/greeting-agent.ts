@@ -31,16 +31,42 @@ export class GreetingAgent extends BaseAgent {
    */
   async handleLocally(message: string, memory: SharedMemory): Promise<AgentResponse> {
     this.log('Manejando saludo localmente');
-    
+
+    // 🔥 CORRECCIÓN CRÍTICA: Si ya se envió saludo en esta conversación, NO repetir
+    if (memory.greetingSent) {
+      this.log('Saludo ya enviado anteriormente - evitando repetición');
+
+      // Si tiene producto en contexto, ir directo a él
+      if (memory.currentProduct) {
+        return {
+          text: `¿Sigues interesado en el *${memory.currentProduct.name}*?
+
+O si prefieres, puedo ayudarte con algo más 🤔`,
+          nextAgent: 'product',
+          confidence: 0.95,
+        };
+      }
+
+      // Si no hay producto, ir a búsqueda
+      return {
+        text: `¿En qué puedo ayudarte? 🤔`,
+        nextAgent: 'search',
+        confidence: 0.95,
+      };
+    }
+
+    // Marcar que se va a enviar saludo
+    memory.greetingSent = true;
+
     const isReturningCustomer = memory.messageCount > 1;
     const hasName = !!memory.userName;
-    
+
     // Cliente recurrente
     if (isReturningCustomer) {
-      const greeting = hasName 
+      const greeting = hasName
         ? `¡Hola de nuevo, ${memory.userName}! 😊`
         : `¡Hola de nuevo! 😊`;
-      
+
       // Si tiene producto en contexto, recordarlo
       if (memory.currentProduct) {
         return {
@@ -53,7 +79,7 @@ O si prefieres, puedo ayudarte con algo más 🤔`,
           confidence: 0.95,
         };
       }
-      
+
       return {
         text: `${greeting}
 

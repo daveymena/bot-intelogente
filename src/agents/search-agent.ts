@@ -80,18 +80,51 @@ export class SearchAgent extends BaseAgent {
       return this.handleNoProducts(message);
     }
     
-    // Un solo producto - Delegar al ProductAgent para mostrar info completa con foto
+    // Un solo producto - Mostrar información COMPLETA inmediatamente
     if (products.length === 1) {
-      memory.currentProduct = products[0];
-      memory.photoSent = false; // Resetear flag de foto para nuevo producto
-      memory.productInfoSent = false; // Resetear flag de info
+      const product = products[0];
+      memory.currentProduct = product;
+      memory.photoSent = false;
+      memory.productInfoSent = true; // Marcar que ya enviamos info
       
-      this.log(`✅ Producto único encontrado: ${products[0].name} - Delegando a ProductAgent`);
+      this.log(`✅ Producto único encontrado: ${product.name} - Mostrando info completa`);
+      
+      // Generar respuesta COMPLETA con toda la información
+      let response = `🎯 *${product.name}*\n\n`;
+      
+      // Descripción (primeras 200 caracteres)
+      if (product.description) {
+        const desc = product.description.length > 200 
+          ? product.description.substring(0, 200) + '...' 
+          : product.description;
+        response += `${desc}\n\n`;
+      }
+      
+      // Precio
+      response += `💰 *Precio:* ${product.price.toLocaleString('es-CO')} COP\n\n`;
+      
+      // Stock
+      if (product.stock && product.stock > 0) {
+        response += `✅ *Disponible:* ${product.stock} unidades\n\n`;
+      }
+      
+      // Categoría
+      const categoryEmoji = product.category === 'DIGITAL' ? '💾' : product.category === 'PHYSICAL' ? '📦' : '🛠️';
+      response += `${categoryEmoji} *Tipo:* ${product.category === 'DIGITAL' ? 'Producto Digital' : product.category === 'PHYSICAL' ? 'Producto Físico' : 'Servicio'}\n\n`;
+      
+      // Llamado a la acción
+      response += `¿Te gustaría comprarlo? 😊`;
       
       return {
-        text: `¡Perfecto! 😊 Encontré el *${products[0].name}*`,
-        nextAgent: 'product', // Delegar a ProductAgent para mostrar info completa
+        text: response,
+        nextAgent: 'product',
         confidence: 0.95,
+        actions: [
+          {
+            type: 'send_photo',
+            product: product
+          }
+        ]
       };
     }
     
@@ -106,49 +139,229 @@ export class SearchAgent extends BaseAgent {
    */
   private findProductInList(message: string, products: Product[]): Product | null {
     const cleanMsg = this.cleanMessage(message);
-    
+
+    // 🔥 CORRECCIÓN CRÍTICA: Detectar selección por número (el 1, el 2, el 03, etc.)
+    const numberSelection = this.detectNumberSelection(cleanMsg);
+    if (numberSelection !== null) {
+      this.log(`Detectada selección por número: ${numberSelection}`);
+      const index = numberSelection - 1; // Convertir a índice base 0
+      if (index >= 0 && index < products.length) {
+        this.log(`Seleccionando producto ${numberSelection}: ${products[index].name}`);
+        return products[index];
+      }
+    }
+
     // Buscar el producto que mejor coincida con el mensaje
     let bestMatch: { product: Product; score: number } | null = null;
-    
+
     for (const product of products) {
       const productName = product.name.toLowerCase();
       const productWords = productName.split(' ').filter(w => w.length > 2);
-      
+
       let score = 0;
-      
+
       // Contar cuántas palabras del producto están en el mensaje
       productWords.forEach(word => {
         if (cleanMsg.includes(word)) {
           score += 1;
         }
       });
-      
+
       // Si el mensaje contiene el nombre completo del producto
       if (cleanMsg.includes(productName)) {
         score += 10;
       }
-      
+
       // Actualizar mejor match
       if (score > 0 && (!bestMatch || score > bestMatch.score)) {
         bestMatch = { product, score };
       }
     }
-    
+
     // Solo devolver si el score es suficientemente alto
     if (bestMatch && bestMatch.score >= 2) {
       return bestMatch.product;
     }
-    
+
     return null;
   }
-  
+
+  /**
+   * Detecta selección de producto por número (el 1, el 2, el primero, etc.)
+   */
+  private detectNumberSelection(message: string): number | null {
+    const cleanMsg = message.toLowerCase().trim();
+
+    // Patrones de números
+    const numberPatterns = [
+      /\bel\s+(\d+)\b/i,  // "el 1", "el 2", "el 03"
+      /\bla\s+(\d+)\b/i,  // "la 1", "la 2"
+      /\blos\s+(\d+)\b/i, // "los 1", "los 2"
+      /\blas\s+(\d+)\b/i, // "las 1", "las 2"
+      /^(\d+)\b/i,        // "1", "2", "03" al inicio
+    ];
+
+    // Patrones de palabras
+    const wordPatterns = [
+      { pattern: /\bel\s+primero\b/i, number: 1 },
+      { pattern: /\bla\s+primera\b/i, number: 1 },
+      { pattern: /\bel\s+segundo\b/i, number: 2 },
+      { pattern: /\bla\s+segunda\b/i, number: 2 },
+      { pattern: /\bel\s+tercero\b/i, number: 3 },
+      { pattern: /\bla\s+tercera\b/i, number: 3 },
+      { pattern: /\bel\s+cuarto\b/i, number: 4 },
+      { pattern: /\bla\s+cuarta\b/i, number: 4 },
+      { pattern: /\bel\s+quinto\b/i, number: 5 },
+      { pattern: /\bla\s+quinta\b/i, number: 5 },
+    ];
+
+    // Buscar patrones de palabras primero
+    for (const { pattern, number } of wordPatterns) {
+      if (pattern.test(cleanMsg)) {
+        return number;
+      }
+    }
+
+    // Buscar patrones de números
+    for (const pattern of numberPatterns) {
+      const match = cleanMsg.match(pattern);
+      if (match) {
+        const number = parseInt(match[1], 10);
+        if (number >= 1 && number <= 10) { // Máximo 10 productos
+          return number;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Aplica fuzzy matching para corregir errores tipográficos comunes
+   */
+  private applyFuzzyMatching(query: string): string {
+    let corrected = query;
+
+    // Correcciones comunes de palabras clave importantes
+    const corrections: { [key: string]: string } = {
+      'curioso': 'curso',
+      'curios': 'cursos',
+      'pian': 'piano',
+      'musica': 'música',
+      'musikas': 'música',
+      'diseñ': 'diseño',
+      'disen': 'diseño',
+      'programacio': 'programación',
+      'programacion': 'programación',
+      'desarroll': 'desarrollo',
+      'fotograf': 'fotografía',
+      'foto': 'fotografía',
+      'marketing': 'marketing',
+      'ventas': 'ventas',
+      'negoci': 'negocio',
+      'emprended': 'emprendimiento',
+      'idioma': 'idiomas',
+      'ingles': 'inglés',
+      'english': 'inglés',
+      'portugues': 'portugués',
+      'aleman': 'alemán',
+      'frances': 'francés',
+      'japones': 'japonés',
+      'coreano': 'coreano',
+      'ruso': 'ruso',
+      'arabe': 'árabe',
+      'hindi': 'hindi',
+      'excel': 'excel',
+      'word': 'word',
+      'powerpoint': 'powerpoint',
+      'photoshop': 'photoshop',
+      'illustrator': 'illustrator',
+      'autocad': 'autocad',
+      'python': 'python',
+      'javascript': 'javascript',
+      'java': 'java',
+      'react': 'react',
+      'angular': 'angular',
+      'vue': 'vue',
+      'node': 'node',
+      'php': 'php',
+      'wordpress': 'wordpress',
+      'woocommerce': 'woocommerce',
+      'shopify': 'shopify',
+      'figma': 'figma',
+      'sketch': 'sketch',
+      'xd': 'xd',
+      'premiere': 'premiere',
+      'after effects': 'after effects',
+      'lightroom': 'lightroom',
+      'indesign': 'indesign',
+      'corel': 'corel',
+      'trading': 'trading',
+      'forex': 'forex',
+      'criptomonedas': 'criptomonedas',
+      'bitcoin': 'bitcoin',
+      'inversiones': 'inversiones',
+      'bolsa': 'bolsa',
+      'acciones': 'acciones',
+      'opciones': 'opciones',
+      'futuros': 'futuros',
+      'fitness': 'fitness',
+      'gym': 'gym',
+      'ejercicio': 'ejercicio',
+      'yoga': 'yoga',
+      'nutricion': 'nutrición',
+      'dieta': 'dieta',
+      'salud': 'salud',
+      'medicina': 'medicina',
+      'enfermeria': 'enfermería',
+      'construccion': 'construcción',
+      'plomeria': 'plomeria',
+      'carpinteria': 'carpintería',
+      'soldadura': 'soldadura',
+      'mecanica': 'mecánica',
+      'albañileria': 'albañilería',
+      'memoria': 'memoria',
+      'lectura': 'lectura',
+      'rapida': 'rápida',
+      'estudio': 'estudio',
+      'aprendizaje': 'aprendizaje',
+      'concentracion': 'concentración',
+      'productividad': 'productividad',
+      'motivacion': 'motivación',
+      'computador': 'computador',
+      'laptop': 'laptop',
+      'portatil': 'portátil',
+      'moto': 'moto',
+      'motocicleta': 'motocicleta',
+      'servicio': 'servicio',
+      'reparacion': 'reparación',
+      'tecnico': 'técnico'
+    };
+
+    // Aplicar correcciones
+    Object.entries(corrections).forEach(([wrong, correct]) => {
+      // Solo corregir si la palabra está sola o al inicio de otra palabra
+      const regex = new RegExp(`\\b${wrong}\\b`, 'gi');
+      corrected = corrected.replace(regex, correct);
+    });
+
+    return corrected;
+  }
+
   /**
    * Busca productos en la base de datos
    */
   private async searchProducts(query: string, userId: string): Promise<Product[]> {
     try {
       const cleanQuery = this.cleanMessage(query);
-      const keywords = cleanQuery.split(' ').filter(w => w.length > 2);
+
+      // 🔥 CORRECCIÓN: Aplicar fuzzy matching para corregir errores tipográficos
+      const correctedQuery = this.applyFuzzyMatching(cleanQuery);
+      if (correctedQuery !== cleanQuery) {
+        this.log(`Query corregido: "${cleanQuery}" → "${correctedQuery}"`);
+      }
+
+      const keywords = correctedQuery.split(' ').filter(w => w.length > 2);
       
       // Obtener todos los productos del usuario y filtrar en memoria
       const allProducts = await db.product.findMany({

@@ -48,6 +48,7 @@ export interface SharedMemory {
   photoSent: boolean;
   paymentLinkSent: boolean;
   productInfoSent: boolean;
+  greetingSent: boolean; // Nueva flag para evitar saludos repetidos
   
   // Metadata
   needs: string[];
@@ -108,6 +109,7 @@ export class SharedMemoryService {
       photoSent: false,
       paymentLinkSent: false,
       productInfoSent: false,
+      greetingSent: false, // Nueva flag inicializada en false
       needs: [],
       objections: [],
       viewedProducts: [],

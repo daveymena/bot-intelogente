@@ -36,7 +36,7 @@ export class IntentDetector {
    */
   static detect(message: string, memory: SharedMemory): IntentResult {
     const cleanMsg = message.toLowerCase().trim();
-    
+
     // 🔥 PRIORIDAD 0: MÉTODOS DE PAGO (antes que todo)
     // Si pregunta por métodos de pago, es payment_methods (no búsqueda)
     if (this.isPaymentMethodsQuery(cleanMsg)) {
@@ -46,7 +46,7 @@ export class IntentDetector {
         entities: {},
       };
     }
-    
+
     // 🔥 PRIORIDAD 1: INFO DE PRODUCTO (si hay productos en contexto)
     // Si hay productos en contexto Y pide información, es product_info (no búsqueda)
     const hasProductContext = memory.currentProduct || (memory.interestedProducts && memory.interestedProducts.length > 0);
@@ -57,7 +57,19 @@ export class IntentDetector {
         entities: {},
       };
     }
-    
+
+    // 🔥 CORRECCIÓN CRÍTICA: Si hay productos interesados Y el mensaje parece selección
+    // (números, "ese", "este", etc.), es product_info para que SearchAgent maneje
+    if (memory.interestedProducts && memory.interestedProducts.length > 0) {
+      if (this.isProductSelection(cleanMsg)) {
+        return {
+          intent: 'product_info', // Usar product_info para que SearchAgent maneje selección
+          confidence: 0.9,
+          entities: {},
+        };
+      }
+    }
+
     // 🔥 PRIORIDAD 2: BÚSQUEDA DE PRODUCTO (antes que saludo)
     // Si el mensaje contiene palabras de búsqueda, es búsqueda aunque tenga "hola"
     if (this.isProductSearch(cleanMsg)) {
@@ -68,9 +80,11 @@ export class IntentDetector {
         entities: { productName },
       };
     }
-    
-    // 2. SALUDO (solo si NO es búsqueda)
-    if (this.isGreeting(cleanMsg)) {
+
+    // 🔥 CORRECCIÓN: SALUDO SOLO SI NO HAY CONTEXTO DE PRODUCTO ACTIVO
+    // Si ya hay conversación avanzada (productos mostrados), NO detectar como saludo
+    const hasActiveConversation = memory.greetingSent && (memory.currentProduct || memory.interestedProducts.length > 0 || memory.messageCount > 2);
+    if (this.isGreeting(cleanMsg) && !hasActiveConversation) {
       return {
         intent: 'greeting',
         confidence: 0.95,

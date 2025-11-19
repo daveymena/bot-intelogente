@@ -122,33 +122,57 @@ export class DeepReasoningAgent {
 
     for (const message of recentBotMessages.reverse()) {
       const content = message.content.toLowerCase();
-      
-      // Buscar patrones de productos mencionados
+
+      // 🔥 CORRECCIÓN: Patrones más robustos para identificar productos
       const productPatterns = [
+        // Patrones principales
         /encontré el (.+?)(?:\n|$)/i,
         /perfecto.*?encontré el (.+?)(?:\n|$)/i,
         /te presento el (.+?)(?:\n|$)/i,
+        /te cuento sobre el (.+?)(?:\n|$)/i,
+        /este es el (.+?)(?:\n|$)/i,
+
+        // Patrones de productos específicos
         /smartwatch (.+?)(?:\n|$)/i,
         /mega pack \d+: (.+?)(?:\n|$)/i,
         /curso de (.+?)(?:\n|$)/i,
+        /curso completo de (.+?)(?:\n|$)/i,
         /portátil (.+?)(?:\n|$)/i,
         /laptop (.+?)(?:\n|$)/i,
-        /moto (.+?)(?:\n|$)/i
+        /computador (.+?)(?:\n|$)/i,
+        /moto (.+?)(?:\n|$)/i,
+        /motocicleta (.+?)(?:\n|$)/i,
+
+        // Patrones de listas numeradas
+        /\d+\.\s*\*\*(.+?)\*\*/i,  // "1. **Producto**"
+        /\d+\.\s*(.+?)(?:\n|$)/i,  // "1. Producto"
+
+        // Patrones generales
+        /\*\*(.+?)\*\*/i,  // Texto en negrita
+        /💻\s*(.+?)(?:\n|$)/i,  // Con emoji de laptop
+        /🏍️\s*(.+?)(?:\n|$)/i,  // Con emoji de moto
+        /💎\s*(.+?)(?:\n|$)/i,  // Con emoji de cursos
       ];
 
       for (const pattern of productPatterns) {
         const match = content.match(pattern);
         if (match) {
-          const productName = match[1].trim();
-          console.log(`🔍 Producto identificado en historial: "${productName}"`);
-          
-          // Retornar producto básico (será enriquecido después)
-          return {
-            id: 'temp-' + Date.now(),
-            name: productName,
-            price: 0,
-            category: 'general',
-          };
+          let productName = match[1].trim();
+
+          // Limpiar el nombre extraído
+          productName = this.cleanExtractedProductName(productName);
+
+          if (productName && productName.length > 3) {
+            console.log(`🔍 Producto identificado en historial: "${productName}"`);
+
+            // Retornar producto básico (será enriquecido después)
+            return {
+              id: 'temp-' + Date.now(),
+              name: productName,
+              price: 0,
+              category: 'general',
+            };
+          }
         }
       }
     }
@@ -430,11 +454,40 @@ export class DeepReasoningAgent {
   private static extractProductNameFromLine(line: string): string | null {
     // Remover emojis y caracteres especiales
     const cleaned = line.replace(/[✅💰📦🎯🔥⚡]/g, '').trim();
-    
+
     // Si la línea tiene más de 5 palabras, probablemente no es un nombre de producto
     const words = cleaned.split(' ');
     if (words.length > 10 || words.length < 2) return null;
-    
+
+    return cleaned;
+  }
+
+  /**
+   * Limpia el nombre de producto extraído de los patrones
+   */
+  private static cleanExtractedProductName(productName: string): string {
+    let cleaned = productName;
+
+    // Remover caracteres especiales y emojis
+    cleaned = cleaned.replace(/[✅💰📦🎯🔥⚡💻🏍️💎🎹📱⭐🟢✨👉•\*\*]/g, '').trim();
+
+    // Remover números al inicio (como "1. " o "03 ")
+    cleaned = cleaned.replace(/^\d+\.\s*/, '').trim();
+
+    // Remover palabras comunes que no son parte del nombre
+    const commonWords = ['el', 'la', 'los', 'las', 'de', 'del', 'y', 'con', 'para', 'por', 'en'];
+    const words = cleaned.split(' ');
+    const filteredWords = words.filter(word => !commonWords.includes(word.toLowerCase()));
+
+    if (filteredWords.length > 0) {
+      cleaned = filteredWords.join(' ');
+    }
+
+    // Si queda muy corto o muy largo, probablemente no es válido
+    if (cleaned.length < 3 || cleaned.length > 100) {
+      return '';
+    }
+
     return cleaned;
   }
 }
