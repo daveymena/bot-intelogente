@@ -31,17 +31,8 @@ RUN cp -r .next/static .next/standalone/.next/ && \
 # Limpiar caché de npm para reducir tamaño de imagen
 RUN npm cache clean --force
 
-# Crear directorios necesarios y script de inicio
-RUN mkdir -p /app/dist /app/whatsapp-sessions /app/auth_sessions /app/data /app/moto && \
-    echo '#!/bin/sh\n\
-echo "🚀 Iniciando aplicación..."\n\
-echo "📦 Aplicando migraciones de base de datos..."\n\
-npx prisma db push --accept-data-loss || echo "⚠️  Error en migraciones, continuando..."\n\
-echo "👤 Creando usuario admin..."\n\
-npx tsx scripts/create-admin.ts || echo "⚠️  Admin ya existe o error, continuando..."\n\
-echo "✅ Iniciando servidor..."\n\
-exec npm start' > /app/start.sh && \
-    chmod +x /app/start.sh
+# Crear directorios necesarios
+RUN mkdir -p /app/dist /app/whatsapp-sessions /app/auth_sessions /app/data /app/moto
 
 # Exponer puerto
 EXPOSE 3000
@@ -53,5 +44,5 @@ ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 # Cambiar a usuario no-root
 USER pptruser
 
-# Comando de inicio con migraciones automáticas
-CMD ["/app/start.sh"]
+# Comando de inicio simplificado
+CMD ["sh", "-c", "npx prisma db push --accept-data-loss || true && npm start"]
