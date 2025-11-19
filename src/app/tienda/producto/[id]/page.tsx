@@ -33,6 +33,50 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
   const [showConversionInfo, setShowConversionInfo] = useState(false)
   const [showContraentregaForm, setShowContraentregaForm] = useState(false)
 
+  // Función para formatear la descripción
+  const formatDescription = (description: string) => {
+    // Dividir por emojis comunes que indican secciones
+    const sections = description.split(/(?=[🎵🎹🎼🎸🎺🎻🎤🎧🎬📚📖📝✅☑️✔️💡🎯🎓📊📈🔥⭐🌟💪🎁🎉🏆📦📱💻🖥️⚡🚀])/g)
+    
+    return sections.map((section, index) => {
+      const trimmed = section.trim()
+      if (!trimmed) return null
+      
+      // Detectar si es un título (empieza con emoji y es corto)
+      const isTitle = /^[^\w\s]{1,3}\s*[A-ZÁ-Ú]/.test(trimmed) && trimmed.length < 100
+      
+      if (isTitle) {
+        return (
+          <h3 key={index} className="text-lg font-bold text-gray-900 mt-4 mb-2 first:mt-0">
+            {trimmed}
+          </h3>
+        )
+      }
+      
+      // Dividir en puntos para crear lista
+      const points = trimmed.split(/[•✓✔☑]/g).filter(p => p.trim())
+      
+      if (points.length > 1) {
+        return (
+          <ul key={index} className="space-y-2 mb-4">
+            {points.map((point, i) => (
+              <li key={i} className="flex items-start gap-2">
+                <span className="text-pink-600 mt-1 flex-shrink-0">✓</span>
+                <span className="text-gray-700">{point.trim()}</span>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+      
+      return (
+        <p key={index} className="text-gray-700 mb-3 leading-relaxed">
+          {trimmed}
+        </p>
+      )
+    }).filter(Boolean)
+  }
+
   useEffect(() => {
     fetchProduct()
     updateCartCount()
@@ -255,8 +299,17 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
 
             {/* Product Info Section */}
             <div className="p-6 md:p-8 lg:p-10 flex flex-col">
+              {/* Categoría */}
+              <div className="mb-3">
+                <span className="inline-block px-3 py-1 bg-gradient-to-r from-pink-100 to-purple-100 text-pink-700 rounded-full text-xs font-semibold uppercase tracking-wide">
+                  {product.category === 'PHYSICAL' ? '📦 Producto Físico' : 
+                   product.category === 'DIGITAL' ? '💾 Producto Digital' : 
+                   '🛠️ Servicio'}
+                </span>
+              </div>
+              
               {/* Título */}
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 leading-tight">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 leading-tight text-gray-900">
                 {product.name}
               </h1>
               
@@ -298,24 +351,89 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
               </div>
 
               {/* Description */}
-              <div className="mb-8">
-                <h2 className="text-lg font-bold mb-3 text-gray-900">📝 Descripción</h2>
-                <p className="text-gray-700 leading-relaxed text-base">{product.description}</p>
+              <div className="mb-8 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 border border-gray-200">
+                <h2 className="text-xl font-bold mb-4 text-gray-900 flex items-center gap-2">
+                  <span className="text-2xl">📝</span>
+                  <span>Descripción del Producto</span>
+                </h2>
+                <div className="prose prose-sm max-w-none">
+                  {formatDescription(product.description)}
+                </div>
+              </div>
+
+              {/* Product Details */}
+              <div className="mb-8 bg-white rounded-xl p-6 border border-gray-200">
+                <h3 className="text-lg font-bold mb-4 text-gray-900 flex items-center gap-2">
+                  <span className="text-xl">ℹ️</span>
+                  <span>Información del Producto</span>
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                    <span className="text-2xl">🏷️</span>
+                    <div>
+                      <div className="text-xs text-gray-500 uppercase font-semibold">Categoría</div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {product.category === 'PHYSICAL' ? 'Producto Físico' : 
+                         product.category === 'DIGITAL' ? 'Producto Digital' : 
+                         'Servicio'}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                    <span className="text-2xl">📊</span>
+                    <div>
+                      <div className="text-xs text-gray-500 uppercase font-semibold">Disponibilidad</div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {product.stock > 0 ? `${product.stock} unidades` : 'Agotado'}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                    <span className="text-2xl">💰</span>
+                    <div>
+                      <div className="text-xs text-gray-500 uppercase font-semibold">Precio Unitario</div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {formatPrice(product.price)}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                    <span className="text-2xl">🌍</span>
+                    <div>
+                      <div className="text-xs text-gray-500 uppercase font-semibold">Envío</div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {product.category === 'PHYSICAL' ? 'A todo el país' : 'Entrega inmediata'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Benefits */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 pb-8 border-b border-gray-200">
-                <div className="flex items-center gap-3 text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">
-                  <Truck className="w-6 h-6 text-pink-600 flex-shrink-0" />
-                  <span className="font-medium">Envío rápido</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">
-                  <Shield className="w-6 h-6 text-pink-600 flex-shrink-0" />
-                  <span className="font-medium">Compra segura</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">
-                  <CreditCard className="w-6 h-6 text-pink-600 flex-shrink-0" />
-                  <span className="font-medium">Pago fácil</span>
+              <div className="mb-8 pb-8 border-b border-gray-200">
+                <h3 className="text-lg font-bold mb-4 text-gray-900">✨ Beneficios de Comprar Aquí</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="flex items-center gap-3 text-sm text-gray-700 bg-gradient-to-br from-pink-50 to-purple-50 p-4 rounded-xl border border-pink-100">
+                    <Truck className="w-7 h-7 text-pink-600 flex-shrink-0" />
+                    <div>
+                      <div className="font-bold text-gray-900">Envío Rápido</div>
+                      <div className="text-xs text-gray-600">Entrega segura</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm text-gray-700 bg-gradient-to-br from-blue-50 to-cyan-50 p-4 rounded-xl border border-blue-100">
+                    <Shield className="w-7 h-7 text-blue-600 flex-shrink-0" />
+                    <div>
+                      <div className="font-bold text-gray-900">Compra Segura</div>
+                      <div className="text-xs text-gray-600">100% protegida</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm text-gray-700 bg-gradient-to-br from-green-50 to-emerald-50 p-4 rounded-xl border border-green-100">
+                    <CreditCard className="w-7 h-7 text-green-600 flex-shrink-0" />
+                    <div>
+                      <div className="font-bold text-gray-900">Pago Fácil</div>
+                      <div className="text-xs text-gray-600">Múltiples métodos</div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
