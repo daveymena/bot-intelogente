@@ -23,23 +23,34 @@
 
 ## 🔍 Diagnóstico
 
+### ✅ Error Identificado:
+
+**Error**: `npm run build` falla con exit code 1
+
+```
+ERROR: failed to build: failed to solve: 
+process "/bin/sh -c npm run build" did not complete successfully: exit code: 1
+```
+
 ### Posibles Causas:
 
-1. **Falta de memoria durante el build**
+1. **Falta de memoria durante el build** 🔴 MÁS PROBABLE
    - Next.js build puede consumir mucha RAM
-   - Solución: Aumentar `NODE_OPTIONS="--max-old-space-size=2048"`
+   - Easypanel puede tener límite de memoria
+   - Solución: Aumentar límite de memoria en Easypanel
 
-2. **Error en el build de Next.js**
-   - Algún archivo puede tener error en producción
-   - Solución: Revisar logs completos del build
+2. **Error de TypeScript no ignorado**
+   - Aunque tenemos `ignoreBuildErrors: true`
+   - Puede no estar funcionando correctamente
+   - Solución: Verificar next.config.ts
 
-3. **Problema con dependencias**
-   - Alguna dependencia puede fallar en Docker
-   - Solución: Verificar package.json
+3. **Dependencias faltantes en Docker**
+   - Alguna dependencia nativa puede fallar
+   - Solución: Usar imagen con más dependencias
 
 4. **Problema con Prisma**
-   - Prisma generate puede fallar
-   - Solución: Verificar schema.prisma
+   - Prisma generate antes del build
+   - Solución: Ya implementado en Dockerfile
 
 ---
 
@@ -73,13 +84,21 @@ eslint: {
 
 ## 🚀 Próximos Pasos
 
-### Opción 1: Ver Logs Completos
-Necesitamos ver los logs completos del build en Easypanel para identificar el error exacto.
+### Opción 1: Aumentar Memoria en Easypanel ⭐ RECOMENDADO
 
-**Cómo obtener logs**:
-1. Ir a Easypanel → Bot WhatsApp → Logs
+El build de Next.js necesita más memoria. En Easypanel:
+
+1. Ir a **Bot WhatsApp** → **Settings** → **Resources**
+2. Aumentar **Build Memory** a **2GB** o más
+3. Hacer **Rebuild**
+
+### Opción 2: Ver Logs Completos del Build
+
+Si aumentar memoria no funciona:
+
+1. Ir a Easypanel → Bot WhatsApp → **Build Logs**
 2. Buscar el error específico durante `npm run build`
-3. Copiar el error completo
+3. Copiar el error completo (especialmente errores de TypeScript)
 
 ### Opción 2: Build Local y Push de Imagen
 Si el build en Easypanel sigue fallando, podemos:
