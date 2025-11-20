@@ -5,7 +5,7 @@
  */
 
 import { BaseAgent, AgentResponse } from './base-agent';
-import { SharedMemory } from './shared-memory';
+import { SharedMemory, Product } from './shared-memory';
 
 export class ProductAgent extends BaseAgent {
   constructor() {
@@ -91,16 +91,61 @@ export class ProductAgent extends BaseAgent {
   async handleLocally(message: string, memory: SharedMemory): Promise<AgentResponse> {
     this.log('Manejando producto localmente');
     
-    const product = memory.currentProduct;
+    const { SharedMemoryService } = await import('./shared-memory');
+    const memoryService = SharedMemoryService.getInstance();
     
+    let product = memory.currentProduct;
+    
+    // 🧠 Si no hay producto en contexto, BUSCAR EN HISTORIAL
     if (!product) {
-      return {
-        text: `¿Qué producto te interesa? 🤔
+      this.log('⚠️ No hay producto en memoria, buscando en historial...');
+      
+      // 1️⃣ Intentar obtener del historial de productos (más confiable)
+      product = memoryService.findProductInHistory(memory.chatId);
+      
+      if (product) {
+        this.log(`✅ Producto recuperado del historial: ${product.name}`);
+        memoryService.setCurrentProduct(memory.chatId, product, 'interested');
+        memory.currentProduct = product;
+      }
+      
+      // 2️⃣ Si no está en historial, buscar en mensajes del asistente
+      if (!product) {
+        const recentMessages = memory.messages.slice(-10);
+        
+        for (const msg of recentMessages.reverse()) {
+          if (msg.role === 'assistant') {
+            const productMention = await this.extractProductFromMessage(msg.content, memory.userId);
+            if (productMention) {
+              this.log(`✅ Producto extraído de mensajes: ${productMention.name}`);
+              product = productMention;
+              memoryService.setCurrentProduct(memory.chatId, productMention, 'interested');
+              memory.currentProduct = productMention;
+              break;
+            }
+          }
+        }
+      }
+      
+      // 3️⃣ Si aún no hay producto, buscar en productos interesados
+      if (!product && memory.interestedProducts?.length > 0) {
+        const lastInterested = memory.interestedProducts[memory.interestedProducts.length - 1];
+        this.log(`✅ Usando último producto de interestedProducts: ${lastInterested.name}`);
+        product = lastInterested;
+        memoryService.setCurrentProduct(memory.chatId, lastInterested, 'interested');
+        memory.currentProduct = lastInterested;
+      }
+      
+      // 4️⃣ Si definitivamente no hay producto
+      if (!product) {
+        return {
+          text: `¿Qué producto te interesa? 🤔
 
 Puedo ayudarte a buscar lo que necesitas.`,
-        nextAgent: 'search',
-        confidence: 0.8,
-      };
+          nextAgent: 'search',
+          confidence: 0.8,
+        };
+      }
     }
     
     // Marcar que se envió info del producto
@@ -177,15 +222,25 @@ Puedo ayudarte a buscar lo que necesitas.`,
     }
     text += `\n\n`;
     
-    // Disponibilidad
-    if (product.stock !== undefined) {
-      if (product.stock > 0) {
-        text += `✅ *Disponible ahora* (${product.stock} unidades)\n\n`;
-      } else {
-        text += `⚠️ *Agotado temporalmente* - ¡Avísame si te interesa para notificarte!\n\n`;
-      }
+    // Disponibilidad - DIFERENTE para digital vs físico
+    if (isCourse) {
+      // PRODUCTOS DIGITALES
+      text += `⚡ *Acceso INMEDIATO* después del pago\n`;
+      text += `📥 *Descarga INSTANTÁNEA*\n`;
+      text += `💳 *Pago online* (MercadoPago, PayPal, Transferencia)\n\n`;
     } else {
-      text += `✅ *Disponible para entrega inmediata*\n\n`;
+      // PRODUCTOS FÍSICOS
+      if (product.stock !== undefined) {
+        if (product.stock > 0) {
+          text += `✅ *Disponible ahora* (${product.stock} unidades)\n`;
+        } else {
+          text += `⚠️ *Agotado temporalmente* - ¡Avísame si te interesa para notificarte!\n`;
+        }
+      } else {
+        text += `✅ *Disponible para entrega inmediata*\n`;
+      }
+      text += `🚚 *Envío GRATIS*\n`;
+      text += `💵 *Pago Contraentrega* (pagas cuando recibes)\n\n`;
     }
     
     // 🚀 ACCIÓN: Call to action persuasivo
@@ -303,6 +358,45 @@ Puedo ayudarte a buscar lo que necesitas.`,
     return content;
   }
   
+  /**
+   * Extrae producto mencionado en un mensaje del historial
+   */
+  private async extractProductFromMessage(messageContent: string, userId: string): Promise<Product | null> {
+    try {
+      // Importar dinámicamente para evitar dependencias circulares
+      const { db } = await import('@/lib/db');
+      
+      // Buscar productos que coincidan con el contenido del mensaje
+      const products = await db.product.findMany({
+        where: {
+          userId,
+          status: 'AVAILABLE'
+        }
+      });
+      
+      // Buscar el producto cuyo nombre aparece en el mensaje
+      for (const p of products) {
+        if (messageContent.includes(p.name)) {
+          return {
+            id: p.id,
+            name: p.name,
+            description: p.description || undefined,
+            price: p.price,
+            category: p.category,
+            images: p.images ? [p.images] : undefined,
+            stock: p.stock || undefined,
+            specs: undefined
+          };
+        }
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('[ProductAgent] Error extrayendo producto del historial:', error);
+      return null;
+    }
+  }
+
   /**
    * Maneja con IA (para consultas complejas)
    */

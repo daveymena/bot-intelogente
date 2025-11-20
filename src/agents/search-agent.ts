@@ -50,12 +50,15 @@ export class SearchAgent extends BaseAgent {
     this.log('Buscando productos localmente');
     
     // 🎯 NUEVO: Si el usuario está especificando un producto que ya vio
+    const { SharedMemoryService } = await import('./shared-memory');
+    const memoryService = SharedMemoryService.getInstance();
+    
     if (memory.interestedProducts.length > 0) {
       const selectedProduct = this.findProductInList(message, memory.interestedProducts);
       if (selectedProduct) {
         this.log(`Usuario seleccionó producto específico: ${selectedProduct.name}`);
+        memoryService.setCurrentProduct(memory.chatId, selectedProduct, 'interested');
         memory.currentProduct = selectedProduct;
-        memory.photoSent = false;
         memory.interestedProducts = []; // Limpiar lista
         
         return {
@@ -83,8 +86,8 @@ export class SearchAgent extends BaseAgent {
     // Un solo producto - Mostrar información COMPLETA inmediatamente
     if (products.length === 1) {
       const product = products[0];
+      memoryService.setCurrentProduct(memory.chatId, product, 'viewed');
       memory.currentProduct = product;
-      memory.photoSent = false;
       memory.productInfoSent = true; // Marcar que ya enviamos info
       
       this.log(`✅ Producto único encontrado: ${product.name} - Mostrando info completa`);
@@ -128,10 +131,17 @@ export class SearchAgent extends BaseAgent {
       };
     }
     
-    // Múltiples productos
-    memory.interestedProducts = products.slice(0, 3);
+    // Múltiples productos - Guardar en memoria
+    const topProducts = products.slice(0, 3);
+    memory.interestedProducts = topProducts;
     
-    return this.showProductList(products.slice(0, 3));
+    // Establecer el primero como producto actual por defecto
+    if (topProducts.length > 0) {
+      memoryService.setCurrentProduct(memory.chatId, topProducts[0], 'viewed');
+      memory.currentProduct = topProducts[0];
+    }
+    
+    return this.showProductList(topProducts);
   }
   
   /**
@@ -463,14 +473,18 @@ export class SearchAgent extends BaseAgent {
     
     let score = 0;
     
+    // 🔥 REGLA FUNDAMENTAL: Detectar si es un producto genérico (Mega Pack)
+    const isGenericPack = name.includes('mega pack') || name.includes('pack completo') || name.includes('pack ');
+    const userSearchedPack = fullQuery.includes('pack') || fullQuery.includes('megapack');
+    
     // 1. Match exacto en el nombre (muy alto)
     if (name === normalizedQuery) {
-      score += 50;
+      score += 100; // Aumentado de 50 a 100
     }
     
     // 2. Nombre contiene la query completa
     if (name.includes(normalizedQuery)) {
-      score += 30;
+      score += 60; // Aumentado de 30 a 60
     }
     
     // 3. NUEVO: Detectar palabras clave específicas importantes (idiomas, temas específicos)
@@ -480,15 +494,25 @@ export class SearchAgent extends BaseAgent {
     if (specificKeywords.length >= 2) {
       const allSpecificInName = specificKeywords.every(k => name.includes(k));
       if (allSpecificInName) {
-        score += 40; // BONUS MUY GRANDE cuando todas las palabras específicas están en el nombre
+        score += 50; // BONUS MUY GRANDE cuando todas las palabras específicas están en el nombre
         this.log(`🎯 MATCH PERFECTO: Todas las keywords específicas en nombre: ${product.name}`);
       }
     }
     
+    // 3b. Si hay UNA keyword específica en el nombre, bonus grande
     specificKeywords.forEach(keyword => {
       if (name.includes(keyword)) {
-        score += 25; // Peso MUY alto para palabras específicas
-        this.log(`✅ Keyword específica encontrada en nombre: "${keyword}" en "${product.name}"`);
+        // 🔥 BONUS EXTRA: Si la keyword específica está en el nombre Y el nombre es corto/específico
+        // (no es un mega pack genérico), dar bonus MASIVO
+        const isGenericPack = name.includes('mega pack') || name.includes('pack completo');
+        
+        if (!isGenericPack) {
+          score += 50; // BONUS MASIVO para productos específicos con la keyword
+          this.log(`🎯 MATCH ESPECÍFICO: "${keyword}" en producto específico "${product.name}"`);
+        } else {
+          score += 30; // Bonus normal para packs genéricos
+          this.log(`✅ Keyword específica encontrada en nombre: "${keyword}" en "${product.name}"`);
+        }
       } else if (description.includes(keyword)) {
         score += 15; // También alto en descripción
         this.log(`✅ Keyword específica encontrada en descripción: "${keyword}"`);
@@ -501,13 +525,32 @@ export class SearchAgent extends BaseAgent {
     // 4. Todas las keywords están en el nombre
     const allKeywordsInName = keywords.every(k => name.includes(k));
     if (allKeywordsInName && keywords.length > 1) {
-      score += 15;
+      score += 20; // Aumentado de 15 a 20
     }
     
-    // 5. Keywords individuales en el nombre (peso alto)
+    // 4b. NUEVO: Si todas las keywords importantes están en el nombre (ignorando palabras comunes)
+    const importantKeywords = keywords.filter(k => !this.isCommonWord(k));
+    const allImportantInName = importantKeywords.every(k => name.includes(k));
+    if (allImportantInName && importantKeywords.length >= 2) {
+      score += 25; // BONUS grande cuando todas las palabras importantes coinciden
+      this.log(`🎯 Todas las keywords importantes en nombre: ${product.name}`);
+    }
+    
+    // 5. Keywords individuales en el nombre
     keywords.forEach(keyword => {
       if (name.includes(keyword)) {
-        score += 5;
+        // 🔥 NUEVO: Si la keyword NO es común, dar mucho más peso
+        if (!this.isCommonWord(keyword)) {
+          // Si es un producto específico (no pack), dar MUCHO más peso
+          if (!isGenericPack) {
+            score += 40; // PESO MASIVO para palabras únicas en productos específicos
+            this.log(`🎯 Palabra única "${keyword}" en producto específico: ${product.name}`);
+          } else {
+            score += 10; // Peso normal para packs
+          }
+        } else {
+          score += 6; // Peso bajo para palabras comunes
+        }
       }
     });
     
@@ -525,14 +568,21 @@ export class SearchAgent extends BaseAgent {
       }
     });
     
-    // 8. PENALIZACIÓN FUERTE: Si es un "mega pack" o "pack completo" pero el usuario NO buscó eso
-    const isPackProduct = name.includes('mega pack') || name.includes('pack completo') || name.includes('pack ');
-    const userSearchedPack = fullQuery.includes('pack') || fullQuery.includes('megapack');
-    
-    if (isPackProduct && !userSearchedPack) {
+    // 8. PENALIZACIÓN FUERTE: Si es un "mega pack" pero el usuario NO buscó eso
+    if (isGenericPack && !userSearchedPack) {
       // El usuario NO buscó un pack, pero este producto es un pack
-      score -= 15; // Penalización MUY fuerte
-      this.log(`❌ Penalizando pack: ${product.name} (usuario no buscó pack)`);
+      // 🔥 PENALIZACIÓN MASIVA: Los packs genéricos NO deben aparecer si el usuario busca algo específico
+      
+      // Detectar si el usuario buscó algo específico (palabras no comunes)
+      const hasSpecificSearch = keywords.some(k => !this.isCommonWord(k));
+      
+      if (hasSpecificSearch || specificKeywords.length > 0) {
+        score -= 50; // PENALIZACIÓN MASIVA cuando busca algo específico
+        this.log(`❌ Penalizando pack MASIVAMENTE: ${product.name} (usuario buscó algo específico, no pack)`);
+      } else {
+        score -= 30; // Penalización fuerte
+        this.log(`❌ Penalizando pack fuertemente: ${product.name} (usuario no buscó pack)`);
+      }
     }
     
     // 9. PENALIZACIÓN: Si el producto NO contiene ninguna keyword específica pero el usuario sí buscó algo específico
@@ -554,7 +604,7 @@ export class SearchAgent extends BaseAgent {
     }
     
     // 11. BONUS: Si el nombre es corto y específico (no es un pack genérico)
-    if (!isPackProduct && nameWords.length <= 5) {
+    if (!isGenericPack && nameWords.length <= 5) {
       score += 2;
     }
     
@@ -599,7 +649,7 @@ export class SearchAgent extends BaseAgent {
     });
     
     // Diseño y Arte (NUEVO - muy importante)
-    const design = ['diseño', 'diseno', 'grafico', 'gráfico', 'logo', 'branding', 'ui', 'ux',
+    const design = ['diseño', 'diseno', 'grafico', 'gráfico', 'logo', 'branding',
                    'web design', 'graphic design', '3d', 'animacion', 'animación', 'ilustracion', 'ilustración',
                    'dibujo', 'pintura', 'arte', 'creativo'];
     design.forEach(d => {
@@ -607,6 +657,12 @@ export class SearchAgent extends BaseAgent {
         specificWords.push(d);
       }
     });
+    
+    // UI/UX (con word boundaries para evitar falsos positivos)
+    if (/\bui\b/.test(query) || /\bux\b/.test(query)) {
+      if (/\bui\b/.test(query)) specificWords.push('ui');
+      if (/\bux\b/.test(query)) specificWords.push('ux');
+    }
     
     // Temas de negocio y profesionales
     const business = ['marketing', 'ventas', 'contabilidad', 'finanzas', 'administracion', 'administración',
@@ -710,13 +766,47 @@ export class SearchAgent extends BaseAgent {
    * Mapea un producto de Prisma a Product
    */
   private mapProduct(p: any): Product {
+    // 🔥 CORRECCIÓN: images puede ser string (URL) o JSON array
+    let images: string[] = [];
+    if (p.images) {
+      if (typeof p.images === 'string') {
+        // Si es string, puede ser una URL directa o un JSON
+        if (p.images.startsWith('http')) {
+          // Es una URL directa
+          images = [p.images];
+        } else if (p.images.startsWith('[')) {
+          // Es un JSON array
+          try {
+            const parsed = JSON.parse(p.images);
+            // Filtrar solo URLs válidas
+            images = Array.isArray(parsed) 
+              ? parsed.filter((img: any) => typeof img === 'string' && img.startsWith('http'))
+              : [];
+          } catch (e) {
+            // Si falla el parse, intentar usar como string si es URL
+            if (p.images.startsWith('http')) {
+              images = [p.images];
+            }
+          }
+        } else {
+          // Otro formato, solo usar si es URL
+          if (p.images.startsWith('http')) {
+            images = [p.images];
+          }
+        }
+      } else if (Array.isArray(p.images)) {
+        // Ya es un array, filtrar solo URLs válidas
+        images = p.images.filter((img: any) => typeof img === 'string' && img.startsWith('http'));
+      }
+    }
+    
     return {
       id: p.id,
       name: p.name,
       description: p.description || undefined,
       price: p.price,
       category: p.category,
-      images: p.images ? JSON.parse(p.images) : [],
+      images,
       stock: p.stock || undefined,
     };
   }

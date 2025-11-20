@@ -37,19 +37,34 @@ export class IntentDetector {
   static detect(message: string, memory: SharedMemory): IntentResult {
     const cleanMsg = message.toLowerCase().trim();
 
-    // 🔥 PRIORIDAD 0: MÉTODOS DE PAGO (antes que todo)
-    // Si pregunta por métodos de pago, es payment_methods (no búsqueda)
-    if (this.isPaymentMethodsQuery(cleanMsg)) {
+    // 🔥 PRIORIDAD 0: SELECCIÓN DE MÉTODO DE PAGO (antes que todo)
+    // Si hay producto en contexto Y menciona un método de pago, es selección
+    const hasProductContext = memory.currentProduct || (memory.interestedProducts && memory.interestedProducts.length > 0);
+    const paymentMethod = this.detectPaymentMethod(cleanMsg);
+    
+    if (hasProductContext && paymentMethod) {
       return {
-        intent: 'payment_methods',
-        confidence: 0.95,
-        entities: {},
+        intent: 'payment_selection',
+        confidence: 0.98, // MUY alta confianza
+        entities: { paymentMethod },
       };
     }
 
-    // 🔥 PRIORIDAD 1: INFO DE PRODUCTO (si hay productos en contexto)
+    // 🔥 PRIORIDAD 1: MÉTODOS DE PAGO (antes que búsqueda)
+    // Si pregunta por métodos de pago, es payment_methods (no búsqueda)
+    if (this.isPaymentMethodsQuery(cleanMsg)) {
+      // 🔥 EXTRAER PRODUCTO MENCIONADO EN EL MENSAJE
+      const productName = this.extractProductName(cleanMsg);
+      
+      return {
+        intent: 'payment_methods',
+        confidence: 0.95,
+        entities: { productName }, // Incluir producto si se menciona
+      };
+    }
+
+    // 🔥 PRIORIDAD 2: INFO DE PRODUCTO (si hay productos en contexto)
     // Si hay productos en contexto Y pide información, es product_info (no búsqueda)
-    const hasProductContext = memory.currentProduct || (memory.interestedProducts && memory.interestedProducts.length > 0);
     if (hasProductContext && this.isProductInfoQuery(cleanMsg)) {
       return {
         intent: 'product_info',
@@ -70,9 +85,10 @@ export class IntentDetector {
       }
     }
 
-    // 🔥 PRIORIDAD 2: BÚSQUEDA DE PRODUCTO (antes que saludo)
+    // 🔥 PRIORIDAD 3: BÚSQUEDA DE PRODUCTO (antes que saludo)
     // Si el mensaje contiene palabras de búsqueda, es búsqueda aunque tenga "hola"
-    if (this.isProductSearch(cleanMsg)) {
+    // PERO: Si hay producto en contexto, NO es búsqueda (evita falsos positivos)
+    if (!hasProductContext && this.isProductSearch(cleanMsg)) {
       const productName = this.extractProductName(cleanMsg);
       return {
         intent: 'search_product',
@@ -108,19 +124,6 @@ export class IntentDetector {
         confidence: 0.9,
         entities: {},
       };
-    }
-    
-    // 5. SELECCIÓN DE MÉTODO DE PAGO (alta prioridad)
-    const paymentMethod = this.detectPaymentMethod(cleanMsg);
-    if (paymentMethod) {
-      // Si hay producto en contexto O intención de pago, es selección de método
-      if (memory.currentProduct || memory.paymentIntent) {
-        return {
-          intent: 'payment_selection',
-          confidence: 0.95, // Alta confianza
-          entities: { paymentMethod },
-        };
-      }
     }
     
     // 6. CONSULTA DE PRECIO
@@ -375,12 +378,51 @@ export class IntentDetector {
   }
   
   private static isProductSearch(msg: string): boolean {
+    // 🔥 CORRECCIÓN: Detectar expresiones de interés en productos específicos
+    const interestPatterns = [
+      /\b(si|sí)\s+(me\s+)?interesa\s+(ver\s+)?(el|la|los|las)?\s*\w+/i,
+      /\bme\s+interesa\s+(ver\s+)?(el|la)?\s*\w+/i,
+      /\bquiero\s+(ver\s+)?(el|la)?\s*\w+/i,
+      /\bme\s+gustaria\s+(ver\s+)?(el|la)?\s*\w+/i,
+      /\bquisiera\s+(ver\s+)?(el|la)?\s*\w+/i,
+      /\binformacion\s+(sobre|del|de)\s+\w+/i,
+      /\bcuentame\s+(sobre|del|de)\s+\w+/i,
+    ];
+    
+    // Si coincide con algún patrón de interés, es búsqueda
+    if (interestPatterns.some(p => p.test(msg))) {
+      return true;
+    }
+    
+    // Palabras clave de búsqueda
     const searchKeywords = [
       'busco', 'necesito', 'quiero', 'me interesa', 'tienes',
-      'vendes', 'hay', 'tienen', 'curso', 'megapack', 'portatil',
-      'computador', 'laptop', 'moto', 'servicio'
+      'vendes', 'hay', 'tienen', 'mostrar', 'ver', 'enseñar'
     ];
-    return searchKeywords.some(k => msg.includes(k));
+    
+    // Nombres de productos/categorías
+    const productKeywords = [
+      'curso', 'megapack', 'portatil', 'portátil',
+      'computador', 'laptop', 'moto', 'servicio',
+      'piano', 'guitarra', 'diseño', 'excel', 'ingles', 'inglés',
+      'programacion', 'programación', 'marketing', 'fotografia', 'fotografía'
+    ];
+    
+    // Si tiene palabra de búsqueda + palabra de producto, es búsqueda
+    const hasSearchKeyword = searchKeywords.some(k => msg.includes(k));
+    const hasProductKeyword = productKeywords.some(k => msg.includes(k));
+    
+    if (hasSearchKeyword && hasProductKeyword) {
+      return true;
+    }
+    
+    // Si solo menciona un producto específico (sin palabra de búsqueda)
+    // pero el mensaje es corto (< 50 caracteres), probablemente es búsqueda
+    if (hasProductKeyword && msg.length < 50) {
+      return true;
+    }
+    
+    return false;
   }
   
   private static isProductInfoQuery(msg: string): boolean {
@@ -421,9 +463,33 @@ export class IntentDetector {
   }
   
   private static extractProductName(msg: string): string | undefined {
-    // Extraer nombre de producto del mensaje
-    // Esto es básico, se puede mejorar
-    const words = msg.split(' ').filter(w => w.length > 3);
-    return words.length > 0 ? words.join(' ') : undefined;
+    // 🔥 MEJORADO: Extraer nombre de producto del mensaje
+    
+    // Limpiar palabras de relleno comunes
+    let cleanMsg = msg
+      .toLowerCase()
+      .replace(/\b(si|sí|me|interesa|ver|el|la|los|las|un|una|quiero|quisiera|me\s+gustaria|me\s+gustaría|busco|necesito|tienes|hay|sobre|del|de)\b/gi, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+    
+    // Si quedó algo después de limpiar, eso es el nombre del producto
+    if (cleanMsg.length > 2) {
+      return cleanMsg;
+    }
+    
+    // Fallback: buscar palabras clave de productos
+    const productKeywords = [
+      'curso', 'megapack', 'portatil', 'portátil', 'computador', 'laptop', 
+      'moto', 'servicio', 'piano', 'guitarra', 'diseño', 'excel', 
+      'ingles', 'inglés', 'programacion', 'programación', 'marketing',
+      'fotografia', 'fotografía', 'idiomas', 'música', 'musica'
+    ];
+    
+    const words = msg.toLowerCase().split(' ');
+    const productWords = words.filter(w => 
+      productKeywords.some(k => w.includes(k)) || w.length > 4
+    );
+    
+    return productWords.length > 0 ? productWords.join(' ') : undefined;
   }
 }

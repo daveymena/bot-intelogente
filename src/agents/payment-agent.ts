@@ -4,7 +4,7 @@
  */
 
 import { BaseAgent, AgentResponse } from './base-agent';
-import { SharedMemory } from './shared-memory';
+import { SharedMemory, Product, SharedMemoryService } from './shared-memory';
 import { PaymentMethodsConfig } from '@/lib/payment-methods-config';
 
 export class PaymentAgent extends BaseAgent {
@@ -33,17 +33,73 @@ export class PaymentAgent extends BaseAgent {
   async handleLocally(message: string, memory: SharedMemory): Promise<AgentResponse> {
     this.log('Manejando pago localmente');
     
-    const product = memory.currentProduct;
+    let product = memory.currentProduct;
+    const memoryService = SharedMemoryService.getInstance();
     
-    // Si no hay producto en contexto
+    // 🧠 Si no hay producto en contexto, BUSCAR EN MENSAJE ACTUAL PRIMERO
     if (!product) {
-      return {
-        text: `Primero necesito saber qué producto quieres comprar 😊
+      this.log('⚠️ No hay producto en memoria, buscando...');
+      
+      // 🔥 1️⃣ PRIMERO: Buscar producto mencionado en el MENSAJE ACTUAL
+      const productInMessage = await this.extractProductFromMessage(message, memory.userId);
+      if (productInMessage) {
+        this.log(`✅ Producto extraído del mensaje actual: ${productInMessage.name}`);
+        product = productInMessage;
+        memoryService.setCurrentProduct(memory.chatId, product, 'payment_intent');
+        memory.currentProduct = product;
+        memory.salesStage = 'payment';
+      }
+      
+      // 2️⃣ Intentar obtener del historial de productos (más confiable)
+      if (!product) {
+        product = memoryService.findProductInHistory(memory.chatId);
+        
+        if (product) {
+          this.log(`✅ Producto recuperado del historial: ${product.name}`);
+          memoryService.setCurrentProduct(memory.chatId, product, 'payment_intent');
+          memory.currentProduct = product;
+          memory.salesStage = 'payment';
+        }
+      }
+      
+      // 3️⃣ Buscar en mensajes del asistente
+      if (!product) {
+        const recentMessages = memory.messages.slice(-10);
+        
+        for (const msg of recentMessages.reverse()) {
+          if (msg.role === 'assistant') {
+            const productMention = await this.extractProductFromMessage(msg.content, memory.userId);
+            if (productMention) {
+              this.log(`✅ Producto extraído de mensajes: ${productMention.name}`);
+              product = productMention;
+              memoryService.setCurrentProduct(memory.chatId, product, 'payment_intent');
+              memory.currentProduct = product;
+              memory.salesStage = 'payment';
+              break;
+            }
+          }
+        }
+      }
+      
+      // 4️⃣ Si aún no hay producto, buscar en productos interesados
+      if (!product && memory.interestedProducts?.length > 0) {
+        this.log(`✅ Usando último producto de interestedProducts: ${memory.interestedProducts[memory.interestedProducts.length - 1].name}`);
+        product = memory.interestedProducts[memory.interestedProducts.length - 1];
+        memoryService.setCurrentProduct(memory.chatId, product, 'payment_intent');
+        memory.currentProduct = product;
+        memory.salesStage = 'payment';
+      }
+      
+      // 5️⃣ Si definitivamente no hay producto
+      if (!product) {
+        return {
+          text: `Primero necesito saber qué producto quieres comprar 😊
 
 ¿Qué te interesa?`,
-        nextAgent: 'search',
-        confidence: 0.9,
-      };
+          nextAgent: 'search',
+          confidence: 0.9,
+        };
+      }
     }
     
     // Detectar si está seleccionando un método específico
@@ -98,6 +154,96 @@ export class PaymentAgent extends BaseAgent {
     if (msg.includes('pse')) return 'mercadopago'; // Redirigir a MercadoPago
     
     return null;
+  }
+  
+  /**
+   * Extrae producto mencionado en un mensaje
+   */
+  private async extractProductFromMessage(messageContent: string, userId: string): Promise<Product | null> {
+    try {
+      // Importar dinámicamente para evitar dependencias circulares
+      const { db } = await import('@/lib/db');
+      
+      const msgLower = messageContent.toLowerCase();
+      
+      // Buscar productos que coincidan con el contenido del mensaje
+      const products = await db.product.findMany({
+        where: {
+          userId,
+          status: 'AVAILABLE'
+        }
+      });
+      
+      // 🔥 BÚSQUEDA INTELIGENTE: Buscar por nombre completo o palabras clave
+      for (const p of products) {
+        const productNameLower = p.name.toLowerCase();
+        
+        // 1. Coincidencia exacta del nombre completo
+        if (msgLower.includes(productNameLower)) {
+          this.log(`✅ Coincidencia exacta: ${p.name}`);
+          return {
+            id: p.id,
+            name: p.name,
+            description: p.description || undefined,
+            price: p.price,
+            category: p.category,
+            images: p.images ? [p.images] : undefined,
+            stock: p.stock || undefined,
+            specs: undefined
+          };
+        }
+        
+        // 2. Coincidencia por palabras clave importantes (mínimo 2 palabras)
+        const productWords = productNameLower.split(' ').filter(w => w.length > 3);
+        const matchedWords = productWords.filter(word => msgLower.includes(word));
+        
+        if (matchedWords.length >= 2) {
+          this.log(`✅ Coincidencia por palabras clave (${matchedWords.length}/${productWords.length}): ${p.name}`);
+          return {
+            id: p.id,
+            name: p.name,
+            description: p.description || undefined,
+            price: p.price,
+            category: p.category,
+            images: p.images ? [p.images] : undefined,
+            stock: p.stock || undefined,
+            specs: undefined
+          };
+        }
+      }
+      
+      // 3. Búsqueda por categoría o tipo de producto
+      const categoryKeywords: Record<string, string[]> = {
+        'curso': ['curso', 'aprender', 'enseñanza'],
+        'megapack': ['megapack', 'pack', 'colección'],
+        'laptop': ['laptop', 'portátil', 'computador'],
+        'moto': ['moto', 'motocicleta'],
+      };
+      
+      for (const p of products) {
+        const category = p.category?.toLowerCase() || '';
+        const keywords = categoryKeywords[category] || [];
+        
+        if (keywords.some(kw => msgLower.includes(kw))) {
+          this.log(`✅ Coincidencia por categoría: ${p.name}`);
+          return {
+            id: p.id,
+            name: p.name,
+            description: p.description || undefined,
+            price: p.price,
+            category: p.category,
+            images: p.images ? [p.images] : undefined,
+            stock: p.stock || undefined,
+            specs: undefined
+          };
+        }
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('[PaymentAgent] Error extrayendo producto del mensaje:', error);
+      return null;
+    }
   }
   
   /**

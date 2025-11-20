@@ -1,6 +1,7 @@
  'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/use-auth'
 import { useSessionPersistence } from '@/hooks/useSessionPersistence'
 import {
@@ -611,6 +612,25 @@ function CustomersTab() {
 }
 
 function SettingsTab() {
+  const router = useRouter()
+  
+  // Redirigir a la página de configuración completa
+  useEffect(() => {
+    router.push('/dashboard/configuracion')
+  }, [router])
+  
+  return (
+    <div className="flex items-center justify-center h-64">
+      <div className="text-center">
+        <Loader2 className="w-8 h-8 animate-spin text-green-600 mx-auto mb-2" />
+        <p className="text-sm text-gray-600">Cargando configuración...</p>
+      </div>
+    </div>
+  )
+}
+
+// COMPONENTE ANTIGUO - REEMPLAZADO POR /dashboard/configuracion
+function SettingsTabOLD() {
   const { user } = useAuth()
   const [settings, setSettings] = useState<any>(null)
   const [loading, setLoading] = useState(true)

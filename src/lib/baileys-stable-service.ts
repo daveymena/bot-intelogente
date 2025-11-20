@@ -432,12 +432,10 @@ export class BaileysStableService {
           //   continue
           // }
 
-          // 🎯 SISTEMA 24/7 CON ENTRENAMIENTO COMPLETO
-          console.log('[Baileys] 🎯 Usando SISTEMA 24/7 ENTRENADO')
+          // 🤖 SISTEMA DE AGENTES ESPECIALIZADOS CON RAZONAMIENTO PROFUNDO
+          console.log('[Baileys] 🤖 Usando SISTEMA DE AGENTES ESPECIALIZADOS')
           
           try {
-            const { Bot24_7Orchestrator } = await import('./bot-24-7-orchestrator')
-            
             // Obtener historial de conversación
             const historyMessages = await db.message.findMany({
               where: { conversationId: conversation.id },
@@ -450,16 +448,34 @@ export class BaileysStableService {
               content: msg.content
             }))
             
-            // Procesar mensaje con AI Service (sistema original)
-            const { AIService } = await import('./ai-service')
-            const aiResponse = await AIService.generateResponse(
-              userId,
-              messageText,
-              from,
-              history
-            )
+            // 🧠 USAR ORQUESTADOR DE AGENTES
+            const { AgentOrchestrator } = await import('@/agents/agent-orchestrator-wrapper')
             
-            console.log(`[Baileys] ✅ Respuesta generada (confianza: ${(aiResponse.confidence * 100).toFixed(0)}%)`)
+            console.log('[Baileys] 🧠 Procesando con razonamiento profundo y agentes especializados...')
+            
+            const agentResponse = await AgentOrchestrator.processMessage({
+              message: messageText,
+              userId,
+              conversationId: conversation.id,
+              customerPhone: from,
+              history
+            })
+            
+            console.log(`[Baileys] ✅ Respuesta de agentes (confianza: ${(agentResponse.confidence * 100).toFixed(0)}%)`)
+            console.log(`[Baileys] 🎯 Agente usado: ${agentResponse.agentUsed || 'orchestrator'}`)
+            
+            // Convertir respuesta de agentes al formato esperado
+            const aiResponse = {
+              message: agentResponse.message,
+              confidence: agentResponse.confidence,
+              intent: agentResponse.intent,
+              shouldSendPhotos: agentResponse.shouldSendPhotos || false,
+              photos: agentResponse.photos || [],
+              productId: agentResponse.productId
+            }
+            
+            console.log(`[Baileys] 📸 Debe enviar fotos: ${aiResponse.shouldSendPhotos}`)
+            console.log(`[Baileys] 🖼️ Fotos disponibles: ${aiResponse.photos?.length || 0}`)
             
             // 📸 ENVIAR FOTO PRIMERO si hay producto con fotos
             if (aiResponse.shouldSendPhotos && aiResponse.photos && aiResponse.photos.length > 0) {
@@ -468,14 +484,30 @@ export class BaileysStableService {
               try {
                 const { MediaService } = await import('./media-service')
                 
-                // Enviar PRIMERA foto con el mensaje completo como caption
-                const firstPhoto = aiResponse.photos[0]
+                // Asegurar que photos es un array
+                let photosArray = aiResponse.photos
+                if (typeof photosArray === 'string') {
+                  try {
+                    photosArray = JSON.parse(photosArray)
+                  } catch (e) {
+                    photosArray = [photosArray]
+                  }
+                }
                 
-                console.log(`[Baileys] 📤 Enviando foto principal con descripción`)
+                // Validar que el array no est� vac�o y tenga URLs v�lidas
+                if (!Array.isArray(photosArray) || photosArray.length === 0) {
+                  console.log(`[Baileys]  No hay fotos v�lidas, enviando solo texto`)
+                  throw new Error('No hay fotos v�lidas')
+                }
+                
+                // Enviar PRIMERA foto con el mensaje completo como caption
+                const firstPhoto = photosArray[0]
+                
+                console.log(`[Baileys]  Enviando foto principal: ${firstPhoto}`)
                 
                 const imageData = await MediaService.prepareImageMessage(
                   firstPhoto,
-                  aiResponse.message // El mensaje completo va como caption de la foto
+                  aiResponse.message
                 )
                 
                 await socket.sendMessage(from, {

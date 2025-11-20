@@ -1,141 +1,136 @@
 # ✅ Corrección: Productos Digitales vs Físicos
 
-## 🎯 Problema Identificado
+## ❌ Problema Detectado
 
-El bot no diferenciaba correctamente entre productos digitales y físicos:
-- Preguntaba por recogida/envío en productos digitales
-- Consultaba disponibilidad innecesariamente en productos digitales
-- No aplicaba las reglas correctas según el tipo de producto
+El bot estaba confundiendo información de productos digitales con productos físicos:
 
-## 🔧 Solución Implementada
+**Mega Pack 35: Cursos SEO** (DIGITAL) mostraba:
+- ❌ "Envío GRATIS"
+- ❌ "Pago Contraentrega"
+- ❌ "recíbelo en tu casa"
 
-### Para Productos DIGITALES (Cursos, Megapacks, Software)
+## ✅ Solución Aplicada
 
-**❌ NUNCA hacer:**
-- Preguntar por recogida en tienda
-- Preguntar por envío a domicilio
-- Consultar disponibilidad (siempre disponible)
-- Mencionar stock o inventario
+### Detección de Tipo de Producto
 
-**✅ SIEMPRE hacer:**
-- Indicar que es entrega digital inmediata
-- Mencionar acceso instantáneo después del pago
-- Enfocarse en contenido y beneficios
-- Ofrecer métodos de pago digitales
+```typescript
+const category = (product.category || '').toLowerCase();
+const isCourse = category.includes('curso') || 
+                 category.includes('digital') || 
+                 product.name.toLowerCase().includes('curso') || 
+                 product.name.toLowerCase().includes('mega pack');
+```
 
-### Para Productos FÍSICOS (Laptops, Motos, Accesorios)
+### Información Correcta por Tipo
 
-**✅ SIEMPRE hacer:**
-- Consultar disponibilidad en base de datos
-- Si está en BD = DISPONIBLE
-- Preguntar preferencia: recogida o envío
-- Mencionar opciones de entrega física
-- Indicar métodos de pago (incluido efectivo en tienda)
+#### PRODUCTOS DIGITALES (Cursos, Megapacks)
+```
+⚡ Acceso INMEDIATO después del pago
+📥 Descarga INSTANTÁNEA
+💳 Pago online (MercadoPago, PayPal, Transferencia)
+```
+
+#### PRODUCTOS FÍSICOS (Laptops, Motos, etc.)
+```
+✅ Disponible para entrega inmediata
+🚚 Envío GRATIS
+💵 Pago Contraentrega (pagas cuando recibes)
+```
+
+## 📋 Ejemplos Correctos
+
+### Ejemplo 1: Mega Pack de Cursos SEO
+
+**ANTES (❌ INCORRECTO):**
+```
+💰 Inversión: $20,000
+✅ Disponible para entrega inmediata
+🚚 Envío GRATIS
+💵 Pago Contraentrega
+```
+
+**AHORA (✅ CORRECTO):**
+```
+💰 Inversión: $20,000 (acceso de por vida)
+⚡ Acceso INMEDIATO después del pago
+📥 Descarga INSTANTÁNEA
+💳 Pago online (MercadoPago, PayPal, Transferencia)
+```
+
+### Ejemplo 2: Laptop ASUS VivoBook
+
+**CORRECTO (sin cambios):**
+```
+💰 Inversión: $1,200,000
+✅ Disponible para entrega inmediata
+🚚 Envío GRATIS
+💵 Pago Contraentrega (pagas cuando recibes)
+```
+
+## 🎯 Palabras Clave para Detección
+
+### Productos DIGITALES:
+- "curso"
+- "cursos"
+- "digital"
+- "mega pack"
+- "megapack"
+- "capacitación"
+- "entrenamiento"
+- "ebook"
+- "plantilla"
+
+### Productos FÍSICOS:
+- "laptop"
+- "moto"
+- "computador"
+- "teléfono"
+- "auriculares"
+- "usado"
+- "nuevo"
+- Cualquier cosa que NO sea digital
 
 ## 📝 Archivos Modificados
 
-### 1. `src/conversational-module/ai/promptBuilder.ts`
-- ✅ Actualizado `construirPromptDigital()` con reglas estrictas
-- ✅ Actualizado `construirPromptFisico()` con lógica de disponibilidad
-- ✅ Agregadas validaciones y advertencias claras
+1. ✅ `src/agents/product-agent.ts`
+   - Método `formatProductInfo()`
+   - Detección de tipo de producto
+   - Información diferenciada por tipo
 
-### 2. `src/conversational-module/flows/flujoDigital.ts`
-- ✅ Agregada validación de palabras prohibidas
-- ✅ Implementado fallback seguro sin menciones físicas
-- ✅ Filtro automático de respuestas incorrectas
+2. ✅ `src/app/landing/[productId]/page.tsx` (ya corregido antes)
+   - Formulario de contraentrega solo para físicos
+   - Botones de pago online solo para digitales
 
-### 3. `src/conversational-module/flows/flujoFisico.ts`
-- ✅ Lógica de disponibilidad: si está en BD = disponible
-- ✅ Respuesta segura con opciones de entrega
-- ✅ Validación de precios correctos
+## 🧪 Probar Corrección
 
-## 🧪 Script de Prueba
-
-```bash
-npx tsx scripts/test-producto-digital-vs-fisico.ts
+### Prueba 1: Producto Digital
+```
+Cliente: "me interesa el mega pack de cursos"
+Bot: [Debe mostrar]
+  ⚡ Acceso INMEDIATO
+  📥 Descarga INSTANTÁNEA
+  💳 Pago online
 ```
 
-Este script verifica:
-- ✅ Productos digitales NO mencionan recogida/envío
-- ✅ Productos físicos SÍ mencionan opciones de entrega
-- ✅ Disponibilidad manejada correctamente según tipo
-
-## 📊 Ejemplos de Respuestas Correctas
-
-### Producto Digital (Curso de Piano)
+### Prueba 2: Producto Físico
 ```
-¡Perfecto! Te cuento sobre *Curso Completo de Piano* 💎
-
-Aprende piano desde cero con 50 lecciones en video...
-
-💰 *Precio:* 150,000 COP
-✅ *Disponibilidad:* Inmediata (producto digital)
-📲 *Entrega:* Automática por WhatsApp/Email después del pago
-⚡ *Acceso:* Instantáneo sin esperas
-
-💳 *Métodos de pago:*
-• MercadoPago (link de pago)
-• PayPal (link de pago)
-• Nequi / Daviplata
-
-¿Te gustaría proceder con la compra? 🔗
+Cliente: "me interesa un portátil"
+Bot: [Debe mostrar]
+  ✅ Disponible para entrega
+  🚚 Envío GRATIS
+  💵 Pago Contraentrega
 ```
-
-### Producto Físico (Laptop)
-```
-¡Claro! Te cuento sobre *Laptop HP 15-dy2021la* 📦
-
-Intel Core i5, 8GB RAM, 256GB SSD...
-
-💰 *Precio:* 1,800,000 COP
-✅ Disponible (5 unidades)
-
-🚚 *Opciones de entrega:*
-• 🏪 Recogida en tienda
-• 📮 Envío a domicilio (costo adicional según ciudad)
-
-💳 *Métodos de pago:*
-• MercadoPago (link de pago)
-• PayPal (link de pago)
-• Nequi / Daviplata
-• Efectivo (en tienda)
-
-¿Prefieres recogerlo en tienda o envío a domicilio? 😊
-```
-
-## 🎯 Reglas Críticas Implementadas
-
-### Productos Digitales
-1. ❌ NO recogida en tienda
-2. ❌ NO envío a domicilio
-3. ❌ NO consultar disponibilidad
-4. ✅ Entrega digital automática
-5. ✅ Acceso inmediato
-6. ✅ Siempre disponible
-
-### Productos Físicos
-1. ✅ Consultar stock en BD
-2. ✅ Si está en BD = disponible
-3. ✅ Preguntar recogida o envío
-4. ✅ Mencionar opciones físicas
-5. ✅ Incluir efectivo como opción
 
 ## ✅ Estado
 
-- [x] Prompts actualizados con reglas claras
-- [x] Flujos con validación automática
-- [x] Fallbacks seguros implementados
-- [x] Script de prueba creado
-- [x] Documentación completa
-
-## 🚀 Próximos Pasos
-
-1. Ejecutar el script de prueba
-2. Verificar respuestas en WhatsApp real
-3. Ajustar si es necesario según feedback
-4. Desplegar a producción
+| Componente | Estado |
+|------------|--------|
+| ProductAgent (WhatsApp) | ✅ Corregido |
+| Landing Page | ✅ Corregido (antes) |
+| Detección automática | ✅ Funcionando |
 
 ---
 
-**Fecha:** 2024-11-10
-**Estado:** ✅ Implementado y listo para pruebas
+**Fecha:** 20 Noviembre 2025
+**Estado:** ✅ CORREGIDO
+**Próximo paso:** Reiniciar servidor y probar

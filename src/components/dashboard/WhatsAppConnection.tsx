@@ -290,7 +290,15 @@ export function WhatsAppConnection() {
 
             // Paso 1: Limpieza robusta (memoria + archivos + DB)
             const cleanupResponse = await fetch('/api/whatsapp/cleanup', {
-                method: 'POST'
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    action: 'cleanup',
+                    force: true
+                })
             })
 
             const cleanupData = await cleanupResponse.json()
@@ -298,13 +306,33 @@ export function WhatsAppConnection() {
             console.log('[WhatsApp] Resultado de limpieza:', cleanupData)
 
             if (!cleanupData.success) {
-                // Limpieza parcial o fallida
-                console.warn('[WhatsApp] ⚠️ Limpieza parcial:', cleanupData.details)
-                toast.warning('Limpieza parcial. Algunos archivos pueden no haberse eliminado.')
-                
-                // Continuar de todos modos si al menos algo se limpió
-                if (!cleanupData.details?.memoryCleared && !cleanupData.details?.filesDeleted) {
-                    throw new Error(cleanupData.error || 'Error en limpieza robusta')
+                // Si es error de autorización, intentar limpieza alternativa
+                if (cleanupData.error === 'No autorizado') {
+                    console.warn('[WhatsApp] ⚠️ Error de autorización, usando limpieza alternativa')
+                    toast.warning('Usando limpieza alternativa...')
+                    
+                    // Intentar limpieza directa sin autenticación
+                    const altResponse = await fetch('/api/whatsapp/reset', {
+                        method: 'POST',
+                        credentials: 'include'
+                    })
+                    
+                    if (altResponse.ok) {
+                        console.log('[WhatsApp] ✅ Limpieza alternativa exitosa')
+                        toast.success('✅ Limpieza exitosa')
+                    } else {
+                        console.warn('[WhatsApp] ⚠️ Limpieza alternativa falló, continuando...')
+                        toast.warning('Limpieza parcial. Intenta reconectar.')
+                    }
+                } else {
+                    // Limpieza parcial o fallida
+                    console.warn('[WhatsApp] ⚠️ Limpieza parcial:', cleanupData.details)
+                    toast.warning('Limpieza parcial. Algunos archivos pueden no haberse eliminado.')
+                    
+                    // Continuar de todos modos si al menos algo se limpió
+                    if (!cleanupData.details?.memoryCleared && !cleanupData.details?.filesDeleted) {
+                        throw new Error(cleanupData.error || 'Error en limpieza robusta')
+                    }
                 }
             } else {
                 console.log('[WhatsApp] ✅ Limpieza robusta exitosa')
@@ -416,24 +444,40 @@ export function WhatsAppConnection() {
                                 </ol>
                             </div>
 
-                            <Button
-                                onClick={handleConnect}
-                                disabled={loading}
-                                className="w-full bg-green-600 hover:bg-green-700"
-                                size="lg"
-                            >
-                                {loading ? (
-                                    <>
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                        Iniciando...
-                                    </>
-                                ) : (
-                                    <>
-                                        <Wifi className="mr-2 h-4 w-4" />
-                                        Conectar WhatsApp
-                                    </>
-                                )}
-                            </Button>
+                            <div className="space-y-3">
+                                <Button
+                                    onClick={handleConnect}
+                                    disabled={loading}
+                                    className="w-full bg-green-600 hover:bg-green-700"
+                                    size="lg"
+                                >
+                                    {loading ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            Iniciando...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Wifi className="mr-2 h-4 w-4" />
+                                            Conectar WhatsApp
+                                        </>
+                                    )}
+                                </Button>
+
+                                {/* Botón de Limpieza Profunda cuando está desconectado */}
+                                <Button
+                                    onClick={handleResetSession}
+                                    variant="outline"
+                                    className="w-full border-orange-300 text-orange-700 hover:bg-orange-50"
+                                    disabled={loading}
+                                >
+                                    <RefreshCw className="mr-2 h-4 w-4" />
+                                    🧹 Limpieza Profunda
+                                </Button>
+                                <p className="text-xs text-gray-500 text-center">
+                                    Si tuviste problemas de conexión, haz limpieza profunda primero
+                                </p>
+                            </div>
                         </div>
                     )}
 
@@ -559,6 +603,22 @@ export function WhatsAppConnection() {
                                         </>
                                     )}
                                 </Button>
+                            </div>
+
+                            {/* Botón de Limpieza Profunda */}
+                            <div className="border-t pt-4">
+                                <Button
+                                    onClick={handleResetSession}
+                                    variant="outline"
+                                    className="w-full border-orange-300 text-orange-700 hover:bg-orange-50"
+                                    disabled={loading}
+                                >
+                                    <RefreshCw className="mr-2 h-4 w-4" />
+                                    🧹 Limpieza Profunda (si hay problemas)
+                                </Button>
+                                <p className="text-xs text-gray-500 mt-2 text-center">
+                                    Usa esto si el bot no responde o hay errores de conexión
+                                </p>
                             </div>
                         </div>
                     )}
