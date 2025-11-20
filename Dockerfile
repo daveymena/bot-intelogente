@@ -5,15 +5,27 @@ FROM ghcr.io/puppeteer/puppeteer:21.6.0
 WORKDIR /app
 
 # Variables de entorno para reducir uso de memoria en build
-ENV NODE_OPTIONS="--max-old-space-size=2048"
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV NPM_CONFIG_LOGLEVEL=error
 
 # Copiar archivos de dependencias
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Instalar dependencias (todas, incluyendo dev para el build)
-RUN npm install --no-audit --legacy-peer-deps
+# Instalar dependencias en modo producción primero (menos memoria)
+# Luego instalar dev dependencies solo si es necesario
+RUN npm ci --only=production --no-audit --legacy-peer-deps || \
+    npm install --only=production --no-audit --legacy-peer-deps
+
+# Instalar dev dependencies necesarias para el build
+RUN npm install --no-save --no-audit --legacy-peer-deps \
+    typescript \
+    @types/node \
+    @types/react \
+    @types/react-dom \
+    eslint \
+    eslint-config-next
 
 # Copiar el resto del código
 COPY . .
