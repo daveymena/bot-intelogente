@@ -234,10 +234,9 @@ export default function PageAssistant() {
            `¿Sobre qué tema específico necesitas ayuda?`
   }
 
-  // Solo mostrar en rutas de administrador
-  const isAdminRoute = pathname?.startsWith('/dashboard') || 
-                       pathname?.startsWith('/admin') ||
-                       pathname?.startsWith('/kiro-assistant')
+  // Solo mostrar en rutas de dashboard (administrador)
+  // NO mostrar en tienda pública, catálogo, checkout, etc.
+  const isAdminRoute = pathname?.startsWith('/dashboard')
   
   // No renderizar nada si no es ruta de admin
   if (!isAdminRoute) {

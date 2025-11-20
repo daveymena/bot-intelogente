@@ -44,6 +44,11 @@ model User {
   subscriptionStatus    String?           @default("trial") // trial, active, expired, cancelled
   subscriptionExpiresAt DateTime?
   
+  // Configuraciones del Dashboard (JSON)
+  paymentMethods        String?           // JSON: MercadoPago, PayPal, Nequi, Daviplata, Bank
+  businessInfo          String?           // JSON: Información del negocio
+  notificationSettings  String?           // JSON: Configuración de notificaciones
+  
   createdAt             DateTime          @default(now())
   updatedAt             DateTime          @updatedAt
 
@@ -103,6 +108,7 @@ model Product {
   // Relations
   user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   conversations Conversation[]
+  landingPages  LandingPage[]
   
   @@index([category, subcategory])
   @@index([store])
@@ -426,6 +432,46 @@ model MessageQueue {
   @@map("message_queue")
 }
 
+// Landing Pages - Configuración personalizada por producto
+model LandingPage {
+  id                Int       @id @default(autoincrement())
+  productId         String
+  product           Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  // Configuración de plantilla
+  template          String    @default("default") // 'default', 'physical', 'digital', 'dropshipping'
+  variant           String?   // 'a', 'b', 'c' para A/B testing
+  
+  // Personalización de contenido
+  heroImage         String?
+  headline          String?
+  subheadline       String?
+  ctaText           String?
+  ctaColor          String?
+  benefits          String?   @db.Text // JSON array
+  features          String?   @db.Text // JSON array
+  urgencyMessage    String?
+  guarantee         String?
+  
+  // SEO y Meta Tags
+  metaTitle         String?
+  metaDescription   String?
+  ogImage           String?
+  
+  // Tracking y Analytics
+  views             Int       @default(0)
+  clicks            Int       @default(0)
+  conversions       Int       @default(0)
+  
+  // Timestamps
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  @@unique([productId, variant])
+  @@map("landing_pages")
+  @@index([productId])
+}
+
 // Enums
 enum UserRole {
   ADMIN
@@ -587,19 +633,26 @@ model PaymentIntegration {
 // Orders - Órdenes de compra
 model Order {
   id              String       @id @default(cuid())
+  userId          String?      // ID del vendedor
+  productId       String?      // ID del producto
+  quantity        Int          @default(1)
   customerName    String
-  customerEmail   String
+  customerEmail   String?
   customerPhone   String
   customerAddress String?
   customerCity    String?
+  shippingAddress String?      // Dirección completa de envío
   notes           String?
-  items           String       // JSON string de los productos
+  items           String?      // JSON string de los productos (para pedidos múltiples)
   total           Float
   paymentMethod   String
   status          String       @default("pending") // pending, paid, completed, cancelled
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
   
+  @@index([userId])
+  @@index([productId])
+  @@index([status])
   @@map("orders")
 }
 

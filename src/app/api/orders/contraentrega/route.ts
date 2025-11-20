@@ -1,116 +1,177 @@
 import { NextRequest, NextResponse } from 'next/server'
-import nodemailer from 'nodemailer'
+import { prisma } from '@/lib/db'
+import { EmailService } from '@/lib/email-service'
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { customerData, cart, total } = body
+    const {
+      productId,
+      productName,
+      quantity,
+      price,
+      total,
+      color,
+      customerData,
+      paymentMethod,
+      userId
+    } = body
 
-    // Crear mensaje para email y WhatsApp
-    const orderMessage = `
-🛒 NUEVO PEDIDO - CONTRAENTREGA
-
-👤 DATOS DEL CLIENTE:
-━━━━━━━━━━━━━━━━━━━━━━
-Nombre: ${customerData.name}
-Email: ${customerData.email}
-Teléfono: ${customerData.phone}
-Dirección: ${customerData.address}
-Ciudad: ${customerData.city}
-
-📦 PRODUCTOS:
-━━━━━━━━━━━━━━━━━━━━━━
-${cart.map((item: any) => `• ${item.name} x${item.quantity} - $${(item.price * item.quantity).toLocaleString('es-CO')} COP`).join('\n')}
-
-💰 TOTAL: $${total.toLocaleString('es-CO')} COP
-
-📝 NOTAS:
-${customerData.notes || 'Ninguna'}
-
-━━━━━━━━━━━━━━━━━━━━━━
-Fecha: ${new Date().toLocaleString('es-CO')}
-    `.trim()
-
-    // Enviar por email
-    const emailSent = await sendEmail(customerData.email, orderMessage)
-
-    // Generar link de WhatsApp
-    const whatsappMessage = orderMessage.replace(/━/g, '-')
-    const whatsappLink = `https://wa.me/573136174267?text=${encodeURIComponent(whatsappMessage)}`
-
-    return NextResponse.json({
-      success: true,
-      emailSent,
-      whatsappLink,
-      message: 'Pedido procesado correctamente'
-    })
-
-  } catch (error) {
-    console.error('[Contraentrega API] Error:', error)
-    return NextResponse.json({
-      success: false,
-      error: 'Error procesando pedido'
-    }, { status: 500 })
-  }
-}
-
-async function sendEmail(customerEmail: string, message: string): Promise<boolean> {
-  try {
-    const EMAIL_USER = process.env.EMAIL_USER
-    const EMAIL_PASS = process.env.EMAIL_PASS
-    const EMAIL_FROM = process.env.EMAIL_FROM || EMAIL_USER
-
-    if (!EMAIL_USER || !EMAIL_PASS) {
-      console.log('[Email] Credenciales no configuradas')
-      return false
+    // Validar datos requeridos
+    if (!productId || !productName || !quantity || !customerData?.name || !customerData?.phone) {
+      return NextResponse.json(
+        { error: 'Faltan datos requeridos' },
+        { status: 400 }
+      )
     }
 
-    // Crear transporter
-    const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-      port: parseInt(process.env.EMAIL_PORT || '587'),
-      secure: false,
-      auth: {
-        user: EMAIL_USER,
-        pass: EMAIL_PASS
+    // Obtener información del negocio
+    const businessInfo = await prisma.businessInfo.findFirst({
+      where: { userId: userId || undefined }
+    })
+
+    // Crear el pedido en la base de datos
+    const order = await prisma.order.create({
+      data: {
+        userId: userId || undefined,
+        productId,
+        quantity,
+        total,
+        status: 'pending',
+        paymentMethod: 'contraentrega',
+        customerName: customerData.name,
+        customerEmail: customerData.email || undefined,
+        customerPhone: customerData.phone,
+        customerAddress: customerData.address,
+        customerCity: customerData.city,
+        shippingAddress: `${customerData.address}, ${customerData.city}, ${customerData.department}`,
+        notes: color ? `Color: ${color}` : undefined
       }
     })
 
-    // Enviar email al vendedor
-    await transporter.sendMail({
-      from: EMAIL_FROM,
-      to: EMAIL_USER, // Enviar al mismo email del negocio
-      subject: '🛒 Nuevo Pedido - Contraentrega',
-      text: message,
-      html: `<pre style="font-family: monospace; white-space: pre-wrap;">${message}</pre>`
-    })
+    // Preparar email para el vendedor
+    const emailSubject = `🛒 Nuevo Pedido Contraentrega - ${productName}`
+    const emailBody = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #2563eb;">🛒 Nuevo Pedido Contraentrega</h2>
+        
+        <div style="background: #f3f4f6; padding: 20px; border-radius: 10px; margin: 20px 0;">
+          <h3 style="color: #1f2937; margin-top: 0;">📦 Información del Producto</h3>
+          <p><strong>Producto:</strong> ${productName}</p>
+          <p><strong>Cantidad:</strong> ${quantity}</p>
+          <p><strong>Precio Unitario:</strong> $${price.toLocaleString('es-CO')} COP</p>
+          <p><strong>Total:</strong> $${total.toLocaleString('es-CO')} COP</p>
+          ${color ? `<p><strong>Color:</strong> ${color}</p>` : ''}
+        </div>
 
-    // Enviar confirmación al cliente
-    await transporter.sendMail({
-      from: EMAIL_FROM,
-      to: customerEmail,
-      subject: '✅ Pedido Recibido - Smart Sales Bot',
-      text: `Hola,\n\nHemos recibido tu pedido correctamente.\n\nNos pondremos en contacto contigo pronto para coordinar la entrega.\n\n${message}\n\nGracias por tu compra!\n\nSmart Sales Bot`,
-      html: `
+        <div style="background: #dbeafe; padding: 20px; border-radius: 10px; margin: 20px 0;">
+          <h3 style="color: #1f2937; margin-top: 0;">👤 Datos del Cliente</h3>
+          <p><strong>Nombre:</strong> ${customerData.name}</p>
+          <p><strong>Teléfono:</strong> ${customerData.phone}</p>
+          ${customerData.email ? `<p><strong>Email:</strong> ${customerData.email}</p>` : ''}
+          <p><strong>Dirección:</strong> ${customerData.address}</p>
+          <p><strong>Ciudad:</strong> ${customerData.city}</p>
+          <p><strong>Departamento:</strong> ${customerData.department}</p>
+        </div>
+
+        <div style="background: #dcfce7; padding: 20px; border-radius: 10px; margin: 20px 0;">
+          <h3 style="color: #1f2937; margin-top: 0;">💳 Método de Pago</h3>
+          <p><strong>Contraentrega</strong> - El cliente pagará al recibir el producto</p>
+        </div>
+
+        <div style="background: #fef3c7; padding: 15px; border-radius: 10px; margin: 20px 0;">
+          <p style="margin: 0;"><strong>⚠️ Acción Requerida:</strong> Contacta al cliente para confirmar el pedido y coordinar la entrega.</p>
+        </div>
+
+        <p style="color: #6b7280; font-size: 14px; margin-top: 30px;">
+          Pedido ID: #${order.id}<br>
+          Fecha: ${new Date().toLocaleString('es-CO')}
+        </p>
+      </div>
+    `
+
+    // Enviar email al vendedor
+    if (businessInfo?.email) {
+      try {
+        await EmailService.sendEmail(
+          businessInfo.email,
+          emailSubject,
+          emailBody
+        )
+      } catch (emailError) {
+        console.error('Error enviando email:', emailError)
+        // No fallar si el email falla, el pedido ya está guardado
+      }
+    }
+
+    // Enviar email de confirmación al cliente (si proporcionó email)
+    if (customerData.email) {
+      const customerEmailSubject = `✅ Confirmación de Pedido - ${productName}`
+      const customerEmailBody = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #EC4899;">✅ Pedido Recibido</h2>
-          <p>Hola <strong>${customerEmail}</strong>,</p>
-          <p>Hemos recibido tu pedido correctamente.</p>
-          <p>Nos pondremos en contacto contigo pronto para coordinar la entrega.</p>
-          <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <pre style="font-family: monospace; white-space: pre-wrap; margin: 0;">${message}</pre>
+          <h2 style="color: #10b981;">✅ ¡Pedido Recibido!</h2>
+          
+          <p>Hola <strong>${customerData.name}</strong>,</p>
+          
+          <p>Hemos recibido tu pedido y pronto nos pondremos en contacto contigo para confirmar la entrega.</p>
+
+          <div style="background: #f3f4f6; padding: 20px; border-radius: 10px; margin: 20px 0;">
+            <h3 style="color: #1f2937; margin-top: 0;">📦 Resumen de tu Pedido</h3>
+            <p><strong>Producto:</strong> ${productName}</p>
+            <p><strong>Cantidad:</strong> ${quantity}</p>
+            <p><strong>Total:</strong> $${total.toLocaleString('es-CO')} COP</p>
+            ${color ? `<p><strong>Color:</strong> ${color}</p>` : ''}
           </div>
-          <p>Gracias por tu compra!</p>
-          <p style="color: #6b7280; font-size: 14px;">Smart Sales Bot</p>
+
+          <div style="background: #dcfce7; padding: 20px; border-radius: 10px; margin: 20px 0;">
+            <h3 style="color: #1f2937; margin-top: 0;">🚚 Dirección de Entrega</h3>
+            <p>${customerData.address}<br>
+            ${customerData.city}, ${customerData.department}</p>
+          </div>
+
+          <div style="background: #dbeafe; padding: 20px; border-radius: 10px; margin: 20px 0;">
+            <h3 style="color: #1f2937; margin-top: 0;">💳 Método de Pago</h3>
+            <p><strong>Contraentrega</strong> - Pagarás al recibir tu producto</p>
+          </div>
+
+          <p style="color: #6b7280; font-size: 14px; margin-top: 30px;">
+            Pedido ID: #${order.id}<br>
+            Fecha: ${new Date().toLocaleString('es-CO')}
+          </p>
+
+          <p style="margin-top: 30px;">
+            Si tienes alguna pregunta, contáctanos por WhatsApp: ${businessInfo?.whatsappNumber || ''}
+          </p>
+
+          <p style="color: #6b7280; font-size: 14px; margin-top: 30px;">
+            Gracias por tu compra,<br>
+            <strong>${businessInfo?.businessName || 'Smart Sales Bot'}</strong>
+          </p>
         </div>
       `
+
+      try {
+        await EmailService.sendEmail(
+          customerData.email,
+          customerEmailSubject,
+          customerEmailBody
+        )
+      } catch (emailError) {
+        console.error('Error enviando email al cliente:', emailError)
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
+      orderId: order.id,
+      message: 'Pedido creado exitosamente'
     })
 
-    console.log('[Email] Emails enviados correctamente')
-    return true
-
   } catch (error) {
-    console.error('[Email] Error enviando:', error)
-    return false
+    console.error('Error procesando pedido contraentrega:', error)
+    return NextResponse.json(
+      { error: 'Error procesando el pedido' },
+      { status: 500 }
+    )
   }
 }

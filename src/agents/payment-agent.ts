@@ -301,6 +301,26 @@ export class PaymentAgent extends BaseAgent {
     memory.preferredPaymentMethod = method;
     memory.paymentLinkSent = true;
     
+    // 🔔 REGISTRAR PAGO PENDIENTE PARA SEGUIMIENTO
+    try {
+      const { paymentFollowUpService } = await import('@/lib/payment-follow-up-service');
+      const customerPhone = memory.chatId.split(':')[1] || memory.chatId;
+      
+      await paymentFollowUpService.registerPendingPayment({
+        userId: memory.userId,
+        customerPhone,
+        productId: product.id,
+        productName: product.name,
+        amount: product.price,
+        paymentMethod: method,
+      });
+      
+      this.log(`✅ Pago pendiente registrado para seguimiento automático`);
+    } catch (error) {
+      this.log(`⚠️ Error registrando seguimiento de pago:`, error);
+      // Continuar sin seguimiento si falla
+    }
+    
     // Generar instrucciones usando la configuración
     const instructions = PaymentMethodsConfig.generatePaymentInstructions(
       method,

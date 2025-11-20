@@ -13,7 +13,10 @@ import {
   Image as ImageIcon,
   Upload,
   Download,
-  FileJson
+  FileJson,
+  ExternalLink,
+  Copy,
+  Sparkles
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -433,6 +436,25 @@ export default function ProductsManagement() {
     }
   }
 
+  // Funciones para Landing Pages
+  const getLandingPageUrl = (productId: string) => {
+    const baseUrl = window.location.origin
+    return `${baseUrl}/landing/${productId}`
+  }
+
+  const copyLandingPageUrl = (productId: string, productName: string) => {
+    const url = getLandingPageUrl(productId)
+    navigator.clipboard.writeText(url)
+    toast.success(`✅ URL copiada: ${productName}`, {
+      description: 'Pégala en tus anuncios de Facebook, Google, Instagram, etc.'
+    })
+  }
+
+  const openLandingPage = (productId: string) => {
+    const url = getLandingPageUrl(productId)
+    window.open(url, '_blank')
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -844,6 +866,39 @@ export default function ProductsManagement() {
                   )}
                 </div>
               )}
+
+              <Separator />
+
+              {/* Botón de Landing Page */}
+              <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-3 rounded-lg border border-blue-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="w-4 h-4 text-purple-600" />
+                  <span className="text-sm font-semibold text-gray-700">Landing Page</span>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 bg-white hover:bg-blue-50 border-blue-300"
+                    onClick={() => copyLandingPageUrl(product.id, product.name)}
+                  >
+                    <Copy className="w-3 h-3 mr-1" />
+                    Copiar URL
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 bg-white hover:bg-purple-50 border-purple-300"
+                    onClick={() => openLandingPage(product.id)}
+                  >
+                    <ExternalLink className="w-3 h-3 mr-1" />
+                    Ver
+                  </Button>
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  Para anuncios de Facebook, Google Ads, Instagram
+                </p>
+              </div>
 
               <Separator />
 

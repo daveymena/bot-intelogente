@@ -40,11 +40,11 @@ export function useStoreSettings() {
   const loadSettings = async () => {
     try {
       setLoading(true)
-      const response = await fetch('/api/store/settings')
+      const response = await fetch('/api/store-settings')
       const data = await response.json()
 
-      if (data.success) {
-        setSettings(data.settings)
+      if (data.settings) {
+        setSettings(data.settings as any)
       } else {
         setError(data.error || 'Error al cargar configuración')
       }
@@ -58,16 +58,16 @@ export function useStoreSettings() {
   // Actualizar configuración
   const updateSettings = async (updates: Partial<StoreSettings>) => {
     try {
-      const response = await fetch('/api/store/settings', {
-        method: 'PUT',
+      const response = await fetch('/api/store-settings', {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updates)
+        body: JSON.stringify({ settings: updates })
       })
 
       const data = await response.json()
 
       if (data.success) {
-        setSettings(data.settings)
+        setSettings(data.settings as any)
         return { success: true }
       } else {
         return { success: false, error: data.error }

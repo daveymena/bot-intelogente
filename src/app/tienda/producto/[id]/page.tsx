@@ -22,6 +22,19 @@ interface Product {
   paymentLinkCustom?: string
 }
 
+interface StoreSettings {
+  storeName: string
+  storeSlogan: string
+  primaryColor: string
+  secondaryColor: string
+  accentColor: string
+  logo: string
+  logoSquare: string
+  email: string
+  phone: string
+  whatsapp: string
+}
+
 export default function ProductoPage({ params }: { params: { id: string } }) {
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
@@ -30,45 +43,50 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
   const [generatingPayment, setGeneratingPayment] = useState(false)
   const [cartCount, setCartCount] = useState(0)
   const [userCurrency, setUserCurrency] = useState('COP')
-  const [showConversionInfo, setShowConversionInfo] = useState(false)
   const [showContraentregaForm, setShowContraentregaForm] = useState(false)
+  const [storeSettings, setStoreSettings] = useState<StoreSettings | null>(null)
 
   // Función para formatear la descripción
   const formatDescription = (description: string) => {
-    // Dividir por emojis comunes que indican secciones
-    const sections = description.split(/(?=[🎵🎹🎼🎸🎺🎻🎤🎧🎬📚📖📝✅☑️✔️💡🎯🎓📊📈🔥⭐🌟💪🎁🎉🏆📦📱💻🖥️⚡🚀])/g)
+    if (!description) return null
     
-    return sections.map((section, index) => {
-      const trimmed = section.trim()
-      if (!trimmed) return null
+    // Limpiar caracteres especiales problemáticos
+    let cleaned = description
+      .replace(/◆/g, '') // Eliminar diamantes
+      .replace(/♦/g, '') // Eliminar otros diamantes
+      .replace(/\s+/g, ' ') // Normalizar espacios
+      .trim()
+    
+    // Dividir por saltos de línea o emojis que indican secciones
+    const lines = cleaned.split(/\n+/)
+    
+    return lines.map((line, index) => {
+      const trimmed = line.trim()
+      if (!trimmed || trimmed.length < 3) return null
       
-      // Detectar si es un título (empieza con emoji y es corto)
-      const isTitle = /^[^\w\s]{1,3}\s*[A-ZÁ-Ú]/.test(trimmed) && trimmed.length < 100
+      // Detectar si es un título (texto en negrita o con emoji al inicio)
+      const isTitleWithEmoji = /^[🎵🎹🎼🎸🎺🎻🎤🎧🎬📚📖📝✅☑️✔️💡🎯🎓📊📈🔥⭐🌟💪🎁🎉🏆📦📱💻🖥️⚡🚀]/.test(trimmed)
+      const isShortTitle = trimmed.length < 80 && /^[A-ZÁ-Ú]/.test(trimmed.replace(/^[^\w\s]+\s*/, ''))
       
-      if (isTitle) {
+      if (isTitleWithEmoji || isShortTitle) {
         return (
-          <h3 key={index} className="text-lg font-bold text-gray-900 mt-4 mb-2 first:mt-0">
+          <h3 key={index} className="text-lg font-bold text-gray-900 mt-6 mb-3 first:mt-0 flex items-center gap-2">
             {trimmed}
           </h3>
         )
       }
       
-      // Dividir en puntos para crear lista
-      const points = trimmed.split(/[•✓✔☑]/g).filter(p => p.trim())
-      
-      if (points.length > 1) {
+      // Detectar listas (líneas que empiezan con +, -, *, •, ✓, ✔, ☑)
+      if (/^[+\-*•✓✔☑]\s/.test(trimmed)) {
         return (
-          <ul key={index} className="space-y-2 mb-4">
-            {points.map((point, i) => (
-              <li key={i} className="flex items-start gap-2">
-                <span className="text-pink-600 mt-1 flex-shrink-0">✓</span>
-                <span className="text-gray-700">{point.trim()}</span>
-              </li>
-            ))}
-          </ul>
+          <div key={index} className="flex items-start gap-3 mb-2 pl-2">
+            <span className="text-blue-600 mt-1 flex-shrink-0 font-bold">✓</span>
+            <span className="text-gray-700 leading-relaxed">{trimmed.replace(/^[+\-*•✓✔☑]\s*/, '')}</span>
+          </div>
         )
       }
       
+      // Texto normal
       return (
         <p key={index} className="text-gray-700 mb-3 leading-relaxed">
           {trimmed}
@@ -79,19 +97,45 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     fetchProduct()
-    updateCartCount()
+    fetchStoreSettings()
     
     // Detectar moneda del usuario
     CurrencyService.detectUserCountry().then(info => {
       setUserCurrency(info.currency.code)
     })
+  }, [params.id])
+  
+  const fetchStoreSettings = async () => {
+    try {
+      // Primero obtener el producto para saber el userId
+      const productRes = await fetch(`/api/products/${params.id}`)
+      const productData = await productRes.json()
+      const userId = productData.product?.userId || 'default'
+      
+      // Luego cargar la configuración de ese usuario
+      const timestamp = new Date().getTime()
+      const res = await fetch(`/api/store-settings/public?userId=${userId}&t=${timestamp}`)
+      const data = await res.json()
+      console.log('🎨 Configuración de tienda cargada en producto:', data.settings)
+      if (data.settings) {
+        setStoreSettings(data.settings)
+      }
+    } catch (error) {
+      console.error('Error cargando configuración de tienda:', error)
+    }
+  }
+
+  useEffect(() => {
+    // Cargar carrito solo en el cliente
+    updateCartCount()
     
     // Escuchar cambios en el carrito
     window.addEventListener('cartUpdated', updateCartCount)
     return () => window.removeEventListener('cartUpdated', updateCartCount)
-  }, [params.id])
+  }, [])
 
   const updateCartCount = () => {
+    if (typeof window === 'undefined') return
     const cart = JSON.parse(localStorage.getItem('cart') || '[]')
     const total = cart.reduce((sum: number, item: any) => sum + item.quantity, 0)
     setCartCount(total)
@@ -118,14 +162,6 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
     const convertedPrice = CurrencyService.convertFromCOP(priceInCOP, userCurrency)
     const usd = CurrencyService.convertToUSD(convertedPrice, userCurrency)
     return CurrencyService.formatPrice(usd, 'USD')
-  }
-
-  const getConversionInfo = () => {
-    if (!product) return null
-    const totalInLocal = product.price * quantity
-    const convertedPrice = CurrencyService.convertFromCOP(totalInLocal, userCurrency)
-    const payment = CurrencyService.calculatePaymentAmount(convertedPrice, userCurrency)
-    return payment
   }
 
   const isPhysicalProduct = () => {
@@ -171,8 +207,38 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
     window.open(whatsappLink, '_blank')
   }
 
-  const handleAddToCart = () => {
+  const handleShare = async () => {
     if (!product) return
+    
+    const shareData = {
+      title: product.name,
+      text: `¡Mira este producto! ${product.name} - ${formatPrice(product.price)}`,
+      url: window.location.href
+    }
+
+    try {
+      // Intentar usar la Web Share API (móviles)
+      if (navigator.share) {
+        await navigator.share(shareData)
+      } else {
+        // Fallback: copiar al portapapeles
+        await navigator.clipboard.writeText(window.location.href)
+        alert('✅ Link copiado al portapapeles')
+      }
+    } catch (error) {
+      // Si falla, copiar al portapapeles
+      try {
+        await navigator.clipboard.writeText(window.location.href)
+        alert('✅ Link copiado al portapapeles')
+      } catch (clipboardError) {
+        // Último fallback: mostrar el link
+        prompt('Copia este link:', window.location.href)
+      }
+    }
+  }
+
+  const handleAddToCart = () => {
+    if (!product || typeof window === 'undefined') return
     
     // Agregar al carrito (localStorage)
     const cart = JSON.parse(localStorage.getItem('cart') || '[]')
@@ -223,16 +289,42 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-black text-white sticky top-0 z-50 shadow-lg">
+      {/* Header Personalizado */}
+      <header 
+        className="text-white sticky top-0 z-50 shadow-lg"
+        style={{
+          background: storeSettings?.primaryColor 
+            ? `linear-gradient(to right, ${storeSettings.primaryColor}, ${storeSettings.secondaryColor || storeSettings.primaryColor})`
+            : 'linear-gradient(to right, #1f2937, #000000)'
+        }}
+      >
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <Link href="/tienda" className="flex items-center space-x-2 hover:opacity-80 transition">
               <ArrowLeft className="w-5 h-5" />
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center font-bold text-xl">
-                SSB
-              </div>
-              <span className="font-bold text-lg hidden sm:block">Smart Sales Bot</span>
+              {storeSettings?.logo ? (
+                <Image
+                  src={storeSettings.logo}
+                  alt={storeSettings.storeName}
+                  width={120}
+                  height={40}
+                  className="h-10 w-auto object-contain"
+                />
+              ) : (
+                <>
+                  <div 
+                    className="w-10 h-10 rounded-lg flex items-center justify-center font-bold text-xl"
+                    style={{
+                      background: storeSettings?.accentColor || '#3b82f6'
+                    }}
+                  >
+                    {storeSettings?.storeName?.charAt(0) || 'S'}
+                  </div>
+                  <span className="font-bold text-lg hidden sm:block">
+                    {storeSettings?.storeName || 'Smart Sales Bot'}
+                  </span>
+                </>
+              )}
             </Link>
             <div className="flex items-center gap-2">
               <CurrencySelector onCurrencyChange={(currency) => setUserCurrency(currency.code)} />
@@ -351,58 +443,62 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
               </div>
 
               {/* Description */}
-              <div className="mb-8 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 border border-gray-200">
-                <h2 className="text-xl font-bold mb-4 text-gray-900 flex items-center gap-2">
-                  <span className="text-2xl">📝</span>
-                  <span>Descripción del Producto</span>
-                </h2>
-                <div className="prose prose-sm max-w-none">
-                  {formatDescription(product.description)}
+              <div className="mb-8">
+                <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                  <h2 className="text-2xl font-bold mb-6 text-gray-900 flex items-center gap-3 pb-4 border-b border-gray-200">
+                    <span className="text-3xl">📝</span>
+                    <span>Descripción del Producto</span>
+                  </h2>
+                  <div className="prose prose-sm max-w-none space-y-4">
+                    {formatDescription(product.description)}
+                  </div>
                 </div>
               </div>
 
               {/* Product Details */}
-              <div className="mb-8 bg-white rounded-xl p-6 border border-gray-200">
-                <h3 className="text-lg font-bold mb-4 text-gray-900 flex items-center gap-2">
-                  <span className="text-xl">ℹ️</span>
-                  <span>Información del Producto</span>
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                    <span className="text-2xl">🏷️</span>
-                    <div>
-                      <div className="text-xs text-gray-500 uppercase font-semibold">Categoría</div>
-                      <div className="text-sm font-medium text-gray-900">
-                        {product.category === 'PHYSICAL' ? 'Producto Físico' : 
-                         product.category === 'DIGITAL' ? 'Producto Digital' : 
-                         'Servicio'}
+              <div className="mb-8">
+                <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-100">
+                  <h3 className="text-xl font-bold mb-5 text-gray-900 flex items-center gap-3">
+                    <span className="text-2xl">ℹ️</span>
+                    <span>Información del Producto</span>
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm border border-blue-100">
+                      <span className="text-3xl">🏷️</span>
+                      <div>
+                        <div className="text-xs text-gray-500 uppercase font-semibold tracking-wide mb-1">Categoría</div>
+                        <div className="text-base font-bold text-gray-900">
+                          {product.category === 'PHYSICAL' ? 'Producto Físico' : 
+                           product.category === 'DIGITAL' ? 'Producto Digital' : 
+                           'Servicio'}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                    <span className="text-2xl">📊</span>
-                    <div>
-                      <div className="text-xs text-gray-500 uppercase font-semibold">Disponibilidad</div>
-                      <div className="text-sm font-medium text-gray-900">
-                        {product.stock > 0 ? `${product.stock} unidades` : 'Agotado'}
+                    <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm border border-blue-100">
+                      <span className="text-3xl">📊</span>
+                      <div>
+                        <div className="text-xs text-gray-500 uppercase font-semibold tracking-wide mb-1">Disponibilidad</div>
+                        <div className="text-base font-bold text-gray-900">
+                          {product.stock > 0 ? `${product.stock} unidades` : 'Agotado'}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                    <span className="text-2xl">💰</span>
-                    <div>
-                      <div className="text-xs text-gray-500 uppercase font-semibold">Precio Unitario</div>
-                      <div className="text-sm font-medium text-gray-900">
-                        {formatPrice(product.price)}
+                    <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm border border-blue-100">
+                      <span className="text-3xl">💰</span>
+                      <div>
+                        <div className="text-xs text-gray-500 uppercase font-semibold tracking-wide mb-1">Precio Unitario</div>
+                        <div className="text-base font-bold text-blue-600">
+                          {formatPrice(product.price)}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                    <span className="text-2xl">🌍</span>
-                    <div>
-                      <div className="text-xs text-gray-500 uppercase font-semibold">Envío</div>
-                      <div className="text-sm font-medium text-gray-900">
-                        {product.category === 'PHYSICAL' ? 'A todo el país' : 'Entrega inmediata'}
+                    <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm border border-blue-100">
+                      <span className="text-3xl">🌍</span>
+                      <div>
+                        <div className="text-xs text-gray-500 uppercase font-semibold tracking-wide mb-1">Envío</div>
+                        <div className="text-base font-bold text-gray-900">
+                          {product.category === 'PHYSICAL' ? 'A todo el país' : 'Entrega inmediata'}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -516,7 +612,10 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
               </div>
 
               {/* Share Button */}
-              <button className="w-full border-2 border-gray-300 hover:border-pink-600 hover:bg-pink-50 text-gray-700 hover:text-pink-600 py-4 px-6 rounded-xl font-bold transition-all duration-200 flex items-center justify-center gap-3 shadow-sm hover:shadow-md">
+              <button 
+                onClick={handleShare}
+                className="w-full border-2 border-gray-300 hover:border-pink-600 hover:bg-pink-50 text-gray-700 hover:text-pink-600 py-4 px-6 rounded-xl font-bold transition-all duration-200 flex items-center justify-center gap-3 shadow-sm hover:shadow-md"
+              >
                 <Share2 className="w-5 h-5" />
                 <span>Compartir producto</span>
               </button>
@@ -526,11 +625,23 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
       </main>
 
       {/* Footer */}
-      <footer className="bg-black text-white mt-16 py-8">
+      <footer 
+        className="text-white mt-16 py-8"
+        style={{
+          background: storeSettings?.primaryColor 
+            ? `linear-gradient(to right, ${storeSettings.primaryColor}, ${storeSettings.secondaryColor || storeSettings.primaryColor})`
+            : 'linear-gradient(to right, #1f2937, #000000)'
+        }}
+      >
         <div className="container mx-auto px-4 text-center">
-          <p className="text-gray-400">
-            © 2024 Smart Sales Bot Pro - Todos los derechos reservados
+          <p className="text-gray-200">
+            © 2024 {storeSettings?.storeName || 'Smart Sales Bot Pro'} - Todos los derechos reservados
           </p>
+          {storeSettings?.storeSlogan && (
+            <p className="text-gray-300 text-sm mt-2">
+              {storeSettings.storeSlogan}
+            </p>
+          )}
         </div>
       </footer>
 

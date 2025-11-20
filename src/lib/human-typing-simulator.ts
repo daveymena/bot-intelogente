@@ -7,46 +7,48 @@ export class HumanTypingSimulator {
   /**
    * Calcula el tiempo de espera antes de responder (retraso humano)
    * Basado en la longitud del mensaje y variabilidad natural
+   * ⚡ OPTIMIZADO: Más rápido pero aún natural
    */
   static calculateResponseDelay(messageLength: number): number {
-    // Tiempo base de lectura: 2-4 segundos
-    const baseReadingTime = 2000 + Math.random() * 2000;
+    // Tiempo base de lectura: 1-2 segundos (reducido)
+    const baseReadingTime = 1000 + Math.random() * 1000;
     
-    // Tiempo de "pensamiento": 1-3 segundos
-    const thinkingTime = 1000 + Math.random() * 2000;
+    // Tiempo de "pensamiento": 0.5-1.5 segundos (reducido)
+    const thinkingTime = 500 + Math.random() * 1000;
     
     // Tiempo adicional por longitud del mensaje (simula lectura)
-    // ~50ms por carácter (lectura rápida)
-    const readingTime = messageLength * (30 + Math.random() * 40);
+    // ~20ms por carácter (lectura rápida)
+    const readingTime = messageLength * (10 + Math.random() * 20);
     
-    // Total: 3-9 segundos + tiempo de lectura
+    // Total: 1.5-4.5 segundos + tiempo de lectura
     const totalDelay = baseReadingTime + thinkingTime + readingTime;
     
-    // Limitar entre 3 y 15 segundos
-    return Math.min(Math.max(totalDelay, 3000), 15000);
+    // Limitar entre 1.5 y 6 segundos (reducido de 3-15)
+    return Math.min(Math.max(totalDelay, 1500), 6000);
   }
   
   /**
    * Calcula el tiempo de "escritura" basado en la longitud de la respuesta
    * Simula velocidad de escritura humana variable
+   * ⚡ OPTIMIZADO: Más rápido (escritura rápida pero natural)
    */
   static calculateTypingTime(responseLength: number): number {
-    // Velocidad de escritura humana: 40-80 palabras por minuto
-    // Aproximadamente 200-400 caracteres por minuto
-    // O 3.3-6.6 caracteres por segundo
+    // Velocidad de escritura rápida: 60-100 palabras por minuto
+    // Aproximadamente 300-500 caracteres por minuto
+    // O 5-8.3 caracteres por segundo
     
-    // Usar velocidad media-rápida: ~5 caracteres por segundo
-    const charsPerSecond = 4 + Math.random() * 2; // 4-6 chars/seg
+    // Usar velocidad rápida: ~8 caracteres por segundo
+    const charsPerSecond = 7 + Math.random() * 2; // 7-9 chars/seg (más rápido)
     const baseTypingTime = (responseLength / charsPerSecond) * 1000;
     
-    // Agregar pausas naturales (comas, puntos, pensar)
-    const pauseCount = (responseLength / 50); // Pausa cada ~50 caracteres
-    const pauseTime = pauseCount * (300 + Math.random() * 700); // 300-1000ms por pausa
+    // Agregar pausas naturales más cortas
+    const pauseCount = (responseLength / 80); // Pausa cada ~80 caracteres (menos pausas)
+    const pauseTime = pauseCount * (200 + Math.random() * 400); // 200-600ms por pausa (más cortas)
     
     const totalTypingTime = baseTypingTime + pauseTime;
     
-    // Limitar entre 2 y 30 segundos
-    return Math.min(Math.max(totalTypingTime, 2000), 30000);
+    // Limitar entre 1 y 15 segundos (optimizado para respuesta rápida)
+    return Math.min(Math.max(totalTypingTime, 1000), 15000);
   }
   
   /**
@@ -107,8 +109,8 @@ export class HumanTypingSimulator {
       console.log(`[HumanTyping] Chat: ${chatId}`);
       console.log(`[HumanTyping] Mensaje: ${message.substring(0, 50)}...`);
       
-      // 1. Retraso inicial FORZADO (lectura + pensamiento)
-      const responseDelay = Math.max(3000, this.calculateResponseDelay(userMessageLength));
+      // 1. Retraso inicial FORZADO (lectura + pensamiento) - OPTIMIZADO
+      const responseDelay = Math.max(2000, this.calculateResponseDelay(userMessageLength));
       console.log(`[HumanTyping] ⏳ Esperando ${(responseDelay / 1000).toFixed(1)}s antes de responder...`);
       await this.sleep(responseDelay);
       
@@ -121,8 +123,8 @@ export class HumanTypingSimulator {
         console.error(`[HumanTyping] ❌ Error enviando presencia:`, e);
       }
       
-      // 3. Simular escritura (tiempo fijo mínimo)
-      const typingTime = Math.max(4000, this.calculateTypingTime(message.length));
+      // 3. Simular escritura (tiempo fijo mínimo) - OPTIMIZADO
+      const typingTime = Math.max(3000, this.calculateTypingTime(message.length));
       console.log(`[HumanTyping] ⌨️ Simulando escritura por ${(typingTime / 1000).toFixed(1)}s...`);
       await this.sleep(typingTime);
       

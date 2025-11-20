@@ -14,6 +14,11 @@ interface APIConfig {
   groqApiKey?: string
   openaiApiKey?: string
   claudeApiKey?: string
+  geminiApiKey?: string
+  openrouterApiKey?: string
+  mistralApiKey?: string
+  deepseekApiKey?: string
+  ollamaBaseUrl?: string
   
   // Payment APIs
   mercadopagoAccessToken?: string
@@ -197,6 +202,156 @@ export default function APIConfiguration() {
             </div>
             <p className="text-xs text-gray-500">
               Obtén tu API key en: <a href="https://console.anthropic.com" target="_blank" className="text-blue-600 hover:underline">console.anthropic.com</a>
+            </p>
+          </div>
+
+          <Separator />
+
+          {/* Gemini */}
+          <div className="space-y-2">
+            <Label htmlFor="geminiApiKey" className="flex items-center gap-2">
+              <Key className="w-4 h-4" />
+              Google Gemini API Key
+              <span className="text-xs text-gray-500">(Opcional - Google AI)</span>
+            </Label>
+            <div className="flex gap-2">
+              <Input
+                id="geminiApiKey"
+                type={showKeys.gemini ? 'text' : 'password'}
+                value={showKeys.gemini ? config.geminiApiKey || '' : maskKey(config.geminiApiKey)}
+                onChange={(e) => setConfig({ ...config, geminiApiKey: e.target.value })}
+                placeholder="AIza..."
+                className="font-mono text-sm"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onClick={() => toggleShowKey('gemini')}
+              >
+                {showKeys.gemini ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </Button>
+            </div>
+            <p className="text-xs text-gray-500">
+              Obtén tu API key en: <a href="https://makersuite.google.com/app/apikey" target="_blank" className="text-blue-600 hover:underline">makersuite.google.com</a>
+            </p>
+          </div>
+
+          <Separator />
+
+          {/* OpenRouter */}
+          <div className="space-y-2">
+            <Label htmlFor="openrouterApiKey" className="flex items-center gap-2">
+              <Key className="w-4 h-4" />
+              OpenRouter API Key
+              <span className="text-xs text-gray-500">(Opcional - Múltiples modelos)</span>
+            </Label>
+            <div className="flex gap-2">
+              <Input
+                id="openrouterApiKey"
+                type={showKeys.openrouter ? 'text' : 'password'}
+                value={showKeys.openrouter ? config.openrouterApiKey || '' : maskKey(config.openrouterApiKey)}
+                onChange={(e) => setConfig({ ...config, openrouterApiKey: e.target.value })}
+                placeholder="sk-or-..."
+                className="font-mono text-sm"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onClick={() => toggleShowKey('openrouter')}
+              >
+                {showKeys.openrouter ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </Button>
+            </div>
+            <p className="text-xs text-gray-500">
+              Obtén tu API key en: <a href="https://openrouter.ai/keys" target="_blank" className="text-blue-600 hover:underline">openrouter.ai/keys</a>
+            </p>
+          </div>
+
+          <Separator />
+
+          {/* Mistral */}
+          <div className="space-y-2">
+            <Label htmlFor="mistralApiKey" className="flex items-center gap-2">
+              <Key className="w-4 h-4" />
+              Mistral AI API Key
+              <span className="text-xs text-gray-500">(Opcional - Mistral)</span>
+            </Label>
+            <div className="flex gap-2">
+              <Input
+                id="mistralApiKey"
+                type={showKeys.mistral ? 'text' : 'password'}
+                value={showKeys.mistral ? config.mistralApiKey || '' : maskKey(config.mistralApiKey)}
+                onChange={(e) => setConfig({ ...config, mistralApiKey: e.target.value })}
+                placeholder="..."
+                className="font-mono text-sm"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onClick={() => toggleShowKey('mistral')}
+              >
+                {showKeys.mistral ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </Button>
+            </div>
+            <p className="text-xs text-gray-500">
+              Obtén tu API key en: <a href="https://console.mistral.ai" target="_blank" className="text-blue-600 hover:underline">console.mistral.ai</a>
+            </p>
+          </div>
+
+          <Separator />
+
+          {/* DeepSeek */}
+          <div className="space-y-2">
+            <Label htmlFor="deepseekApiKey" className="flex items-center gap-2">
+              <Key className="w-4 h-4" />
+              DeepSeek API Key
+              <span className="text-xs text-gray-500">(Opcional - DeepSeek)</span>
+            </Label>
+            <div className="flex gap-2">
+              <Input
+                id="deepseekApiKey"
+                type={showKeys.deepseek ? 'text' : 'password'}
+                value={showKeys.deepseek ? config.deepseekApiKey || '' : maskKey(config.deepseekApiKey)}
+                onChange={(e) => setConfig({ ...config, deepseekApiKey: e.target.value })}
+                placeholder="sk-..."
+                className="font-mono text-sm"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onClick={() => toggleShowKey('deepseek')}
+              >
+                {showKeys.deepseek ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </Button>
+            </div>
+            <p className="text-xs text-gray-500">
+              Obtén tu API key en: <a href="https://platform.deepseek.com" target="_blank" className="text-blue-600 hover:underline">platform.deepseek.com</a>
+            </p>
+          </div>
+
+          <Separator />
+
+          {/* Ollama */}
+          <div className="space-y-2">
+            <Label htmlFor="ollamaBaseUrl" className="flex items-center gap-2">
+              <Key className="w-4 h-4" />
+              Ollama Base URL
+              <span className="text-xs text-gray-500">(Opcional - IA Local)</span>
+            </Label>
+            <Input
+              id="ollamaBaseUrl"
+              type="text"
+              value={config.ollamaBaseUrl || ''}
+              onChange={(e) => setConfig({ ...config, ollamaBaseUrl: e.target.value })}
+              placeholder="http://localhost:11434 o https://tu-ollama.easypanel.host"
+              className="font-mono text-sm"
+            />
+            <p className="text-xs text-gray-500">
+              URL de tu servidor Ollama local o remoto
             </p>
           </div>
         </CardContent>
