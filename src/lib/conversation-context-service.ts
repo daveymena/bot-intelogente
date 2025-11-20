@@ -172,6 +172,18 @@ export class ConversationContextService {
     if (context) {
       context.messageCount++
       context.lastMentionedAt = new Date() // Renovar tiempo
+      console.log(`[Context] 🔄 Contexto renovado para ${conversationKey} (${context.messageCount} mensajes)`)
+    }
+  }
+
+  /**
+   * Renovar tiempo del contexto (mantener vivo)
+   */
+  static renewContext(conversationKey: string): void {
+    const context = this.contexts.get(conversationKey)
+    if (context) {
+      context.lastMentionedAt = new Date()
+      console.log(`[Context] ⏰ Tiempo renovado para ${conversationKey}`)
     }
   }
 

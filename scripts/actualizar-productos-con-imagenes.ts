@@ -1,159 +1,248 @@
 import { PrismaClient } from '@prisma/client';
-import fs from 'fs';
-import path from 'path';
+import puppeteer from 'puppeteer';
 
 const prisma = new PrismaClient();
 
-async function actualizarProductos() {
+async function buscarImagenEnSmartJoys(nombreProducto: string, page: any): Promise<string[]> {
   try {
-    console.log('🔄 Actualizando productos con imágenes...\n');
+    const searchUrl = `https://smartjoys.co/search?q=${encodeURIComponent(nombreProducto)}`;
+    console.log(`   🔍 Buscando: ${searchUrl}`);
+    
+    await page.goto(searchUrl, { 
+      waitUntil: 'networkidle2',
+      timeout: 15000 
+    });
 
-    const productosPath = path.join(process.cwd(), 'scripts', 'productos-completos.json');
-    const productosData = JSON.parse(fs.readFileSync(productosPath, 'utf-8'));
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    const imagenes = await page.evaluate(() => {
+      const imgs: string[] = [];
+      
+      // Buscar imágenes de productos
+      document.querySelectorAll('img').forEach(img => {
+        const src = img.getAttribute('src') || img.getAttribute('data-src') || '';
+        if (src && (src.includes('product') || src.includes('cdn') || src.includes('image'))) {
+          if (!imgs.includes(src)) {
+            imgs.push(src);
+          }
+        }
+      });
+
+      return imgs.slice(0, 3); // Máximo 3 imágenes
+    });
+
+    return imagenes.map(img => 
+      img.startsWith('http') ? img : 
+      img.startsWith('//') ? `https:${img}` :
+      `https://smartjoys.co${img}`
+    );
+
+  } catch (error) {
+    console.log(`   ❌ Error buscando imágenes`);
+    return [];
+  }
+}
+
+function categorizarProducto(nombre: string): { subcategory: string; tags: string[] } {
+  const texto = nombre.toLowerCase();
+  
+  // Audífonos
+  if (texto.match(/audífono|auricular|airpod|earbud/i)) {
+    return {
+      subcategory: 'Audífonos',
+      tags: ['audífonos', 'audio', 'tecnología', 'bluetooth']
+    };
+  }
+  
+  // Smartwatch
+  if (texto.match(/smartwatch|reloj|watch/i)) {
+    return {
+      subcategory: 'Smartwatches',
+      tags: ['smartwatch', 'reloj', 'tecnología', 'deportivo']
+    };
+  }
+  
+  // Parlantes
+  if (texto.match(/parlante|speaker|bocina/i)) {
+    return {
+      subcategory: 'Parlantes',
+      tags: ['parlante', 'audio', 'bluetooth', 'música']
+    };
+  }
+  
+  // Computadores/Portátiles
+  if (texto.match(/portatil|laptop|macbook|notebook/i)) {
+    return {
+      subcategory: 'Computadores',
+      tags: ['computador', 'portátil', 'laptop', 'tecnología']
+    };
+  }
+  
+  // Impresoras
+  if (texto.match(/impresora|printer/i)) {
+    return {
+      subcategory: 'Impresoras',
+      tags: ['impresora', 'oficina', 'tecnología']
+    };
+  }
+  
+  // Tablets
+  if (texto.match(/tablet|ipad/i)) {
+    return {
+      subcategory: 'Tablets',
+      tags: ['tablet', 'tecnología', 'portátil']
+    };
+  }
+  
+  // Motos
+  if (texto.match(/moto|motocicleta|bajaj|pulsar/i)) {
+    return {
+      subcategory: 'Motocicletas',
+      tags: ['moto', 'vehículo', 'transporte']
+    };
+  }
+  
+  // Cursos/Megapacks
+  if (texto.match(/curso|mega pack|pack/i)) {
+    return {
+      subcategory: 'Cursos Digitales',
+      tags: ['curso', 'digital', 'educación', 'online']
+    };
+  }
+  
+  // Power Banks
+  if (texto.match(/power bank|batería|cargador portátil/i)) {
+    return {
+      subcategory: 'Power Banks',
+      tags: ['power bank', 'batería', 'cargador', 'portátil']
+    };
+  }
+  
+  // Mouse/Teclado
+  if (texto.match(/mouse|teclado|keyboard/i)) {
+    return {
+      subcategory: 'Periféricos',
+      tags: ['periférico', 'computador', 'oficina']
+    };
+  }
+  
+  // Cámaras
+  if (texto.match(/cámara|webcam|proyector/i)) {
+    return {
+      subcategory: 'Cámaras y Proyectores',
+      tags: ['cámara', 'video', 'tecnología']
+    };
+  }
+  
+  // Oficina/Papelería
+  if (texto.match(/papel|cinta|lapiz|borrador|separador/i)) {
+    return {
+      subcategory: 'Papelería',
+      tags: ['papelería', 'oficina', 'escolar']
+    };
+  }
+  
+  // Hogar
+  if (texto.match(/silla|copa|envase|toalla|cepillo/i)) {
+    return {
+      subcategory: 'Hogar',
+      tags: ['hogar', 'casa', 'útiles']
+    };
+  }
+  
+  return {
+    subcategory: 'Tecnología',
+    tags: ['producto', 'tecnología']
+  };
+}
+
+async function actualizarProductos() {
+  console.log('🔄 Actualizando productos con imágenes y tags...\n');
+
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
+
+  const page = await browser.newPage();
+  await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
+
+  try {
+    // Obtener usuario y todos sus productos
+    const usuario = await prisma.user.findUnique({
+      where: { email: 'daveymena16@gmail.com' },
+      include: {
+        products: {
+          take: 30 // Actualizar primeros 30 productos
+        }
+      }
+    });
+
+    if (!usuario) {
+      console.error('❌ Usuario no encontrado');
+      return;
+    }
+
+    console.log(`✅ Usuario: ${usuario.email}`);
+    console.log(`📦 Productos sin imágenes: ${usuario.products.length}\n`);
 
     let actualizados = 0;
-    let creados = 0;
+    let conImagenes = 0;
+    let sinImagenes = 0;
 
-    // Procesar laptops ASUS VivoBook
-    if (productosData.categorias?.productos_tecnologicos?.productos?.laptops?.asus_vivobook?.modelos) {
-      for (const modelo of productosData.categorias.productos_tecnologicos.productos.laptops.asus_vivobook.modelos) {
-        if (modelo.imagenes && modelo.imagenes.length > 0) {
-          const nombre = `ASUS VivoBook GO 15 - ${modelo.procesador} ${modelo.ram} ${modelo.almacenamiento}`;
-          const descripcion = `Laptop ASUS VivoBook GO 15 con procesador ${modelo.procesador}, ${modelo.ram} RAM, ${modelo.almacenamiento} de almacenamiento, pantalla ${modelo.pantalla}, color ${modelo.color}`;
-
-          // Buscar si existe un producto con este nombre
-          const existente = await prisma.product.findFirst({
-            where: { name: nombre }
-          });
-
-          const producto = existente 
-            ? await prisma.product.update({
-                where: { id: existente.id },
-                data: {
-                  description: descripcion,
-                  price: modelo.precio,
-                  stock: 5,
-                  category: 'PHYSICAL',
-                  images: JSON.stringify(modelo.imagenes),
-                  tags: JSON.stringify([modelo.codigo, 'laptop', 'asus', 'vivobook']),
-                },
-              })
-            : await prisma.product.create({
-                data: {
-                  name: nombre,
-                  description: descripcion,
-                  price: modelo.precio,
-                  stock: 5,
-                  category: 'PHYSICAL',
-                  images: JSON.stringify(modelo.imagenes),
-                  tags: JSON.stringify([modelo.codigo, 'laptop', 'asus', 'vivobook']),
-                  userId: (await prisma.user.findFirst())!.id,
-                },
-              });
-
-          if (producto) {
-            actualizados++;
-            console.log(`✅ ${modelo.codigo}: ${nombre}`);
+    for (const producto of usuario.products) {
+      try {
+        console.log(`\n📦 ${producto.name}`);
+        
+        // Categorizar producto
+        const { subcategory, tags } = categorizarProducto(producto.name);
+        
+        // Buscar imágenes en SmartJoys
+        const imagenes = await buscarImagenEnSmartJoys(producto.name, page);
+        
+        // Actualizar producto
+        await prisma.product.update({
+          where: { id: producto.id },
+          data: {
+            subcategory,
+            tags,
+            ...(imagenes.length > 0 && { images: imagenes })
           }
+        });
+
+        if (imagenes.length > 0) {
+          console.log(`   ✅ ${imagenes.length} imágenes encontradas`);
+          conImagenes++;
+        } else {
+          console.log(`   ⚠️  Sin imágenes`);
+          sinImagenes++;
         }
+        
+        console.log(`   📂 Categoría: ${subcategory}`);
+        console.log(`   🏷️  Tags: ${tags.join(', ')}`);
+        
+        actualizados++;
+
+        // Pausa entre productos
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+      } catch (error: any) {
+        console.error(`   ❌ Error: ${error.message}`);
       }
     }
 
-    // Procesar MacBook
-    if (productosData.categorias?.productos_tecnologicos?.productos?.laptops?.apple?.modelos) {
-      for (const modelo of productosData.categorias.productos_tecnologicos.productos.laptops.apple.modelos) {
-        if (modelo.imagenes && modelo.imagenes.length > 0) {
-          const nombre = `MacBook Pro ${modelo.procesador} ${modelo.ram} ${modelo.almacenamiento}`;
-          const descripcion = `MacBook Pro con chip ${modelo.procesador}, ${modelo.ram} RAM, ${modelo.almacenamiento} de almacenamiento, pantalla ${modelo.pantalla}, color ${modelo.color}`;
-
-          const existente = await prisma.product.findFirst({
-            where: { name: nombre }
-          });
-
-          const producto = existente 
-            ? await prisma.product.update({
-                where: { id: existente.id },
-                data: {
-                  description: descripcion,
-                  price: modelo.precio,
-                  stock: 2,
-                  category: 'PHYSICAL',
-                  images: JSON.stringify(modelo.imagenes),
-                  tags: JSON.stringify([modelo.codigo, 'laptop', 'macbook', 'apple']),
-                },
-              })
-            : await prisma.product.create({
-                data: {
-                  name: nombre,
-                  description: descripcion,
-                  price: modelo.precio,
-                  stock: 2,
-                  category: 'PHYSICAL',
-                  images: JSON.stringify(modelo.imagenes),
-                  tags: JSON.stringify([modelo.codigo, 'laptop', 'macbook', 'apple']),
-                  userId: (await prisma.user.findFirst())!.id,
-                },
-              });
-
-          if (producto) {
-            actualizados++;
-            console.log(`✅ ${modelo.codigo}: ${nombre}`);
-          }
-        }
-      }
-    }
-
-    // Procesar motos
-    if (productosData.categorias?.vehiculos?.productos?.motos) {
-      for (const moto of productosData.categorias.vehiculos.productos.motos) {
-        if (moto.imagenes && moto.imagenes.length > 0) {
-          const nombre = `${moto.marca} ${moto.modelo} ${moto.año}`;
-          const descripcion = `${moto.marca} ${moto.modelo} ${moto.año}, ${moto.cilindraje}, ${moto.caracteristicas.join(', ')}`;
-
-          const existente = await prisma.product.findFirst({
-            where: { name: nombre }
-          });
-
-          const producto = existente 
-            ? await prisma.product.update({
-                where: { id: existente.id },
-                data: {
-                  description: descripcion,
-                  price: moto.precio,
-                  stock: 1,
-                  category: 'PHYSICAL',
-                  images: JSON.stringify(moto.imagenes),
-                  tags: JSON.stringify([moto.id, 'moto', 'bajaj', 'pulsar']),
-                },
-              })
-            : await prisma.product.create({
-                data: {
-                  name: nombre,
-                  description: descripcion,
-                  price: moto.precio,
-                  stock: 1,
-                  category: 'PHYSICAL',
-                  images: JSON.stringify(moto.imagenes),
-                  tags: JSON.stringify([moto.id, 'moto', 'bajaj', 'pulsar']),
-                  userId: (await prisma.user.findFirst())!.id,
-                },
-              });
-
-          if (producto) {
-            actualizados++;
-            console.log(`✅ ${moto.id}: ${nombre}`);
-          }
-        }
-      }
-    }
-
-    console.log(`\n📊 RESUMEN:`);
-    console.log(`✅ Productos actualizados/creados: ${actualizados}`);
-    console.log(`\n✨ Base de datos actualizada con éxito!`);
+    console.log('\n' + '='.repeat(60));
+    console.log('📊 RESUMEN');
+    console.log('='.repeat(60));
+    console.log(`✅ Productos actualizados: ${actualizados}`);
+    console.log(`🖼️  Con imágenes: ${conImagenes}`);
+    console.log(`⚠️  Sin imágenes: ${sinImagenes}`);
+    console.log('='.repeat(60));
 
   } catch (error) {
     console.error('❌ Error:', error);
   } finally {
+    await browser.close();
     await prisma.$disconnect();
   }
 }

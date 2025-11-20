@@ -154,6 +154,22 @@ export class SharedMemoryService {
       
       memory.messageCount++;
       memory.lastUpdate = new Date();
+      
+      // 🔄 SINCRONIZAR con ConversationContextService
+      this.syncWithConversationContext(chatId);
+    }
+  }
+  
+  /**
+   * Sincroniza con ConversationContextService para mantener contexto vivo
+   */
+  private async syncWithConversationContext(chatId: string): Promise<void> {
+    try {
+      const { ConversationContextService } = await import('../lib/conversation-context-service');
+      ConversationContextService.renewContext(chatId);
+      ConversationContextService.incrementMessageCount(chatId);
+    } catch (error) {
+      // Silencioso, no es crítico
     }
   }
   

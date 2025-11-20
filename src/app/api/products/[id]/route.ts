@@ -69,3 +69,117 @@ export async function GET(
     return NextResponse.json({ error: 'Failed to fetch product' }, { status: 500 })
   }
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    console.log(`[API] Eliminando producto: ${params.id}`)
+
+    // Verificar que el producto existe
+    const product = await db.product.findUnique({
+      where: { id: params.id }
+    })
+
+    if (!product) {
+      console.log(`[API] Producto no encontrado: ${params.id}`)
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 })
+    }
+
+    // Eliminar el producto
+    await db.product.delete({
+      where: { id: params.id }
+    })
+
+    console.log(`[API] ✅ Producto eliminado: ${product.name}`)
+
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Product deleted successfully',
+      productName: product.name
+    })
+  } catch (error) {
+    console.error('[API] Error deleting product:', error)
+    return NextResponse.json({ 
+      error: 'Failed to delete product',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 })
+  }
+}
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const body = await request.json()
+    console.log(`[API] Actualizando producto: ${params.id}`)
+
+    // Verificar que el producto existe
+    const existingProduct = await db.product.findUnique({
+      where: { id: params.id }
+    })
+
+    if (!existingProduct) {
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 })
+    }
+
+    // Preparar datos para actualizar
+    const updateData: any = {
+      name: body.name,
+      description: body.description,
+      price: parseFloat(body.price),
+      currency: body.currency || 'COP',
+      category: body.category,
+      status: body.status,
+      stock: body.stock ? parseInt(body.stock) : null,
+    }
+
+    // Manejar imágenes
+    if (body.images) {
+      if (typeof body.images === 'string') {
+        // Si viene como string separado por comas
+        const imagesArray = body.images.split(',').map((img: string) => img.trim()).filter(Boolean)
+        updateData.images = JSON.stringify(imagesArray)
+      } else if (Array.isArray(body.images)) {
+        updateData.images = JSON.stringify(body.images)
+      }
+    }
+
+    // Manejar tags
+    if (body.tags) {
+      if (typeof body.tags === 'string') {
+        const tagsArray = body.tags.split(',').map((tag: string) => tag.trim()).filter(Boolean)
+        updateData.tags = JSON.stringify(tagsArray)
+      } else if (Array.isArray(body.tags)) {
+        updateData.tags = JSON.stringify(body.tags)
+      }
+    }
+
+    // Campos opcionales
+    if (body.autoResponse !== undefined) updateData.autoResponse = body.autoResponse
+    if (body.paymentLinkMercadoPago !== undefined) updateData.paymentLinkMercadoPago = body.paymentLinkMercadoPago
+    if (body.paymentLinkPayPal !== undefined) updateData.paymentLinkPayPal = body.paymentLinkPayPal
+    if (body.paymentLinkCustom !== undefined) updateData.paymentLinkCustom = body.paymentLinkCustom
+
+    // Actualizar producto
+    const updatedProduct = await db.product.update({
+      where: { id: params.id },
+      data: updateData
+    })
+
+    console.log(`[API] ✅ Producto actualizado: ${updatedProduct.name}`)
+
+    return NextResponse.json({ 
+      success: true, 
+      product: updatedProduct 
+    })
+  } catch (error) {
+    console.error('[API] Error updating product:', error)
+    return NextResponse.json({ 
+      error: 'Failed to update product',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 })
+  }
+}

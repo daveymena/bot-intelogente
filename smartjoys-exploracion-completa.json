@@ -1,0 +1,71 @@
+{
+  "timestamp": "2025-11-20T05:22:46.555Z",
+  "paginas": [
+    {
+      "nombre": "Página Principal",
+      "url": "https://smartjoys.co/",
+      "titulo": "403 - Forbidden",
+      "existe": true,
+      "productos": [],
+      "selectores": [],
+      "links": [],
+      "categorias": [],
+      "screenshot": "smartjoys-página-principal.png"
+    },
+    {
+      "nombre": "Tienda",
+      "url": "https://smartjoys.co/tienda/",
+      "titulo": "403 - Forbidden",
+      "existe": true,
+      "productos": [],
+      "selectores": [],
+      "links": [],
+      "categorias": [],
+      "screenshot": "smartjoys-tienda.png"
+    },
+    {
+      "nombre": "Productos",
+      "url": "https://smartjoys.co/productos/",
+      "titulo": "403 - Forbidden",
+      "existe": true,
+      "productos": [],
+      "selectores": [],
+      "links": [],
+      "categorias": [],
+      "screenshot": "smartjoys-productos.png"
+    },
+    {
+      "nombre": "Categorías",
+      "url": "https://smartjoys.co/categorias/",
+      "titulo": "403 - Forbidden",
+      "existe": true,
+      "productos": [],
+      "selectores": [],
+      "links": [],
+      "categorias": [],
+      "screenshot": "smartjoys-categorías.png"
+    },
+    {
+      "nombre": "Collections",
+      "url": "https://smartjoys.co/collections/",
+      "titulo": "403 - Forbidden",
+      "existe": true,
+      "productos": [],
+      "selectores": [],
+      "links": [],
+      "categorias": [],
+      "screenshot": "smartjoys-collections.png"
+    },
+    {
+      "nombre": "Shop",
+      "url": "https://smartjoys.co/shop/",
+      "titulo": "403 - Forbidden",
+      "existe": true,
+      "productos": [],
+      "selectores": [],
+      "links": [],
+      "categorias": [],
+      "screenshot": "smartjoys-shop.png"
+    }
+  ]
+}

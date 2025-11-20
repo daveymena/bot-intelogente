@@ -103,22 +103,46 @@ export class HumanTypingSimulator {
     userMessageLength: number
   ): Promise<void> {
     try {
-      // 1. Retraso inicial (lectura + pensamiento)
-      const responseDelay = this.calculateResponseDelay(userMessageLength);
+      console.log(`[HumanTyping] 🎭 INICIANDO SIMULACIÓN HUMANA`);
+      console.log(`[HumanTyping] Chat: ${chatId}`);
+      console.log(`[HumanTyping] Mensaje: ${message.substring(0, 50)}...`);
+      
+      // 1. Retraso inicial FORZADO (lectura + pensamiento)
+      const responseDelay = Math.max(3000, this.calculateResponseDelay(userMessageLength));
       console.log(`[HumanTyping] ⏳ Esperando ${(responseDelay / 1000).toFixed(1)}s antes de responder...`);
       await this.sleep(responseDelay);
       
-      // 2. Simular escritura
-      console.log(`[HumanTyping] ⌨️ Simulando escritura de ${message.length} caracteres...`);
-      await this.simulateTyping(sock, chatId, message.length);
+      // 2. FORZAR estado "escribiendo..."
+      console.log(`[HumanTyping] ⌨️ FORZANDO indicador "escribiendo..."`);
+      try {
+        await sock.sendPresenceUpdate('composing', chatId);
+        console.log(`[HumanTyping] ✅ Indicador "escribiendo..." enviado`);
+      } catch (e) {
+        console.error(`[HumanTyping] ❌ Error enviando presencia:`, e);
+      }
       
-      // 3. Enviar mensaje
-      console.log(`[HumanTyping] ✅ Enviando mensaje`);
+      // 3. Simular escritura (tiempo fijo mínimo)
+      const typingTime = Math.max(4000, this.calculateTypingTime(message.length));
+      console.log(`[HumanTyping] ⌨️ Simulando escritura por ${(typingTime / 1000).toFixed(1)}s...`);
+      await this.sleep(typingTime);
+      
+      // 4. Volver a disponible
+      try {
+        await sock.sendPresenceUpdate('available', chatId);
+        console.log(`[HumanTyping] ✅ Estado cambiado a "disponible"`);
+      } catch (e) {
+        console.error(`[HumanTyping] ❌ Error cambiando presencia:`, e);
+      }
+      
+      // 5. Enviar mensaje
+      console.log(`[HumanTyping] 📤 Enviando mensaje...`);
       await sock.sendMessage(chatId, { text: message });
+      console.log(`[HumanTyping] ✅ Mensaje enviado exitosamente`);
       
     } catch (error) {
-      console.error('[HumanTyping] Error en envío humanizado:', error);
+      console.error('[HumanTyping] ❌ Error en envío humanizado:', error);
       // Fallback: enviar directamente
+      console.log('[HumanTyping] 🔄 Usando fallback directo');
       await sock.sendMessage(chatId, { text: message });
     }
   }
@@ -132,21 +156,38 @@ export class HumanTypingSimulator {
     message: string
   ): Promise<void> {
     try {
-      // Retraso corto: 1-3 segundos
-      const quickDelay = 1000 + Math.random() * 2000;
+      console.log(`[HumanTyping] 🚀 ENVÍO RÁPIDO INICIADO`);
+      
+      // Retraso corto FORZADO: 2-4 segundos
+      const quickDelay = 2000 + Math.random() * 2000;
+      console.log(`[HumanTyping] ⏳ Esperando ${(quickDelay / 1000).toFixed(1)}s...`);
       await this.sleep(quickDelay);
       
-      // Escritura rápida
-      await sock.sendPresenceUpdate('composing', chatId);
-      const quickTyping = 1000 + Math.random() * 1000; // 1-2 segundos
+      // FORZAR escritura rápida
+      console.log(`[HumanTyping] ⌨️ Mostrando "escribiendo..."`);
+      try {
+        await sock.sendPresenceUpdate('composing', chatId);
+      } catch (e) {
+        console.error(`[HumanTyping] Error presencia:`, e);
+      }
+      
+      const quickTyping = 1500 + Math.random() * 1500; // 1.5-3 segundos
+      console.log(`[HumanTyping] ⌨️ Escribiendo por ${(quickTyping / 1000).toFixed(1)}s...`);
       await this.sleep(quickTyping);
-      await sock.sendPresenceUpdate('available', chatId);
+      
+      try {
+        await sock.sendPresenceUpdate('available', chatId);
+      } catch (e) {
+        console.error(`[HumanTyping] Error presencia:`, e);
+      }
       
       // Enviar
+      console.log(`[HumanTyping] 📤 Enviando mensaje`);
       await sock.sendMessage(chatId, { text: message });
+      console.log(`[HumanTyping] ✅ Enviado`);
       
     } catch (error) {
-      console.error('[HumanTyping] Error en envío rápido:', error);
+      console.error('[HumanTyping] ❌ Error en envío rápido:', error);
       await sock.sendMessage(chatId, { text: message });
     }
   }

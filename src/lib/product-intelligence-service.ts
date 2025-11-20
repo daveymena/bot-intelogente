@@ -302,7 +302,12 @@ export class ProductIntelligenceService {
                         // NO en descripción (para evitar confusión)
                         // Esto incluye: instrumentos musicales, cursos, megapacks, diseño
                         if (match.priority >= 95) {
-                            return nameLower.includes(match.name)
+                            const matchInName = nameLower.includes(match.name)
+                            // Si busca curso/megapack, SOLO productos DIGITALES
+                            if (match.name.includes('curso') || match.name.includes('mega pack')) {
+                                return matchInName && p.category === 'DIGITAL'
+                            }
+                            return matchInName
                         }
                         
                         // Para idiomas, buscar en nombre Y descripción

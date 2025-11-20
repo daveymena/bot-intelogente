@@ -25,6 +25,9 @@ interface AIResponse {
   confidence: number
   intent?: string
   productMentioned?: string
+  productId?: string // ID del producto mencionado
+  shouldSendPhotos?: boolean // Flag para enviar fotos automáticamente
+  photos?: string[] // URLs de las fotos del producto
 }
 
 export class AIService {
@@ -583,10 +586,17 @@ export class AIService {
             userId
           )
 
+          // 📸 Preparar fotos del producto para envío automático
+          const photos = product.images ? JSON.parse(product.images as string) : []
+          const shouldSendPhotos = photos.length > 0
+
           return {
             message: aiResponse,
             confidence: productIntent.confidence,
-            intent: productIntent.type
+            intent: productIntent.type,
+            productId: product.id,
+            shouldSendPhotos,
+            photos: photos.slice(0, 3) // Máximo 3 fotos
           }
         } else {
           // NO encontró producto - responder honestamente
