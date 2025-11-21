@@ -227,6 +227,32 @@ export default function ProductsManagement() {
 
   const handleEdit = (product: Product) => {
     setEditingProduct(product)
+    
+    // Convertir images y tags a string correctamente
+    let imagesStr = ''
+    if (Array.isArray(product.images)) {
+      imagesStr = product.images.join(', ')
+    } else if (typeof product.images === 'string') {
+      try {
+        const parsed = JSON.parse(product.images)
+        imagesStr = Array.isArray(parsed) ? parsed.join(', ') : product.images
+      } catch {
+        imagesStr = product.images
+      }
+    }
+    
+    let tagsStr = ''
+    if (Array.isArray(product.tags)) {
+      tagsStr = product.tags.join(', ')
+    } else if (typeof product.tags === 'string') {
+      try {
+        const parsed = JSON.parse(product.tags)
+        tagsStr = Array.isArray(parsed) ? parsed.join(', ') : product.tags
+      } catch {
+        tagsStr = product.tags
+      }
+    }
+    
     setFormData({
       name: product.name,
       description: product.description || '',
@@ -234,8 +260,8 @@ export default function ProductsManagement() {
       currency: product.currency,
       category: product.category as 'PHYSICAL' | 'DIGITAL' | 'SERVICE',
       status: product.status as 'AVAILABLE' | 'OUT_OF_STOCK' | 'DISCONTINUED',
-      images: product.images.join(', '),
-      tags: product.tags.join(', '),
+      images: imagesStr,
+      tags: tagsStr,
       autoResponse: product.autoResponse || '',
       stock: product.stock?.toString() || '',
       paymentLinkMercadoPago: (product as any).paymentLinkMercadoPago || '',
