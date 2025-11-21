@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://bot-whatsapp-bot-whatsapp-inteligente.sqaoeo.easypanel.host';
-const LOGO_VERSION = '?v=20251120'; // Cambiar este número para forzar actualización del logo
+const LOGO_VERSION = '?v=20251120v2'; // Cambiar este número para forzar actualización del logo
 
 export const viewport = {
   width: 'device-width',
