@@ -83,6 +83,7 @@ model Product {
   currency      String      @default("COP")
   category      ProductType
   subcategory   String?     // Subcategoría específica (ej: "Portátiles", "Monitores", "Cursos de Diseño")
+  customCategory String?    // Categoría personalizada creada por el usuario
   store         String?     // Tienda/Proveedor (ej: "MegaComputer", "Hotmart", "Propio")
   status        ProductStatus @default(AVAILABLE)
   images        String?     // JSON string array of image URLs

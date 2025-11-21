@@ -239,6 +239,9 @@ export class EmailService {
   }): Promise<boolean> {
     const { to, userName, resetUrl } = params;
     
+    console.log('[EmailService] Enviando email de recuperación a:', to);
+    console.log('[EmailService] URL de reset:', resetUrl);
+    
     const html = `
       <!DOCTYPE html>
       <html>

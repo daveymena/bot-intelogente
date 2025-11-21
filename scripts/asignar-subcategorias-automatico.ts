@@ -1,100 +1,146 @@
-import { PrismaClient } from '@prisma/client';
+/**
+ * Script para asignar subcategorías automáticamente a productos
+ */
 
-const prisma = new PrismaClient();
+import { db } from '../src/lib/db'
 
-// Definir subcategorías por tipo de producto
-const SUBCATEGORIAS = {
-  // PHYSICAL
-  PORTATILES: ['portátil', 'laptop', 'notebook', 'computador portátil', 'lenovo', 'hp', 'dell', 'asus', 'acer', 'macbook', 'todo en uno'],
-  MOTOS: ['moto', 'motocicleta', 'scooter', 'yamaha', 'honda', 'suzuki', 'kawasaki', 'ktm', 'bajaj', 'auteco'],
-  MONITORES: ['monitor', 'pantalla', 'display'],
-  AUDIO: ['parlante', 'speaker', 'torre de sonido', 'altavoz', 'bocina'],
-  DIADEMAS: ['diadema', 'audífono', 'auricular', 'headset', 'headphone'],
-  IMPRESORAS: ['impresora', 'multifuncional', 'escáner', 'scanner', 'ecotank'],
-  ACCESORIOS: ['mouse', 'teclado', 'cargador', 'cable', 'funda', 'protector', 'base', 'cooler', 'mousepad', 'soporte', 'hub', 'organizador', 'receptor', 'ventilador', 'lámpara', 'cámara web', 'micrófono', 'smartwatch', 'reloj'],
-  COMPONENTES: ['ram', 'memoria', 'disco', 'ssd', 'procesador', 'tarjeta', 'placa', 'fuente', 'usb', 'micro sd'],
+// Definir subcategorías por palabras clave
+const subcategoryRules = {
+  // COMPUTADORES
+  'Portátiles': ['portátil', 'laptop', 'notebook', 'ultrabook', 'macbook'],
+  'PC Escritorio': ['pc', 'computador de mesa', 'desktop', 'torre', 'all in one'],
+  'Monitores': ['monitor', 'pantalla', 'display'],
+  'Componentes PC': ['procesador', 'ram', 'disco duro', 'ssd', 'tarjeta gráfica', 'motherboard', 'fuente'],
   
-  // DIGITAL
-  MEGAPACKS: ['megapack', 'mega pack', 'pack'],
-  CURSOS_DISENO: ['diseño gráfico', 'photoshop', 'illustrator', 'corel', 'after effects', 'premiere', 'edición'],
-  CURSOS_PROGRAMACION: ['programación', 'desarrollo', 'python', 'javascript', 'java', 'php', 'web', 'app'],
-  CURSOS_MARKETING: ['marketing', 'ventas', 'publicidad', 'redes sociales', 'seo', 'sem', 'facebook ads'],
-  CURSOS_OFFICE: ['office', 'excel', 'word', 'powerpoint', 'access', 'outlook'],
-  CURSOS_IDIOMAS: ['inglés', 'francés', 'alemán', 'italiano', 'portugués', 'idioma'],
-  CURSOS_PROFESIONALES: ['gastronomía', 'cocina', 'repostería', 'construcción', 'electricidad', 'plomería', 'carpintería'],
-  LIBROS: ['libro', 'ebook', 'audiolibro', 'pdf'],
-  PLANTILLAS: ['plantilla', 'template', 'preset', 'infografía'],
-};
-
-function detectarSubcategoria(nombre: string, descripcion: string, categoria: string): string | null {
-  const texto = `${nombre} ${descripcion}`.toLowerCase();
+  // ACCESORIOS
+  'Teclados y Mouse': ['teclado', 'mouse', 'ratón'],
+  'Audífonos': ['audífono', 'auricular', 'headset', 'headphone'],
+  'Cámaras Web': ['cámara web', 'webcam'],
+  'Cables y Adaptadores': ['cable', 'adaptador', 'hub', 'usb'],
+  'Almacenamiento': ['usb', 'pendrive', 'memoria', 'disco externo'],
   
-  for (const [subcat, keywords] of Object.entries(SUBCATEGORIAS)) {
-    for (const keyword of keywords) {
-      if (texto.includes(keyword.toLowerCase())) {
-        return subcat;
-      }
-    }
-  }
+  // MOTOS
+  'Motos Nuevas': ['moto nueva', 'motocicleta nueva'],
+  'Motos Usadas': ['moto usada', 'motocicleta usada', 'segunda mano'],
+  'Repuestos Moto': ['repuesto', 'pieza', 'accesorio moto'],
   
-  return null;
+  // CURSOS DIGITALES
+  'Cursos de Música': ['piano', 'guitarra', 'música', 'canto', 'batería'],
+  'Cursos de Idiomas': ['inglés', 'francés', 'alemán', 'idioma', 'language'],
+  'Cursos de Diseño': ['diseño gráfico', 'photoshop', 'illustrator', 'diseño web'],
+  'Cursos de Programación': ['programación', 'python', 'javascript', 'desarrollo web'],
+  'Cursos de Marketing': ['marketing', 'ventas', 'publicidad', 'redes sociales'],
+  
+  // MEGAPACKS
+  'Megapacks Educativos': ['megapack', 'mega pack', 'curso completo', 'colección'],
+  'Megapacks Profesionales': ['profesional', 'avanzado', 'experto'],
+  
+  // SERVICIOS
+  'Reparación': ['reparación', 'arreglo', 'mantenimiento'],
+  'Instalación': ['instalación', 'configuración', 'setup'],
+  'Consultoría': ['consultoría', 'asesoría', 'consulta']
 }
 
 async function asignarSubcategorias() {
-  console.log('🏷️  Asignando subcategorías automáticamente...\n');
-
+  console.log('🏷️ Iniciando asignación de subcategorías...\n')
+  
   try {
-    const products = await prisma.product.findMany({
-      where: {
-        subcategory: null
+    // Obtener todos los productos
+    const products = await db.product.findMany({
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        category: true,
+        subcategory: true,
+        tags: true
       }
-    });
-
-    console.log(`📦 Productos sin subcategoría: ${products.length}\n`);
-
-    const stats = new Map<string, number>();
-    let actualizados = 0;
-    let sinAsignar = 0;
-
+    })
+    
+    console.log(`📦 Productos encontrados: ${products.length}\n`)
+    
+    let updated = 0
+    let skipped = 0
+    
     for (const product of products) {
-      const subcategoria = detectarSubcategoria(
+      // Si ya tiene subcategoría, saltar
+      if (product.subcategory) {
+        skipped++
+        continue
+      }
+      
+      // Combinar nombre, descripción y tags para análisis
+      const searchText = [
         product.name,
         product.description || '',
-        product.category
-      );
-
-      if (subcategoria) {
-        await prisma.product.update({
+        product.tags || ''
+      ].join(' ').toLowerCase()
+      
+      // Buscar subcategoría que coincida
+      let assignedSubcategory: string | null = null
+      
+      for (const [subcategory, keywords] of Object.entries(subcategoryRules)) {
+        for (const keyword of keywords) {
+          if (searchText.includes(keyword.toLowerCase())) {
+            assignedSubcategory = subcategory
+            break
+          }
+        }
+        if (assignedSubcategory) break
+      }
+      
+      // Si encontró subcategoría, actualizar
+      if (assignedSubcategory) {
+        await db.product.update({
           where: { id: product.id },
-          data: { subcategory: subcategoria }
-        });
-
-        stats.set(subcategoria, (stats.get(subcategoria) || 0) + 1);
-        actualizados++;
-        console.log(`✅ ${product.name} → ${subcategoria}`);
+          data: { subcategory: assignedSubcategory }
+        })
+        
+        console.log(`✅ ${product.name}`)
+        console.log(`   → Subcategoría: ${assignedSubcategory}`)
+        console.log(`   → Categoría: ${product.category}\n`)
+        
+        updated++
       } else {
-        sinAsignar++;
-        console.log(`⚠️  ${product.name} → Sin subcategoría detectada`);
+        console.log(`⚠️  ${product.name}`)
+        console.log(`   → No se encontró subcategoría automática`)
+        console.log(`   → Categoría: ${product.category}\n`)
       }
     }
-
-    console.log('\n═══════════════════════════════════════════════');
-    console.log('📊 RESUMEN DE ASIGNACIÓN\n');
     
-    const sortedStats = Array.from(stats.entries()).sort((a, b) => b[1] - a[1]);
-    sortedStats.forEach(([subcat, count]) => {
-      console.log(`   ${subcat}: ${count} productos`);
-    });
-
-    console.log('\n═══════════════════════════════════════════════');
-    console.log(`✅ Productos actualizados: ${actualizados}`);
-    console.log(`⚠️  Productos sin asignar: ${sinAsignar}`);
-
+    console.log('\n========================================')
+    console.log('📊 RESUMEN')
+    console.log('========================================')
+    console.log(`Total productos: ${products.length}`)
+    console.log(`Actualizados: ${updated}`)
+    console.log(`Ya tenían subcategoría: ${skipped}`)
+    console.log(`Sin subcategoría: ${products.length - updated - skipped}`)
+    console.log('========================================\n')
+    
+    // Mostrar resumen por subcategoría
+    const productsBySubcategory = await db.product.groupBy({
+      by: ['subcategory'],
+      _count: true
+    })
+    
+    console.log('📋 Productos por subcategoría:')
+    for (const group of productsBySubcategory) {
+      console.log(`   ${group.subcategory || '(Sin subcategoría)'}: ${group._count} productos`)
+    }
+    
   } catch (error) {
-    console.error('❌ Error:', error);
-  } finally {
-    await prisma.$disconnect();
+    console.error('❌ Error:', error)
+    process.exit(1)
   }
 }
 
-asignarSubcategorias();
+// Ejecutar
+asignarSubcategorias()
+  .then(() => {
+    console.log('\n✅ Proceso completado')
+    process.exit(0)
+  })
+  .catch((error) => {
+    console.error('❌ Error fatal:', error)
+    process.exit(1)
+  })

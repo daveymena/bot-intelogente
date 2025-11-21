@@ -10,6 +10,7 @@ import { ObjectionHandler } from './objection-handler';
 import { DeepReasoningAgent } from './deep-reasoning-agent';
 
 // Importar agentes
+import { InterpreterAgent } from './interpreter-agent';
 import { GreetingAgent } from './greeting-agent';
 import { SearchAgent } from './search-agent';
 import { ProductAgent } from './product-agent';
@@ -25,7 +26,8 @@ export class Orchestrator {
     this.memoryService = SharedMemoryService.getInstance();
     this.agents = new Map();
     
-    // Registrar agentes
+    // Registrar agentes (Intérprete PRIMERO)
+    this.registerAgent('interpreter', new InterpreterAgent());
     this.registerAgent('greeting', new GreetingAgent());
     this.registerAgent('search', new SearchAgent());
     this.registerAgent('product', new ProductAgent());
@@ -73,7 +75,25 @@ export class Orchestrator {
       messageCount: memory.messageCount,
     });
     
-    // 🧠 PASO 1: RAZONAMIENTO PROFUNDO (SIEMPRE PRIMERO)
+    // 🔍 PASO 0: INTERPRETACIÓN (ANTES DE TODO)
+    console.log('\n🔍 ========================================');
+    console.log('🔍 INTERPRETANDO INTENCIÓN REAL');
+    console.log('🔍 ========================================\n');
+    
+    const interpreterAgent = this.agents.get('interpreter')!;
+    const interpretation = await interpreterAgent.execute(message, memory);
+    
+    console.log('✅ Interpretación completada:');
+    if (interpretation.metadata?.interpretation) {
+      const interp = interpretation.metadata.interpretation;
+      console.log('🎯 Intención:', interp.intent);
+      console.log('📝 Tipo:', interp.details.type);
+      console.log('💡 Clarificación:', interp.details.clarification);
+      console.log('➡️  Siguiente agente:', interp.nextAgent);
+    }
+    console.log('\n🔍 ========================================\n');
+    
+    // 🧠 PASO 1: RAZONAMIENTO PROFUNDO (CON INTERPRETACIÓN)
     console.log('\n🧠 ========================================');
     console.log('🧠 INICIANDO RAZONAMIENTO PROFUNDO');
     console.log('🧠 ========================================\n');
@@ -81,7 +101,8 @@ export class Orchestrator {
     const reasoningResult = await DeepReasoningAgent.analyzeContext(
       chatId,
       message,
-      memory
+      memory,
+      interpretation.metadata?.interpretation // Pasar interpretación al razonamiento
     );
     
     console.log('\n🎯 RESULTADO DEL RAZONAMIENTO:');

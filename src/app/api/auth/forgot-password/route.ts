@@ -60,11 +60,13 @@ export async function POST(req: NextRequest) {
       }
     });
 
-    // Construir URL de reset
-    const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000'}/reset-password?token=${resetToken}`;
+    // Construir URL de reset - Usar NEXTAUTH_URL que es la URL correcta de la app
+    const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000';
+    const resetUrl = `${baseUrl}/reset-password?token=${resetToken}`;
 
     console.log('[ForgotPassword] Token generado para:', email);
-    console.log('[ForgotPassword] URL de reset:', resetUrl);
+    console.log('[ForgotPassword] Base URL:', baseUrl);
+    console.log('[ForgotPassword] URL de reset completa:', resetUrl);
 
     // Enviar email
     try {

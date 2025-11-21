@@ -452,6 +452,50 @@ export class SearchAgent extends BaseAgent {
   }
   
   /**
+   * Detecta la categoría esperada desde la query del usuario
+   */
+  private detectCategoryFromQuery(query: string): string[] {
+    const hints: string[] = [];
+    
+    // Computadores y laptops
+    if (/portatil|laptop|computador|pc|notebook/i.test(query)) {
+      hints.push('computador', 'laptop', 'portatil');
+    }
+    
+    // Motos
+    if (/moto|motocicleta|scooter/i.test(query)) {
+      hints.push('moto', 'motocicleta');
+    }
+    
+    // Cursos y educación
+    if (/curso|aprender|estudiar|clase|leccion|tutorial/i.test(query)) {
+      hints.push('curso', 'educacion', 'digital');
+    }
+    
+    // Megapacks
+    if (/megapack|pack|paquete|coleccion/i.test(query)) {
+      hints.push('megapack', 'pack', 'digital');
+    }
+    
+    // Servicios técnicos
+    if (/reparacion|servicio|tecnico|arreglo|mantenimiento/i.test(query)) {
+      hints.push('servicio', 'reparacion', 'tecnico');
+    }
+    
+    // Accesorios y consumibles
+    if (/tinta|cartucho|toner|cinta|papel|accesorio/i.test(query)) {
+      hints.push('accesorio', 'consumible', 'tinta');
+    }
+    
+    // Pilas y baterías
+    if (/pila|bateria|cargador|energia/i.test(query)) {
+      hints.push('pila', 'bateria', 'energia');
+    }
+    
+    return hints;
+  }
+  
+  /**
    * Normaliza texto removiendo tildes y caracteres especiales
    */
   private normalizeText(text: string): string {
@@ -468,10 +512,27 @@ export class SearchAgent extends BaseAgent {
     const name = this.normalizeText(product.name);
     const description = this.normalizeText(product.description || '');
     const category = this.normalizeText(product.category || '');
+    const subcategory = this.normalizeText(product.subcategory || '');
     const tags = this.normalizeText(product.tags || '');
     const normalizedQuery = this.normalizeText(fullQuery);
     
     let score = 0;
+    
+    // 🎯 NUEVA REGLA: Penalizar productos de categorías completamente diferentes
+    const queryCategoryHints = this.detectCategoryFromQuery(normalizedQuery);
+    if (queryCategoryHints.length > 0) {
+      const productCategories = [category, subcategory].filter(Boolean);
+      const hasMatchingCategory = queryCategoryHints.some(hint => 
+        productCategories.some(cat => cat.includes(hint))
+      );
+      
+      // Si la query sugiere una categoría específica y el producto NO está en esa categoría
+      // aplicar penalización SEVERA
+      if (!hasMatchingCategory) {
+        score -= 50; // Penalización grande
+        this.log(`❌ PENALIZACIÓN: "${product.name}" no coincide con categoría esperada (${queryCategoryHints.join(', ')})`);
+      }
+    }
     
     // 🔥 REGLA FUNDAMENTAL: Detectar si es un producto genérico (Mega Pack)
     const isGenericPack = name.includes('mega pack') || name.includes('pack completo') || name.includes('pack ');
@@ -485,6 +546,16 @@ export class SearchAgent extends BaseAgent {
     // 2. Nombre contiene la query completa
     if (name.includes(normalizedQuery)) {
       score += 60; // Aumentado de 30 a 60
+    }
+    
+    // 2.5. BONUS: Subcategoría coincide con keywords
+    if (subcategory) {
+      keywords.forEach(keyword => {
+        if (subcategory.includes(keyword)) {
+          score += 15;
+          this.log(`✅ Keyword en subcategoría: "${keyword}" en "${subcategory}"`);
+        }
+      });
     }
     
     // 3. NUEVO: Detectar palabras clave específicas importantes (idiomas, temas específicos)

@@ -40,11 +40,20 @@ export class DeepReasoningAgent {
   static async analyzeContext(
     chatId: string,
     currentMessage: string,
-    memory: SharedMemory
+    memory: SharedMemory,
+    interpretation?: any // Interpretación del InterpreterAgent
   ): Promise<ReasoningResult> {
     console.log('\n🧠 [DEEP REASONING] Iniciando análisis profundo...');
     console.log(`📱 Chat: ${chatId}`);
     console.log(`💬 Mensaje: "${currentMessage}"`);
+    
+    // 0. Si hay interpretación previa, usarla
+    if (interpretation) {
+      console.log('🔍 [REASONING] Usando interpretación previa:');
+      console.log(`   Intent: ${interpretation.intent}`);
+      console.log(`   Type: ${interpretation.details.type}`);
+      console.log(`   Clarification: ${interpretation.details.clarification}`);
+    }
 
     // 1. Obtener contexto de conversación
     const conversationContext = ConversationContextService.getProductContext(chatId);
@@ -52,8 +61,13 @@ export class DeepReasoningAgent {
     // 2. Identificar el producto actual en discusión
     const currentProduct = this.identifyCurrentProduct(memory, conversationContext);
     
-    // 3. Analizar la intención del usuario con contexto
-    const userIntent = this.analyzeUserIntent(currentMessage, memory, currentProduct);
+    // 3. Analizar la intención del usuario con contexto E INTERPRETACIÓN
+    const userIntent = this.analyzeUserIntent(
+      currentMessage, 
+      memory, 
+      currentProduct,
+      interpretation // Pasar interpretación
+    );
     
     // 4. Generar recomendaciones basadas en el razonamiento
     const recommendations = this.generateRecommendations(userIntent, currentProduct);
@@ -187,13 +201,39 @@ export class DeepReasoningAgent {
   private static analyzeUserIntent(
     message: string,
     memory: SharedMemory,
-    currentProduct: Product | null
+    currentProduct: Product | null,
+    interpretation?: any // Interpretación del InterpreterAgent
   ): {
     primary: string;
     confidence: number;
     implicitReference: boolean;
   } {
     const lowerMessage = message.toLowerCase().trim();
+    
+    // 🔍 Si hay interpretación previa, usarla con prioridad
+    if (interpretation) {
+      console.log('🔍 [REASONING] Usando interpretación para determinar intención');
+      
+      // Mapear intent de interpretación a intención de razonamiento
+      const intentMap: { [key: string]: string } = {
+        'browse_category': 'browse_products',
+        'specific_product': 'search_specific_product',
+        'specific_payment_method': 'request_payment_method',
+        'payment_options': 'request_payment_info',
+        'product_details': 'request_product_info',
+        'budget_search': 'search_by_budget',
+        'check_availability': 'check_stock',
+        'compare_products': 'compare_options'
+      };
+      
+      const mappedIntent = intentMap[interpretation.intent] || interpretation.intent;
+      
+      return {
+        primary: mappedIntent,
+        confidence: interpretation.confidence,
+        implicitReference: interpretation.details.needsOptions || false
+      };
+    }
 
     // Detectar referencias implícitas a fotos
     if (this.isPhotoRequest(lowerMessage)) {
