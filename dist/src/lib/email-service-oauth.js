@@ -67,7 +67,7 @@ class GmailOAuthService {
     static async sendVerificationEmail(to, token, name) {
         try {
             const transporter = await this.getTransporter();
-            const verificationUrl = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/verify-email?token=${token}`;
+            const verificationUrl = `${process.env.NEXTAUTH_URL || 'http://localhost:4000'}/verify-email?token=${token}`;
             const mailOptions = {
                 from: `"${process.env.APP_NAME || 'Smart Sales Bot'}" <${process.env.GMAIL_USER}>`,
                 to,
@@ -172,7 +172,7 @@ class GmailOAuthService {
                 </ol>
                 
                 <p style="text-align: center;">
-                  <a href="${process.env.NEXTAUTH_URL || 'http://localhost:3000'}" class="button">🚀 Ir al Dashboard</a>
+                  <a href="${process.env.NEXTAUTH_URL || 'http://localhost:4000'}" class="button">🚀 Ir al Dashboard</a>
                 </p>
                 
                 <p>Si tienes alguna pregunta, estamos aquí para ayudarte.</p>

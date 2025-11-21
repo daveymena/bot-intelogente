@@ -180,7 +180,7 @@ class PaymentLinkGenerator {
         }
     }
     static generateFallbackLink(params) {
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000';
         switch (params.method.toLowerCase()) {
             case 'mercadopago':
                 return `${baseUrl}/payment/mercadopago?product=${encodeURIComponent(params.productName)}&amount=${params.amount}`;

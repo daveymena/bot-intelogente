@@ -10,28 +10,56 @@ let tray;
 const isDev = process.env.NODE_ENV === 'development';
 const PORT = process.env.PORT || 4000;
 
-// Crear ventana principal
+// Crear ventana principal con soporte responsive
 function createWindow() {
+  // Obtener tamaño de pantalla
+  const { screen } = require('electron');
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const { width: screenWidth, height: screenHeight } = primaryDisplay.workAreaSize;
+  
+  // Calcular tamaño de ventana (80% de la pantalla)
+  const windowWidth = Math.min(1400, Math.floor(screenWidth * 0.8));
+  const windowHeight = Math.min(900, Math.floor(screenHeight * 0.8));
+  
+  // Tamaños mínimos adaptativos
+  const minWidth = Math.min(800, Math.floor(screenWidth * 0.5));
+  const minHeight = Math.min(600, Math.floor(screenHeight * 0.5));
+
   mainWindow = new BrowserWindow({
-    width: 1400,
-    height: 900,
-    minWidth: 1200,
-    minHeight: 700,
-    icon: path.join(__dirname, '../public/logo.png'),
+    width: windowWidth,
+    height: windowHeight,
+    minWidth: minWidth,
+    minHeight: minHeight,
+    icon: path.join(__dirname, '../public/smart-sales-bot-logo.png'),
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      zoomFactor: 1.0, // Zoom inicial
+      enableRemoteModule: false,
+      sandbox: true
     },
     backgroundColor: '#0f172a',
     show: false,
     frame: true,
-    titleBarStyle: 'default'
+    titleBarStyle: 'default',
+    resizable: true, // Permitir redimensionar
+    maximizable: true, // Permitir maximizar
+    fullscreenable: true, // Permitir pantalla completa
+    center: true // Centrar en pantalla
   });
 
   // Esperar a que el servidor esté listo
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
+    
+    // Ajustar zoom según tamaño de pantalla
+    adjustZoomLevel();
+  });
+
+  // Ajustar zoom cuando se redimensiona
+  mainWindow.on('resize', () => {
+    adjustZoomLevel();
   });
 
   // Cargar la aplicación
@@ -54,6 +82,25 @@ function createWindow() {
     }
     return false;
   });
+}
+
+// Ajustar nivel de zoom según tamaño de ventana
+function adjustZoomLevel() {
+  if (!mainWindow) return;
+  
+  const [width] = mainWindow.getSize();
+  let zoomFactor = 1.0;
+  
+  // Ajustar zoom según ancho de ventana
+  if (width < 1000) {
+    zoomFactor = 0.85; // Reducir zoom en ventanas pequeñas
+  } else if (width < 1200) {
+    zoomFactor = 0.9;
+  } else if (width > 1600) {
+    zoomFactor = 1.1; // Aumentar zoom en ventanas grandes
+  }
+  
+  mainWindow.webContents.setZoomFactor(zoomFactor);
 }
 
 // Crear icono de bandeja

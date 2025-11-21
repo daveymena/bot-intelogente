@@ -22,6 +22,14 @@ const geistMono = Geist_Mono({
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://bot-whatsapp-bot-whatsapp-inteligente.sqaoeo.easypanel.host';
 const LOGO_VERSION = '?v=20251120'; // Cambiar este número para forzar actualización del logo
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: '#075e54',
+}
+
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
   title: {

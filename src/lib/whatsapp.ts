@@ -51,7 +51,16 @@ export class WhatsAppService {
           }
         })
 
-        return updatedConnection
+        return {
+          ...updatedConnection,
+          qrCode: updatedConnection.qrCode ?? undefined,
+          qrExpiresAt: updatedConnection.qrExpiresAt ?? undefined,
+          sessionId: updatedConnection.sessionId ?? undefined,
+          lastConnectedAt: updatedConnection.lastConnectedAt ?? undefined,
+          lastMessageAt: updatedConnection.lastMessageAt ?? undefined,
+          lastError: updatedConnection.lastError ?? undefined,
+          lastErrorAt: updatedConnection.lastErrorAt ?? undefined
+        }
       }
 
       // Create new connection record
@@ -68,7 +77,16 @@ export class WhatsAppService {
       // Generate QR code for connection
       await this.generateQRCode(connection.id, phoneNumber)
 
-      return connection
+      return {
+        ...connection,
+        qrCode: connection.qrCode ?? undefined,
+        qrExpiresAt: connection.qrExpiresAt ?? undefined,
+        sessionId: connection.sessionId ?? undefined,
+        lastConnectedAt: connection.lastConnectedAt ?? undefined,
+        lastMessageAt: connection.lastMessageAt ?? undefined,
+        lastError: connection.lastError ?? undefined,
+        lastErrorAt: connection.lastErrorAt ?? undefined
+      }
     } catch (error) {
       console.error('Error initializing WhatsApp connection:', error)
       throw error
@@ -159,7 +177,7 @@ export class WhatsAppService {
 
       // Check if QR code has expired
       if (connection.status === 'QR_PENDING' && connection.qrExpiresAt && connection.qrExpiresAt < new Date()) {
-        await db.whatsAppConnection.update({
+        const updated = await db.whatsAppConnection.update({
           where: { id: connection.id },
           data: {
             status: 'QR_EXPIRED',
@@ -169,14 +187,28 @@ export class WhatsAppService {
         })
 
         return {
-          ...connection,
+          ...updated,
           status: 'QR_EXPIRED',
-          qrCode: null,
-          qrExpiresAt: null
+          qrCode: undefined,
+          qrExpiresAt: undefined,
+          sessionId: updated.sessionId ?? undefined,
+          lastConnectedAt: updated.lastConnectedAt ?? undefined,
+          lastMessageAt: updated.lastMessageAt ?? undefined,
+          lastError: updated.lastError ?? undefined,
+          lastErrorAt: updated.lastErrorAt ?? undefined
         }
       }
 
-      return connection
+      return {
+        ...connection,
+        qrCode: connection.qrCode ?? undefined,
+        qrExpiresAt: connection.qrExpiresAt ?? undefined,
+        sessionId: connection.sessionId ?? undefined,
+        lastConnectedAt: connection.lastConnectedAt ?? undefined,
+        lastMessageAt: connection.lastMessageAt ?? undefined,
+        lastError: connection.lastError ?? undefined,
+        lastErrorAt: connection.lastErrorAt ?? undefined
+      }
     } catch (error) {
       console.error('Error getting connection status:', error)
       return null

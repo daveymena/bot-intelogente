@@ -100,7 +100,7 @@ class NotificationService {
      * Genera URL según el tipo de notificación
      */
     static generateUrl(type, token) {
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000';
         const urlMap = {
             PAYMENT_CONFIRMATION: `/payment/confirmation?token=${token}`,
             PAYMENT_REMINDER: `/payment/reminder?token=${token}`,

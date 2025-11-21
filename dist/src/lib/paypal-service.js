@@ -76,8 +76,8 @@ async function createPayPalLink(product) {
             }
         ],
         application_context: {
-            return_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/tienda/success`,
-            cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/tienda/failure`,
+            return_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000'}/tienda/success`,
+            cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000'}/tienda/failure`,
             brand_name: 'Tecnovariedades D&S',
             shipping_preference: 'NO_SHIPPING',
             user_action: 'PAY_NOW'

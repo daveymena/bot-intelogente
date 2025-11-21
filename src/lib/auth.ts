@@ -288,33 +288,7 @@ export class AuthService {
     return { success: true, user: updatedUser }
   }
 
-  // Resend verification email
-  static async resendVerificationEmail(email: string): Promise<boolean> {
-    const user = await db.user.findUnique({
-      where: { email }
-    })
-
-    if (!user) {
-      throw new Error('User not found')
-    }
-
-    if (user.isEmailVerified) {
-      throw new Error('Email already verified')
-    }
-
-    // Generate new token
-    const verificationToken = this.generateVerificationToken()
-
-    await db.user.update({
-      where: { id: user.id },
-      data: { emailVerificationToken: verificationToken }
-    })
-
-    // Send email
-    await EmailService.sendVerificationEmail(user.email, verificationToken, user.name || undefined)
-
-    return true
-  }
+  // Resend verification email - Ver implementación más abajo con código de 6 dígitos
 
   // Login user
   static async login(credentials: LoginCredentials): Promise<{ user: any; token: string }> {
@@ -589,3 +563,27 @@ export class AuthService {
     console.log(`✅ Código de verificación reenviado a: ${user.email}`)
   }
 }
+
+
+/**
+ * Verificar autenticación desde request
+ * Función helper para API routes
+ */
+export async function verifyAuth(request: Request | NextRequest): Promise<AuthUser | null> {
+  try {
+    const authHeader = request.headers.get('authorization')
+    if (!authHeader?.startsWith('Bearer ')) {
+      return null
+    }
+
+    const token = authHeader.substring(7)
+    const user = await AuthService.verifyToken(token)
+    return user
+  } catch (error) {
+    console.error('Error verifying auth:', error)
+    return null
+  }
+}
+
+// Importar NextRequest si no está importado
+import type { NextRequest } from 'next/server'

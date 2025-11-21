@@ -223,22 +223,8 @@ class ReasoningService {
                 suggestedResponse: greeting_detector_1.GreetingDetector.generateGreetingResponse()
             };
         }
-        // PASO 0.5: Detectar si es pregunta general
-        if (greeting_detector_1.GreetingDetector.isGeneralQuestion(message)) {
-            console.log(`[Reasoning] 🤔 Pregunta general detectada`);
-            return {
-                steps: [{
-                        step: 0,
-                        thought: 'El cliente pregunta qué vendemos en general',
-                        action: 'Mostrar catálogo general sin detalles específicos',
-                        result: { type: 'general_catalog' }
-                    }],
-                finalIntent: 'general_inquiry',
-                confidence: 1.0,
-                shouldUseAI: false,
-                suggestedResponse: greeting_detector_1.GreetingDetector.generateGeneralResponse()
-            };
-        }
+        // PASO 0.5: Detectar si es pregunta general (deshabilitado temporalmente)
+        // TODO: Implementar isGeneralQuestion en GreetingDetector
         // PASO 1: Analizar la consulta
         steps.push({
             step: 1,

@@ -107,7 +107,7 @@ class UniversalSalesFlow {
         // Inicializar estado
         this.flowStates.set(from, {
             step: 'initial',
-            productId: product?.id,
+            productId: product?.id || undefined,
             productName: product?.name || productName || 'nuestro servicio'
         });
         // Generar respuesta según tipo de negocio
@@ -210,8 +210,8 @@ class UniversalSalesFlow {
             state.step = 'details';
             this.flowStates.set(from, state);
             let response = `Perfecto 👌\n\n`;
-            if (product) {
-                response += product.description || 'Este producto/servicio está diseñado para satisfacer tus necesidades.';
+            if (product && product.description) {
+                response += product.description;
                 response += `\n\n¿Te gustaría ver fotos o conocer el precio?`;
             }
             else {
@@ -290,11 +290,11 @@ class UniversalSalesFlow {
                 }).format(product.price);
                 let response = `Listo ✅ Pedido confirmado:\n\n`;
                 response += `📦 *${product.name}*\n`;
-                if (data.name)
+                if (data?.name)
                     response += `👤 ${data.name}\n`;
-                if (data.phone)
+                if (data?.phone)
                     response += `📞 ${data.phone}\n`;
-                if (data.address && data.city)
+                if (data?.address && data?.city)
                     response += `📍 ${data.address}, ${data.city}\n`;
                 response += `💰 ${price}\n\n`;
                 if (config.businessType === 'DROPSHIPPING') {

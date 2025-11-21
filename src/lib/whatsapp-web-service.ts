@@ -288,7 +288,7 @@ export class WhatsAppWebService {
       console.log(`[WhatsApp Web] ✅ Cliente inicializado - esperando QR por evento`)
       
       // Retornar inmediatamente - el QR se manejará por eventos
-      return { success: true, message: 'Conexión iniciada - esperando QR' }
+      return { success: true }
     } catch (error) {
       console.error('[WhatsApp Web] Error inicializando conexión:', error)
       await this.updateConnectionStatus(userId, 'DISCONNECTED', error instanceof Error ? error.message : 'Error desconocido')

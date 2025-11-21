@@ -157,8 +157,8 @@ class WhatsAppReconnectionService {
                     where: { userId },
                     data: {
                         status: 'CONNECTED',
-                        lastReconnection: new Date(),
-                        reconnectionAttempts: 0
+                        lastConnectedAt: new Date(),
+                        connectionAttempts: 0
                     }
                 });
                 // Notificar éxito
@@ -172,8 +172,7 @@ class WhatsAppReconnectionService {
                 await db_1.db.whatsAppConnection.update({
                     where: { userId },
                     data: {
-                        reconnectionAttempts: state.retryCount,
-                        lastReconnectionAttempt: new Date()
+                        connectionAttempts: state.retryCount
                     }
                 });
                 // Intentar de nuevo si no alcanzó el máximo
@@ -219,9 +218,7 @@ class WhatsAppReconnectionService {
                 where: { userId },
                 data: {
                     status: 'DISCONNECTED',
-                    isConnected: false,
-                    reconnectionFailed: true,
-                    lastReconnectionAttempt: new Date()
+                    isConnected: false
                 }
             });
             // Aquí podrías enviar una notificación al usuario

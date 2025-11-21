@@ -15,7 +15,7 @@ async function createMercadoPagoLink(product) {
         throw new Error('MERCADO_PAGO_ACCESS_TOKEN no configurado');
     }
     console.log('[MercadoPago] Creando preferencia para:', product.name);
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000';
     const preference = {
         items: [
             {

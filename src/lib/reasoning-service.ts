@@ -267,22 +267,8 @@ export class ReasoningService {
       }
     }
 
-    // PASO 0.5: Detectar si es pregunta general
-    if (GreetingDetector.isGeneralQuestion(message)) {
-      console.log(`[Reasoning] 🤔 Pregunta general detectada`)
-      return {
-        steps: [{
-          step: 0,
-          thought: 'El cliente pregunta qué vendemos en general',
-          action: 'Mostrar catálogo general sin detalles específicos',
-          result: { type: 'general_catalog' }
-        }],
-        finalIntent: 'general_inquiry',
-        confidence: 1.0,
-        shouldUseAI: false,
-        suggestedResponse: GreetingDetector.generateGeneralResponse()
-      }
-    }
+    // PASO 0.5: Detectar si es pregunta general (deshabilitado temporalmente)
+    // TODO: Implementar isGeneralQuestion en GreetingDetector
 
     // PASO 1: Analizar la consulta
     steps.push({
@@ -328,7 +314,13 @@ export class ReasoningService {
     }
 
     // PASO 3: Analizar información de pago si pregunta por eso
-    let paymentInfo = null
+    let paymentInfo: {
+      hasPaymentLinks: boolean
+      methods: string[]
+      links: any
+      isDigital: boolean
+      isPhysical: boolean
+    } | null = null
 
     if (product && (
       analysis.mainIntent === 'request_payment_link' ||

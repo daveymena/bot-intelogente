@@ -37,6 +37,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
+exports.verifyAuth = verifyAuth;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const db_1 = require("./db");
@@ -272,27 +273,7 @@ class AuthService {
         }
         return { success: true, user: updatedUser };
     }
-    // Resend verification email
-    static async resendVerificationEmail(email) {
-        const user = await db_1.db.user.findUnique({
-            where: { email }
-        });
-        if (!user) {
-            throw new Error('User not found');
-        }
-        if (user.isEmailVerified) {
-            throw new Error('Email already verified');
-        }
-        // Generate new token
-        const verificationToken = this.generateVerificationToken();
-        await db_1.db.user.update({
-            where: { id: user.id },
-            data: { emailVerificationToken: verificationToken }
-        });
-        // Send email
-        await email_service_1.EmailService.sendVerificationEmail(user.email, verificationToken, user.name || undefined);
-        return true;
-    }
+    // Resend verification email - Ver implementación más abajo con código de 6 dígitos
     // Login user
     static async login(credentials) {
         const user = await db_1.db.user.findUnique({
@@ -514,3 +495,22 @@ class AuthService {
     }
 }
 exports.AuthService = AuthService;
+/**
+ * Verificar autenticación desde request
+ * Función helper para API routes
+ */
+async function verifyAuth(request) {
+    try {
+        const authHeader = request.headers.get('authorization');
+        if (!authHeader?.startsWith('Bearer ')) {
+            return null;
+        }
+        const token = authHeader.substring(7);
+        const user = await AuthService.verifyToken(token);
+        return user;
+    }
+    catch (error) {
+        console.error('Error verifying auth:', error);
+        return null;
+    }
+}

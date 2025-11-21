@@ -98,6 +98,13 @@ export class UnifiedWhatsAppService {
 
         return {
           ...updatedConnection,
+          qrCode: updatedConnection.qrCode ?? undefined,
+          qrExpiresAt: updatedConnection.qrExpiresAt ?? undefined,
+          sessionId: updatedConnection.sessionId ?? undefined,
+          lastConnectedAt: updatedConnection.lastConnectedAt ?? undefined,
+          lastMessageAt: updatedConnection.lastMessageAt ?? undefined,
+          lastError: updatedConnection.lastError ?? undefined,
+          lastErrorAt: updatedConnection.lastErrorAt ?? undefined,
           aiEnabled: options?.aiEnabled ?? true,
           audioTranscriptionEnabled: options?.audioTranscriptionEnabled ?? true,
           photoSendingEnabled: options?.photoSendingEnabled ?? true,
@@ -126,6 +133,13 @@ export class UnifiedWhatsAppService {
 
       return {
         ...connection,
+        qrCode: connection.qrCode ?? undefined,
+        qrExpiresAt: connection.qrExpiresAt ?? undefined,
+        sessionId: connection.sessionId ?? undefined,
+        lastConnectedAt: connection.lastConnectedAt ?? undefined,
+        lastMessageAt: connection.lastMessageAt ?? undefined,
+        lastError: connection.lastError ?? undefined,
+        lastErrorAt: connection.lastErrorAt ?? undefined,
         aiEnabled: options?.aiEnabled ?? true,
         audioTranscriptionEnabled: options?.audioTranscriptionEnabled ?? true,
         photoSendingEnabled: options?.photoSendingEnabled ?? true,
@@ -222,7 +236,7 @@ export class UnifiedWhatsAppService {
 
       // Verificar si el QR expiró
       if (connection.status === 'QR_PENDING' && connection.qrExpiresAt && connection.qrExpiresAt < new Date()) {
-        await db.whatsAppConnection.update({
+        const updated = await db.whatsAppConnection.update({
           where: { id: connection.id },
           data: {
             status: 'QR_EXPIRED',
@@ -232,10 +246,15 @@ export class UnifiedWhatsAppService {
         })
 
         return {
-          ...connection,
+          ...updated,
           status: 'QR_EXPIRED',
-          qrCode: null,
-          qrExpiresAt: null,
+          qrCode: undefined,
+          qrExpiresAt: undefined,
+          sessionId: updated.sessionId ?? undefined,
+          lastConnectedAt: updated.lastConnectedAt ?? undefined,
+          lastMessageAt: updated.lastMessageAt ?? undefined,
+          lastError: updated.lastError ?? undefined,
+          lastErrorAt: updated.lastErrorAt ?? undefined,
           aiEnabled: true,
           audioTranscriptionEnabled: true,
           photoSendingEnabled: true,
@@ -245,6 +264,13 @@ export class UnifiedWhatsAppService {
 
       return {
         ...connection,
+        qrCode: connection.qrCode ?? undefined,
+        qrExpiresAt: connection.qrExpiresAt ?? undefined,
+        sessionId: connection.sessionId ?? undefined,
+        lastConnectedAt: connection.lastConnectedAt ?? undefined,
+        lastMessageAt: connection.lastMessageAt ?? undefined,
+        lastError: connection.lastError ?? undefined,
+        lastErrorAt: connection.lastErrorAt ?? undefined,
         aiEnabled: true,
         audioTranscriptionEnabled: true,
         photoSendingEnabled: true,

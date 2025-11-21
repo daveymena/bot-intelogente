@@ -102,7 +102,7 @@ Responde en formato JSON:
         console.log('🔄 Iniciando auto-recuperación de WhatsApp...');
         try {
             // 1. Verificar estado actual
-            const statusResponse = await fetch('http://localhost:3000/api/whatsapp/status');
+            const statusResponse = await fetch('http://localhost:4000/api/whatsapp/status');
             const status = await statusResponse.json();
             if (status.connected) {
                 console.log('✅ WhatsApp ya está conectado');
@@ -111,7 +111,7 @@ Responde en formato JSON:
             // 2. Intentar desconectar sesión corrupta
             console.log('🔧 Limpiando sesión corrupta...');
             try {
-                await fetch('http://localhost:3000/api/whatsapp/disconnect', { method: 'POST' });
+                await fetch('http://localhost:4000/api/whatsapp/disconnect', { method: 'POST' });
                 await new Promise(resolve => setTimeout(resolve, 2000));
             }
             catch (err) {
@@ -130,7 +130,7 @@ Responde en formato JSON:
             }
             // 4. Intentar reconectar
             console.log('🔌 Intentando reconectar...');
-            const connectResponse = await fetch('http://localhost:3000/api/whatsapp/connect', {
+            const connectResponse = await fetch('http://localhost:4000/api/whatsapp/connect', {
                 method: 'POST'
             });
             const connectResult = await connectResponse.json();
@@ -213,7 +213,7 @@ Responde en formato JSON:
                 return false;
             }
             // Probar API de pagos
-            const testPayment = await fetch('http://localhost:3000/api/payments/create-link', {
+            const testPayment = await fetch('http://localhost:4000/api/payments/create-link', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -343,7 +343,7 @@ Responde en formato JSON:
      */
     static async checkWhatsAppHealth() {
         try {
-            const response = await fetch('http://localhost:3000/api/whatsapp/status');
+            const response = await fetch('http://localhost:4000/api/whatsapp/status');
             const status = await response.json();
             return status.connected || false;
         }

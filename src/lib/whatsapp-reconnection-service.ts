@@ -218,8 +218,8 @@ export class WhatsAppReconnectionService {
           where: { userId },
           data: {
             status: 'CONNECTED',
-            lastReconnection: new Date(),
-            reconnectionAttempts: 0
+            lastConnectedAt: new Date(),
+            connectionAttempts: 0
           }
         })
 
@@ -235,8 +235,7 @@ export class WhatsAppReconnectionService {
         await db.whatsAppConnection.update({
           where: { userId },
           data: {
-            reconnectionAttempts: state.retryCount,
-            lastReconnectionAttempt: new Date()
+            connectionAttempts: state.retryCount
           }
         })
 
@@ -287,9 +286,7 @@ export class WhatsAppReconnectionService {
         where: { userId },
         data: {
           status: 'DISCONNECTED',
-          isConnected: false,
-          reconnectionFailed: true,
-          lastReconnectionAttempt: new Date()
+          isConnected: false
         }
       })
 
