@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { getServerSession } from 'next-auth'
+import { EncryptionService } from '@/lib/encryption-service'
+import { SecurityService } from '@/lib/security-service'
 
 // Modelo para configuración de integraciones de pago
 interface PaymentIntegration {
@@ -28,16 +30,36 @@ interface PaymentIntegration {
   }
 }
 
-// Función para ofuscar información sensible
-function maskSensitiveData(value: string | undefined): string {
-  if (!value) return ''
-  if (value.length <= 4) return '****'
-  return '****' + value.slice(-4)
+// Función para desencriptar y ofuscar datos sensibles
+function decryptAndMask(encryptedValue: string | null | undefined): string {
+  if (!encryptedValue) return ''
+  
+  try {
+    // Si está encriptado, desencriptar primero
+    if (EncryptionService.isEncrypted(encryptedValue)) {
+      const decrypted = EncryptionService.decrypt(encryptedValue)
+      return EncryptionService.mask(decrypted)
+    }
+    // Si no está encriptado (datos legacy), ofuscar directamente
+    return EncryptionService.mask(encryptedValue)
+  } catch (error) {
+    console.error('[Payment API] Error desencriptando:', error)
+    return '****'
+  }
 }
 
 // GET - Obtener configuración (con datos sensibles ofuscados)
 export async function GET(request: NextRequest) {
   try {
+    // Rate limiting
+    const ip = SecurityService.getClientIP(request)
+    if (!SecurityService.checkRateLimit(ip, 20, 60000)) {
+      return NextResponse.json(
+        { error: 'Demasiadas solicitudes. Intenta de nuevo en 1 minuto.' },
+        { status: 429 }
+      )
+    }
+
     const session = await getServerSession()
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
@@ -66,29 +88,29 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    // Ofuscar datos sensibles antes de enviar
+    // Desencriptar y ofuscar datos sensibles antes de enviar
     const safeConfig = {
       hotmart: {
         enabled: config.hotmartEnabled,
-        apiKey: config.hotmartApiKey ? maskSensitiveData(config.hotmartApiKey) : '',
+        apiKey: decryptAndMask(config.hotmartApiKey),
         productId: config.hotmartProductId,
         checkoutUrl: config.hotmartCheckoutUrl
       },
       mercadopago: {
         enabled: config.mercadopagoEnabled,
-        accessToken: config.mercadopagoAccessToken ? maskSensitiveData(config.mercadopagoAccessToken) : '',
-        publicKey: config.mercadopagoPublicKey ? maskSensitiveData(config.mercadopagoPublicKey) : ''
+        accessToken: decryptAndMask(config.mercadopagoAccessToken),
+        publicKey: decryptAndMask(config.mercadopagoPublicKey)
       },
       paypal: {
         enabled: config.paypalEnabled,
-        clientId: config.paypalClientId ? maskSensitiveData(config.paypalClientId) : '',
-        clientSecret: config.paypalClientSecret ? maskSensitiveData(config.paypalClientSecret) : '',
+        clientId: decryptAndMask(config.paypalClientId),
+        clientSecret: decryptAndMask(config.paypalClientSecret),
         email: config.paypalEmail
       },
       stripe: {
         enabled: config.stripeEnabled,
-        secretKey: config.stripeSecretKey ? maskSensitiveData(config.stripeSecretKey) : '',
-        publishableKey: config.stripePublishableKey ? maskSensitiveData(config.stripePublishableKey) : ''
+        secretKey: decryptAndMask(config.stripeSecretKey),
+        publishableKey: decryptAndMask(config.stripePublishableKey)
       }
     }
 
@@ -105,6 +127,15 @@ export async function GET(request: NextRequest) {
 // POST - Guardar configuración
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting más estricto para escritura
+    const ip = SecurityService.getClientIP(request)
+    if (!SecurityService.checkRateLimit(ip, 10, 60000)) {
+      return NextResponse.json(
+        { error: 'Demasiadas solicitudes. Intenta de nuevo en 1 minuto.' },
+        { status: 429 }
+      )
+    }
+
     const session = await getServerSession()
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
@@ -120,50 +151,47 @@ export async function POST(request: NextRequest) {
 
     const data: PaymentIntegration = await request.json()
 
+    // Encriptar datos sensibles antes de guardar
+    const encryptedData = {
+      // Hotmart
+      hotmartEnabled: data.hotmart.enabled,
+      hotmartApiKey: data.hotmart.apiKey ? EncryptionService.encrypt(data.hotmart.apiKey) : null,
+      hotmartProductId: data.hotmart.productId,
+      hotmartCheckoutUrl: data.hotmart.checkoutUrl,
+      // MercadoPago
+      mercadopagoEnabled: data.mercadopago.enabled,
+      mercadopagoAccessToken: data.mercadopago.accessToken ? EncryptionService.encrypt(data.mercadopago.accessToken) : null,
+      mercadopagoPublicKey: data.mercadopago.publicKey ? EncryptionService.encrypt(data.mercadopago.publicKey) : null,
+      // PayPal
+      paypalEnabled: data.paypal.enabled,
+      paypalClientId: data.paypal.clientId ? EncryptionService.encrypt(data.paypal.clientId) : null,
+      paypalClientSecret: data.paypal.clientSecret ? EncryptionService.encrypt(data.paypal.clientSecret) : null,
+      paypalEmail: data.paypal.email,
+      // Stripe
+      stripeEnabled: data.stripe.enabled,
+      stripeSecretKey: data.stripe.secretKey ? EncryptionService.encrypt(data.stripe.secretKey) : null,
+      stripePublishableKey: data.stripe.publishableKey ? EncryptionService.encrypt(data.stripe.publishableKey) : null
+    }
+
+    // Log de seguridad (sin datos sensibles)
+    console.log('[Payment API] 💾 Guardando configuración encriptada', {
+      userId: user.id,
+      providers: {
+        hotmart: data.hotmart.enabled,
+        mercadopago: data.mercadopago.enabled,
+        paypal: data.paypal.enabled,
+        stripe: data.stripe.enabled
+      }
+    })
+
     // Guardar o actualizar configuración
     const config = await db.paymentIntegration.upsert({
       where: { userId: user.id },
       create: {
         userId: user.id,
-        // Hotmart
-        hotmartEnabled: data.hotmart.enabled,
-        hotmartApiKey: data.hotmart.apiKey,
-        hotmartProductId: data.hotmart.productId,
-        hotmartCheckoutUrl: data.hotmart.checkoutUrl,
-        // MercadoPago
-        mercadopagoEnabled: data.mercadopago.enabled,
-        mercadopagoAccessToken: data.mercadopago.accessToken,
-        mercadopagoPublicKey: data.mercadopago.publicKey,
-        // PayPal
-        paypalEnabled: data.paypal.enabled,
-        paypalClientId: data.paypal.clientId,
-        paypalClientSecret: data.paypal.clientSecret,
-        paypalEmail: data.paypal.email,
-        // Stripe
-        stripeEnabled: data.stripe.enabled,
-        stripeSecretKey: data.stripe.secretKey,
-        stripePublishableKey: data.stripe.publishableKey
+        ...encryptedData
       },
-      update: {
-        // Hotmart
-        hotmartEnabled: data.hotmart.enabled,
-        hotmartApiKey: data.hotmart.apiKey,
-        hotmartProductId: data.hotmart.productId,
-        hotmartCheckoutUrl: data.hotmart.checkoutUrl,
-        // MercadoPago
-        mercadopagoEnabled: data.mercadopago.enabled,
-        mercadopagoAccessToken: data.mercadopago.accessToken,
-        mercadopagoPublicKey: data.mercadopago.publicKey,
-        // PayPal
-        paypalEnabled: data.paypal.enabled,
-        paypalClientId: data.paypal.clientId,
-        paypalClientSecret: data.paypal.clientSecret,
-        paypalEmail: data.paypal.email,
-        // Stripe
-        stripeEnabled: data.stripe.enabled,
-        stripeSecretKey: data.stripe.secretKey,
-        stripePublishableKey: data.stripe.publishableKey
-      }
+      update: encryptedData
     })
 
     return NextResponse.json({ 

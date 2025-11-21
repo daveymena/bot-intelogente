@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { Bot } from 'lucide-react'
+import Image from 'next/image'
 
 export default function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -31,8 +31,15 @@ export default function PageTransition({ children }: { children: React.ReactNode
         <div className="text-center">
           {/* Logo animado */}
           <div className="relative">
-            <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6 animate-pulse">
-              <Bot className="w-10 h-10 text-white" />
+            <div className="w-24 h-24 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 animate-pulse shadow-lg">
+              <Image 
+                src="/smart-sales-bot-logo.png" 
+                alt="Smart Sales Bot Pro" 
+                width={80} 
+                height={80}
+                className="object-contain"
+                priority
+              />
             </div>
             
             {/* Spinner */}

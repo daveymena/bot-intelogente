@@ -84,6 +84,9 @@ export default function PaymentIntegrationsPanel() {
   const [loading, setLoading] = useState(true)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [testing, setTesting] = useState(false)
+  const [testingProvider, setTestingProvider] = useState<Record<string, boolean>>({})
+  const [testResults, setTestResults] = useState<Record<string, { isValid: boolean; message: string }>>({})
+
   
   // Configuraciones avanzadas
   const [advancedSettings, setAdvancedSettings] = useState({
@@ -174,6 +177,41 @@ export default function PaymentIntegrationsPanel() {
       })
     } finally {
       setTesting(false)
+    }
+  }
+
+  const handleTestProvider = async (provider: string) => {
+    setTestingProvider(prev => ({ ...prev, [provider]: true }))
+    
+    try {
+      const credentials = config[provider as keyof IntegrationConfig]
+      
+      const response = await fetch('/api/integrations/payment/test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          provider,
+          credentials
+        })
+      })
+      
+      const result = await response.json()
+      
+      setTestResults(prev => ({ ...prev, [provider]: result }))
+      
+      toast({
+        title: result.isValid ? "✅ Conexión exitosa" : "❌ Error de conexión",
+        description: result.message,
+        variant: result.isValid ? "default" : "destructive"
+      })
+    } catch (error: any) {
+      toast({
+        title: "❌ Error",
+        description: `No se pudo probar la conexión: ${error.message}`,
+        variant: "destructive"
+      })
+    } finally {
+      setTestingProvider(prev => ({ ...prev, [provider]: false }))
     }
   }
 
@@ -531,6 +569,38 @@ export default function PaymentIntegrationsPanel() {
                   className="mt-1"
                 />
               </div>
+
+              {/* Botón de prueba */}
+              <div className="pt-2">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => handleTestProvider('mercadopago')}
+                  disabled={testingProvider.mercadopago || !config.mercadopago.accessToken}
+                >
+                  {testingProvider.mercadopago ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                      Probando conexión...
+                    </>
+                  ) : (
+                    <>
+                      <TestTube className="w-4 h-4 mr-2" />
+                      Probar Conexión
+                    </>
+                  )}
+                </Button>
+                
+                {testResults.mercadopago && (
+                  <div className={`mt-2 p-2 rounded text-sm ${
+                    testResults.mercadopago.isValid 
+                      ? 'bg-green-50 text-green-700 border border-green-200' 
+                      : 'bg-red-50 text-red-700 border border-red-200'
+                  }`}>
+                    {testResults.mercadopago.isValid ? '✅' : '❌'} {testResults.mercadopago.message}
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </TabsContent>
@@ -609,6 +679,38 @@ export default function PaymentIntegrationsPanel() {
                   <option value="sandbox">Sandbox (Pruebas)</option>
                   <option value="live">Live (Producción)</option>
                 </select>
+              </div>
+
+              {/* Botón de prueba */}
+              <div className="pt-2">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => handleTestProvider('paypal')}
+                  disabled={testingProvider.paypal || !config.paypal.clientId || !config.paypal.clientSecret}
+                >
+                  {testingProvider.paypal ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                      Probando conexión...
+                    </>
+                  ) : (
+                    <>
+                      <TestTube className="w-4 h-4 mr-2" />
+                      Probar Conexión
+                    </>
+                  )}
+                </Button>
+                
+                {testResults.paypal && (
+                  <div className={`mt-2 p-2 rounded text-sm ${
+                    testResults.paypal.isValid 
+                      ? 'bg-green-50 text-green-700 border border-green-200' 
+                      : 'bg-red-50 text-red-700 border border-red-200'
+                  }`}>
+                    {testResults.paypal.isValid ? '✅' : '❌'} {testResults.paypal.message}
+                  </div>
+                )}
               </div>
             </div>
           )}
