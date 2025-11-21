@@ -83,7 +83,7 @@ function ResetPasswordForm() {
         },
         body: JSON.stringify({
           token,
-          newPassword: password,
+          password: password, // ← Corregido: era "newPassword"
         }),
       });
 
