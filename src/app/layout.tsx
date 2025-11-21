@@ -20,6 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://bot-whatsapp-bot-whatsapp-inteligente.sqaoeo.easypanel.host';
+const LOGO_VERSION = '?v=20251120'; // Cambiar este número para forzar actualización del logo
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
@@ -84,7 +85,7 @@ export const metadata: Metadata = {
     description: "Bot inteligente de WhatsApp con IA avanzada. Automatiza ventas, gestiona productos y atiende clientes 24/7. Múltiples modelos de IA, análisis en tiempo real y respuestas personalizadas.",
     images: [
       {
-        url: `${APP_URL}/smart-sales-bot-logo.png`,
+        url: `${APP_URL}/smart-sales-bot-logo.png${LOGO_VERSION}`,
         width: 512,
         height: 512,
         alt: "Smart Sales Bot Pro - Bot de WhatsApp con IA",
@@ -96,7 +97,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Smart Sales Bot Pro - Automatización de Ventas con IA",
     description: "Bot inteligente de WhatsApp con IA avanzada. Automatiza ventas 24/7 con múltiples modelos de IA.",
-    images: [`${APP_URL}/smart-sales-bot-logo.png`],
+    images: [`${APP_URL}/smart-sales-bot-logo.png${LOGO_VERSION}`],
     creator: "@smartsalesbot",
   },
   alternates: {
@@ -129,9 +130,9 @@ export default function RootLayout({
         <meta property="og:locale" content="es_CO" />
         
         {/* Imagen principal - TODAS las variantes */}
-        <meta property="og:image" content={`${APP_URL}/smart-sales-bot-logo.png`} />
-        <meta property="og:image:url" content={`${APP_URL}/smart-sales-bot-logo.png`} />
-        <meta property="og:image:secure_url" content={`${APP_URL}/smart-sales-bot-logo.png`} />
+        <meta property="og:image" content={`${APP_URL}/smart-sales-bot-logo.png${LOGO_VERSION}`} />
+        <meta property="og:image:url" content={`${APP_URL}/smart-sales-bot-logo.png${LOGO_VERSION}`} />
+        <meta property="og:image:secure_url" content={`${APP_URL}/smart-sales-bot-logo.png${LOGO_VERSION}`} />
         <meta property="og:image:type" content="image/png" />
         <meta property="og:image:width" content="512" />
         <meta property="og:image:height" content="512" />
@@ -143,12 +144,12 @@ export default function RootLayout({
         <meta name="twitter:creator" content="@smartsalesbot" />
         <meta name="twitter:title" content="Smart Sales Bot Pro - Automatización de Ventas con IA" />
         <meta name="twitter:description" content="Bot inteligente de WhatsApp con IA avanzada. Automatiza ventas 24/7 con múltiples modelos de IA." />
-        <meta name="twitter:image" content={`${APP_URL}/smart-sales-bot-logo.png`} />
-        <meta name="twitter:image:src" content={`${APP_URL}/smart-sales-bot-logo.png`} />
+        <meta name="twitter:image" content={`${APP_URL}/smart-sales-bot-logo.png${LOGO_VERSION}`} />
+        <meta name="twitter:image:src" content={`${APP_URL}/smart-sales-bot-logo.png${LOGO_VERSION}`} />
         <meta name="twitter:image:alt" content="Smart Sales Bot Pro - Automatización de Ventas con IA" />
         
         {/* ========== WHATSAPP ESPECÍFICO ========== */}
-        <meta property="og:image" content={`${APP_URL}/smart-sales-bot-logo.png`} />
+        <meta property="og:image" content={`${APP_URL}/smart-sales-bot-logo.png${LOGO_VERSION}`} />
         <meta property="og:image:width" content="512" />
         <meta property="og:image:height" content="512" />
         
@@ -157,8 +158,8 @@ export default function RootLayout({
         
         {/* ========== GENERAL ========== */}
         <meta name="description" content="Bot inteligente de WhatsApp con IA avanzada. Automatiza ventas, gestiona productos y atiende clientes 24/7." />
-        <meta name="image" content={`${APP_URL}/smart-sales-bot-logo.png`} />
-        <link rel="image_src" href={`${APP_URL}/smart-sales-bot-logo.png`} />
+        <meta name="image" content={`${APP_URL}/smart-sales-bot-logo.png${LOGO_VERSION}`} />
+        <link rel="image_src" href={`${APP_URL}/smart-sales-bot-logo.png${LOGO_VERSION}`} />
         
         {/* ========== CANONICAL ========== */}
         <link rel="canonical" href={APP_URL} />
