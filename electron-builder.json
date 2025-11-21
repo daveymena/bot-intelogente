@@ -1,0 +1,86 @@
+{
+  "appId": "com.tecnovariedades.smartsalesbot",
+  "productName": "Smart Sales Bot Pro",
+  "copyright": "Copyright © 2025 Tecnovariedades D&S",
+  "directories": {
+    "output": "dist-electron",
+    "buildResources": "electron/resources"
+  },
+  "files": [
+    "electron/**/*",
+    "dist/**/*",
+    "public/**/*",
+    "prisma/**/*",
+    "node_modules/**/*",
+    "package.json",
+    "server.js",
+    ".env.example"
+  ],
+  "extraResources": [
+    {
+      "from": "prisma",
+      "to": "prisma"
+    },
+    {
+      "from": ".env.example",
+      "to": ".env"
+    }
+  ],
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64"]
+      },
+      {
+        "target": "portable",
+        "arch": ["x64"]
+      }
+    ],
+    "icon": "public/logo.png",
+    "artifactName": "${productName}-${version}-${arch}.${ext}"
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "Smart Sales Bot Pro",
+    "installerIcon": "public/logo.png",
+    "uninstallerIcon": "public/logo.png",
+    "installerHeaderIcon": "public/logo.png",
+    "license": "LICENSE.txt"
+  },
+  "portable": {
+    "artifactName": "${productName}-${version}-portable.${ext}"
+  },
+  "mac": {
+    "target": ["dmg", "zip"],
+    "icon": "public/logo.png",
+    "category": "public.app-category.business",
+    "hardenedRuntime": true,
+    "gatekeeperAssess": false,
+    "entitlements": "electron/entitlements.mac.plist",
+    "entitlementsInherit": "electron/entitlements.mac.plist"
+  },
+  "dmg": {
+    "contents": [
+      {
+        "x": 130,
+        "y": 220
+      },
+      {
+        "x": 410,
+        "y": 220,
+        "type": "link",
+        "path": "/Applications"
+      }
+    ]
+  },
+  "linux": {
+    "target": ["AppImage", "deb", "rpm"],
+    "icon": "public/logo.png",
+    "category": "Office",
+    "maintainer": "Tecnovariedades D&S"
+  }
+}
