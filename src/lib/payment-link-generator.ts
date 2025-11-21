@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 💳 GENERADOR DE LINKS DE PAGO
  * Genera links dinámicos de MercadoPago y PayPal según el producto
  * PayPal ahora usa API REST v2 para crear órdenes reales
@@ -149,8 +149,8 @@ export class PaymentLinkGenerator {
           }
         ],
         application_context: {
-          return_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/payment/success`,
-          cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/payment/cancel`,
+          return_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000'}/payment/success`,
+          cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000'}/payment/cancel`,
           brand_name: 'Tecnovariedades D&S',
           shipping_preference: 'NO_SHIPPING',
           user_action: 'PAY_NOW'
@@ -463,3 +463,4 @@ export class PaymentLinkGenerator {
     }
   }
 }
+

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
   try {
@@ -48,7 +48,7 @@ async function createMercadoPagoLink(
       return '#'
     }
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000'
     
     const response = await fetch('https://api.mercadopago.com/checkout/preferences', {
       method: 'POST',
@@ -125,7 +125,7 @@ async function createPayPalLink(
 
     // Create order
     const totalUSD = (price * quantity / 4000).toFixed(2)
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000'
     
     const orderResponse = await fetch('https://api-m.paypal.com/v2/checkout/orders', {
       method: 'POST',
@@ -200,3 +200,4 @@ function createWhatsAppLink(name: string, price: number, quantity: number): stri
 
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
 }
+

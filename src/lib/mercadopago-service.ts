@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 💳 SERVICIO DE MERCADOPAGO
  * Integración real con la API de MercadoPago para crear links de pago dinámicos
  */
@@ -40,7 +40,7 @@ export async function createMercadoPagoLink(product: Product): Promise<string> {
 
   console.log('[MercadoPago] Creando preferencia para:', product.name)
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000'
 
   const preference: MercadoPagoPreference = {
     items: [
@@ -115,3 +115,4 @@ export async function getMercadoPagoPaymentStatus(paymentId: string): Promise<an
     throw error
   }
 }
+

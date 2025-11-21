@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -17,7 +17,7 @@ export default function ShareStoreButton({ userId, productCount = 0 }: ShareStor
 
   const baseUrl = typeof window !== 'undefined' 
     ? window.location.origin 
-    : process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    : process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000'
   
   // Usar la nueva ruta de tienda sin userId (catálogo general)
   const storeUrl = `${baseUrl}/tienda`
@@ -131,3 +131,4 @@ export default function ShareStoreButton({ userId, productCount = 0 }: ShareStor
     </Card>
   )
 }
+

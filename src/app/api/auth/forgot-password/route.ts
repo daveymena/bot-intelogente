@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
     });
 
     // Construir URL de reset
-    const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`;
+    const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000'}/reset-password?token=${resetToken}`;
 
     console.log('[ForgotPassword] Token generado para:', email);
     console.log('[ForgotPassword] URL de reset:', resetUrl);

@@ -1,0 +1,161 @@
+"use strict";
+/**
+ * Cliente Groq para Smart Sales Bot Pro
+ * Maneja la comunicación con la API de Groq con rotación automática
+ */
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.sendToGroq = sendToGroq;
+exports.sendToOllama = sendToOllama;
+exports.sendWithFallback = sendWithFallback;
+exports.getApiStats = getApiStats;
+const groq_sdk_1 = __importDefault(require("groq-sdk"));
+// Rotación automática de APIs Groq
+const GROQ_API_KEYS = [
+    process.env.GROQ_API_KEY,
+    process.env.GROQ_API_KEY_2,
+    process.env.GROQ_API_KEY_6,
+].filter(Boolean);
+let currentKeyIndex = 0;
+function getGroqClient() {
+    const apiKey = GROQ_API_KEYS[currentKeyIndex] || process.env.GROQ_API_KEY || '';
+    return new groq_sdk_1.default({ apiKey });
+}
+function rotateApiKey() {
+    currentKeyIndex = (currentKeyIndex + 1) % GROQ_API_KEYS.length;
+    console.log(`[GroqClient] 🔄 Rotando a API key ${currentKeyIndex + 1}/${GROQ_API_KEYS.length}`);
+}
+/**
+ * Envía un mensaje a Groq y obtiene respuesta con rotación automática
+ */
+async function sendToGroq(messages, options = {}) {
+    const model = options.model || process.env.GROQ_MODEL || 'llama-3.1-8b-instant';
+    const temperature = options.temperature ?? 0.7;
+    const maxTokens = options.maxTokens || parseInt(process.env.GROQ_MAX_TOKENS || '300');
+    // Intentar con todas las API keys disponibles
+    for (let attempt = 0; attempt < GROQ_API_KEYS.length; attempt++) {
+        try {
+            const groq = getGroqClient();
+            const completion = await groq.chat.completions.create({
+                messages,
+                model,
+                temperature,
+                max_tokens: maxTokens,
+            });
+            console.log(`[GroqClient] ✅ Respuesta exitosa con API key ${currentKeyIndex + 1}`);
+            return {
+                content: completion.choices[0]?.message?.content || '',
+                model: completion.model || model,
+                usage: completion.usage ? {
+                    prompt_tokens: completion.usage.prompt_tokens || 0,
+                    completion_tokens: completion.usage.completion_tokens || 0,
+                    total_tokens: completion.usage.total_tokens || 0,
+                } : undefined,
+            };
+        }
+        catch (error) {
+            console.error(`[GroqClient] ❌ Error con API key ${currentKeyIndex + 1}:`, error.message);
+            // Si es error de rate limit, rotar a la siguiente API key
+            if (error.message?.includes('rate_limit') || error.message?.includes('429')) {
+                console.log('[GroqClient] 🔄 Rate limit alcanzado, rotando API key...');
+                rotateApiKey();
+                // Si no es el último intento, continuar con la siguiente key
+                if (attempt < GROQ_API_KEYS.length - 1) {
+                    continue;
+                }
+            }
+            // Si es el último intento o no es rate limit, lanzar error
+            throw new Error('Error al comunicarse con Groq');
+        }
+    }
+    throw new Error('Todas las API keys de Groq agotadas');
+}
+/**
+ * Fallback a Ollama si Groq falla
+ */
+async function sendToOllama(messages, options = {}) {
+    try {
+        const ollamaEnabled = process.env.OLLAMA_ENABLED === 'true';
+        if (!ollamaEnabled) {
+            throw new Error('Ollama está desactivado');
+        }
+        const ollamaUrl = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
+        const model = options.model || process.env.OLLAMA_MODEL || 'gemma:2b';
+        const timeout = parseInt(process.env.OLLAMA_TIMEOUT || '60000');
+        console.log(`[OllamaClient] 🔄 Intentando con Ollama (${model})...`);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
+        const response = await fetch(`${ollamaUrl}/api/chat`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model,
+                messages,
+                stream: false,
+                options: {
+                    temperature: options.temperature ?? 0.7,
+                    num_predict: parseInt(process.env.OLLAMA_MAX_TOKENS || '500'),
+                },
+            }),
+            signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
+        if (!response.ok) {
+            throw new Error(`Ollama error: ${response.statusText}`);
+        }
+        const data = await response.json();
+        console.log('[OllamaClient] ✅ Respuesta exitosa de Ollama');
+        return {
+            content: data.message?.content || '',
+            model,
+        };
+    }
+    catch (error) {
+        console.error('[OllamaClient] ❌ Error:', error.message);
+        throw new Error('Error al comunicarse con Ollama');
+    }
+}
+/**
+ * Envía mensaje con fallback automático: Groq (con rotación) → Ollama → Error
+ */
+async function sendWithFallback(messages, options = {}) {
+    const fallbackEnabled = process.env.AI_FALLBACK_ENABLED !== 'false';
+    // Intentar con Groq (con rotación automática de API keys)
+    try {
+        console.log('[AI] 🚀 Usando Groq como proveedor primario...');
+        return await sendToGroq(messages, options);
+    }
+    catch (groqError) {
+        console.error('[AI] ❌ Groq falló:', groqError.message);
+        // Si el fallback está desactivado, lanzar error
+        if (!fallbackEnabled) {
+            throw new Error('Servicio de IA no disponible (fallback desactivado)');
+        }
+        // Intentar con Ollama como fallback
+        try {
+            console.log('[AI] 🔄 Groq falló, intentando con Ollama...');
+            return await sendToOllama(messages, options);
+        }
+        catch (ollamaError) {
+            console.error('[AI] ❌ Ollama también falló:', ollamaError.message);
+            // Respuesta estática de emergencia
+            console.log('[AI] 🆘 Usando respuesta estática de emergencia');
+            return {
+                content: 'Disculpa, estoy teniendo problemas técnicos temporales. ¿Podrías intentar de nuevo en un momento? 🙏',
+                model: 'fallback-static',
+            };
+        }
+    }
+}
+/**
+ * Obtiene estadísticas de uso de APIs
+ */
+function getApiStats() {
+    return {
+        currentKeyIndex,
+        totalKeys: GROQ_API_KEYS.length,
+        currentKey: `...${GROQ_API_KEYS[currentKeyIndex]?.slice(-8)}`,
+    };
+}

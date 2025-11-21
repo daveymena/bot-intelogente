@@ -1,4 +1,4 @@
-// 🤖 Sistema Multi-Provider de IA con Fallback Automático
+﻿// 🤖 Sistema Multi-Provider de IA con Fallback Automático
 // Si una API falla, automáticamente usa las otras
 // 🧠 Con detección automática de modelos disponibles
 
@@ -125,7 +125,7 @@ export class AIMultiProvider {
         headers: {
           'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
-          'HTTP-Referer': process.env.NEXTAUTH_URL || 'http://localhost:3000',
+          'HTTP-Referer': process.env.NEXTAUTH_URL || 'http://localhost:4000',
           'X-Title': 'Tecnovariedades D&S Bot'
         },
         body: JSON.stringify({
@@ -556,3 +556,4 @@ export class AIMultiProvider {
   }
 
 }
+

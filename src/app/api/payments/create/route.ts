@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 
 const mercadopago = new MercadoPagoConfig({
@@ -80,9 +80,9 @@ async function createMercadoPagoPayment(items: any[], metadata?: any) {
           currency_id: item.currency_id || 'COP',
         })),
         back_urls: {
-          success: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/payment/success?plan=${metadata?.planId || 'monthly'}`,
-          failure: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/payment/failure`,
-          pending: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/payment/pending`,
+          success: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000'}/payment/success?plan=${metadata?.planId || 'monthly'}`,
+          failure: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000'}/payment/failure`,
+          pending: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000'}/payment/pending`,
         },
         external_reference: metadata?.planId || 'membership',
         statement_descriptor: 'MEMBRESIA',
@@ -167,8 +167,8 @@ async function createPayPalPayment(items: any[], metadata?: any) {
             },
           ],
           application_context: {
-            return_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/payment/success?plan=${metadata?.planId || 'monthly'}`,
-            cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/payment/failure`,
+            return_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000'}/payment/success?plan=${metadata?.planId || 'monthly'}`,
+            cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000'}/payment/failure`,
             brand_name: 'Tu Tienda',
             user_action: 'PAY_NOW',
           },
@@ -193,3 +193,4 @@ async function createPayPalPayment(items: any[], metadata?: any) {
     throw new Error(`Error de PayPal: ${error.message}`);
   }
 }
+

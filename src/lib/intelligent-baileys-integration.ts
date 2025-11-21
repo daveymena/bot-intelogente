@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Integración del Motor Inteligente con Baileys
  * Sistema con razonamiento real y memoria contextual
  */
@@ -283,7 +283,7 @@ export class IntelligentBaileysIntegration {
       return `📱 Número: 3136174267\n💰 Monto: $${params.amount.toLocaleString('es-CO')} COP\n\n📸 Envía captura del comprobante por este chat`;
     }
     
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000';
     const queryParams = new URLSearchParams({
       product: params.productName,
       amount: params.amount.toString(),
@@ -331,3 +331,4 @@ export async function handleMessageWithIntelligence(params: {
 }) {
   return IntelligentBaileysIntegration.handleIntelligentMessage(params);
 }
+

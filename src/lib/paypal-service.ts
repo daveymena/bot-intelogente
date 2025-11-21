@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 💙 SERVICIO DE PAYPAL
  * Integración real con la API de PayPal para crear links de pago dinámicos
  */
@@ -93,8 +93,8 @@ export async function createPayPalLink(product: Product): Promise<string> {
       }
     ],
     application_context: {
-      return_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/tienda/success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/tienda/failure`,
+      return_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000'}/tienda/success`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000'}/tienda/failure`,
       brand_name: 'Tecnovariedades D&S',
       shipping_preference: 'NO_SHIPPING',
       user_action: 'PAY_NOW'
@@ -166,3 +166,4 @@ export async function capturePayPalPayment(orderId: string): Promise<any> {
     throw error
   }
 }
+

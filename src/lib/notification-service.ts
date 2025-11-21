@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 🔔 Servicio Universal de Notificaciones con Tokens
  * 
  * Sistema reutilizable para enviar notificaciones seguras con tokens temporales.
@@ -132,7 +132,7 @@ export class NotificationService {
    * Genera URL según el tipo de notificación
    */
   private static generateUrl(type: NotificationTokenType, token: string): string {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000';
     
     const urlMap: Record<NotificationTokenType, string> = {
       PAYMENT_CONFIRMATION: `/payment/confirmation?token=${token}`,
@@ -524,3 +524,4 @@ export class NotificationService {
     `;
   }
 }
+

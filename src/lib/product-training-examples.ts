@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 🎓 Ejemplos de Entrenamiento Generados Automáticamente
  * 
  * Este archivo fue generado automáticamente basándose en los productos
@@ -9550,14 +9550,7 @@ export const PRODUCT_TRAINING_EXAMPLES = [
   },
 
   {
-    userMessage: "busco Curso Completo de Piano Online",
-    botResponse: "¡Perfecto! Tengo el Curso Completo de Piano Online disponible por $ 60.000. # 🎹 Curso Completo de Piano Online  
-### Aprende desde cero hasta nivel intermedio — a tu ritmo, co ¿Te gustaría más información?",
-    context: "product_search",
-    intent: "search_by_name",
-    productId: "cmhpw941q0000kmp85qvjm0o5-curso-completo-de-piano-online",
-    category: "DIGITAL"
-  },
+    // TEMP: Ejemplo comentado por error de sintaxis
 
   {
     userMessage: "cuánto cuesta Curso Completo de Piano Online",
@@ -10524,3 +10517,4 @@ export const PRODUCT_TRAINING_METADATA = {
   categories: ["PHYSICAL","DIGITAL"],
   examplesByCategory: {"PHYSICAL":827,"DIGITAL":339}
 }
+

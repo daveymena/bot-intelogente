@@ -1,4 +1,4 @@
-// Email Service - Sistema de notificaciones por correo con Nodemailer
+﻿// Email Service - Sistema de notificaciones por correo con Nodemailer
 import nodemailer from 'nodemailer'
 
 export interface EmailOptions {
@@ -604,7 +604,7 @@ export class EmailService {
                 </div>
                 
                 <div style="text-align: center;">
-                  <a href="${process.env.NEXTAUTH_URL || 'http://localhost:3000'}" class="cta-button">
+                  <a href="${process.env.NEXTAUTH_URL || 'http://localhost:4000'}" class="cta-button">
                     Acceder al Dashboard
                   </a>
                 </div>
@@ -665,7 +665,7 @@ export class EmailService {
       - Transcripción de Audio
       - Analytics en Tiempo Real
       
-      Visita: ${process.env.NEXTAUTH_URL || 'http://localhost:3000'}
+      Visita: ${process.env.NEXTAUTH_URL || 'http://localhost:4000'}
       
       Fecha: ${new Date().toLocaleString('es-ES')}
       
@@ -680,3 +680,4 @@ export class EmailService {
     })
   }
 }
+

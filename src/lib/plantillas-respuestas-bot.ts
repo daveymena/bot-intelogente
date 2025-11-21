@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Smart Sales Bot Pro — Flujo conversacional completo para Baileys + Groq
  * Proyecto: Tecnovariedades D&S
  * 
@@ -203,7 +203,7 @@ export class PaymentLinkGenerator {
     amount: number;
     method: string;
   }): string {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000';
     
     switch (params.method.toLowerCase()) {
       case 'mercadopago':
@@ -552,3 +552,4 @@ export class FlowEngine {
 export function createFlowEngine(): FlowEngine {
   return new FlowEngine();
 }
+
