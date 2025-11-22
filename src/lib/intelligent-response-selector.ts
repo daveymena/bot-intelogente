@@ -18,6 +18,7 @@ import { Product } from '@prisma/client';
 import { ProductValidator } from './product-validator';
 import { AidaResponseGenerator } from './aida-response-generator';
 import { PersistentMemoryManager } from './persistent-memory-manager';
+import { GroqDynamicResponseSystem } from './groq-dynamic-response-system';
 
 interface ResponseSelection {
   responseType: 'multi_option' | 'single_product' | 'closing' | 'clarification' | 'no_products';
@@ -179,14 +180,33 @@ Aceptamos:
       };
     }
 
-    const aidaResponse = AidaResponseGenerator.generateSingleProduct(product);
+    // Usar generación dinámica con Groq
+    console.log(`🎨 [SELECTOR] Generando descripción dinámica para pregunta sobre ${product.name}`);
+    
+    try {
+      const dynamicResponse = await GroqDynamicResponseSystem.generateDynamic({
+        product
+      });
 
-    return {
-      responseType: 'single_product',
-      text: aidaResponse.text,
-      products: [product],
-      confidence: 0.9
-    };
+      console.log(`✅ [SELECTOR] Descripción dinámica generada (${dynamicResponse.technique})`);
+
+      return {
+        responseType: 'single_product',
+        text: dynamicResponse.text,
+        products: [product],
+        confidence: 0.95
+      };
+    } catch (error) {
+      console.log(`⚠️ [SELECTOR] Fallback a AIDA estático`);
+      const aidaResponse = AidaResponseGenerator.generateSingleProduct(product);
+
+      return {
+        responseType: 'single_product',
+        text: aidaResponse.text,
+        products: [product],
+        confidence: 0.9
+      };
+    }
   }
 
   /**
@@ -223,14 +243,33 @@ Aceptamos:
       };
     }
 
-    const aidaResponse = AidaResponseGenerator.generateSingleProduct(product);
+    // Usar generación dinámica con Groq
+    console.log(`🎨 [SELECTOR] Generando descripción dinámica para ${product.name}`);
+    
+    try {
+      const dynamicResponse = await GroqDynamicResponseSystem.generateDynamic({
+        product
+      });
 
-    return {
-      responseType: 'single_product',
-      text: aidaResponse.text,
-      products: [product],
-      confidence: 0.9
-    };
+      console.log(`✅ [SELECTOR] Descripción dinámica generada (${dynamicResponse.technique})`);
+
+      return {
+        responseType: 'single_product',
+        text: dynamicResponse.text,
+        products: [product],
+        confidence: 0.95
+      };
+    } catch (error) {
+      console.log(`⚠️ [SELECTOR] Fallback a AIDA estático`);
+      const aidaResponse = AidaResponseGenerator.generateSingleProduct(product);
+
+      return {
+        responseType: 'single_product',
+        text: aidaResponse.text,
+        products: [product],
+        confidence: 0.9
+      };
+    }
   }
 
   /**
