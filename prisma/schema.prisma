@@ -862,6 +862,24 @@ model ConversationKnowledge {
   @@map("conversation_knowledge")
 }
 
+// 🧠 Patrones de Conversación Aprendidos (para matching rápido)
+model ConversationPattern {
+  id              String   @id @default(cuid())
+  pattern         String   @unique // Patrón normalizado de la consulta
+  queryType       String   // Tipo: price_inquiry, photo_request, etc.
+  keywords        String   // Palabras clave separadas por comas
+  responseTemplate String  @db.Text // Template de respuesta
+  confidence      Float    @default(0.8)
+  usageCount      Int      @default(1)
+  successRate     Float    @default(1.0)
+  createdAt       DateTime @default(now())
+  lastUsedAt      DateTime @default(now())
+  
+  @@index([queryType])
+  @@index([successRate])
+  @@map("conversation_patterns")
+}
+
 // 🔔 Sistema Universal de Notificaciones con Tokens
 model NotificationToken {
   id            String              @id @default(cuid())
@@ -923,4 +941,45 @@ enum TokenStatus {
   USED        // Ya fue usado
   EXPIRED     // Expirado
   CANCELLED   // Cancelado
+}
+
+// 💾 Memoria Persistente entre Sesiones
+model PersistentMemory {
+  conversationKey String   @id // Formato: "userId:chatId"
+  userId          String
+  chatId          String
+  userName        String?
+
+  // Producto actual
+  currentProduct  String?  // JSON stringified UnifiedMemory['currentProduct']
+
+  // Historial de productos
+  productHistory  String   @default("[]") // JSON stringified array
+
+  // Estado de conversación
+  conversationStage String @default("greeting")
+  messageCount    Int      @default(0)
+  lastInteraction String   // ISO date string
+
+  // Intenciones y contexto
+  intentions      String   @default("[]") // JSON stringified array
+  preferences     String   @default("{}") // JSON stringified object
+
+  // Información financiera
+  budget          String?  // JSON stringified budget object
+
+  // Objeciones detectadas
+  objections      String   @default("[]") // JSON stringified array
+
+  // Flags operativos
+  photoSent      Boolean  @default(false)
+  paymentIntent  Boolean  @default(false)
+  preferredPaymentMethod String?
+
+  // Metadata
+  lastUpdated    DateTime @default(now())
+
+  @@map("persistent_memory")
+  @@index([userId])
+  @@index([lastUpdated])
 }
