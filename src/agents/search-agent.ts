@@ -190,52 +190,92 @@ export class SearchAgent extends BaseAgent {
       'busco', 'necesito', 'quiero', 'ver', 'muestrame', 'tienes',
       'especifico', 'específico', 'solo', 'unicamente', 'únicamente',
       'exactamente', 'puntual', 'el', 'la', 'los', 'las', 'un', 'una',
-      'de', 'del', 'en', 'para', 'con', 'y', 'o'
+      'de', 'del', 'en', 'para', 'con', 'y', 'o', 'interesado'
     ];
     
     const keywords = cleanQuery.split(' ')
       .map(w => w.trim())
       .filter(w => w.length > 2 && !ignoreWords.includes(w));
     
+    if (keywords.length === 0) return [];
+
     try {
-      // Buscar productos que contengan las palabras clave
+      // 1. Búsqueda AMPLIA en base de datos (OR)
+      // Traemos candidatos que coincidan con AL MENOS UNA palabra clave
+      const orConditions = keywords.map(k => ({
+        OR: [
+          { name: { contains: k, mode: 'insensitive' as const } },
+          { description: { contains: k, mode: 'insensitive' as const } },
+          { tags: { contains: k, mode: 'insensitive' as const } }
+        ]
+      }));
+
+      // Si hay muchas keywords, la query puede ser pesada, simplificamos
+      // Buscamos productos que tengan al menos una de las keywords
       const dbProducts = await db.product.findMany({
         where: {
           status: 'AVAILABLE',
-          OR: [
-            { name: { contains: cleanQuery, mode: 'insensitive' } },
-            { description: { contains: cleanQuery, mode: 'insensitive' } },
-            { tags: { contains: cleanQuery, mode: 'insensitive' } }
-          ]
+          OR: orConditions.flatMap(c => c.OR)
         },
-        take: 20, // Traer más para filtrar después
+        take: 50, // Traer suficientes para filtrar en memoria
         orderBy: { createdAt: 'desc' }
       });
       
       let products = dbProducts;
       
-      // FILTRADO ESTRICTO para búsquedas específicas
-      if (searchType === 'specific' && keywords.length > 0) {
-        products = products.filter(p => {
-          const nameLower = p.name.toLowerCase();
-          const descLower = (p.description || '').toLowerCase();
+      // 2. FILTRADO INTELIGENTE EN MEMORIA
+      
+      // A) Prioridad: Coincidencia de TODAS las keywords (AND)
+      // Manejo básico de typos: si la keyword es "pianon", y el producto tiene "piano", 
+      // "piano".includes("pianon") es falso. 
+      // Pero "pianon".includes("piano") es verdadero (substring inverso) o distancia baja.
+      
+      const strictMatches = products.filter(p => {
+        const text = `${p.name} ${p.description || ''} ${p.tags || ''}`.toLowerCase();
+        return keywords.every(k => {
+          // Coincidencia exacta o substring
+          if (text.includes(k)) return true;
           
-          // Debe contener TODAS las palabras clave importantes en el nombre o descripción
-          return keywords.every(k => nameLower.includes(k) || descLower.includes(k));
+          // Coincidencia parcial para typos simples (si la keyword es larga)
+          // Ej: "pianon" (6 chars) vs "piano" (5 chars)
+          // Si el texto contiene una parte significativa de la keyword
+          if (k.length > 4) {
+             const sub = k.substring(0, k.length - 1); // "piano"
+             return text.includes(sub);
+          }
+          return false;
         });
-        
-        // Si después del filtrado estricto no queda nada, intentar ser un poco más flexible
-        // (ej: coincidir en nombre es más importante)
-        if (products.length === 0) {
-           products = dbProducts.filter(p => {
-             const nameLower = p.name.toLowerCase();
-             // Al menos una keyword en el nombre
-             return keywords.some(k => nameLower.includes(k));
-           });
-        }
+      });
+      
+      if (strictMatches.length > 0) {
+        return strictMatches.slice(0, 10).map(p => this.mapProduct(p));
       }
       
-      return products.slice(0, 10).map(p => this.mapProduct(p));
+      // B) Si no hay coincidencia estricta, usar coincidencia PARCIAL (OR)
+      // Pero ordenando por relevancia (cuántas keywords coinciden)
+      
+      // Si es búsqueda ESPECÍFICA, NO hacer fallback a parcial
+      if (searchType === 'specific') {
+        return [];
+      }
+      
+      const scoredProducts = products.map(p => {
+        const text = `${p.name} ${p.description || ''} ${p.tags || ''}`.toLowerCase();
+        let score = 0;
+        keywords.forEach(k => {
+          if (text.includes(k)) score++;
+        });
+        return { product: p, score };
+      });
+      
+      // Filtrar solo los que tengan alguna coincidencia y ordenar
+      const sorted = scoredProducts
+        .filter(item => item.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map(item => item.product);
+        
+      return sorted.slice(0, 10).map(p => this.mapProduct(p));
+      
     } catch (error) {
       this.log('Error en búsqueda:', error);
       return [];
