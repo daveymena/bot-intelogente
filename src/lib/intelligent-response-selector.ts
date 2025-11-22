@@ -46,8 +46,25 @@ export class IntelligentResponseSelector {
     // Obtener memoria persistente
     const memory = await PersistentMemoryManager.getMemory(chatId, userId);
 
-    // CASO 1: Intención de pago (cierre de venta)
+    // PRIORIDAD MÁXIMA: Detectar pago por keywords DIRECTAMENTE (no depender del intent)
+    const lowerMessage = message.toLowerCase();
+    const paymentKeywords = [
+      'pago', 'pagar', 'comprar', 'compro',
+      'método', 'metodo', 'métodos', 'metodos',
+      'forma de pago', 'formas de pago',
+      'cómo pago', 'como pago',
+      'mercadopago', 'paypal', 'nequi', 'daviplata',
+      'transferencia', 'efectivo', 'tarjeta'
+    ];
+    
+    if (paymentKeywords.some(kw => lowerMessage.includes(kw))) {
+      console.log(`💳 [SELECTOR] Detectada pregunta sobre PAGO (keyword match)`);
+      return await this.handlePaymentIntent(memory, userId);
+    }
+
+    // CASO 1: Intención de pago (cierre de venta) - Fallback si no detectó arriba
     if (this.isPaymentIntent(intent, message)) {
+      console.log(`💳 [SELECTOR] Detectada pregunta sobre PAGO (intent match)`);
       return await this.handlePaymentIntent(memory, userId);
     }
 
