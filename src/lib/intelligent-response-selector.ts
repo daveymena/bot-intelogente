@@ -77,24 +77,59 @@ export class IntelligentResponseSelector {
     memory: any,
     userId: string
   ): Promise<ResponseSelection> {
+    // Si no hay producto en contexto, mostrar métodos de pago generales
     if (!memory.currentProduct) {
       return {
-        responseType: 'clarification',
-        text: '¿Qué producto te gustaría comprar? 😊',
+        responseType: 'closing',
+        text: `💳 **Métodos de Pago Disponibles**
+
+Aceptamos las siguientes formas de pago:
+
+1. 💳 **MercadoPago**
+   → Paga con tarjeta en cuotas sin interés
+   → Seguro y confiable
+
+2. 💵 **Nequi / Daviplata**
+   → Transferencia instantánea
+   → Sin comisiones
+
+3. 🏦 **Transferencia Bancaria**
+   → Bancolombia, Davivienda, etc.
+   → Confirmación rápida
+
+4. 💰 **PayPal**
+   → Pago internacional
+   → Protección al comprador
+
+5. 💵 **Efectivo**
+   → Pago contra entrega
+   → Disponible en algunas zonas
+
+¿Cuál método prefieres? 😊`,
         products: [],
-        confidence: 0.8
+        confidence: 0.95
       };
     }
 
-    // Buscar producto en BD para asegurar que existe
+    // Si hay producto en contexto, buscar en BD y mostrar cierre de venta
     const product = await ProductValidator.findSpecific(memory.currentProduct.name, userId);
 
     if (!product) {
+      // Si el producto no existe, mostrar métodos generales
       return {
-        responseType: 'clarification',
-        text: 'Lo siento, ese producto ya no está disponible. ¿Te gustaría ver otras opciones? 😊',
+        responseType: 'closing',
+        text: `💳 **Métodos de Pago Disponibles**
+
+Aceptamos:
+• MercadoPago (cuotas sin interés)
+• Nequi / Daviplata
+• Transferencia bancaria
+• PayPal
+• Efectivo (contra entrega)
+
+¿Cuál prefieres? 😊`,
         products: [],
-        confidence: 0.7
+        confidence: 0.85
       };
     }
 
@@ -251,17 +286,29 @@ export class IntelligentResponseSelector {
     const paymentIntents = [
       'request_payment_method',
       'confirm_purchase',
-      'purchase_intent'
+      'purchase_intent',
+      'payment'
     ];
 
     if (paymentIntents.includes(intent)) return true;
 
+    const lowerMessage = message.toLowerCase();
+    
     const paymentKeywords = [
-      'pagar', 'comprar', 'método de pago', 'cómo pago',
-      'formas de pago', 'lo quiero', 'lo compro'
+      'pagar', 'pago', 'comprar', 'compro',
+      'método', 'metodo', 'métodos', 'metodos',
+      'método de pago', 'metodo de pago',
+      'métodos de pago', 'metodos de pago',
+      'forma de pago', 'formas de pago',
+      'cómo pago', 'como pago',
+      'cómo puedo pagar', 'como puedo pagar',
+      'lo quiero', 'lo compro', 'quiero comprar',
+      'mercadopago', 'mercado pago', 'paypal',
+      'nequi', 'daviplata', 'transferencia',
+      'efectivo', 'tarjeta'
     ];
 
-    return paymentKeywords.some(kw => message.toLowerCase().includes(kw));
+    return paymentKeywords.some(kw => lowerMessage.includes(kw));
   }
 
   /**
