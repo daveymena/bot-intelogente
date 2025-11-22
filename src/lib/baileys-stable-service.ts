@@ -1,7 +1,7 @@
 import { procesarMensaje } from '@/conversational-module';
 import makeWASocket, {
   DisconnectReason,
-  useMultiFileAuthState as getMultiFileAuthState,
+  useMultiFileAuthState,
   fetchLatestBaileysVersion,
   makeCacheableSignalKeyStore,
   WASocket,
@@ -24,7 +24,7 @@ import { FlowIntegration } from './flow-integration'
 // 🛡️ Sistema Anti-Ban
 import { SafeBaileysSender } from './safe-baileys-sender'
 import { SafeReconnectManager } from './safe-reconnect-manager'
-// 🤖 Simulador de Escritura Humana
+// 🎭 Simulación Humana
 import { HumanTypingSimulator } from './human-typing-simulator'
 
 interface BaileysSession {
@@ -105,7 +105,7 @@ export class BaileysStableService {
       console.log(`[Baileys] 📁 Directorio de sesión: ${authDir}`)
 
       // Cargar estado de autenticación
-      const { state, saveCreds } = await getMultiFileAuthState(authDir)
+      const { state, saveCreds } = await useMultiFileAuthState(authDir)
       console.log(`[Baileys] ✅ Estado de autenticación cargado`)
 
       // Obtener versión más reciente de Baileys
@@ -362,6 +362,9 @@ export class BaileysStableService {
           const from = message.key.remoteJid
           if (!from) continue
 
+          // Extraer nombre del usuario
+          const pushName = message.pushName || 'Cliente'
+
           // Extraer texto del mensaje
           let messageText = message.message?.conversation ||
             message.message?.extendedTextMessage?.text ||
@@ -405,7 +408,13 @@ export class BaileysStableService {
           if (message.message?.imageMessage) {
             console.log(`[Baileys] 📸 Imagen recibida de ${from}`)
             const caption = message.message.imageMessage.caption || ''
-            messageText = caption || 'Me envías fotos para verlo'
+            try {
+              const { ImageAnalysisService } = await import('./image-analysis-service')
+              const analysis = await ImageAnalysisService.analyzeCaption(caption)
+              messageText = analysis
+            } catch {
+              messageText = caption || 'Me envías fotos para verlo'
+            }
           }
 
           if (!messageText) continue
@@ -415,16 +424,6 @@ export class BaileysStableService {
           // Guardar mensaje en DB
           const conversation = await this.saveIncomingMessage(userId, from, messageText)
 
-          // 🔄 RENOVAR CONTEXTO: Mantener vivo el contexto de conversación
-          try {
-            const { ConversationContextService } = await import('./conversation-context-service')
-            const conversationKey = `${userId}:${from}`
-            ConversationContextService.renewContext(conversationKey)
-            ConversationContextService.incrementMessageCount(conversationKey)
-          } catch (error) {
-            console.error('[Baileys] ⚠️ Error renovando contexto:', error)
-          }
-
           // ❌ DESACTIVADO: Sistema antiguo de pagos (ahora lo maneja clean-bot)
           // const paymentDetected = await this.detectAndHandlePayment(socket, userId, from, messageText, conversation.id)
           // if (paymentDetected) {
@@ -432,10 +431,12 @@ export class BaileysStableService {
           //   continue
           // }
 
-          // 🤖 SISTEMA DE AGENTES ESPECIALIZADOS CON RAZONAMIENTO PROFUNDO
-          console.log('[Baileys] 🤖 Usando SISTEMA DE AGENTES ESPECIALIZADOS')
+          // 🎯 SISTEMA 24/7 CON ENTRENAMIENTO COMPLETO
+          console.log('[Baileys] 🎯 Usando SISTEMA 24/7 ENTRENADO')
           
           try {
+            // const { Bot24_7Orchestrator } = await import('./bot-24-7-orchestrator')
+            
             // Obtener historial de conversación
             const historyMessages = await db.message.findMany({
               where: { conversationId: conversation.id },
@@ -448,145 +449,155 @@ export class BaileysStableService {
               content: msg.content
             }))
             
-            // 🧠 USAR ORQUESTADOR DE AGENTES
-            const { AgentOrchestrator } = await import('@/agents/agent-orchestrator-wrapper')
+            // 🤖 SISTEMA DE AGENTES INTELIGENTES (con razonamiento profundo)
+            console.log('[Baileys] 🤖 Usando sistema de agentes especializados')
             
-            console.log('[Baileys] 🧠 Procesando con razonamiento profundo y agentes especializados...')
+            const { IntelligentConversationEngine } = await import('./intelligent-conversation-engine')
+            const engine = new IntelligentConversationEngine(process.env.GROQ_API_KEY || '')
             
-            const agentResponse = await AgentOrchestrator.processMessage({
+            const aiResponse = await engine.processMessage({
+              chatId: from,
+              userId: userId,
               message: messageText,
-              userId,
-              conversationId: conversation.id,
-              customerPhone: from,
-              history
+              userName: pushName
             })
             
-            console.log(`[Baileys] ✅ Respuesta de agentes (confianza: ${(agentResponse.confidence * 100).toFixed(0)}%)`)
-            console.log(`[Baileys] 🎯 Agente usado: ${agentResponse.agentUsed || 'orchestrator'}`)
+            console.log(`[Baileys] ✅ Respuesta generada con agentes (confianza: ${((aiResponse.confidence || 0.8) * 100).toFixed(0)}%)`)
             
-            // Convertir respuesta de agentes al formato esperado
-            const aiResponse = {
-              message: agentResponse.message,
-              confidence: agentResponse.confidence,
-              intent: agentResponse.intent,
-              shouldSendPhotos: agentResponse.shouldSendPhotos || false,
-              photos: agentResponse.photos || [],
-              productId: agentResponse.productId
-            }
-            
-            console.log(`[Baileys] 📸 Debe enviar fotos: ${aiResponse.shouldSendPhotos}`)
-            console.log(`[Baileys] 🖼️ Fotos disponibles: ${aiResponse.photos?.length || 0}`)
-            
-            // 📸 ENVIAR FOTO PRIMERO si hay producto con fotos
-            if (aiResponse.shouldSendPhotos && aiResponse.photos && aiResponse.photos.length > 0) {
-              console.log(`[Baileys] 📸 Enviando foto del producto con información...`)
+            // 🎯 CORRECCIÓN: Si debe enviar imagen con caption, hacerlo en un solo mensaje
+            if (aiResponse.metadata?.sendAsImageWithCaption && aiResponse.metadata?.imageUrl) {
+              console.log('[Baileys] 📸 Enviando imagen con texto como caption (mensaje único)...')
               
               try {
-                const { MediaService } = await import('./media-service')
+                // Descargar imagen
+                const axios = (await import('axios')).default
+                const imageResponse = await axios.get(aiResponse.metadata.imageUrl, {
+                  responseType: 'arraybuffer',
+                  timeout: 10000
+                })
                 
-                // Asegurar que photos es un array
-                let photosArray = aiResponse.photos
-                if (typeof photosArray === 'string') {
-                  try {
-                    photosArray = JSON.parse(photosArray)
-                  } catch (e) {
-                    photosArray = [photosArray]
-                  }
-                }
+                const imageBuffer = Buffer.from(imageResponse.data)
                 
-                // Validar que el array no est� vac�o y tenga URLs v�lidas
-                if (!Array.isArray(photosArray) || photosArray.length === 0) {
-                  console.log(`[Baileys]  No hay fotos v�lidas, enviando solo texto`)
-                  throw new Error('No hay fotos v�lidas')
-                }
+                // Simular escritura antes de enviar
+                await HumanTypingSimulator.simulateTyping(socket, from, 3000)
                 
-                // Enviar PRIMERA foto con el mensaje completo como caption
-                const firstPhoto = photosArray[0]
-                
-                console.log(`[Baileys]  Enviando foto principal: ${firstPhoto}`)
-                
-                const imageData = await MediaService.prepareImageMessage(
-                  firstPhoto,
-                  aiResponse.message
-                )
-                
+                // Enviar imagen con caption
                 await socket.sendMessage(from, {
-                  image: imageData.image,
-                  caption: aiResponse.message
+                  image: imageBuffer,
+                  caption: aiResponse.text
                 })
                 
-                console.log(`[Baileys] ✅ Foto con información enviada`)
-                
-                // Guardar en DB
-                await db.message.create({
-                  data: {
-                    conversationId: conversation.id,
-                    content: `[Foto del producto]\n${aiResponse.message}`,
-                    direction: 'OUTGOING',
-                    type: 'IMAGE'
-                  }
-                })
-                
-                // Si hay más fotos, enviarlas después
-                if (aiResponse.photos.length > 1) {
-                  console.log(`[Baileys] 📸 Enviando ${aiResponse.photos.length - 1} foto(s) adicionales...`)
-                  
-                  // Pequeña pausa antes de fotos adicionales
-                  await new Promise(resolve => setTimeout(resolve, 1000))
-                  
-                  for (let i = 1; i < Math.min(aiResponse.photos.length, 3); i++) {
-                    const photoUrl = aiResponse.photos[i]
-                    
-                    try {
-                      console.log(`[Baileys] 📤 Enviando foto adicional ${i}/${Math.min(aiResponse.photos.length, 3) - 1}`)
-                      
-                      const additionalImageData = await MediaService.prepareImageMessage(photoUrl)
-                      
-                      await socket.sendMessage(from, {
-                        image: additionalImageData.image
-                      })
-                      
-                      console.log(`[Baileys] ✅ Foto adicional ${i} enviada`)
-                      
-                      // Guardar en DB
-                      await db.message.create({
-                        data: {
-                          conversationId: conversation.id,
-                          content: `[Foto adicional ${i} del producto]`,
-                          direction: 'OUTGOING',
-                          type: 'IMAGE'
-                        }
-                      })
-                      
-                      // Pausa entre fotos adicionales
-                      if (i < Math.min(aiResponse.photos.length, 3) - 1) {
-                        await new Promise(resolve => setTimeout(resolve, 800))
-                      }
-                      
-                    } catch (photoError) {
-                      console.error(`[Baileys] ❌ Error enviando foto adicional ${i}:`, photoError)
-                    }
-                  }
-                  
-                  console.log(`[Baileys] ✅ Todas las fotos enviadas`)
-                }
-                
+                console.log('[Baileys] ✅ Imagen con caption enviada exitosamente')
               } catch (error) {
-                console.error('[Baileys] ❌ Error en envío de foto:', error)
-                
-                // FALLBACK: Si falla la foto, enviar solo texto
-                await HumanTypingSimulator.humanizedSend(socket, from, aiResponse.message, messageText.length)
-                await this.saveOutgoingMessage(userId, from, aiResponse.message, conversation.id)
+                console.error('[Baileys] ❌ Error enviando imagen con caption:', error)
+                // Fallback: enviar solo texto
+                await HumanTypingSimulator.humanizedSend(socket, from, aiResponse.text, messageText.length)
               }
-              
             } else {
-              // No hay fotos, enviar solo texto con simulación humana
-              await HumanTypingSimulator.humanizedSend(socket, from, aiResponse.message, messageText.length)
+              // 🎭 Enviar respuesta con simulación humana (solo texto)
+              console.log('[Baileys] 🎭 Enviando con simulación humana...')
+              if (HumanTypingSimulator.shouldUseQuickSend(aiResponse.text)) {
+                await HumanTypingSimulator.quickHumanizedSend(socket, from, aiResponse.text)
+              } else {
+                await HumanTypingSimulator.humanizedSend(socket, from, aiResponse.text, messageText.length)
+              }
               console.log('[Baileys] ✅ Mensaje enviado con simulación humana')
-              
-              // Guardar respuesta en DB
-              await this.saveOutgoingMessage(userId, from, aiResponse.message, conversation.id)
             }
+            
+            // Ejecutar acciones (enviar fotos, links de pago, etc.)
+            if (aiResponse.actions && aiResponse.actions.length > 0) {
+              console.log(`[Baileys] ⚡ Ejecutando ${aiResponse.actions.length} acciones...`)
+              for (const action of aiResponse.actions) {
+                console.log(`[Baileys] 🔍 Acción recibida:`, JSON.stringify({
+                  type: action.type,
+                  hasProduct: !!action.data?.product,
+                  hasProductId: !!action.data?.productId,
+                  hasImageUrl: !!action.data?.imageUrl,
+                  productName: action.data?.product?.name
+                }, null, 2))
+                try {
+                  // 📸 ENVIAR FOTO CON INFORMACIÓN (múltiples formatos soportados)
+                  if ((action.type === 'send_photo' || action.type === 'SEND_IMAGE') && (action.product || action.data?.product)) {
+                    // Caso 1: PhotoAgent envía el producto completo
+                    console.log('[Baileys] 📸 Enviando foto con información del producto (desde agente)...')
+                    const { ProductPhotoSender } = await import('./product-photo-sender')
+                    
+                    const product = action.product || action.data.product
+                    console.log(`[Baileys] 📦 Producto: ${product.name}`)
+                    
+                    // Enviar con simulación humana
+                    console.log('[Baileys] 🎭 Simulando preparación de foto...')
+                    await HumanTypingSimulator.sleep(2000) // Pausa antes de enviar foto
+                    
+                    await ProductPhotoSender.sendProductsWithPhotos(
+                      socket,
+                      from,
+                      [product as any],
+                      1
+                    )
+                    console.log('[Baileys] ✅ Foto con información enviada')
+                    
+                  } else if ((action.type === 'send_photo' || action.type === 'SEND_IMAGE') && action.data?.productId) {
+                    // Caso 2: Se envía solo el ID del producto
+                    console.log('[Baileys] 📸 Enviando foto con información del producto (desde ID)...')
+                    const { ProductPhotoSender } = await import('./product-photo-sender')
+                    
+                    // Obtener producto completo de BD
+                    const product = await db.product.findUnique({
+                      where: { id: action.data.productId }
+                    })
+                    
+                    if (product) {
+                      console.log(`[Baileys] 📦 Producto: ${product.name}`)
+                      
+                      // Enviar con simulación humana
+                      console.log('[Baileys] 🎭 Simulando preparación de foto...')
+                      await HumanTypingSimulator.sleep(2000)
+                      
+                      await ProductPhotoSender.sendProductsWithPhotos(
+                        socket,
+                        from,
+                        [product as any],
+                        1
+                      )
+                      console.log('[Baileys] ✅ Foto con información enviada')
+                    } else {
+                      console.log('[Baileys] ⚠️ Producto no encontrado para enviar foto')
+                    }
+                    
+                  } else if ((action.type === 'send_photo' || action.type === 'SEND_IMAGE') && action.data?.imageUrl) {
+                    // Caso 3: Fallback - enviar imagen simple con URL
+                    console.log('[Baileys] 📸 Enviando foto simple (URL)...')
+                    await socket.sendMessage(from, {
+                      image: { url: action.data.imageUrl },
+                      caption: action.data.caption || ''
+                    })
+                    console.log('[Baileys] ✅ Foto simple enviada')
+                    
+                  } else if (action.type === 'SEND_PAYMENT_LINK' && action.data?.link) {
+                    // 💳 Enviar link de pago con simulación humana
+                    console.log('[Baileys] 💳 Enviando link de pago...')
+                    await HumanTypingSimulator.quickHumanizedSend(socket, from, action.data.link)
+                    console.log('[Baileys] ✅ Link de pago enviado')
+                    
+                  } else {
+                    // Acción no reconocida - LOG DETALLADO
+                    console.log(`[Baileys] ⚠️ Acción no reconocida:`)
+                    console.log(`  - Tipo: "${action.type}"`)
+                    console.log(`  - Tipo esperado: "send_photo" o "SEND_IMAGE"`)
+                    console.log(`  - Tiene product:`, !!action.data?.product)
+                    console.log(`  - Tiene productId:`, !!action.data?.productId)
+                    console.log(`  - Tiene imageUrl:`, !!action.data?.imageUrl)
+                    console.log(`  - Data completa:`, JSON.stringify(action.data, null, 2))
+                  }
+                } catch (actionError) {
+                  console.error('[Baileys] ❌ Error ejecutando acción:', actionError)
+                }
+              }
+            }
+            
+            // Guardar respuesta en DB
+            await this.saveOutgoingMessage(userId, from, aiResponse.text, conversation.id)
             
           } catch (error) {
             console.error('[Baileys] ❌ Error con sistema 24/7:', error)
@@ -670,8 +681,8 @@ export class BaileysStableService {
       let enviado = false
       for (let intento = 1; intento <= 3; intento++) {
         try {
-          await HumanTypingSimulator.humanizedSend(socket, from, intelligentResponse.message, messageText.length)
-          console.log(`[Baileys] 📤 Respuesta enviada con simulación humana`)
+          await socket.sendMessage(from, { text: intelligentResponse.message })
+          console.log(`[Baileys] 📤 Respuesta enviada`)
           enviado = true
           break
         } catch (sendError) {
@@ -738,7 +749,8 @@ export class BaileysStableService {
       const selection = await NumericSelectionDetector.detectSelection(
         messageText,
         history,
-        userId
+        userId,
+        from
       )
       
       if (selection.isSelection && selection.selectedProduct) {
@@ -749,7 +761,7 @@ export class BaileysStableService {
           const { ProductPhotoSender } = await import('./product-photo-sender')
           
           const confirmMessage = `¡Perfecto! 😊 Elegiste la opción ${selection.selectedNumber}\n\nTe envío los detalles:`
-          await HumanTypingSimulator.quickHumanizedSend(socket, from, confirmMessage)
+          await socket.sendMessage(from, { text: confirmMessage })
           await this.saveOutgoingMessage(userId, from, confirmMessage, conversationId)
           
           // Enviar producto con foto
@@ -791,8 +803,8 @@ export class BaileysStableService {
           from
         )
         
-        // Enviar respuesta con simulación humana
-        await HumanTypingSimulator.humanizedSend(socket, from, response, messageText.length)
+        // Enviar respuesta
+        await socket.sendMessage(from, { text: response })
         
         // Guardar en DB
         await this.saveOutgoingMessage(userId, from, response, conversationId)
@@ -881,9 +893,9 @@ export class BaileysStableService {
             
             optionsMessage += closes[Math.floor(Math.random() * closes.length)] + ' 😊';
             
-            // Enviar mensaje con opciones (con simulación humana)
-            await HumanTypingSimulator.humanizedSend(socket, from, optionsMessage, messageText.length)
-            console.log('[Baileys] ✅ Opciones enviadas con simulación humana')
+            // Enviar mensaje con opciones
+            await socket.sendMessage(from, { text: optionsMessage })
+            console.log('[Baileys] ✅ Opciones enviadas')
             
             // Guardar en DB
             await this.saveOutgoingMessage(userId, from, optionsMessage, conversationId)
@@ -922,9 +934,9 @@ export class BaileysStableService {
             const intro = intros[Math.floor(Math.random() * intros.length)];
             const recommendationMessage = `${intro}\n\n${productMatch.reason}\n\nTe envío los detalles completos:`;
             
-            await HumanTypingSimulator.humanizedSend(socket, from, recommendationMessage, messageText.length);
+            await socket.sendMessage(from, { text: recommendationMessage });
             await this.saveOutgoingMessage(userId, from, recommendationMessage, conversationId);
-            console.log('[Baileys] 💡 Mensaje de recomendación enviado con simulación humana');
+            console.log('[Baileys] 💡 Mensaje de recomendación enviado');
           }
           
           // Enviar productos con fotos
@@ -1032,9 +1044,9 @@ export class BaileysStableService {
       }
       this.conversationHistories.set(from, history)
 
-      // Enviar respuesta (texto + audio opcional) con simulación humana
-      await HumanTypingSimulator.humanizedSend(socket, from, response, messageText.length)
-      console.log('[Baileys] ✅ Respuesta híbrida enviada con simulación humana')
+      // Enviar respuesta (texto + audio opcional)
+      await socket.sendMessage(from, { text: response })
+      console.log('[Baileys] ✅ Respuesta híbrida enviada')
 
       // 📸 NO REENVIAR FOTOS EN PREGUNTAS DE SEGUIMIENTO
       // Solo continuar la conversación con texto
@@ -1072,9 +1084,9 @@ export class BaileysStableService {
     } catch (error) {
       console.error('[Baileys] ❌ Error en respuesta híbrida:', error)
 
-      // Fallback a respuesta simple con simulación humana
+      // Fallback a respuesta simple
       const fallbackResponse = '😅 Disculpa, tuve un problema procesando tu mensaje. ¿Puedes intentar de nuevo?'
-      await HumanTypingSimulator.quickHumanizedSend(socket, from, fallbackResponse)
+      await socket.sendMessage(from, { text: fallbackResponse })
     }
   }
 
@@ -1529,10 +1541,10 @@ export class BaileysStableService {
       // 🤖 Procesar con el nuevo sistema
       const respuesta = await procesarMensaje(from, messageText, opciones)
 
-      // 📤 Enviar respuesta de texto con simulación humana
+      // 📤 Enviar respuesta de texto
       if (respuesta.texto) {
-        await HumanTypingSimulator.humanizedSend(socket, from, respuesta.texto, messageText.length)
-        console.log(`[Baileys] ✅ Respuesta enviada con simulación humana`)
+        await socket.sendMessage(from, { text: respuesta.texto })
+        console.log(`[Baileys] ✅ Respuesta enviada`)
 
         // Guardar en BD
         await db.message.create({
@@ -1571,10 +1583,10 @@ export class BaileysStableService {
     } catch (error) {
       console.error('[Baileys] ❌ Error en nuevo sistema conversacional:', error)
       
-      // Fallback: respuesta genérica con simulación humana
-      await HumanTypingSimulator.quickHumanizedSend(socket, from,
-        'Disculpa, tuve un problema al procesar tu mensaje. ¿Podrías intentar de nuevo? 🙏'
-      )
+      // Fallback: respuesta genérica
+      await socket.sendMessage(from, {
+        text: 'Disculpa, tuve un problema al procesar tu mensaje. ¿Podrías intentar de nuevo? 🙏'
+      })
     }
   }
 
@@ -1629,7 +1641,7 @@ export class BaileysStableService {
 
 ¿Podrías decirme cuál producto quieres comprar?`
         
-        await HumanTypingSimulator.humanizedSend(socket, from, noProductMessage, messageText.length)
+        await socket.sendMessage(from, { text: noProductMessage })
         await this.saveOutgoingMessage(userId, from, noProductMessage, conversationId)
         return true // Manejado
       }
@@ -1657,8 +1669,8 @@ export class BaileysStableService {
       if (paymentResult.success && paymentResult.message) {
         console.log(`[Baileys] ✅ Links de pago generados exitosamente`)
         
-        // Enviar mensaje con los links (con simulación humana)
-        await HumanTypingSimulator.humanizedSend(socket, from, paymentResult.message, messageText.length)
+        // Enviar mensaje con los links
+        await socket.sendMessage(from, { text: paymentResult.message })
         
         // Guardar en BD
         await this.saveOutgoingMessage(userId, from, paymentResult.message, conversationId)
@@ -1679,7 +1691,7 @@ export class BaileysStableService {
 
 Escríbeme para coordinar el pago 😊`
         
-        await HumanTypingSimulator.humanizedSend(socket, from, fallbackMessage, messageText.length)
+        await socket.sendMessage(from, { text: fallbackMessage })
         await this.saveOutgoingMessage(userId, from, fallbackMessage, conversationId)
         
         return true // Manejado
@@ -1730,9 +1742,11 @@ Escríbeme para coordinar el pago 😊`
       // 🚀 PROCESAR CON SISTEMA CONVERSACIONAL COMPLETO
       const respuesta = await procesarMensaje(userId, messageText);
 
-      // Enviar respuesta de texto con simulación humana
+      // Enviar respuesta de texto
       if (respuesta.texto) {
-        await BaileysStableService.sendHumanizedMessage(socket, from, respuesta.texto, messageText.length);
+        await socket.sendMessage(from, { 
+          text: respuesta.texto 
+        });
       }
 
       // 📸 Enviar fotos si las hay
@@ -1759,30 +1773,6 @@ Escríbeme para coordinar el pago 😊`
       await socket.sendMessage(from, {
         text: 'Disculpa, tuve un problema al procesar tu mensaje. ¿Podrías intentar de nuevo? 🙏'
       });
-    }
-  }
-  
-  /**
-   * 🤖 Envía un mensaje con simulación de escritura humana
-   * Incluye retrasos naturales y estado "escribiendo..."
-   */
-  private static async sendHumanizedMessage(
-    socket: WASocket,
-    chatId: string,
-    message: string,
-    userMessageLength: number = 50
-  ): Promise<void> {
-    try {
-      // Decidir si usar envío rápido o normal
-      if (HumanTypingSimulator.shouldUseQuickSend(message)) {
-        await HumanTypingSimulator.quickHumanizedSend(socket, chatId, message);
-      } else {
-        await HumanTypingSimulator.humanizedSend(socket, chatId, message, userMessageLength);
-      }
-    } catch (error) {
-      console.error('[Baileys] Error en envío humanizado, usando fallback:', error);
-      // Fallback: enviar directamente sin simulación
-      await socket.sendMessage(chatId, { text: message });
     }
   }
 }

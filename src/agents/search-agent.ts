@@ -7,6 +7,7 @@
 import { BaseAgent, AgentResponse } from './base-agent';
 import { SharedMemory, Product } from './shared-memory';
 import { db } from '@/lib/db';
+import { matchesIntent } from '@/lib/intent-patterns';
 
 export class SearchAgent extends BaseAgent {
   constructor() {
@@ -32,15 +33,69 @@ export class SearchAgent extends BaseAgent {
   canHandleLocally(message: string, memory: SharedMemory): boolean {
     const cleanMsg = this.cleanMessage(message);
     
-    // Puede manejar localmente si contiene palabras clave claras
-    const keywords = [
+    // 🚨 PRIORIDAD 0: Si es pregunta sobre MÉTODOS DE PAGO, NO buscar productos
+    if (this.isPaymentQuestion(cleanMsg)) {
+      this.log('⚠️ Pregunta sobre métodos de pago detectada - NO buscar productos');
+      return false; // Dejar que el PaymentAgent lo maneje
+    }
+    
+    // 🚨 PRIORIDAD 1: Si hay producto en contexto y el mensaje NO es claramente una búsqueda nueva
+    // NO manejar localmente, dejar que la IA interprete el contexto
+    if (memory.currentProduct) {
+      const isNewSearch = this.isExplicitNewSearch(cleanMsg);
+      if (!isNewSearch) {
+        this.log('⚠️ Hay producto en contexto y mensaje no es búsqueda nueva - Delegando a IA');
+        return false; // Dejar que la IA interprete con contexto
+      }
+    }
+    
+    // 1. Palabras clave de productos
+    const productKeywords = [
       'portatil', 'laptop', 'computador', 'pc',
       'moto', 'motocicleta',
       'curso', 'megapack', 'digital',
       'servicio', 'reparacion', 'tecnico'
     ];
     
-    return keywords.some(k => cleanMsg.includes(k));
+    // 2. Palabras clave de precio/filtros
+    const priceKeywords = [
+      'economico', 'barato', 'caro', 'precio',
+      'presupuesto', 'mas barato', 'mas economico',
+      'menor precio', 'mayor precio', 'mas caro'
+    ];
+    
+    // 3. Palabras de propósito (detectadas por razonamiento)
+    const purposeKeywords = ['para', 'de', 'con'];
+    
+    const hasProductKeyword = productKeywords.some(k => cleanMsg.includes(k));
+    const hasPriceKeyword = priceKeywords.some(k => cleanMsg.includes(k));
+    const hasPurposeKeyword = purposeKeywords.some(k => cleanMsg.includes(k));
+    
+    // Puede manejar localmente si:
+    // 1. Tiene palabra de producto
+    // 2. Tiene palabra de precio (ej: "tienes más económico")
+    // 3. Tiene palabra de propósito (ej: "para estudio")
+    return hasProductKeyword || hasPriceKeyword || hasPurposeKeyword;
+  }
+  
+  /**
+   * Detecta si es una pregunta sobre métodos de pago
+   */
+  private isPaymentQuestion(msg: string): boolean {
+    return matchesIntent(msg, 'payment_inquiry');
+  }
+  
+  /**
+   * Detecta si es una búsqueda nueva explícita
+   */
+  private isExplicitNewSearch(msg: string): boolean {
+    const newSearchPatterns = [
+      'busco', 'necesito', 'quiero ver', 'muestrame',
+      'tienes', 'tienen', 'hay', 'venden',
+      'otro', 'otra', 'diferente', 'algo mas',
+      'que mas', 'que otros', 'que otras'
+    ];
+    return newSearchPatterns.some(p => msg.includes(p));
   }
   
   /**
@@ -78,57 +133,33 @@ export class SearchAgent extends BaseAgent {
     
     this.log(`Encontrados ${products.length} productos`);
     
-    // Sin resultados
+    // Sin resultados - DELEGAR A PREGUNTA GENERAL O IA
     if (products.length === 0) {
-      return this.handleNoProducts(message);
+      // Verificar si es una pregunta general (no sobre productos)
+      if (this.isGeneralQuestion(message)) {
+        this.log('⚠️ Pregunta general detectada - Delegando a GeneralQAAgent');
+        const { GeneralQAAgent } = await import('./general-qa-agent');
+        const qaAgent = new GeneralQAAgent();
+        return await qaAgent.execute(message, memory);
+      }
+      
+      // Usar IA para manejar la falta de productos
+      return await this.handleNoProducts(message, memory);
     }
     
-    // Un solo producto - Mostrar información COMPLETA inmediatamente
+    // Un solo producto - DELEGAR al ProductAgent para que maneje la presentación
     if (products.length === 1) {
       const product = products[0];
       memoryService.setCurrentProduct(memory.chatId, product, 'viewed');
       memory.currentProduct = product;
-      memory.productInfoSent = true; // Marcar que ya enviamos info
       
-      this.log(`✅ Producto único encontrado: ${product.name} - Mostrando info completa`);
+      this.log(`✅ Producto único encontrado: ${product.name} - Delegando a ProductAgent`);
       
-      // Generar respuesta COMPLETA con toda la información
-      let response = `🎯 *${product.name}*\n\n`;
-      
-      // Descripción (primeras 200 caracteres)
-      if (product.description) {
-        const desc = product.description.length > 200 
-          ? product.description.substring(0, 200) + '...' 
-          : product.description;
-        response += `${desc}\n\n`;
-      }
-      
-      // Precio
-      response += `💰 *Precio:* ${product.price.toLocaleString('es-CO')} COP\n\n`;
-      
-      // Stock
-      if (product.stock && product.stock > 0) {
-        response += `✅ *Disponible:* ${product.stock} unidades\n\n`;
-      }
-      
-      // Categoría
-      const categoryEmoji = product.category === 'DIGITAL' ? '💾' : product.category === 'PHYSICAL' ? '📦' : '🛠️';
-      response += `${categoryEmoji} *Tipo:* ${product.category === 'DIGITAL' ? 'Producto Digital' : product.category === 'PHYSICAL' ? 'Producto Físico' : 'Servicio'}\n\n`;
-      
-      // Llamado a la acción
-      response += `¿Te gustaría comprarlo? 😊`;
-      
-      return {
-        text: response,
-        nextAgent: 'product',
-        confidence: 0.95,
-        actions: [
-          {
-            type: 'send_photo',
-            product: product
-          }
-        ]
-      };
+      // DELEGAR al ProductAgent para que presente el producto correctamente
+      // (información breve + foto en un solo mensaje)
+      const { ProductAgent } = await import('./product-agent');
+      const productAgent = new ProductAgent();
+      return await productAgent.execute(message, memory);
     }
     
     // Múltiples productos - Guardar en memoria
@@ -137,6 +168,9 @@ export class SearchAgent extends BaseAgent {
     
     // Establecer el primero como producto actual por defecto
     if (topProducts.length > 0) {
+      // Guardar la lista completa para selección numérica
+      memoryService.setProductList(memory.chatId, topProducts);
+
       memoryService.setCurrentProduct(memory.chatId, topProducts[0], 'viewed');
       memory.currentProduct = topProducts[0];
     }
@@ -373,12 +407,19 @@ export class SearchAgent extends BaseAgent {
 
       const keywords = correctedQuery.split(' ').filter(w => w.length > 2);
       
-      // Obtener todos los productos del usuario y filtrar en memoria
+      // 🔥 CORRECCIÓN CRÍTICA: Si userId está vacío o es de test, buscar en TODOS los productos
+      const whereClause: any = {
+        status: 'AVAILABLE',
+      };
+      
+      // Solo filtrar por userId si es un userId real (no de test)
+      if (userId && !userId.startsWith('test_')) {
+        whereClause.userId = userId;
+      }
+      
+      // Obtener todos los productos disponibles y filtrar en memoria
       const allProducts = await db.product.findMany({
-        where: {
-          userId,
-          status: 'AVAILABLE',
-        },
+        where: whereClause,
         orderBy: { createdAt: 'desc' },
       });
       
@@ -388,13 +429,46 @@ export class SearchAgent extends BaseAgent {
         return { product, score };
       }).filter(p => p.score > 0);
       
-      // Ordenar por score descendente
-      productsWithScore.sort((a, b) => b.score - a.score);
+      // 🔥 NUEVO: Detectar si el usuario busca por precio O por categoría general (portátiles, motos, etc.)
+      const priceKeywords = ['economico', 'barato', 'mas barato', 'menor precio', 'presupuesto'];
+      const searchesCheapest = priceKeywords.some(k => cleanQuery.includes(k));
+      
+      // 🎯 NUEVO: Detectar búsqueda general de categoría (sin especificar modelo)
+      const generalCategoryKeywords = ['portatil', 'laptop', 'computador', 'moto', 'motocicleta'];
+      const isGeneralCategorySearch = generalCategoryKeywords.some(k => cleanQuery.includes(k)) &&
+                                      !cleanQuery.includes('asus') && 
+                                      !cleanQuery.includes('acer') &&
+                                      !cleanQuery.includes('hp') &&
+                                      !cleanQuery.includes('dell') &&
+                                      !cleanQuery.includes('lenovo') &&
+                                      !cleanQuery.includes('bajaj') &&
+                                      !cleanQuery.includes('yamaha');
+      
+      if (searchesCheapest || isGeneralCategorySearch) {
+        // Ordenar por precio ascendente (más barato primero)
+        productsWithScore.sort((a, b) => {
+          // Primero por score (relevancia) - solo si la diferencia es MUY grande
+          if (Math.abs(a.score - b.score) > 20) {
+            return b.score - a.score;
+          }
+          // Si tienen score similar, ordenar por precio (más económico primero)
+          return a.product.price - b.product.price;
+        });
+        
+        if (isGeneralCategorySearch) {
+          this.log('💰 Búsqueda general de categoría detectada - Mostrando más económicos primero');
+        } else {
+          this.log('💰 Búsqueda por precio detectada - Mostrando más económicos primero');
+        }
+      } else {
+        // Ordenar solo por score descendente
+        productsWithScore.sort((a, b) => b.score - a.score);
+      }
       
       // Log de los top 5 para debugging
       this.log('🔍 Top productos encontrados:');
       productsWithScore.slice(0, 5).forEach((p, i) => {
-        this.log(`  ${i + 1}. ${p.product.name} (score: ${p.score})`);
+        this.log(`  ${i + 1}. ${p.product.name} (score: ${p.score}, precio: $${p.product.price.toLocaleString('es-CO')})`);
       });
       
       // Si el mejor match tiene un score muy alto (>= 20), solo devolver ese
@@ -518,19 +592,37 @@ export class SearchAgent extends BaseAgent {
     
     let score = 0;
     
-    // 🎯 NUEVA REGLA: Penalizar productos de categorías completamente diferentes
+    // 🎯 REGLA CRÍTICA: Categoría principal tiene PRIORIDAD ABSOLUTA
     const queryCategoryHints = this.detectCategoryFromQuery(normalizedQuery);
     if (queryCategoryHints.length > 0) {
-      const productCategories = [category, subcategory].filter(Boolean);
+      // Buscar coincidencias en: categoría, subcategoría, nombre, tags
+      const searchableFields = [category, subcategory, name, tags].filter(Boolean).join(' ');
       const hasMatchingCategory = queryCategoryHints.some(hint => 
-        productCategories.some(cat => cat.includes(hint))
+        searchableFields.includes(hint)
       );
       
-      // Si la query sugiere una categoría específica y el producto NO está en esa categoría
-      // aplicar penalización SEVERA
-      if (!hasMatchingCategory) {
-        score -= 50; // Penalización grande
-        this.log(`❌ PENALIZACIÓN: "${product.name}" no coincide con categoría esperada (${queryCategoryHints.join(', ')})`);
+      if (hasMatchingCategory) {
+        // ✅ BONUS MASIVO: Si coincide con la categoría esperada
+        // Pero dar MÁS bonus si es el producto principal (no accesorio)
+        
+        // Detectar si es producto principal o accesorio
+        const isAccessory = this.isAccessory(name);
+        const isMainProduct = this.isMainProduct(name, queryCategoryHints);
+        
+        if (isMainProduct && !isAccessory) {
+          score += 200; // BONUS MASIVO para producto principal real
+          this.log(`🎯 PRODUCTO PRINCIPAL: "${product.name}" es el producto principal buscado`);
+        } else if (isAccessory) {
+          score += 50; // BONUS pequeño para accesorios
+          this.log(`✅ ACCESORIO: "${product.name}" es un accesorio relacionado`);
+        } else {
+          score += 100; // BONUS normal para productos relacionados
+          this.log(`✅ BONUS CATEGORÍA: "${product.name}" coincide con categoría esperada (${queryCategoryHints.join(', ')})`);
+        }
+      } else {
+        // ❌ PENALIZACIÓN SEVERA: Si NO coincide con la categoría esperada
+        score -= 100; // Penalización MASIVA
+        this.log(`❌ PENALIZACIÓN CATEGORÍA: "${product.name}" no coincide con categoría esperada (${queryCategoryHints.join(', ')})`);
       }
     }
     
@@ -639,7 +731,26 @@ export class SearchAgent extends BaseAgent {
       }
     });
     
-    // 8. PENALIZACIÓN FUERTE: Si es un "mega pack" pero el usuario NO buscó eso
+    // 8. 🔥 NUEVO: PENALIZACIÓN CRÍTICA - Marca específica NO coincide
+    const brandKeywords = ['asus', 'hp', 'dell', 'lenovo', 'acer', 'apple', 'macbook', 'msi', 'samsung', 'bajaj', 'yamaha', 'honda', 'suzuki'];
+    const brandInQuery = brandKeywords.find(b => fullQuery.includes(b));
+    
+    if (brandInQuery) {
+      // El usuario buscó una marca específica
+      const productHasBrand = name.includes(brandInQuery) || description.includes(brandInQuery);
+      
+      if (!productHasBrand) {
+        // El producto NO tiene la marca buscada
+        score -= 200; // PENALIZACIÓN MASIVA - Marca incorrecta
+        this.log(`❌ MARCA INCORRECTA: Usuario buscó "${brandInQuery}" pero producto es "${product.name}"`);
+      } else {
+        // El producto SÍ tiene la marca buscada
+        score += 80; // BONUS GRANDE - Marca correcta
+        this.log(`✅ MARCA CORRECTA: "${brandInQuery}" encontrada en "${product.name}"`);
+      }
+    }
+    
+    // 9. PENALIZACIÓN FUERTE: Si es un "mega pack" pero el usuario NO buscó eso
     if (isGenericPack && !userSearchedPack) {
       // El usuario NO buscó un pack, pero este producto es un pack
       // 🔥 PENALIZACIÓN MASIVA: Los packs genéricos NO deben aparecer si el usuario busca algo específico
@@ -832,6 +943,38 @@ export class SearchAgent extends BaseAgent {
     ];
     return commonWords.includes(word.toLowerCase());
   }
+
+  /**
+   * Detecta si un producto es un accesorio (no el producto principal)
+   */
+  private isAccessory(name: string): boolean {
+    const accessoryKeywords = [
+      'base para', 'soporte', 'mouse', 'teclado', 'cable', 'cargador',
+      'funda', 'estuche', 'protector', 'adaptador', 'hub', 'dock',
+      'cooler', 'ventilador', 'limpiador', 'kit', 'accesorio'
+    ];
+    
+    return accessoryKeywords.some(keyword => name.includes(keyword));
+  }
+
+  /**
+   * Detecta si un producto es el producto principal buscado
+   */
+  private isMainProduct(name: string, categoryHints: string[]): boolean {
+    // Para portátiles/laptops/computadores
+    if (categoryHints.some(h => ['portatil', 'laptop', 'computador'].includes(h))) {
+      const mainBrands = ['asus', 'acer', 'hp', 'dell', 'lenovo', 'macbook', 'msi', 'samsung'];
+      return mainBrands.some(brand => name.includes(brand));
+    }
+    
+    // Para motos
+    if (categoryHints.some(h => ['moto', 'motocicleta'].includes(h))) {
+      const motoBrands = ['bajaj', 'yamaha', 'honda', 'suzuki', 'kawasaki', 'ktm', 'pulsar'];
+      return motoBrands.some(brand => name.includes(brand));
+    }
+    
+    return false;
+  }
   
   /**
    * Mapea un producto de Prisma a Product
@@ -908,21 +1051,86 @@ export class SearchAgent extends BaseAgent {
   }
   
   /**
-   * Maneja cuando no hay productos
+   * Maneja cuando no hay productos - USA IA para respuesta inteligente
    */
-  private handleNoProducts(query: string): AgentResponse {
-    return {
-      text: `No encontré productos que coincidan con "${query}" 😕
+  private async handleNoProducts(query: string, memory: SharedMemory): Promise<AgentResponse> {
+    this.log('⚠️ No se encontraron productos - Usando IA para respuesta inteligente');
+    
+    try {
+      const { AIMultiProvider } = await import('@/lib/ai-multi-provider');
+      
+      // Obtener productos disponibles para ofrecer alternativas
+      const allProducts = await this.getAllProducts(memory.userId);
+      const categories = [...new Set(allProducts.map(p => p.category))];
+      const brands = [...new Set(allProducts.map(p => {
+        const name = p.name.toLowerCase();
+        if (name.includes('asus')) return 'Asus';
+        if (name.includes('hp')) return 'HP';
+        if (name.includes('dell')) return 'Dell';
+        if (name.includes('acer')) return 'Acer';
+        if (name.includes('lenovo')) return 'Lenovo';
+        if (name.includes('bajaj')) return 'Bajaj';
+        if (name.includes('yamaha')) return 'Yamaha';
+        return null;
+      }).filter(Boolean))];
+      
+      // Prompt para IA
+      const systemPrompt = `Eres un asistente de ventas de Tecnovariedades D&S.
 
-¿Podrías darme más detalles sobre lo que buscas?
+El cliente buscó: "${query}"
 
-Por ejemplo:
-• ¿Es un computador, moto, curso o servicio?
-• ¿Qué características necesitas?
+NO TENEMOS ese producto exacto en stock.
+
+CATEGORÍAS DISPONIBLES: ${categories.join(', ')}
+MARCAS DISPONIBLES: ${brands.join(', ')}
+
+Tu trabajo:
+1. Ser HONESTO: Decir que NO tenemos ese producto específico
+2. OFRECER ALTERNATIVAS: Sugerir productos similares que SÍ tenemos
+3. SER ÚTIL: Preguntar qué características necesita
+
+REGLAS:
+- NO inventes productos que no tenemos
+- NO digas que tenemos algo si no está en las marcas/categorías disponibles
+- SÉ breve (máximo 4 líneas)
+- Menciona "Tecnovariedades D&S"
+- Usa emojis apropiados
+
+Ejemplo:
+"No tengo Lenovo en stock actualmente 😕 Pero en Tecnovariedades D&S tenemos excelentes laptops Asus y HP con características similares. ¿Qué uso le darás? (trabajo, estudio, diseño) Así te recomiendo la mejor opción 💻"`;
+
+      const response = await AIMultiProvider.generateResponse(
+        systemPrompt,
+        `Cliente buscó: "${query}". Responde de forma honesta y útil.`,
+        {
+          temperature: 0.7,
+          maxTokens: 150,
+        }
+      );
+      
+      return {
+        text: response,
+        nextAgent: 'search',
+        confidence: 0.8,
+      };
+      
+    } catch (error) {
+      this.log('Error usando IA, usando respuesta por defecto:', error);
+      
+      // Fallback si la IA falla
+      return {
+        text: `No encontré productos que coincidan exactamente con "${query}" 😕
+
+Pero en Tecnovariedades D&S tenemos muchas opciones similares.
+
+¿Podrías contarme más sobre lo que necesitas?
+• ¿Para qué lo usarás?
+• ¿Qué características son importantes para ti?
 • ¿Tienes un presupuesto en mente?`,
-      nextAgent: 'search',
-      confidence: 0.7,
-    };
+        nextAgent: 'search',
+        confidence: 0.7,
+      };
+    }
   }
   
   /**
@@ -931,10 +1139,154 @@ Por ejemplo:
   async handleWithAI(message: string, memory: SharedMemory): Promise<AgentResponse> {
     this.log('Buscando con IA (razonamiento profundo)');
     
-    // Aquí se integraría con Groq/Ollama para interpretar consultas complejas
-    // Por ejemplo: "ese que sirve para diseñar" → "computador para diseño"
-    
-    // Por ahora, fallback a búsqueda local
-    return this.handleLocally(message, memory);
+    try {
+      // Importar servicio de IA dinámicamente
+      const { AIMultiProvider } = await import('@/lib/ai-multi-provider');
+      
+      // Obtener lista de productos disponibles para contexto
+      const allProducts = await this.getAllProducts(memory.userId);
+      const productList = allProducts.slice(0, 20).map(p => 
+        `- ${p.name} (${p.category}, $${p.price.toLocaleString('es-CO')})`
+      ).join('\n');
+      
+      // Prompt para que la IA interprete la consulta
+      const prompt = `Eres un asistente de ventas experto. El cliente preguntó: "${message}"
+
+Productos disponibles:
+${productList}
+
+Tu tarea:
+1. Interpretar qué está buscando el cliente
+2. Identificar las palabras clave para buscar en la base de datos
+3. Responder SOLO con las palabras clave separadas por espacios
+
+Ejemplos:
+- Cliente: "ese que sirve para diseñar" → Respuesta: "computador diseño gráfico"
+- Cliente: "el que tiene más memoria" → Respuesta: "laptop ram almacenamiento"
+- Cliente: "algo barato pero bueno" → Respuesta: "económico calidad precio"
+
+
+Responde SOLO con las palabras clave, sin explicaciones:`;
+
+      // Llamar a la IA con la firma correcta
+      const aiResponse = await AIMultiProvider.generateCompletion([
+        { role: 'user', content: prompt }
+      ], {
+        max_tokens: 50,
+        temperature: 0.3, // Baja temperatura para respuestas precisas
+      });
+      
+      const keywords = aiResponse.content.trim();
+      this.log(`🤖 IA interpretó: "${message}" → "${keywords}"`);
+      
+      // Buscar con las keywords interpretadas
+      const products = await this.searchProducts(keywords, memory.userId);
+      
+      if (products.length === 0) {
+        return {
+          text: `Entiendo que buscas ${keywords}, pero no encontré productos que coincidan. ¿Podrías darme más detalles? 🤔`,
+          nextAgent: 'search',
+          confidence: 0.6,
+        };
+      }
+      
+      // Un solo producto
+      if (products.length === 1) {
+        const product = products[0];
+        const { SharedMemoryService } = await import('./shared-memory');
+        const memoryService = SharedMemoryService.getInstance();
+        memoryService.setCurrentProduct(memory.chatId, product, 'viewed');
+        memory.currentProduct = product;
+        memory.productInfoSent = true;
+        
+        this.log(`✅ Producto encontrado con IA: ${product.name}`);
+        
+        let response = `🎯 *${product.name}*\n\n`;
+        
+        if (product.description) {
+          const desc = product.description.length > 200 
+            ? product.description.substring(0, 200) + '...' 
+            : product.description;
+          response += `${desc}\n\n`;
+        }
+        
+        response += `💰 *Precio:* ${product.price.toLocaleString('es-CO')} COP\n\n`;
+        
+        if (product.stock && product.stock > 0) {
+          response += `✅ *Disponible:* ${product.stock} unidades\n\n`;
+        }
+        
+        const categoryEmoji = product.category === 'DIGITAL' ? '💾' : product.category === 'PHYSICAL' ? '📦' : '🛠️';
+        response += `${categoryEmoji} *Tipo:* ${product.category === 'DIGITAL' ? 'Producto Digital' : product.category === 'PHYSICAL' ? 'Producto Físico' : 'Servicio'}\n\n`;
+        
+        response += `¿Te gustaría comprarlo? 😊`;
+        
+        return {
+          text: response,
+          nextAgent: 'product',
+          confidence: 0.9,
+          actions: [
+            {
+              type: 'send_photo',
+              product: product
+            }
+          ]
+        };
+      }
+      
+      // Múltiples productos
+      const topProducts = products.slice(0, 3);
+      memory.interestedProducts = topProducts;
+      
+      const { SharedMemoryService } = await import('./shared-memory');
+      const memoryService = SharedMemoryService.getInstance();
+      memoryService.setProductList(memory.chatId, topProducts);
+      
+      if (topProducts.length > 0) {
+        memoryService.setCurrentProduct(memory.chatId, topProducts[0], 'viewed');
+        memory.currentProduct = topProducts[0];
+      }
+      
+      return this.showProductList(topProducts);
+      
+    } catch (error) {
+      this.log('❌ Error usando IA, fallback a búsqueda local:', error);
+      
+      // Fallback a búsqueda local si falla la IA
+      return this.handleLocally(message, memory);
+    }
+  }
+  
+  /**
+   * Obtiene todos los productos disponibles
+   */
+  private async getAllProducts(userId: string): Promise<any[]> {
+    try {
+      const { db } = await import('@/lib/db');
+      
+      const whereClause: any = {
+        status: 'AVAILABLE',
+      };
+      
+      if (userId && !userId.startsWith('test_')) {
+        whereClause.userId = userId;
+      }
+      
+      return await db.product.findMany({
+        where: whereClause,
+        orderBy: { createdAt: 'desc' },
+        take: 50, // Limitar para no sobrecargar el prompt
+      });
+    } catch (error) {
+      this.log('Error obteniendo productos:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Detecta si es una pregunta general (no sobre productos específicos)
+   */
+  private isGeneralQuestion(message: string): boolean {
+    return matchesIntent(message, 'general_question');
   }
 }

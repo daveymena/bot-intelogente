@@ -19,18 +19,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    let user: any = null
-    try {
-      user = await db.user.findUnique({
-        where: { email: email.toLowerCase().trim() }
-      })
-    } catch (dbError) {
-      console.error('[ForgotPassword] Error de base de datos:', dbError)
-      return NextResponse.json({
-        success: true,
-        message: 'Si el correo existe, recibirás un enlace de recuperación'
-      })
-    }
+    // Buscar usuario por email
+    const user = await db.user.findUnique({
+      where: { email: email.toLowerCase().trim() }
+    });
 
     // Por seguridad, siempre devolver éxito (no revelar si el email existe)
     if (!user) {
@@ -60,13 +52,11 @@ export async function POST(req: NextRequest) {
       }
     });
 
-    // Construir URL de reset - Usar NEXTAUTH_URL que es la URL correcta de la app
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000';
-    const resetUrl = `${baseUrl}/reset-password?token=${resetToken}`;
+    // Construir URL de reset
+    const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`;
 
     console.log('[ForgotPassword] Token generado para:', email);
-    console.log('[ForgotPassword] Base URL:', baseUrl);
-    console.log('[ForgotPassword] URL de reset completa:', resetUrl);
+    console.log('[ForgotPassword] URL de reset:', resetUrl);
 
     // Enviar email
     try {

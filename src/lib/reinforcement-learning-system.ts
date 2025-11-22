@@ -348,8 +348,8 @@ export class ReinforcementLearningSystem {
     const sevenDaysAgo = new Date()
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
 
-    const recentConvs = conversations.filter(c => c.createdAt >= sevenDaysAgo)
-    const olderConvs = conversations.filter(c => c.createdAt < sevenDaysAgo)
+    const recentConvs = conversations.filter(c => c.lastMessageAt >= sevenDaysAgo)
+    const olderConvs = conversations.filter(c => c.lastMessageAt < sevenDaysAgo)
 
     let recentReward = 0
     let olderReward = 0

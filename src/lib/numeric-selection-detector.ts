@@ -19,54 +19,87 @@ export class NumericSelectionDetector {
   static async detectSelection(
     message: string,
     conversationHistory: any[],
-    userId: string
+    userId: string,
+    chatId?: string
   ): Promise<NumericSelection> {
     const messageLower = message.toLowerCase().trim()
-    
+
     // Buscar números en el mensaje
     const numberMatch = messageLower.match(/\b([1-9]|10)\b/)
     if (!numberMatch) {
       return { isSelection: false, confidence: 0 }
     }
-    
+
     const selectedNumber = parseInt(numberMatch[1])
     console.log(`🔢 [NumericSelection] Número detectado: ${selectedNumber}`)
-    
+
+    // MÉTODO 1: Usar memoria compartida si está disponible (más confiable)
+    if (chatId) {
+      try {
+        const { SharedMemoryService } = await import('../agents/shared-memory')
+        const memoryService = SharedMemoryService.getInstance()
+
+        if (memoryService.hasActiveProductList(chatId)) {
+          console.log('🔢 [NumericSelection] ✅ Usando memoria compartida para selección')
+          const selectedProduct = memoryService.getProductByPosition(chatId, selectedNumber)
+
+          if (selectedProduct) {
+            console.log(`🔢 [NumericSelection] ✅ Producto seleccionado de memoria: ${selectedProduct.name}`)
+
+            // Limpiar la lista después de la selección
+            memoryService.clearProductList(chatId)
+
+            return {
+              isSelection: true,
+              selectedNumber,
+              selectedProduct,
+              confidence: 98 // Mayor confianza con memoria
+            }
+          }
+        }
+      } catch (error) {
+        console.log('🔢 [NumericSelection] ⚠️ Error accediendo a memoria compartida, usando método alternativo')
+      }
+    }
+
+    // MÉTODO 2: Método tradicional (fallback)
+    console.log('🔢 [NumericSelection] 🔄 Usando método tradicional de extracción')
+
     // Verificar si el mensaje anterior del bot contenía una lista numerada
     const lastBotMessage = this.getLastBotMessage(conversationHistory)
     if (!lastBotMessage) {
       console.log('🔢 [NumericSelection] No hay mensaje previo del bot')
       return { isSelection: false, confidence: 0 }
     }
-    
+
     // Verificar si el mensaje del bot tenía opciones numeradas
     const hasNumberedList = this.hasNumberedOptions(lastBotMessage)
     if (!hasNumberedList) {
       console.log('🔢 [NumericSelection] El mensaje previo no tenía lista numerada')
       return { isSelection: false, confidence: 0 }
     }
-    
+
     console.log('🔢 [NumericSelection] ✅ Lista numerada detectada en mensaje previo')
-    
+
     // Extraer productos de la lista
     const products = await this.extractProductsFromList(lastBotMessage, userId)
     if (products.length === 0) {
       console.log('🔢 [NumericSelection] No se pudieron extraer productos de la lista')
       return { isSelection: false, confidence: 0 }
     }
-    
+
     console.log(`🔢 [NumericSelection] ${products.length} productos extraídos de la lista`)
-    
+
     // Verificar que el número seleccionado esté en rango
     if (selectedNumber < 1 || selectedNumber > products.length) {
       console.log(`🔢 [NumericSelection] Número ${selectedNumber} fuera de rango (1-${products.length})`)
       return { isSelection: false, confidence: 0 }
     }
-    
+
     // Obtener el producto seleccionado
     const selectedProduct = products[selectedNumber - 1]
     console.log(`🔢 [NumericSelection] ✅ Producto seleccionado: ${selectedProduct.name}`)
-    
+
     return {
       isSelection: true,
       selectedNumber,

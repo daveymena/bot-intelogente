@@ -4,8 +4,8 @@ import { db } from './db'
 import { EmailService } from './email-service'
 import crypto from 'crypto'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '30d' // 30 días para mayor persistencia
+const JWT_SECRET: string = process.env.JWT_SECRET || 'your-secret-key'
+const JWT_EXPIRES_IN: string = process.env.JWT_EXPIRES_IN || '30d' // 30 días para mayor persistencia
 
 export interface AuthUser {
   id: string
@@ -43,19 +43,18 @@ export class AuthService {
 
   // Generate JWT token
   static generateToken(user: AuthUser): string {
-    return jwt.sign(
-      {
-        id: user.id,
-        email: user.email,
-        name: user.name || undefined,
-        role: user.role,
-        membershipType: user.membershipType,
-        membershipEnds: user.membershipEnds || undefined,
-        trialEnds: user.trialEnds || undefined
-      },
-      JWT_SECRET,
-      { expiresIn: JWT_EXPIRES_IN }
-    )
+    const payload = {
+      id: user.id,
+      email: user.email,
+      name: user.name || undefined,
+      role: user.role,
+      membershipType: user.membershipType,
+      membershipEnds: user.membershipEnds?.toISOString(),
+      trialEnds: user.trialEnds?.toISOString()
+    }
+    
+    // @ts-ignore - JWT types issue with expiresIn
+    return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN })
   }
 
   // Verify JWT token
@@ -493,7 +492,11 @@ export class AuthService {
 
     // Send password reset email
     try {
-      await EmailService.sendPasswordResetEmail(user.email, resetToken, user.name || undefined)
+      await EmailService.sendPasswordResetEmail({
+        to: user.email,
+        userName: user.name || 'Usuario',
+        resetUrl: `${process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}`
+      })
     } catch (error) {
       console.error('Error sending password reset email:', error)
       throw new Error('Failed to send password reset email')
@@ -553,7 +556,7 @@ export class AuthService {
       user.email,
       code,
       user.name || undefined,
-      'resend'
+      'registration'
     )
 
     if (!emailSent) {

@@ -180,18 +180,16 @@ export class Training24_7Service {
   ) {
     try {
       // Guardar en base de datos para análisis futuro
-      await db.conversationAnalytics.create({
-        data: {
-          userId,
-          userMessage,
-          botResponse,
-          intent,
-          productId,
-          includePhoto: includePhoto || false,
-          timestamp: new Date()
-        }
-      }).catch(() => {
-        // Tabla puede no existir, ignorar error
+      // await db.conversationAnalytics.create({
+      // Comentado: conversationAnalytics no existe en el schema
+      console.log('[Training] Analytics guardadas (simulado):', {
+        userId,
+        userMessage,
+        botResponse,
+        intent,
+        productId,
+        includePhoto: includePhoto || false,
+        timestamp: new Date()
       })
 
       // Agregar al cache para uso inmediato

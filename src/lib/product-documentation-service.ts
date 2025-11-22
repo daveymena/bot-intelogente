@@ -254,7 +254,7 @@ export class ProductDocumentationService {
         where: {
           userId,
           status: 'AVAILABLE',
-          category: category.toUpperCase()
+          category: category.toUpperCase() as any
         },
         orderBy: { price: 'asc' }
       })

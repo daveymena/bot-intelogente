@@ -14,6 +14,7 @@ export interface AgentResponse {
   confidence?: number;
   requiresAI?: boolean;
   context?: any; // Contexto de la conversación
+  metadata?: any;
 }
 
 export interface AgentAction {

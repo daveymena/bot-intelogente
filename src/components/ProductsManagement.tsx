@@ -188,8 +188,8 @@ export default function ProductsManagement() {
         ...formData,
         price: parseFloat(formData.price),
         stock: formData.stock ? parseInt(formData.stock) : undefined,
-        images: JSON.stringify(imagesArray),
-        tags: JSON.stringify(tagsArray),
+        images: imagesArray, // Enviar como array, el backend lo convierte a JSON
+        tags: tagsArray, // Enviar como array, el backend lo convierte a JSON
         paymentLinkMercadoPago: formData.paymentLinkMercadoPago || null,
         paymentLinkPayPal: formData.paymentLinkPayPal || null,
         paymentLinkCustom: formData.paymentLinkCustom || null,
@@ -228,27 +228,41 @@ export default function ProductsManagement() {
   const handleEdit = (product: Product) => {
     setEditingProduct(product)
     
-    // Convertir images y tags a string correctamente
+    // 🔧 CORRECCIÓN: Convertir images y tags a string limpio (sin JSON)
     let imagesStr = ''
     if (Array.isArray(product.images)) {
-      imagesStr = product.images.join(', ')
+      // Si ya es array, unir con comas
+      imagesStr = product.images.filter(img => img && typeof img === 'string').join(', ')
     } else if (typeof product.images === 'string') {
+      // Si es string, intentar parsear
       try {
         const parsed = JSON.parse(product.images)
-        imagesStr = Array.isArray(parsed) ? parsed.join(', ') : product.images
+        if (Array.isArray(parsed)) {
+          imagesStr = parsed.filter(img => img && typeof img === 'string').join(', ')
+        } else {
+          imagesStr = product.images
+        }
       } catch {
+        // Si no es JSON válido, usar como está (puede ser una URL simple)
         imagesStr = product.images
       }
     }
     
     let tagsStr = ''
     if (Array.isArray(product.tags)) {
-      tagsStr = product.tags.join(', ')
+      // Si ya es array, unir con comas
+      tagsStr = product.tags.filter(tag => tag && typeof tag === 'string').join(', ')
     } else if (typeof product.tags === 'string') {
+      // Si es string, intentar parsear
       try {
         const parsed = JSON.parse(product.tags)
-        tagsStr = Array.isArray(parsed) ? parsed.join(', ') : product.tags
+        if (Array.isArray(parsed)) {
+          tagsStr = parsed.filter(tag => tag && typeof tag === 'string').join(', ')
+        } else {
+          tagsStr = product.tags
+        }
       } catch {
+        // Si no es JSON válido, usar como está
         tagsStr = product.tags
       }
     }

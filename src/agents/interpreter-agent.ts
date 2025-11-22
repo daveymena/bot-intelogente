@@ -6,6 +6,7 @@
 
 import { BaseAgent, AgentResponse } from './base-agent';
 import { SharedMemory } from './shared-memory';
+import { detectIntent, matchesIntent } from '@/lib/intent-patterns';
 
 export class InterpreterAgent extends BaseAgent {
   constructor() {
@@ -34,56 +35,106 @@ export class InterpreterAgent extends BaseAgent {
   }
   
   /**
-   * Interpreta la consulta del cliente
+   * Interpreta la consulta del cliente usando patrones robustos
    */
   private async interpretQuery(message: string, memory: SharedMemory): Promise<Interpretation> {
     const cleanMsg = this.cleanMessage(message);
     
-    // 1. BÚSQUEDA DE PRODUCTOS (no específica)
-    if (this.isGeneralProductInquiry(cleanMsg)) {
-      return this.interpretProductInquiry(cleanMsg, memory);
-    }
+    // Usar sistema de detección de intenciones robusto
+    const detectedIntent = detectIntent(cleanMsg);
     
-    // 2. BÚSQUEDA ESPECÍFICA (con detalles)
-    if (this.isSpecificProductSearch(cleanMsg)) {
-      return this.interpretSpecificSearch(cleanMsg, memory);
+    // Mapear intenciones detectadas a agentes
+    switch (detectedIntent) {
+      case 'greeting':
+      case 'farewell':
+        return {
+          intent: 'greeting',
+          confidence: 0.95,
+          nextAgent: 'greeting',
+          details: {
+            query: message,
+            type: detectedIntent
+          }
+        };
+      
+      case 'pending_payment':
+        return {
+          intent: 'pending_payment',
+          confidence: 0.95,
+          nextAgent: 'closing',
+          details: {
+            query: message,
+            type: 'pending_payment',
+            clarification: 'El cliente confirmará el pago más tarde'
+          }
+        };
+      
+      case 'payment_inquiry':
+        return this.interpretPaymentInquiry(cleanMsg, memory);
+      
+      case 'price_inquiry':
+        return {
+          intent: 'price_inquiry',
+          confidence: 0.9,
+          nextAgent: memory.currentProduct ? 'product' : 'search',
+          details: {
+            query: message,
+            type: 'price',
+            clarification: 'El cliente quiere saber el precio'
+          }
+        };
+      
+      case 'product_info':
+        return this.interpretProductInfo(cleanMsg, memory);
+      
+      case 'availability':
+        return this.interpretAvailability(cleanMsg, memory);
+      
+      case 'general_question':
+        return {
+          intent: 'general_question',
+          confidence: 0.95,
+          nextAgent: 'general_qa',
+          details: {
+            query: message,
+            type: 'general',
+            clarification: 'Pregunta general que no es sobre productos'
+          }
+        };
+      
+      case 'comparison':
+        return this.interpretComparison(cleanMsg, memory);
+      
+      case 'budget':
+        return this.interpretBudgetInquiry(cleanMsg, memory);
+      
+      case 'product_search':
+        if (this.isSpecificProductSearch(cleanMsg)) {
+          return this.interpretSpecificSearch(cleanMsg, memory);
+        }
+        return this.interpretProductInquiry(cleanMsg, memory);
+      
+      default:
+        // Si no se detectó intención clara, intentar con métodos legacy
+        if (this.isGeneralProductInquiry(cleanMsg)) {
+          return this.interpretProductInquiry(cleanMsg, memory);
+        }
+        
+        if (this.isSpecificProductSearch(cleanMsg)) {
+          return this.interpretSpecificSearch(cleanMsg, memory);
+        }
+        
+        // Por defecto, búsqueda general
+        return {
+          intent: 'search',
+          confidence: 0.5,
+          nextAgent: 'search',
+          details: {
+            query: message,
+            type: 'general'
+          }
+        };
     }
-    
-    // 3. MÉTODOS DE PAGO
-    if (this.isPaymentInquiry(cleanMsg)) {
-      return this.interpretPaymentInquiry(cleanMsg, memory);
-    }
-    
-    // 4. INFORMACIÓN DE PRODUCTO
-    if (this.isProductInfoRequest(cleanMsg)) {
-      return this.interpretProductInfo(cleanMsg, memory);
-    }
-    
-    // 5. PRESUPUESTO
-    if (this.isBudgetInquiry(cleanMsg)) {
-      return this.interpretBudgetInquiry(cleanMsg, memory);
-    }
-    
-    // 6. DISPONIBILIDAD
-    if (this.isAvailabilityCheck(cleanMsg)) {
-      return this.interpretAvailability(cleanMsg, memory);
-    }
-    
-    // 7. COMPARACIÓN
-    if (this.isComparison(cleanMsg)) {
-      return this.interpretComparison(cleanMsg, memory);
-    }
-    
-    // Por defecto, búsqueda general
-    return {
-      intent: 'search',
-      confidence: 0.5,
-      nextAgent: 'search',
-      details: {
-        query: message,
-        type: 'general'
-      }
-    };
   }
   
   /**
@@ -240,6 +291,50 @@ export class InterpreterAgent extends BaseAgent {
   // FUNCIONES DE DETECCIÓN
   // ============================================
   
+  private isGreeting(message: string): boolean {
+    const msg = message.toLowerCase().trim();
+    
+    const greetingPatterns = [
+      /^hola$/i,
+      /^hola\s+(que\s+tal|como\s+estas?|buenos?\s+dias?|buenas?\s+tardes?|buenas?\s+noches?)/i,
+      /^buenos?\s+dias?$/i,
+      /^buenas?\s+tardes?$/i,
+      /^buenas?\s+noches?$/i,
+      /^buenas?$/i,
+      /^muy\s+buenas?$/i,
+      /^hola\s+muy\s+buenas?$/i,
+      /^saludos?$/i,
+      /^hey$/i,
+      /^holi$/i,
+      /^que\s+tal$/i,
+      /^como\s+estas?$/i,
+      /^como\s+va$/i,
+      // Despedidas
+      /^(adios|adiós|chao|chau|hasta\s+luego|nos\s+vemos|bye|gracias|ok\s+gracias)$/i
+    ];
+    
+    return greetingPatterns.some(p => p.test(msg));
+  }
+  
+  private isPendingPayment(message: string): boolean {
+    const patterns = [
+      /luego\s+(te\s+)?(envio|mando|paso)/i,
+      /despues\s+(te\s+)?(envio|mando|paso)/i,
+      /después\s+(te\s+)?(envío|mando|paso)/i,
+      /mas\s+tarde\s+(te\s+)?(envio|mando|paso)/i,
+      /más\s+tarde\s+(te\s+)?(envío|mando|paso)/i,
+      /ahorita\s+(te\s+)?(envio|mando|paso)/i,
+      /ya\s+(te\s+)?(envio|mando|paso)/i,
+      /voy\s+a\s+(pagar|hacer\s+el\s+pago|transferir)/i,
+      /dame\s+(un\s+momento|unos\s+minutos)/i,
+      /espera\s+(un\s+momento|unos\s+minutos)/i,
+      /en\s+un\s+rato\s+(te\s+)?(envio|mando|paso)/i,
+      /cuando\s+(pueda|tenga)\s+(te\s+)?(envio|mando|paso)/i
+    ];
+    
+    return patterns.some(p => p.test(message));
+  }
+  
   private isGeneralProductInquiry(message: string): boolean {
     const patterns = [
       /^(tienen|hay|venden|manejan|trabajan)\s+(portatil|laptop|moto|curso|impresora)/i,
@@ -268,7 +363,14 @@ export class InterpreterAgent extends BaseAgent {
       /(como|cual|que)\s+(pago|pagar|forma|metodo)/i,
       /(mercadopago|paypal|nequi|daviplata|contraentrega)/i,
       /opciones?\s+de\s+pago/i,
-      /puedo\s+pagar/i
+      /puedo\s+pagar/i,
+      /metodos?\s+(de\s+)?pago/i,
+      /formas?\s+(de\s+)?pago/i,
+      /el\s+metodo\s+(de\s+)?pago/i,
+      /la\s+forma\s+(de\s+)?pago/i,
+      /medios?\s+(de\s+)?pago/i,
+      /como\s+(puedo\s+)?pagar/i,
+      /acepta(n)?\s+(tarjeta|efectivo|transferencia)/i
     ];
     
     return patterns.some(p => p.test(message));

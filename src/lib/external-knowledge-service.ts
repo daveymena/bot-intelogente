@@ -31,6 +31,22 @@ export class ExternalKnowledgeService {
     try {
       console.log(`🔍 [External Knowledge] Buscando info de: "${productName}"`)
 
+      if (process.env.AI_ALLOW_EXTERNAL_KNOWLEDGE !== 'true') {
+        return {
+          found: false,
+          source: 'Disabled',
+          confidence: 0
+        }
+      }
+
+      if (!process.env.GROQ_API_KEY) {
+        return {
+          found: false,
+          source: 'NoAPIKey',
+          confidence: 0
+        }
+      }
+
       // Usar Groq con modelo que tiene conocimiento general
       const prompt = `Eres un experto en tecnología y productos. Proporciona información REAL y VERIFICABLE sobre el siguiente producto.
 
@@ -279,6 +295,10 @@ Para más detalles específicos sobre tu pregunta: "${question}", contáctanos d
    * Verificar si un producto necesita información externa
    */
   static shouldEnrichProduct(product: any, question: string): boolean {
+    if (process.env.AI_ALLOW_EXTERNAL_KNOWLEDGE !== 'true') {
+      return false
+    }
+
     const needsEnrichment = [
       'especificaciones',
       'características',

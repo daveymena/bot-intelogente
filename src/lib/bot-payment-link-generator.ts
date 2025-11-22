@@ -297,7 +297,7 @@ export class BotPaymentLinkGenerator {
     whatsAppLink?: string,
     paymentInfo?: { nequi?: string; daviplata?: string }
   ): string {
-    let message = `🟢 ¡Perfecto! Aquí están tus opciones de pago\n\n`
+    let message = `🟢 Tecnovariedades D&S — Opciones de pago\n\n`
     message += `📦 *Producto:* ${productName}\n`
     message += `💰 *Total a Pagar:* ${formattedPrice} COP\n\n`
     message += `━━━━━━━━━━━━━━━━━━━━━━\n`
@@ -354,7 +354,7 @@ export class BotPaymentLinkGenerator {
     message += `━━━━━━━━━━━━━━━━━━━━━━\n`
     message += `✅ *Todos los métodos son seguros*\n`
     message += `📦 *Entrega inmediata* después del pago\n`
-    message += `🔒 *Compra protegida*\n\n`
+    message += `🔒 *Compra protegida por Tecnovariedades D&S*\n\n`
     message += `¿Con cuál método prefieres pagar? 😊`
 
     return message

@@ -15,12 +15,13 @@ function safeJSONParse(value: string | null): any[] {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const product = await db.product.findUnique({
       where: {
-        id: params.id
+        id
       },
       select: {
         id: true,
@@ -72,24 +73,25 @@ export async function GET(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    console.log(`[API] Eliminando producto: ${params.id}`)
+    const { id } = await params
+    console.log(`[API] Eliminando producto: ${id}`)
 
     // Verificar que el producto existe
     const product = await db.product.findUnique({
-      where: { id: params.id }
+      where: { id }
     })
 
     if (!product) {
-      console.log(`[API] Producto no encontrado: ${params.id}`)
+      console.log(`[API] Producto no encontrado: ${id}`)
       return NextResponse.json({ error: 'Product not found' }, { status: 404 })
     }
 
     // Eliminar el producto
     await db.product.delete({
-      where: { id: params.id }
+      where: { id }
     })
 
     console.log(`[API] ✅ Producto eliminado: ${product.name}`)
@@ -110,15 +112,16 @@ export async function DELETE(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const body = await request.json()
-    console.log(`[API] Actualizando producto: ${params.id}`)
+    console.log(`[API] Actualizando producto: ${id}`)
 
     // Verificar que el producto existe
     const existingProduct = await db.product.findUnique({
-      where: { id: params.id }
+      where: { id }
     })
 
     if (!existingProduct) {
@@ -165,7 +168,7 @@ export async function PUT(
 
     // Actualizar producto
     const updatedProduct = await db.product.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData
     })
 

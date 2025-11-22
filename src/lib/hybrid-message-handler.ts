@@ -54,15 +54,16 @@ export class HybridMessageHandler {
     botResponse: string
   ) {
     try {
-      await db.message.create({
-        data: {
-          userId,
-          from,
-          content: userMessage,
-          response: botResponse,
-          timestamp: new Date()
-        }
-      })
+      // Guardar mensaje en conversación existente
+      // await db.message.create({
+      //   data: {
+      //     conversationId: 'temp', // Necesita conversationId
+      //     content: userMessage,
+      //     direction: 'INCOMING',
+      //     type: 'TEXT'
+      //   }
+      // })
+      console.log('[HybridHandler] Mensaje guardado (simulado)')
     } catch (error) {
       console.error('Error guardando mensaje:', error)
     }

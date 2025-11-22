@@ -58,7 +58,10 @@ export class IntelligentPhotoHandler {
     }
     
     // Obtener contexto de memoria
-    const memory = ProfessionalConversationMemory.getContext(conversationKey);
+    const memory = ProfessionalConversationMemory.getMemory(conversationKey) || {
+      currentProduct: null,
+      productHistory: [],
+    } as any;
     
     // Razonamiento sobre el contexto
     if (memory.currentProduct) {
@@ -75,7 +78,7 @@ export class IntelligentPhotoHandler {
     }
     
     // Si hay productos en historial reciente
-    if (memory.productHistory.length > 0) {
+    if (memory.productHistory && memory.productHistory.length > 0) {
       const lastProduct = memory.productHistory[0];
       return {
         isPhotoRequest: true,

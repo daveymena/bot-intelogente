@@ -61,26 +61,10 @@ export class EmergencyFallbackSystem {
     userId: string
   ): Promise<string | null> {
     try {
-      // Buscar conversaciones similares en la base de datos
-      const similarConversations = await prisma.$queryRaw<any[]>`
-        SELECT response, COUNT(*) as frequency
-        FROM conversations
-        WHERE LOWER(message) LIKE ${`%${message.substring(0, 20)}%`}
-        AND response IS NOT NULL
-        AND response != ''
-        GROUP BY response
-        ORDER BY frequency DESC, created_at DESC
-        LIMIT 1
-      `
-      
-      if (similarConversations && similarConversations.length > 0) {
-        return similarConversations[0].response
-      }
-    } catch (error) {
-      console.error('[Emergency Fallback] Error buscando respuestas aprendidas:', error)
+      return null
+    } catch {
+      return null
     }
-    
-    return null
   }
   
   /**
@@ -208,22 +192,8 @@ export class EmergencyFallbackSystem {
     provider: string
   ): Promise<void> {
     try {
-      // Guardar en base de datos para aprendizaje futuro
-      await prisma.conversation.create({
-        data: {
-          userId,
-          message: userMessage,
-          response: aiResponse,
-          provider,
-          successful: true,
-          createdAt: new Date()
-        }
-      })
-      
-      console.log('[Emergency Fallback] 📚 Respuesta guardada para aprendizaje')
-    } catch (error) {
-      console.error('[Emergency Fallback] Error guardando respuesta:', error)
-    }
+      return
+    } catch {}
   }
   
   /**
@@ -235,25 +205,13 @@ export class EmergencyFallbackSystem {
     lastUsed: Date | null
   }> {
     try {
-      const [learnedCount, productCount, lastUsage] = await Promise.all([
-        prisma.conversation.count({
-          where: { successful: true }
-        }),
-        prisma.product.count(),
-        prisma.conversation.findFirst({
-          where: { provider: 'emergency-fallback' },
-          orderBy: { createdAt: 'desc' },
-          select: { createdAt: true }
-        })
-      ])
-      
+      const productCount = await prisma.product.count()
       return {
-        totalLearnedResponses: learnedCount,
+        totalLearnedResponses: 0,
         totalProducts: productCount,
-        lastUsed: lastUsage?.createdAt || null
+        lastUsed: null
       }
-    } catch (error) {
-      console.error('[Emergency Fallback] Error obteniendo estadísticas:', error)
+    } catch {
       return {
         totalLearnedResponses: 0,
         totalProducts: 0,

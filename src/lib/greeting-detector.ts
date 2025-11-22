@@ -32,14 +32,19 @@ export class GreetingDetector {
 
   /**
    * Genera respuesta de saludo predeterminada (sin gastar tokens)
+   * CORREGIDO: Saludo natural sin listar productos automáticamente
    */
   static generateGreetingResponse(userName?: string): string {
     const greetings = [
-      `¡Hola${userName ? ' ' + userName : ''}! 😊 Bienvenido a Tecnovariedades D&S 🎉\n\n¿En qué puedo ayudarte hoy? Tenemos:\n\n💻 Laptops y computadores\n🏍️ Motos\n🎓 Cursos digitales y megapacks\n📱 Accesorios tecnológicos\n\n¿Qué te interesa? 😄`,
+      `¡Hola${userName ? ' ' + userName : ''}! 😊 Bienvenido a Tecnovariedades D&S 🎉\n\n¿En qué puedo ayudarte hoy?`,
       
-      `¡Hola${userName ? ' ' + userName : ''}! 👋 ¿Cómo estás?\n\nSoy tu asistente de Tecnovariedades D&S ✨\n\nPuedo ayudarte con:\n✅ Información de productos\n✅ Precios y disponibilidad\n✅ Métodos de pago\n✅ Cursos digitales\n\n¿Qué necesitas? 😊`,
+      `¡Hola${userName ? ' ' + userName : ''}! 👋 ¿Cómo estás?\n\nSoy tu asistente de Tecnovariedades D&S ✨\n\n¿Qué necesitas? 😊`,
       
-      `¡Hola${userName ? ' ' + userName : ''}! 😄 ¡Qué bueno verte por aquí!\n\nEstoy aquí para ayudarte con todo lo que necesites de Tecnovariedades D&S 🚀\n\n¿Buscas algo en particular? 🔍`
+      `¡Hola${userName ? ' ' + userName : ''}! 😄 ¡Qué bueno verte por aquí!\n\nEstoy aquí para ayudarte con todo lo que necesites 🚀\n\n¿Buscas algo en particular? 🔍`,
+      
+      `¡Hola${userName ? ' ' + userName : ''}! 😊 ¿Cómo te va?\n\n¿En qué te puedo ayudar hoy? 💬`,
+      
+      `¡Hola${userName ? ' ' + userName : ''}! 👋 Bienvenido 😄\n\n¿Qué estás buscando? Cuéntame y te ayudo 😊`
     ];
     
     // Seleccionar saludo aleatorio

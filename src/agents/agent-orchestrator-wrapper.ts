@@ -106,10 +106,71 @@ export class AgentOrchestrator {
         agentUsed: response.nextAgent || 'orchestrator'
       }
 
+      // 🔥 SISTEMA DE FALLBACK INTELIGENTE A IA
+      // Si la confianza es baja, usar IA como respaldo
+      const confidenceThreshold = parseFloat(process.env.AI_FALLBACK_CONFIDENCE_THRESHOLD || '0.6')
+      
+      if (response.confidence < confidenceThreshold) {
+        console.log(`[AgentOrchestrator] ⚠️ Confianza baja (${(response.confidence * 100).toFixed(0)}%)`)
+        console.log('[AgentOrchestrator] 🤖 Activando fallback a IA (Groq)...')
+        
+        try {
+          const { AIMultiProvider } = await import('@/lib/ai-multi-provider')
+          
+          // Construir contexto para la IA
+          const contextMessages = history.slice(-4).map(h => ({
+            role: h.role,
+            content: h.content
+          }))
+          
+          // Agregar mensaje actual
+          contextMessages.push({
+            role: 'user',
+            content: message
+          })
+          
+          // Llamar a la IA
+          const aiResponse = await AIMultiProvider.generateResponse({
+            messages: contextMessages,
+            systemPrompt: `Eres un asistente de ventas profesional y amigable de Tecnovariedades D&S.
+Responde de forma natural, concisa y útil. Si no entiendes algo, pide clarificación.
+Mantén un tono conversacional y usa emojis apropiadamente.`,
+            maxTokens: 200,
+            temperature: 0.7
+          })
+          
+          console.log('[AgentOrchestrator] ✅ IA generó respuesta de respaldo')
+          
+          return {
+            message: aiResponse,
+            confidence: 0.75, // Confianza media con IA
+            intent: 'ai_fallback',
+            shouldSendPhotos,
+            photos,
+            productId,
+            agentUsed: 'ai_fallback'
+          }
+        } catch (aiError) {
+          console.error('[AgentOrchestrator] ❌ Error en fallback a IA:', aiError)
+          // Si falla la IA, usar la respuesta original del agente
+        }
+      }
+
+      // Retornar respuesta del agente (original o si falló el fallback)
+      return {
+        message: response.text,
+        confidence: response.confidence,
+        intent: response.context?.salesStage || 'general',
+        shouldSendPhotos,
+        photos,
+        productId,
+        agentUsed: response.nextAgent || 'orchestrator'
+      }
+
     } catch (error) {
       console.error('[AgentOrchestrator] ❌ Error procesando mensaje:', error)
 
-      // Fallback: respuesta genérica
+      // Fallback final: respuesta genérica
       return {
         message: 'Disculpa, tuve un problema procesando tu mensaje. ¿Podrías intentar de nuevo? 🙏',
         confidence: 0.3,

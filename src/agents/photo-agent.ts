@@ -33,9 +33,9 @@ export class PhotoAgent extends BaseAgent {
     this.log('Manejando solicitud de foto localmente');
     this.log(`📦 Producto en memoria: ${memory.currentProduct?.name || 'ninguno'}`);
     this.log(`📦 Productos interesados: ${memory.interestedProducts?.length || 0}`);
-    
+
     const product = memory.currentProduct;
-    
+
     // Si no hay producto en contexto
     if (!product) {
       this.log('❌ No hay producto en contexto, pidiendo clarificación');
@@ -47,7 +47,7 @@ Puedes decirme el nombre del producto que te interesa.`,
         confidence: 0.9,
       };
     }
-    
+
     // Si el producto no tiene imágenes
     if (!product.images || product.images.length === 0) {
       return {
@@ -58,10 +58,27 @@ Puedes decirme el nombre del producto que te interesa.`,
         confidence: 0.9,
       };
     }
-    
+
+    // 🛡️ VERIFICAR SI LAS FOTOS YA FUERON ENVIADAS
+    const productId = product.id;
+    if (memory.photoSent && memory.currentProduct?.id === productId) {
+      this.log('📸 Fotos ya enviadas anteriormente para este producto');
+      return {
+        text: `Ya te envié las fotos de *${product.name}* anteriormente 📸
+
+¿Te gustaría ver más detalles o información adicional?`,
+        nextAgent: 'product',
+        confidence: 0.9,
+      };
+    }
+
     // Enviar fotos del producto
-    this.log(`Enviando ${product.images.length} foto(s) de: ${product.name}`);
-    
+    this.log(`📸 Enviando ${product.images.length} foto(s) de: ${product.name}`);
+
+    // Marcar que se van a enviar fotos para evitar duplicados futuros
+    memory.photoSent = true;
+    (memory as any).imageSent = product.id;
+
     return {
       text: `¡Claro! Te envío la foto de *${product.name}* 📸`,
       sendPhotos: true,
@@ -71,6 +88,7 @@ Puedes decirme el nombre del producto que te interesa.`,
       actions: [
         {
           type: 'send_photo',
+          product: product,
           data: { product },
         },
       ],

@@ -310,91 +310,188 @@ Lamentablemente no tengo productos que coincidan exactamente.
 }
 
 /**
- * Busca productos en la base de datos con búsqueda inteligente
+ * Busca productos en la base de datos con búsqueda inteligente mejorada
+ * CORRECCIÓN CRÍTICA: Ahora filtra por categorías y subcategorías para evitar resultados irrelevantes
  */
-async function buscarProductos(query: string): Promise<ProductoInfo[]> {
+export async function buscarProductos(query: string): Promise<ProductoInfo[]> {
   try {
-    const queryLower = query.toLowerCase();
+    const queryLower = query.toLowerCase().trim();
 
-    // Extraer palabras clave importantes
-    const palabrasClave = queryLower
-      .replace(/[¿?¡!.,;]/g, ' ')
-      .split(' ')
-      .filter(p => p.length > 2 && !['para', 'con', 'por', 'los', 'las', 'del', 'una', 'uno', 'que', 'más', 'información', 'puedes', 'dar', 'dame'].includes(p));
+    console.log('[BuscarProductos] 🔍 Query original:', query);
+    console.log('[BuscarProductos] 🔍 Query procesado:', queryLower);
 
-    console.log('[BuscarProductos] Palabras clave:', palabrasClave);
+    // 1. DETECTAR CATEGORÍA PRINCIPAL DE LA BÚSQUEDA
+    const categoriaDetectada = detectarCategoriaBusqueda(queryLower);
+    console.log('[BuscarProductos] 📂 Categoría detectada:', categoriaDetectada);
 
-    // Buscar por nombre y descripción solamente
-    const productos = await db.product.findMany({
-      where: {
-        AND: [
-          {
-            OR: palabrasClave.map(palabra => ({
-              OR: [
-                { name: { contains: palabra, mode: 'insensitive' } },
-                { description: { contains: palabra, mode: 'insensitive' } },
-              ]
-            }))
-          },
-          { status: 'AVAILABLE' }
+    // 2. Extraer palabras clave importantes (filtrando palabras comunes)
+    const palabrasClave = extraerPalabrasClaveInteligentes(queryLower);
+    console.log('[BuscarProductos] 🔑 Palabras clave:', palabrasClave);
+
+    // 3. CONSTRUIR CONSULTA INTELIGENTE CON ESTRATEGIA DE FALLBACK
+    let whereCondition: any = {
+      status: 'AVAILABLE'
+    };
+
+    // ESTRATEGIA 1: Si hay subcategoría específica, buscar PRIMERO por subcategoría
+    if (categoriaDetectada.subcategoria) {
+      whereCondition.subcategory = categoriaDetectada.subcategoria;
+      console.log('[BuscarProductos] 🎯 ESTRATEGIA 1: Filtrando por subcategoría:', categoriaDetectada.subcategoria);
+    }
+    // ESTRATEGIA 2: Si no hay subcategoría pero sí categoría, filtrar por categoría
+    else if (categoriaDetectada.categoria) {
+      whereCondition.category = categoriaDetectada.categoria;
+      console.log('[BuscarProductos] 🎯 ESTRATEGIA 2: Filtrando por categoría:', categoriaDetectada.categoria);
+    }
+
+    // Agregar búsqueda por palabras clave SOLO si tenemos palabras relevantes
+    if (palabrasClave.length > 0) {
+      whereCondition.AND = palabrasClave.map(palabra => ({
+        OR: [
+          { name: { contains: palabra, mode: 'insensitive' } },
+          { description: { contains: palabra, mode: 'insensitive' } },
         ]
-      },
-      take: 10,
+      }));
+    }
+
+    console.log('[BuscarProductos] 🏗️ Condición de búsqueda:', JSON.stringify(whereCondition, null, 2));
+
+    // 4. EJECUTAR BÚSQUEDA
+    const productos = await db.product.findMany({
+      where: whereCondition,
+      take: 15, // Aumentar límite para mejor selección
       orderBy: { createdAt: 'desc' },
     });
 
-    // Eliminar duplicados
-    const productosUnicos = productos.filter((p, index, self) =>
-      index === self.findIndex(t => t.id === p.id)
-    );
+    console.log('[BuscarProductos] 📊 Productos encontrados en BD:', productos.length);
 
-    // Ordenar por relevancia (cuántas palabras clave coinciden)
-    const productosConScore = productosUnicos.map(p => {
-      const nombreLower = p.name.toLowerCase();
-      const descripcionLower = (p.description || '').toLowerCase();
-      
+    // 5. FILTRAR Y PUNTUAR POR RELEVANCIA
+    const productosPuntuados = productos.map(producto => {
+      const nombreLower = producto.name.toLowerCase();
+      const descripcionLower = (producto.description || '').toLowerCase();
+      const categoriaLower = producto.category.toLowerCase();
+      const subcategoriaLower = (producto.subcategory || '').toLowerCase();
+
       let score = 0;
+      let razonesScore: string[] = [];
+
+      // Puntaje por palabras clave en nombre (muy importante)
       palabrasClave.forEach(palabra => {
-        if (nombreLower.includes(palabra)) score += 3; // Nombre vale más
-        if (descripcionLower.includes(palabra)) score += 1;
+        if (nombreLower.includes(palabra)) {
+          score += 5;
+          razonesScore.push(`nombre:${palabra}`);
+        }
       });
-      
-      return { producto: p, score };
+
+      // Puntaje por palabras clave en descripción
+      palabrasClave.forEach(palabra => {
+        if (descripcionLower.includes(palabra)) {
+          score += 2;
+          razonesScore.push(`desc:${palabra}`);
+        }
+      });
+
+      // BONUS: Si coincide exactamente con categoría detectada
+      if (categoriaDetectada.categoria && categoriaLower === categoriaDetectada.categoria.toLowerCase()) {
+        score += 10;
+        razonesScore.push(`categoria_exacta`);
+      }
+
+      // BONUS: Si coincide con subcategoría detectada
+      if (categoriaDetectada.subcategoria && subcategoriaLower.includes(categoriaDetectada.subcategoria.toLowerCase())) {
+        score += 8;
+        razonesScore.push(`subcategoria_match`);
+      }
+
+      // Penalización por productos que no deberían estar en esta categoría
+      if (categoriaDetectada.categoria === 'COMPUTER' && !esProductoComputacion(producto)) {
+        score -= 20;
+        razonesScore.push(`penalizacion_categoria`);
+      }
+
+      return {
+        producto,
+        score,
+        razones: razonesScore,
+        categoriaMatch: categoriaLower === categoriaDetectada.categoria?.toLowerCase()
+      };
     });
 
-    // Ordenar por score descendente
-    productosConScore.sort((a, b) => b.score - a.score);
+    // 6. ORDENAR POR SCORE DESCENDENTE
+    productosPuntuados.sort((a, b) => b.score - a.score);
 
-    console.log('[BuscarProductos] Encontrados:', productosConScore.length);
-    if (productosConScore.length > 0) {
-      console.log('[BuscarProductos] Mejor match:', productosConScore[0].producto.name, 'Score:', productosConScore[0].score);
-    }
+    console.log('[BuscarProductos] 🏆 Top 5 productos por score:');
+    productosPuntuados.slice(0, 5).forEach((p, i) => {
+      console.log(`  ${i + 1}. ${p.producto.name} (Score: ${p.score}) - ${p.razones.join(', ')}`);
+    });
 
-    // LÓGICA MEJORADA: Priorizar match específico sobre sugerencias
-    const mejorScore = productosConScore[0]?.score || 0;
-    const segundoScore = productosConScore[1]?.score || 0;
+    // 7. FILTRAR PRODUCTOS CON ESTRATEGIA INTELIGENTE
+    let productosFiltrados;
 
-    // Ser más estricto: si el mejor score es bueno (>= 4) y mejor que el segundo, usar solo ese
-    const esMatchEspecifico = mejorScore >= 4 && (mejorScore > segundoScore);
+    if (categoriaDetectada.subcategoria) {
+      // 🎯 ESTRATEGIA 1: Subcategoría específica detectada (ej: LAPTOP)
+      console.log('[BuscarProductos] 🎯 SUBCATEGORÍA detectada - Aplicando filtro por subcategoría');
+      productosFiltrados = productosPuntuados.filter(p =>
+        p.producto.subcategory === categoriaDetectada.subcategoria &&
+        p.score > 0 &&
+        esProductoComputacion(p.producto)
+      );
 
-    let productosRelevantes;
+      console.log(`[BuscarProductos] 📊 Encontrados en subcategoría ${categoriaDetectada.subcategoria}: ${productosFiltrados.length}`);
 
-    if (esMatchEspecifico || productosConScore.length === 1) {
-      // Match específico o único: devolver SOLO el mejor producto
-      console.log('[BuscarProductos] ✅ Match específico detectado - Devolviendo solo 1 producto');
-      productosRelevantes = [productosConScore[0]];
-    } else if (mejorScore >= 2) {
-      // Múltiples opciones relevantes: devolver máximo 2 para no confundir
-      console.log('[BuscarProductos] 📋 Múltiples matches - Devolviendo máximo 2 productos');
-      productosRelevantes = productosConScore.slice(0, 2);
+      // Si no hay productos en subcategoría específica, fallback a categoría completa
+      if (productosFiltrados.length === 0 && categoriaDetectada.categoria) {
+        console.log('[BuscarProductos] ⚠️ No hay productos en subcategoría, haciendo fallback a categoría completa');
+        productosFiltrados = productosPuntuados.filter(p =>
+          p.categoriaMatch &&
+          p.score > 0 &&
+          esProductoComputacion(p.producto)
+        );
+        console.log(`[BuscarProductos] 📊 Encontrados en categoría completa: ${productosFiltrados.length}`);
+      }
+    } else if (categoriaDetectada.categoria) {
+      // 🎯 ESTRATEGIA 2: Solo categoría detectada
+      console.log('[BuscarProductos] 🎯 CATEGORÍA detectada - Aplicando filtro estricto');
+      productosFiltrados = productosPuntuados.filter(p =>
+        p.categoriaMatch &&
+        p.score > 0 &&
+        esProductoComputacion(p.producto)
+      );
+      console.log(`[BuscarProductos] 📊 Productos válidos en categoría: ${productosFiltrados.length}`);
     } else {
-      // Match muy débil: devolver máximo 3
-      console.log('[BuscarProductos] 🔍 Match débil - Devolviendo máximo 3 productos');
-      productosRelevantes = productosConScore.slice(0, 3);
+      // 🎯 ESTRATEGIA 3: No se detectó categoría, usar búsqueda amplia
+      console.log('[BuscarProductos] 🎯 Sin categoría detectada - Búsqueda amplia');
+      productosFiltrados = productosPuntuados.filter(p => p.score > 0);
     }
 
-    return productosRelevantes.map(({ producto: p }) => ({
-      id: p.id, // ✅ Mantener el ID original (string)
+    // Si aún no hay productos, intentar búsqueda más amplia como último recurso
+    if (productosFiltrados.length === 0) {
+      console.log('[BuscarProductos] ⚠️ No hay productos válidos, intentando búsqueda amplia');
+      productosFiltrados = productosPuntuados.filter(p => p.score >= 0);
+    }
+
+    // 8. APLICAR LÓGICA DE SELECCIÓN INTELIGENTE
+    let productosSeleccionados;
+
+    if (productosFiltrados.length === 0) {
+      console.log('[BuscarProductos] ❌ No hay productos válidos encontrados');
+      return [];
+    }
+
+    const mejorScore = productosFiltrados[0]?.score || 0;
+
+    // Si tenemos productos válidos, devolver máximo 3
+    if (productosFiltrados.length <= 3) {
+      console.log(`[BuscarProductos] 📋 Devolviendo ${productosFiltrados.length} productos válidos`);
+      productosSeleccionados = productosFiltrados;
+    } else {
+      console.log('[BuscarProductos] 📋 Devolviendo top 3 productos válidos');
+      productosSeleccionados = productosFiltrados.slice(0, 3);
+    }
+
+    // 8. CONVERTIR AL FORMATO REQUERIDO
+    const resultadoFinal = productosSeleccionados.map(({ producto: p }) => ({
+      id: p.id,
       nombre: p.name,
       descripcion: p.description || undefined,
       precio: p.price,
@@ -402,12 +499,175 @@ async function buscarProductos(query: string): Promise<ProductoInfo[]> {
       tipoVenta: p.subcategory || undefined,
       imagenes: p.images ? JSON.parse(p.images) : [],
       stock: p.stock || undefined,
-      metodosPago: [], // Se puede agregar después si es necesario
+      metodosPago: [],
     }));
+
+    console.log('[BuscarProductos] 🎯 Resultado final:', resultadoFinal.length, 'productos');
+    resultadoFinal.forEach((p, i) => {
+      console.log(`  ${i + 1}. ${p.nombre} (${p.categoria})`);
+    });
+
+    return resultadoFinal;
+
   } catch (error) {
-    console.error('[BuscarProductos] Error:', error);
+    console.error('[BuscarProductos] ❌ Error:', error);
     return [];
   }
+}
+
+/**
+ * Detecta la categoría principal de una búsqueda
+ */
+function detectarCategoriaBusqueda(query: string): { categoria: string | null, subcategoria: string | null } {
+  const queryLower = query.toLowerCase();
+
+  // PATRONES DE COMPUTACIÓN
+  if (/\b(portatil|laptop|notebook|computador|pc|ordenador|cpu|procesador|ram|disco|ssd|hdd|teclado|mouse|monitor|impresora|portátil)\b/.test(queryLower)) {
+    return { categoria: 'COMPUTER', subcategoria: detectarSubcategoriaComputacion(queryLower) };
+  }
+
+  // PATRONES DE TELÉFONOS/CELULARES
+  if (/\b(celular|telefono|teléfono|iphone|samsung|huawei|xiaomi|motorola|android|ios|smartphone)\b/.test(queryLower)) {
+    return { categoria: 'PHONE', subcategoria: null };
+  }
+
+  // PATRONES DE AUDIO
+  if (/\b(audifono|audífonos|headset|parlante|altavoz|speaker|bluetooth|wireless|inalambrico|inalámbrico)\b/.test(queryLower)) {
+    return { categoria: 'AUDIO', subcategoria: null };
+  }
+
+  // PATRONES DE ELECTRÓNICA GENERAL
+  if (/\b(cable|adaptador|cargador|usb|hdmi|vga|ethernet|wifi|router|modem)\b/.test(queryLower)) {
+    return { categoria: 'ELECTRONICS', subcategoria: null };
+  }
+
+  // PATRONES DE SERVICIOS DIGITALES
+  if (/\b(curso|megapack|software|digital|online|virtual|descarga|download)\b/.test(queryLower)) {
+    return { categoria: 'DIGITAL', subcategoria: null };
+  }
+
+  // PATRONES DE SERVICIOS
+  if (/\b(servicio|service|reparacion|reparación|mantenimiento|instalacion|instalación)\b/.test(queryLower)) {
+    return { categoria: 'SERVICE', subcategoria: null };
+  }
+
+  return { categoria: null, subcategoria: null };
+}
+
+/**
+ * Detecta subcategoría específica para computación
+ */
+function detectarSubcategoriaComputacion(query: string): string | null {
+  if (/\b(portatil|laptop|notebook|portátil)\b/.test(query)) return 'LAPTOP';
+  if (/\b(escritorio|desktop|cpu|torre)\b/.test(query)) return 'DESKTOP';
+  if (/\b(teclado|keyboard)\b/.test(query)) return 'KEYBOARD';
+  if (/\b(mouse|raton|ratón)\b/.test(query)) return 'MOUSE';
+  if (/\b(monitor|pantalla|display)\b/.test(query)) return 'MONITOR';
+  if (/\b(impresora|printer)\b/.test(query)) return 'PRINTER';
+  if (/\b(disco|ssd|hdd|almacenamiento|storage)\b/.test(query)) return 'STORAGE';
+  if (/\b(ram|memoria)\b/.test(query)) return 'MEMORY';
+  return null;
+}
+
+/**
+ * Extrae palabras clave inteligentes, filtrando ruido
+ */
+function extraerPalabrasClaveInteligentes(query: string): string[] {
+  // Lista expandida de palabras para filtrar
+  const palabrasComunes = [
+    'para', 'con', 'por', 'los', 'las', 'del', 'una', 'uno', 'que', 'más',
+    'información', 'puedes', 'dar', 'dame', 'quiero', 'necesito', 'busco',
+    'tengo', 'hay', 'como', 'cual', 'cuando', 'donde', 'porque', 'muy',
+    'bueno', 'buena', 'buenos', 'buenas', 'mejor', 'mejores', 'barato', 'barata',
+    'caro', 'cara', 'precio', 'cuanto', 'vale', 'costo', 'venta', 'comprar',
+    'adquirir', 'obtener', 'encontrar', 'buscar', 'ver', 'mirar', 'saber',
+    'tener', 'hacer', 'ser', 'esta', 'este', 'esto', 'estos', 'estas',
+    'aqui', 'alla', 'aca', 'alla', 'ahora', 'hoy', 'ayer', 'mañana'
+  ];
+
+  const palabras = query
+    .replace(/[¿?¡!.,;()]/g, ' ')
+    .split(' ')
+    .map(p => p.trim().toLowerCase())
+    .filter(p => p.length >= 3 && !palabrasComunes.includes(p));
+
+  // Remover duplicados
+  return [...new Set(palabras)];
+}
+
+/**
+ * Verifica si un producto realmente pertenece a computación
+ * SER MUY ESTRICTO: solo productos que son claramente computadoras/portátiles
+ */
+function esProductoComputacion(producto: any): boolean {
+  const nombreLower = producto.name.toLowerCase();
+  const descLower = (producto.description || '').toLowerCase();
+  const categoria = producto.category;
+
+  console.log(`[esProductoComputacion] 🔍 Verificando: "${producto.name}" (Categoría: ${categoria})`);
+
+  // ❌ EXCLUIR productos que NO son computación real
+  const palabrasExclusion = [
+    'base para', 'base de', 'soporte para', 'estuche para', 'funda para',
+    'cable para', 'adaptador para', 'bateria para', 'batería para',
+    'cargador para', 'pantalla para', 'teclado para', 'mouse para',
+    'maquina de coser', 'máquina de coser', 'coser', 'costura',
+    'parlante', 'altavoz', 'speaker', 'audifono', 'audífonos', 'headset',
+    'bluetooth', 'inalambrico', 'inalámbrico', 'wireless',
+    'telefono', 'teléfono', 'celular', 'iphone', 'samsung', 'huawei',
+    'xiaomi', 'motorola', 'smartphone', 'android', 'ios'
+  ];
+
+  // Si contiene palabras de exclusión, NO es producto de computación
+  const exclusionMatch = palabrasExclusion.find(palabra => nombreLower.includes(palabra));
+  if (exclusionMatch) {
+    console.log(`[esProductoComputacion] ❌ EXCLUÍDO por palabra: "${exclusionMatch}"`);
+    return false;
+  }
+
+  // ✅ INCLUIR solo productos que son claramente computadoras/portátiles
+  const palabrasComputacionEstrictas = [
+    // Portátiles/Laptops
+    'portatil', 'laptop', 'notebook', 'portátil',
+
+    // Escritorio/Desktop
+    'computador', 'pc', 'ordenador', 'desktop', 'escritorio', 'cpu', 'torre',
+
+    // Componentes internos
+    'procesador', 'ram', 'disco', 'ssd', 'hdd', 'motherboard', 'placa madre',
+    'fuente', 'gabinete', 'case', 'cooler', 'ventilador',
+
+    // Periféricos
+    'teclado', 'mouse', 'monitor', 'impresora',
+
+    // Conectividad
+    'usb', 'hdmi', 'vga', 'ethernet',
+
+    // Software/SO
+    'windows', 'linux', 'mac', 'intel', 'amd', 'nvidia', 'radeon'
+  ];
+
+  // Debe contener al menos una palabra de computación Y no tener palabras de exclusión
+  const computacionMatch = palabrasComputacionEstrictas.find(palabra =>
+    nombreLower.includes(palabra) || descLower.includes(palabra)
+  );
+
+  if (!computacionMatch) {
+    console.log(`[esProductoComputacion] ❌ NO contiene palabras de computación`);
+    return false;
+  }
+
+  // Verificación adicional: debe ser una categoría válida de computación
+  const categoriasComputacion = ['COMPUTER', 'ELECTRONICS'];
+  const esCategoriaValida = categoriasComputacion.includes(categoria);
+
+  if (!esCategoriaValida) {
+    console.log(`[esProductoComputacion] ❌ Categoría inválida: ${categoria}`);
+    return false;
+  }
+
+  console.log(`[esProductoComputacion] ✅ APROBADO: contiene "${computacionMatch}" y categoría válida`);
+  return true;
 }
 
 /**

@@ -31,6 +31,7 @@ interface ReasoningResult {
     clarificationNeeded: string | null;
   };
   reasoning: string; // Explicación del razonamiento
+  suggestedAgent: string; // Agente sugerido para manejar esta intención
 }
 
 export class DeepReasoningAgent {
@@ -78,19 +79,24 @@ export class DeepReasoningAgent {
     // 6. Explicar el razonamiento
     const reasoning = this.explainReasoning(currentMessage, currentProduct, userIntent);
 
+    // 7. Determinar el agente sugerido basado en la intención
+    const suggestedAgent = this.selectAgent(userIntent.primary, currentProduct);
+
     const result: ReasoningResult = {
       understood: userIntent.confidence > 0.6,
       contextSummary,
       currentProduct,
       userIntent,
       recommendations,
-      reasoning
+      reasoning,
+      suggestedAgent
     };
 
     console.log('\n🎯 [REASONING RESULT]');
     console.log(`✅ Entendido: ${result.understood}`);
     console.log(`🎯 Intención: ${result.userIntent.primary} (${(result.userIntent.confidence * 100).toFixed(0)}%)`);
     console.log(`📦 Producto actual: ${currentProduct?.name || 'Ninguno'}`);
+    console.log(`🤖 Agente sugerido: ${suggestedAgent}`);
     console.log(`💡 Razonamiento: ${reasoning}`);
     console.log(`📋 Recomendaciones:`, recommendations);
     console.log('\n🧠 ========================================\n');
@@ -288,6 +294,15 @@ export class DeepReasoningAgent {
       }
     }
 
+    // Detectar solicitud de métodos de pago
+    if (this.isPaymentMethodRequest(lowerMessage)) {
+      return {
+        primary: 'request_payment_method',
+        confidence: 0.95,
+        implicitReference: currentProduct ? true : false
+      };
+    }
+
     // Detectar solicitud de más información
     if (this.isMoreInfoRequest(lowerMessage)) {
       if (currentProduct) {
@@ -318,6 +333,24 @@ export class DeepReasoningAgent {
     if (this.isGreeting(lowerMessage)) {
       return {
         primary: 'greeting',
+        confidence: 0.9,
+        implicitReference: false
+      };
+    }
+
+    // Detectar confirmación de pago pendiente
+    if (this.isPendingPaymentConfirmation(lowerMessage)) {
+      return {
+        primary: 'pending_payment_confirmation',
+        confidence: 0.95,
+        implicitReference: true
+      };
+    }
+
+    // Detectar agradecimiento/despedida
+    if (this.isFarewell(lowerMessage)) {
+      return {
+        primary: 'farewell',
         confidence: 0.9,
         implicitReference: false
       };
@@ -458,6 +491,17 @@ export class DeepReasoningAgent {
     return purchaseKeywords.some(keyword => message.includes(keyword));
   }
 
+  private static isPaymentMethodRequest(message: string): boolean {
+    const paymentMethodKeywords = [
+      'pagar por', 'pago por', 'quiero pagar',
+      'como pago', 'cómo pago', 'metodos de pago', 'métodos de pago',
+      'formas de pago', 'opciones de pago',
+      'transferencia', 'nequi', 'daviplata', 'efectivo',
+      'mercadopago', 'paypal', 'tarjeta', 'contraentrega'
+    ];
+    return paymentMethodKeywords.some(keyword => message.includes(keyword));
+  }
+
   private static isMoreInfoRequest(message: string): boolean {
     const infoKeywords = [
       'más información', 'mas informacion', 'más info', 'mas info',
@@ -489,6 +533,80 @@ export class DeepReasoningAgent {
       'buen día', 'saludos', 'hey', 'holi', 'ola'
     ];
     return greetings.some(g => message.includes(g));
+  }
+
+  private static isPendingPaymentConfirmation(message: string): boolean {
+    const pendingPatterns = [
+      'luego te envio', 'luego te mando', 'luego te paso',
+      'despues te envio', 'despues te mando', 'despues te paso',
+      'más tarde te envio', 'mas tarde te envio',
+      'ahorita te envio', 'ya te envio', 'te envio el comprobante',
+      'te mando el comprobante', 'te paso el comprobante',
+      'voy a pagar', 'voy a hacer el pago', 'voy a transferir',
+      'dame un momento', 'espera un momento', 'dame unos minutos'
+    ];
+    return pendingPatterns.some(p => message.includes(p));
+  }
+
+  private static isFarewell(message: string): boolean {
+    const farewells = [
+      'gracias', 'muchas gracias', 'ok gracias', 'perfecto gracias',
+      'entendido', 'ok', 'vale', 'perfecto', 'listo',
+      'adios', 'adiós', 'chao', 'hasta luego', 'nos vemos',
+      'bye', 'hasta pronto'
+    ];
+    return farewells.some(f => message.includes(f));
+  }
+
+  /**
+   * Selecciona el agente apropiado basado en la intención
+   */
+  private static selectAgent(intent: string, currentProduct: Product | null): string {
+    // Mapeo de intenciones a agentes
+    const intentToAgent: { [key: string]: string } = {
+      // Saludos
+      'greeting': 'greeting',
+      
+      // Búsqueda de productos
+      'search_product': 'search',
+      'browse_products': 'search',
+      'search_specific_product': 'search',
+      'search_by_budget': 'search',
+      
+      // Información de producto
+      'request_more_info': 'product',
+      'request_price_current_product': 'product',
+      'request_product_info': 'product',
+      'check_stock': 'product',
+      'compare_options': 'product',
+      
+      // Fotos
+      'request_photo_current_product': 'photo',
+      'request_photo_unclear': 'photo',
+      
+      // Pagos
+      'confirm_purchase': 'payment',
+      'request_payment_info': 'payment',
+      'request_payment_method': 'payment',
+      'pending_payment_confirmation': 'closing',
+      
+      // Cierre
+      'farewell': 'closing',
+      'thank_you': 'closing',
+    };
+
+    // Si la intención está mapeada, usar ese agente
+    if (intentToAgent[intent]) {
+      return intentToAgent[intent];
+    }
+
+    // Si no está claro pero hay producto en contexto, ir a product
+    if (currentProduct && intent.includes('unclear')) {
+      return 'product';
+    }
+
+    // Por defecto, ir a search
+    return 'search';
   }
 
   private static extractProductNameFromLine(line: string): string | null {

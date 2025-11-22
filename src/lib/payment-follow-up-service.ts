@@ -22,8 +22,9 @@ export class PaymentFollowUpService {
   private static instance: PaymentFollowUpService;
   private pendingPayments: Map<string, PendingPayment> = new Map();
   private reminderInterval: NodeJS.Timeout | null = null;
-  private readonly REMINDER_INTERVAL_MS = 30 * 60 * 1000; // 30 minutos
-  private readonly MAX_REMINDERS = 5; // Máximo 5 recordatorios (2.5 horas)
+  private readonly REMINDER_INTERVAL_MS = 24 * 60 * 60 * 1000; // 24 horas (1 día)
+  private readonly MAX_REMINDERS = 3; // Máximo 3 recordatorios (3 días)
+  private readonly REMINDERS_ENABLED = false; // ⚠️ DESACTIVADO para evitar ban de Meta
 
   private constructor() {
     this.startReminderService();
@@ -96,6 +97,12 @@ export class PaymentFollowUpService {
    * Inicia el servicio de recordatorios automáticos
    */
   private startReminderService(): void {
+    // ⚠️ DESACTIVADO: Recordatorios automáticos pueden causar ban de Meta/WhatsApp
+    if (!this.REMINDERS_ENABLED) {
+      console.log('[PaymentFollowUp] ⚠️ Servicio de recordatorios DESACTIVADO (protección anti-ban)');
+      return;
+    }
+    
     if (this.reminderInterval) {
       clearInterval(this.reminderInterval);
     }
@@ -112,6 +119,11 @@ export class PaymentFollowUpService {
    * Verifica pagos pendientes y envía recordatorios
    */
   private async checkPendingPayments(): Promise<void> {
+    // ⚠️ DESACTIVADO: Recordatorios automáticos pueden causar ban de Meta/WhatsApp
+    if (!this.REMINDERS_ENABLED) {
+      return;
+    }
+    
     const now = new Date();
 
     for (const [id, payment] of this.pendingPayments.entries()) {
@@ -119,7 +131,7 @@ export class PaymentFollowUpService {
       const lastTime = payment.lastReminderAt || payment.createdAt;
       const timeSinceLastReminder = now.getTime() - lastTime.getTime();
 
-      // Si han pasado 30 minutos y no se ha alcanzado el máximo de recordatorios
+      // Si han pasado 24 horas y no se ha alcanzado el máximo de recordatorios
       if (timeSinceLastReminder >= this.REMINDER_INTERVAL_MS && payment.reminderCount < this.MAX_REMINDERS) {
         await this.sendReminder(payment);
         

@@ -1,4 +1,4 @@
-﻿// Email Service - Sistema de notificaciones por correo con Nodemailer
+// Email Service - Sistema de notificaciones por correo con Nodemailer
 import nodemailer from 'nodemailer'
 
 export interface EmailOptions {
@@ -30,7 +30,7 @@ export class EmailService {
     })
   }
 
-  private static async sendEmail(options: EmailOptions): Promise<boolean> {
+  static async sendEmail(options: EmailOptions): Promise<boolean> {
     try {
       const transporter = this.getTransporter()
       

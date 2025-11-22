@@ -7,48 +7,48 @@ export class HumanTypingSimulator {
   /**
    * Calcula el tiempo de espera antes de responder (retraso humano)
    * Basado en la longitud del mensaje y variabilidad natural
-   * ⚡ OPTIMIZADO: Más rápido pero aún natural
+   * ⚡ ULTRA OPTIMIZADO: Rápido pero natural (máx 3s)
    */
   static calculateResponseDelay(messageLength: number): number {
-    // Tiempo base de lectura: 1-2 segundos (reducido)
-    const baseReadingTime = 1000 + Math.random() * 1000;
+    // Tiempo base de lectura: 0.5-1 segundo (muy reducido)
+    const baseReadingTime = 500 + Math.random() * 500;
     
-    // Tiempo de "pensamiento": 0.5-1.5 segundos (reducido)
-    const thinkingTime = 500 + Math.random() * 1000;
+    // Tiempo de "pensamiento": 0.3-0.8 segundos (muy reducido)
+    const thinkingTime = 300 + Math.random() * 500;
     
-    // Tiempo adicional por longitud del mensaje (simula lectura)
-    // ~20ms por carácter (lectura rápida)
-    const readingTime = messageLength * (10 + Math.random() * 20);
+    // Tiempo adicional por longitud del mensaje (simula lectura rápida)
+    // ~5ms por carácter (lectura muy rápida)
+    const readingTime = messageLength * (3 + Math.random() * 5);
     
-    // Total: 1.5-4.5 segundos + tiempo de lectura
+    // Total: 0.8-2.3 segundos + tiempo de lectura
     const totalDelay = baseReadingTime + thinkingTime + readingTime;
     
-    // Limitar entre 1.5 y 6 segundos (reducido de 3-15)
-    return Math.min(Math.max(totalDelay, 1500), 6000);
+    // Limitar entre 0.8 y 3 segundos (muy reducido)
+    return Math.min(Math.max(totalDelay, 800), 3000);
   }
   
   /**
    * Calcula el tiempo de "escritura" basado en la longitud de la respuesta
    * Simula velocidad de escritura humana variable
-   * ⚡ OPTIMIZADO: Más rápido (escritura rápida pero natural)
+   * ⚡ ULTRA OPTIMIZADO: Muy rápido (máx 5s)
    */
   static calculateTypingTime(responseLength: number): number {
-    // Velocidad de escritura rápida: 60-100 palabras por minuto
-    // Aproximadamente 300-500 caracteres por minuto
-    // O 5-8.3 caracteres por segundo
+    // Velocidad de escritura muy rápida: 100-120 palabras por minuto
+    // Aproximadamente 500-600 caracteres por minuto
+    // O 10-12 caracteres por segundo
     
-    // Usar velocidad rápida: ~8 caracteres por segundo
-    const charsPerSecond = 7 + Math.random() * 2; // 7-9 chars/seg (más rápido)
+    // Usar velocidad muy rápida: ~12 caracteres por segundo
+    const charsPerSecond = 10 + Math.random() * 4; // 10-14 chars/seg (muy rápido)
     const baseTypingTime = (responseLength / charsPerSecond) * 1000;
     
-    // Agregar pausas naturales más cortas
-    const pauseCount = (responseLength / 80); // Pausa cada ~80 caracteres (menos pausas)
-    const pauseTime = pauseCount * (200 + Math.random() * 400); // 200-600ms por pausa (más cortas)
+    // Agregar pausas naturales muy cortas
+    const pauseCount = (responseLength / 100); // Pausa cada ~100 caracteres (pocas pausas)
+    const pauseTime = pauseCount * (100 + Math.random() * 200); // 100-300ms por pausa (muy cortas)
     
     const totalTypingTime = baseTypingTime + pauseTime;
     
-    // Limitar entre 1 y 15 segundos (optimizado para respuesta rápida)
-    return Math.min(Math.max(totalTypingTime, 1000), 15000);
+    // Limitar entre 0.8 y 5 segundos (muy reducido)
+    return Math.min(Math.max(totalTypingTime, 800), 5000);
   }
   
   /**
@@ -109,8 +109,8 @@ export class HumanTypingSimulator {
       console.log(`[HumanTyping] Chat: ${chatId}`);
       console.log(`[HumanTyping] Mensaje: ${message.substring(0, 50)}...`);
       
-      // 1. Retraso inicial FORZADO (lectura + pensamiento) - OPTIMIZADO
-      const responseDelay = Math.max(2000, this.calculateResponseDelay(userMessageLength));
+      // 1. Retraso inicial FORZADO (lectura + pensamiento) - ULTRA OPTIMIZADO
+      const responseDelay = Math.max(800, this.calculateResponseDelay(userMessageLength));
       console.log(`[HumanTyping] ⏳ Esperando ${(responseDelay / 1000).toFixed(1)}s antes de responder...`);
       await this.sleep(responseDelay);
       
@@ -123,8 +123,8 @@ export class HumanTypingSimulator {
         console.error(`[HumanTyping] ❌ Error enviando presencia:`, e);
       }
       
-      // 3. Simular escritura (tiempo fijo mínimo) - OPTIMIZADO
-      const typingTime = Math.max(3000, this.calculateTypingTime(message.length));
+      // 3. Simular escritura (tiempo fijo mínimo) - ULTRA OPTIMIZADO
+      const typingTime = Math.max(1500, this.calculateTypingTime(message.length));
       console.log(`[HumanTyping] ⌨️ Simulando escritura por ${(typingTime / 1000).toFixed(1)}s...`);
       await this.sleep(typingTime);
       
@@ -151,6 +151,7 @@ export class HumanTypingSimulator {
   
   /**
    * Versión simplificada para mensajes cortos (saludos, confirmaciones)
+   * ⚡ ULTRA RÁPIDO: 1-2 segundos total
    */
   static async quickHumanizedSend(
     sock: any,
@@ -160,12 +161,12 @@ export class HumanTypingSimulator {
     try {
       console.log(`[HumanTyping] 🚀 ENVÍO RÁPIDO INICIADO`);
       
-      // Retraso corto FORZADO: 2-4 segundos
-      const quickDelay = 2000 + Math.random() * 2000;
+      // Retraso muy corto: 0.5-1 segundo
+      const quickDelay = 500 + Math.random() * 500;
       console.log(`[HumanTyping] ⏳ Esperando ${(quickDelay / 1000).toFixed(1)}s...`);
       await this.sleep(quickDelay);
       
-      // FORZAR escritura rápida
+      // FORZAR escritura muy rápida
       console.log(`[HumanTyping] ⌨️ Mostrando "escribiendo..."`);
       try {
         await sock.sendPresenceUpdate('composing', chatId);
@@ -173,7 +174,7 @@ export class HumanTypingSimulator {
         console.error(`[HumanTyping] Error presencia:`, e);
       }
       
-      const quickTyping = 1500 + Math.random() * 1500; // 1.5-3 segundos
+      const quickTyping = 800 + Math.random() * 700; // 0.8-1.5 segundos
       console.log(`[HumanTyping] ⌨️ Escribiendo por ${(quickTyping / 1000).toFixed(1)}s...`);
       await this.sleep(quickTyping);
       
@@ -195,9 +196,9 @@ export class HumanTypingSimulator {
   }
   
   /**
-   * Helper: Sleep con Promise
+   * Helper: Sleep con Promise (público para uso externo)
    */
-  private static sleep(ms: number): Promise<void> {
+  static sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
   

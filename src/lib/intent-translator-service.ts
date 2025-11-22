@@ -27,7 +27,6 @@ export class IntentTranslatorService {
     
     // Errores comunes de "gráfico"
     'grafico': 'gráfico',
-    'grafico': 'gráfico',
     'grafiko': 'gráfico',
     'grafic': 'gráfico',
     

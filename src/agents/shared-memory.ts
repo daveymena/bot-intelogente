@@ -65,6 +65,10 @@ export interface SharedMemory {
   // Tracking
   viewedProducts: string[]; // IDs de productos vistos
   searchQueries: string[]; // Búsquedas realizadas
+
+  // Gestión de múltiples productos
+  productList: Product[]; // Lista actual de productos mostrados (para selección numérica)
+  listTimestamp: Date; // Cuando se mostró la lista (para expiración)
 }
 
 /**
@@ -122,6 +126,8 @@ export class SharedMemoryService {
       objections: [],
       viewedProducts: [],
       searchQueries: [],
+      productList: [], // Lista de productos mostrados actualmente
+      listTimestamp: new Date(), // Timestamp de la lista
     };
   }
   
@@ -299,8 +305,72 @@ export class SharedMemoryService {
   isProductChange(chatId: string, newProductId: string): boolean {
     const memory = this.memories.get(chatId);
     if (!memory || !memory.currentProduct) return false;
-    
+
     return memory.currentProduct.id !== newProductId;
+  }
+
+  /**
+   * 🆕 Establecer lista de productos mostrados (para selección numérica)
+   */
+  setProductList(chatId: string, products: Product[]): void {
+    const memory = this.memories.get(chatId);
+    if (memory) {
+      memory.productList = products;
+      memory.listTimestamp = new Date();
+      console.log(`[Memory] 📋 Lista de ${products.length} productos guardada para selección numérica`);
+    }
+  }
+
+  /**
+   * 🆕 Obtener producto por posición en la lista (1-based)
+   */
+  getProductByPosition(chatId: string, position: number): Product | null {
+    const memory = this.memories.get(chatId);
+    if (!memory || !memory.productList || position < 1 || position > memory.productList.length) {
+      return null;
+    }
+
+    // Verificar que la lista no haya expirado (5 minutos)
+    const listAge = Date.now() - memory.listTimestamp.getTime();
+    if (listAge > 5 * 60 * 1000) {
+      console.log(`[Memory] ⏰ Lista expirada (${Math.round(listAge / 60000)}min), limpiando`);
+      memory.productList = [];
+      return null;
+    }
+
+    const product = memory.productList[position - 1];
+    console.log(`[Memory] 🎯 Producto seleccionado de lista: ${product.name} (posición ${position})`);
+    return product;
+  }
+
+  /**
+   * 🆕 Limpiar lista de productos (cuando se selecciona uno o cambia contexto)
+   */
+  clearProductList(chatId: string): void {
+    const memory = this.memories.get(chatId);
+    if (memory) {
+      memory.productList = [];
+      console.log(`[Memory] 🧹 Lista de productos limpiada`);
+    }
+  }
+
+  /**
+   * 🆕 Verificar si hay una lista activa de productos
+   */
+  hasActiveProductList(chatId: string): boolean {
+    const memory = this.memories.get(chatId);
+    if (!memory || !memory.productList || memory.productList.length === 0) {
+      return false;
+    }
+
+    // Verificar expiración
+    const listAge = Date.now() - memory.listTimestamp.getTime();
+    if (listAge > 5 * 60 * 1000) {
+      memory.productList = [];
+      return false;
+    }
+
+    return true;
   }
   
   /**

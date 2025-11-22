@@ -17,17 +17,14 @@ const groq = new Groq({
 
 // Usar sistema multi-provider si está habilitado
 const USE_MULTI_PROVIDER = process.env.AI_FALLBACK_ENABLED === 'true'
-// FORZAR sistema de razonamiento avanzado SIEMPRE (Ollama + Groq)
-const USE_ADVANCED_REASONING = true // FORZADO: Siempre usar razonamiento avanzado
+// Usar sistema de razonamiento avanzado (Ollama + Groq)
+const USE_ADVANCED_REASONING = process.env.AI_USE_REASONING === 'true'
 
 interface AIResponse {
   message: string
   confidence: number
   intent?: string
   productMentioned?: string
-  productId?: string // ID del producto mencionado
-  shouldSendPhotos?: boolean // Flag para enviar fotos automáticamente
-  photos?: string[] // URLs de las fotos del producto
 }
 
 export class AIService {
@@ -98,20 +95,6 @@ export class AIService {
       const fullHistory = await this.loadFullConversationHistory(userId, _customerPhone)
       console.log(`[AI] 📚 Historial cargado: ${fullHistory.length} mensajes de las últimas 24h`)
 
-      // 🚨 PRIORIDAD -1: Detectar pregunta GENERAL sobre productos (ANTES de todo)
-      // Si pregunta "¿Qué productos tienes?" sin mencionar categoría específica
-      const isGeneralProductQuery = /(qué productos|que productos|productos tienes|que vendes|qué vendes|catálogo|catalogo|qué hay|que hay|qué tienen|que tienen)/i.test(customerMessage)
-      
-      if (isGeneralProductQuery && customerMessage.length < 50) {
-        console.log(`[AI] 📋 Pregunta GENERAL sobre productos detectada`)
-        
-        return {
-          message: `¡Hola! 😊 Tenemos varias categorías de productos:\n\n🏠 *Productos Físicos*\n• Tecnología y electrónica\n• Artículos para el hogar\n• Juguetes y entretenimiento\n\n📱 *Productos Digitales*\n• Cursos online\n• Megapacks de contenido\n• Recursos digitales\n\n🛠️ *Servicios*\n• Consultoría\n• Soporte técnico\n\n¿Qué tipo de producto te interesa? 🤔`,
-          confidence: 0.98,
-          intent: 'product_list'
-        }
-      }
-
       // 🚨 PRIORIDAD 0: Detectar si necesita escalamiento a humano
       const { HumanEscalationService } = await import('./human-escalation-service')
       const escalation = HumanEscalationService.needsHumanEscalation(customerMessage)
@@ -142,8 +125,8 @@ export class AIService {
       // Crear clave única para esta conversación
       const conversationKey = `${userId}:${_customerPhone}`
 
+      // 🧠 INICIALIZAR MEMORIA PROFESIONAL
       ProfessionalConversationMemory.initMemory(conversationKey)
-      await ProfessionalConversationMemory.hydrateFromStore(conversationKey)
       ProfessionalConversationMemory.incrementMessageCount(conversationKey)
 
       // 🚨 PRIORIDAD 1: Detectar limitación de presupuesto
@@ -582,21 +565,13 @@ export class AIService {
             productInfo,
             productIntent,
             fullHistory.length > 0 ? fullHistory : conversationHistory,
-            conversationKey,
-            userId
+            conversationKey
           )
-
-          // 📸 Preparar fotos del producto para envío automático
-          const photos = product.images ? JSON.parse(product.images as string) : []
-          const shouldSendPhotos = photos.length > 0
 
           return {
             message: aiResponse,
             confidence: productIntent.confidence,
-            intent: productIntent.type,
-            productId: product.id,
-            shouldSendPhotos,
-            photos: photos.slice(0, 3) // Máximo 3 fotos
+            intent: productIntent.type
           }
         } else {
           // NO encontró producto - responder honestamente
@@ -692,6 +667,8 @@ Puedo ayudarte con:
         productsInfo
       )
       
+      systemPrompt += '\n\nREGLAS ESTRICTAS:\n1. Usa EXCLUSIVAMENTE la información del bloque de producto y del historial.\n2. Si falta un dato, pide aclaración o indica que no está en la base de datos.\n3. No inventes información.\n4. Mantén respuestas claras, profesionales y concisas.'
+
       // 📚 AGREGAR CONTEXTO DE MEGAFLUJOS
       const megaflujoContexto = MegaflujoService.obtenerContextoParaPrompt(customerMessage)
       if (megaflujoContexto) {
@@ -727,9 +704,9 @@ Puedo ayudarte con:
         const aiResponse = await AIMultiProvider.generateCompletion(
           messages,
           {
-            temperature: 0.7,
+            temperature: 0.2,
             max_tokens: parseInt(process.env.GROQ_MAX_TOKENS || '500'),
-            top_p: 1
+            top_p: 0.9
           }
         )
         responseMessage = aiResponse.content
@@ -740,7 +717,7 @@ Puedo ayudarte con:
         const completion = await groq.chat.completions.create({
           model: process.env.GROQ_MODEL || 'llama-3.1-8b-instant',
           messages,
-          temperature: 0.7,
+          temperature: 0.2,
           max_tokens: parseInt(process.env.GROQ_MAX_TOKENS || '500'),
           top_p: 1,
           stream: false
@@ -762,18 +739,15 @@ Puedo ayudarte con:
     } catch (error) {
       console.error('[AI] Error generando respuesta:', error)
 
-      // 🧠 FALLBACK 1: Intentar usar respuestas entrenadas localmente
+      // 🧠 FALLBACK 1: Respuesta genérica (trained-response-service no existe)
       try {
-        // TODO: Implementar trained-response-service
-        // const { trainedResponseService } = await import('./trained-response-service')
-        // const trainedResponse = await trainedResponseService.findTrainedResponse(customerMessage)
+        console.log('⚠️ Usando respuesta genérica de fallback')
+        const fallbackMessage = 'Disculpa, tuve un problema procesando tu mensaje. ¿Podrías intentar de nuevo? 🙏'
         
-        const trainedResponse = null // Temporalmente deshabilitado
-        
-        if (trainedResponse) {
-          console.log('✅ Usando respuesta entrenada local (sin IA externa)')
+        if (true) {
+          console.log('✅ Usando respuesta de fallback')
           return {
-            message: trainedResponse,
+            message: fallbackMessage,
             confidence: 0.75,
             intent: 'trained_response'
           }
@@ -884,16 +858,42 @@ Puedo ayudarte con:
         // Buscar palabras clave específicas del mensaje
         const keywords = messageLower.split(' ').filter(w => w.length > 3)
         
+        // 🔥 PALABRAS ÚNICAS (alta prioridad)
+        const uniqueWords = ['piano', 'guitarra', 'bateria', 'violin', 'saxofon',
+                            'ingles', 'frances', 'aleman', 'italiano', 'portugues',
+                            'photoshop', 'illustrator', 'autocad', 'excel', 'word',
+                            'python', 'javascript', 'java', 'react', 'angular',
+                            'asus', 'hp', 'lenovo', 'dell', 'macbook',
+                            'bajaj', 'pulsar', 'yamaha', 'honda']
+        
+        // Detectar si es un megapack genérico
+        const isGenericPack = nameLower.includes('mega pack') || nameLower.includes('pack completo')
+        
         keywords.forEach(keyword => {
-          // Coincidencia exacta en nombre = +10 puntos
+          const isUniqueWord = uniqueWords.includes(keyword)
+          
+          // Coincidencia en nombre
           if (nameLower.includes(keyword)) {
-            score += 10
+            if (isUniqueWord && !isGenericPack) {
+              score += 50 // BONUS MASIVO para palabras únicas en productos específicos
+            } else if (isUniqueWord && isGenericPack) {
+              score += 5 // Bonus bajo para palabras únicas en packs genéricos
+            } else {
+              score += 10 // Bonus normal para palabras comunes
+            }
           }
-          // Coincidencia en descripción = +5 puntos
+          
+          // Coincidencia en descripción
           if (descLower.includes(keyword)) {
-            score += 5
+            score += isUniqueWord ? 15 : 5
           }
         })
+        
+        // PENALIZACIÓN para packs genéricos si hay palabras únicas en la búsqueda
+        const hasUniqueWords = keywords.some(k => uniqueWords.includes(k))
+        if (isGenericPack && hasUniqueWords) {
+          score -= 30 // Penalización fuerte
+        }
         
         // Bonus si el nombre del producto aparece completo en el mensaje
         const productWords = nameLower.split(' ').filter(w => w.length > 3)
@@ -1774,36 +1774,19 @@ Responde SIEMPRE en español, de forma profesional y honesta.`
   private static detectIntent(message: string): string {
     const lowerMessage = message.toLowerCase()
 
-    // Saludos (debe ir primero para detectar antes que otros)
-    if (/^(hola|buenos días|buenas tardes|buenas noches|hey|hi|saludos)/i.test(lowerMessage)) {
-      return 'greeting'
+    // Solicitud de enlace/link
+    if (/(link|enlace|url|página|pagina|comprar|compra)/i.test(lowerMessage)) {
+      return 'link_request'
     }
 
-    // Despedida
-    if (/(gracias|chao|adiós|bye|hasta luego)/i.test(lowerMessage)) {
-      return 'farewell'
-    }
-
-    // Consulta de precio (CORREGIDO: debe devolver "product_info" no "price_inquiry")
+    // Consulta de precio
     if (/(cuánto|precio|cuesta|valor|cuanto|costo)/i.test(lowerMessage)) {
-      return 'product_info'
+      return 'price_inquiry'
     }
 
-    // Solicitud de información (CORREGIDO: debe devolver "product_info" no "information_request")
-    if (/(información|info|detalles|características|especificaciones|dime sobre|háblame de|que es|cuéntame)/i.test(lowerMessage)) {
-      return 'product_info'
-    }
-
-    // Consulta de disponibilidad con producto específico (CORREGIDO: debe devolver "product_list" no "availability_inquiry")
-    // Si pregunta "tienes X?" donde X es un producto específico
-    if (/(tienes|tienen|venden|hay|disponible|stock)/i.test(lowerMessage)) {
-      // Si menciona un producto específico después, es product_list
-      return 'product_list'
-    }
-
-    // Pregunta general sobre productos (CORREGIDO: debe devolver "product_list")
-    if (/(qué productos|que productos|productos tienes|que vendes|qué vendes|catálogo|catalogo)/i.test(lowerMessage)) {
-      return 'product_list'
+    // Solicitud de información
+    if (/(información|info|detalles|características|especificaciones|dime sobre|háblame de|que es)/i.test(lowerMessage)) {
+      return 'information_request'
     }
 
     // Intención de compra
@@ -1811,9 +1794,19 @@ Responde SIEMPRE en español, de forma profesional y honesta.`
       return 'purchase_intent'
     }
 
-    // Solicitud de enlace/link
-    if (/(link|enlace|url|página|pagina)/i.test(lowerMessage)) {
-      return 'link_request'
+    // Consulta de disponibilidad
+    if (/(tienes|tienen|venden|hay|disponible|stock)/i.test(lowerMessage)) {
+      return 'availability_inquiry'
+    }
+
+    // Saludos
+    if (/^(hola|buenos días|buenas tardes|buenas noches|hey|hi|saludos)/i.test(lowerMessage)) {
+      return 'greeting'
+    }
+
+    // Despedida
+    if (/(gracias|chao|adiós|bye|hasta luego)/i.test(lowerMessage)) {
+      return 'farewell'
     }
 
     return 'general'
@@ -1845,13 +1838,12 @@ Responde SIEMPRE en español, de forma profesional y honesta.`
     productInfo: any,
     intent: any,
     conversationHistory: Array<{ role: 'user' | 'assistant'; content: string }>,
-    conversationKey: string,
-    userId?: string
+    conversationKey: string
   ): Promise<string> {
     try {
       // 🌐 VERIFICAR SI NECESITA INFORMACIÓN EXTERNA
       const { ExternalKnowledgeService } = await import('./external-knowledge-service')
-      const needsExternalInfo = ExternalKnowledgeService.shouldEnrichProduct(product, customerMessage)
+      const needsExternalInfo = process.env.AI_ALLOW_EXTERNAL_KNOWLEDGE === 'true' && ExternalKnowledgeService.shouldEnrichProduct(product, customerMessage)
       
       let externalInfo: any = null
       if (needsExternalInfo) {
@@ -1937,44 +1929,28 @@ INTENCIÓN DEL CLIENTE: ${intent.type}
       // 🧠 GENERAR RESUMEN DE MEMORIA CONTEXTUAL
       const memoryContext = ProfessionalConversationMemory.generateContextSummary(conversationKey)
       
-      // 🎭 CARGAR PERSONALIDAD PERSONALIZADA (si existe)
-      const { AIPersonalityLoader } = await import('./ai-personality-loader')
-      const customPersonality = userId ? await AIPersonalityLoader.loadPersonality(userId) : null
-      
-      // Si hay personalidad personalizada, usarla; si no, usar la default
-      const personalitySection = customPersonality || `Eres un vendedor profesional experto de Tecnovariedades D&S en WhatsApp.
+      const systemPrompt = `Eres un vendedor profesional experto de Tecnovariedades D&S en WhatsApp.
 
 TU PERSONALIDAD:
 - Profesional pero cercano y amigable
 - Entusiasta sobre los productos
 - Orientado a ayudar genuinamente al cliente
 - Conversacional y natural (no robótico)
-- Proactivo en cerrar ventas`
-      
-      const systemPrompt = `${personalitySection}
+- Proactivo en cerrar ventas
 
 ${memoryContext}
 
 ⚠️ REGLAS ABSOLUTAS - NUNCA VIOLAR:
 
-0. **INFORMACIÓN COMPLETA LA PRIMERA VEZ** (CRÍTICO):
+0. **NO REPITAS INFORMACIÓN** (CRÍTICO):
    - 🧠 Revisa el CONTEXTO DE LA CONVERSACIÓN arriba
-   - Si es la PRIMERA VEZ que mencionas este producto → Da información COMPLETA:
-     * Nombre del producto
-     * Descripción breve (2-3 líneas)
-     * Precio
-     * 3-4 beneficios clave
-     * Pregunta si desea más info o comprarlo
-   - Si YA hablaste del producto antes:
-     * Si pregunta precio → Solo di el precio
-     * Si pregunta link → Solo confirma que enviarás opciones de pago
-     * Si pregunta disponibilidad → Solo confirma disponibilidad
+   - Si ya mencionaste el precio → NO lo repitas
+   - Si ya explicaste el producto → NO lo expliques de nuevo
+   - Si el cliente ya sabe de qué trata → Ve directo al punto
    - ❌ NUNCA repitas información que ya diste
-   - ✅ Primera mención = Información COMPLETA
-   - ✅ Menciones siguientes = Solo lo que preguntan
-   - Ejemplo: 
-     * Primera vez: "🎹 Curso Completo de Piano\n\nAprende desde cero...\n💰 60.000 COP\n\n✅ Beneficios..."
-     * Segunda vez (si pregunta precio): "El precio es 60.000 COP"
+   - ✅ RESPONDE SOLO lo que el cliente pregunta
+   - ✅ Sé CONCISO y DIRECTO
+   - Ejemplo: Si ya hablaste del producto y pregunta "métodos de pago", solo di los métodos, NO repitas todo sobre el producto
 
 0.1. **USA EL NOMBRE EXACTO DEL PRODUCTO** (CRÍTICO):
    - El producto se llama: "${product.name}"
@@ -2008,8 +1984,8 @@ ${memoryContext}
    - ❌ NUNCA inventes especificaciones técnicas
 
 3. **ADAPTA TU RESPUESTA A LA INTENCIÓN**:
-   - Si pide info → Da información COMPLETA del producto (nombre, descripción breve, precio, beneficios clave)
-   - Si pregunta precio → Menciona el precio exacto + 2-3 características principales
+   - Si pide info → Destaca beneficios del producto
+   - Si pregunta precio → Menciona el precio exacto que aparece arriba
    - Si pide fotos/imágenes → Confirma que tienes fotos y ofrece enviarlas
    - Si pide link o quiere comprar:
      * El sistema generará enlaces de pago automáticamente
@@ -2017,7 +1993,6 @@ ${memoryContext}
      * Solo confirma que le enviarás las opciones de pago
      * Ejemplo: "¡Perfecto! Te envío las opciones de pago ahora mismo 💳"
    - Si pregunta disponibilidad → Confirma que SÍ está disponible
-   - Si es la PRIMERA VEZ que mencionas el producto → Da información COMPLETA (nombre, descripción, precio, beneficios)
 
 4. **FORMATO DE RESPUESTA**:
    - Máximo 4-5 líneas

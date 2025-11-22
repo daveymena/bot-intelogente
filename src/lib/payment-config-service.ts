@@ -38,7 +38,7 @@ export class PaymentConfigService {
       })
     }
 
-    let message = `💳 **MÉTODOS DE PAGO PARA ${productName}**\n\n`
+    let message = `💳 **Tecnovariedades D&S — Métodos de pago para ${productName}**\n\n`
     message += `💰 Precio: ${price.toLocaleString('es-CO')} COP\n\n`
     message += `Elige tu método de pago preferido:\n\n`
 

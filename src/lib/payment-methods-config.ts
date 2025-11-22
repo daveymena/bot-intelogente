@@ -65,12 +65,17 @@ export const PAYMENT_METHODS: PaymentMethod[] = [
     id: 'nequi',
     name: 'Nequi',
     icon: '📱',
-    description: 'Transferencia móvil',
+    description: 'Transferencia móvil instantánea',
     availableFor: 'physical',
-    instructions: `*Pasos:*
+    instructions: `*Pasos para pagar:*
 1️⃣ Abre tu app Nequi
-2️⃣ Envía el monto al número indicado
-3️⃣ Envíame el comprobante de pago`,
+2️⃣ Selecciona "Enviar plata"
+3️⃣ Ingresa el número: *3136174267*
+4️⃣ Envía el monto exacto
+5️⃣ Toma captura del comprobante
+6️⃣ Envíame la captura aquí
+
+✅ *Confirmación:* Tu pedido se procesa inmediatamente al recibir el comprobante`,
     accountInfo: {
       number: '3136174267',
     },
@@ -79,12 +84,17 @@ export const PAYMENT_METHODS: PaymentMethod[] = [
     id: 'daviplata',
     name: 'Daviplata',
     icon: '📱',
-    description: 'Transferencia móvil',
+    description: 'Transferencia móvil instantánea',
     availableFor: 'physical',
-    instructions: `*Pasos:*
+    instructions: `*Pasos para pagar:*
 1️⃣ Abre tu app Daviplata
-2️⃣ Envía el monto al número indicado
-3️⃣ Envíame el comprobante de pago`,
+2️⃣ Selecciona "Enviar plata"
+3️⃣ Ingresa el número: *3136174267*
+4️⃣ Envía el monto exacto
+5️⃣ Toma captura del comprobante
+6️⃣ Envíame la captura aquí
+
+✅ *Confirmación:* Tu pedido se procesa inmediatamente al recibir el comprobante`,
     accountInfo: {
       number: '3136174267',
     },
@@ -155,7 +165,7 @@ export class PaymentMethodsConfig {
   static formatMethodsList(isDigital: boolean): string {
     const methods = this.getAvailableMethods(isDigital);
     
-    let text = '📱 *Métodos de Pago:*\n\n';
+    let text = '📱 *Métodos de Pago (Tecnovariedades D&S):*\n\n';
     
     methods.forEach((method, index) => {
       text += `${index + 1}️⃣ *${method.name}* ${method.icon}\n`;
@@ -179,7 +189,7 @@ export class PaymentMethodsConfig {
       return `Para pagar con ${methodId}, contáctanos directamente.`;
     }
     
-    let text = `${method.icon} *${method.name}:*\n\n`;
+    let text = `${method.icon} *${method.name} (Tecnovariedades D&S):*\n\n`;
     
     // Agregar información de cuenta si existe
     if (method.accountInfo) {

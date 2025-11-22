@@ -52,13 +52,9 @@ export class WhatsAppCatalogService {
     try {
       console.log(`[Catalog] 📤 Enviando producto del catálogo: ${productId}`)
 
+      // Enviar como mensaje de texto con link (productMessage no soportado en esta versión de Baileys)
       await socket.sendMessage(to, {
-        productMessage: {
-          product: {
-            productId: productId,
-            businessOwnerJid: businessJid
-          }
-        }
+        text: `🛍️ Producto del catálogo: ${productId}\n\nID: ${productId}\nBusiness: ${businessJid}`
       })
 
       console.log('[Catalog] ✅ Producto del catálogo enviado')
@@ -85,6 +81,13 @@ export class WhatsAppCatalogService {
       // WhatsApp permite enviar hasta 10 productos en una lista
       const productsToSend = products.slice(0, 10)
 
+      // Enviar como mensaje de texto formateado (listMessage no soportado en esta versión de Baileys)
+      const productList = productsToSend.map((p, i) => `${i + 1}. ${p.name}`).join('\n')
+      await socket.sendMessage(to, {
+        text: `🛍️ *Productos Disponibles*\n\n${productList}\n\nResponde con el número del producto que te interesa.`
+      })
+      
+      /* Código original comentado:
       await socket.sendMessage(to, {
         listMessage: {
           title: '🛍️ Productos Disponibles',
@@ -103,6 +106,7 @@ export class WhatsAppCatalogService {
           ]
         }
       })
+      */
 
       console.log('[Catalog] ✅ Lista de productos enviada')
       return true

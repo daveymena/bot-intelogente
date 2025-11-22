@@ -63,6 +63,15 @@ export class IntentDetector {
       };
     }
 
+    // 🔥 PRIORIDAD 1.5: ENTREGA / ENVÍO → confirmation (lo maneja ClosingAgent)
+    if (this.isDeliveryQuery(cleanMsg)) {
+      return {
+        intent: 'confirmation',
+        confidence: 0.9,
+        entities: {},
+      };
+    }
+
     // 🔥 PRIORIDAD 2: INFO DE PRODUCTO (si hay productos en contexto)
     // Si hay productos en contexto Y pide información, es product_info (no búsqueda)
     if (hasProductContext && this.isProductInfoQuery(cleanMsg)) {
@@ -145,7 +154,7 @@ export class IntentDetector {
     }
     
     // 8. CONFIRMACIÓN
-    if (this.isConfirmation(cleanMsg)) {
+    if (this.isConfirmation(cleanMsg) || this.isPaymentConfirmation(cleanMsg)) {
       return {
         intent: 'confirmation',
         confidence: 0.8,
@@ -178,6 +187,24 @@ export class IntentDetector {
       return {
         intent: 'complaint',
         confidence: 0.8,
+        entities: {},
+      };
+    }
+
+    // 10b. SERVICIO TÉCNICO (reparación/mantenimiento)
+    if (this.isRepairService(cleanMsg)) {
+      return {
+        intent: 'support',
+        confidence: 0.9,
+        entities: {},
+      };
+    }
+
+    // 10c. AGENDAMIENTO DE CITA
+    if (this.isAppointmentRequest(cleanMsg)) {
+      return {
+        intent: 'support',
+        confidence: 0.9,
         entities: {},
       };
     }
@@ -364,6 +391,15 @@ export class IntentDetector {
     const confirmations = ['si', 'sí', 'ok', 'vale', 'dale', 'perfecto', 'bien', 'bueno', 'claro'];
     return confirmations.includes(msg) || (msg.length < 10 && confirmations.some(c => msg.includes(c)));
   }
+
+  private static isPaymentConfirmation(msg: string): boolean {
+    const patterns = [
+      'pague', 'pagúe', 'pagué', 'pago realizado', 'realice el pago', 'realicé el pago',
+      'envio el comprobante', 'envío el comprobante', 'envié el comprobante', 'adjunto comprobante',
+      'mandé el comprobante', 'mande el comprobante'
+    ];
+    return patterns.some(p => msg.includes(p));
+  }
   
   private static isComplaint(msg: string): boolean {
     return (
@@ -445,6 +481,24 @@ export class IntentDetector {
     }
     
     return infoPatterns.some(p => msg.includes(p));
+  }
+
+  private static isDeliveryQuery(msg: string): boolean {
+    const keywords = [
+      'entrega', 'envio', 'envío', 'domicilio', 'contrareembolso', 'contra reembolso',
+      'como me lo envias', 'cómo me lo envías', 'cuando llega', 'cuándo llega', 'tiempo de entrega'
+    ];
+    return keywords.some(k => msg.includes(k));
+  }
+
+  private static isRepairService(msg: string): boolean {
+    return /reparaci[oó]n|reparar|arreglar|arreglo|mantenimiento|formatear|instalar|no funciona|da[ñn]ado/i.test(msg) && /computador|pc|laptop|portatil|port[aá]til|equipo|celular|consola/i.test(msg);
+  }
+
+  private static isAppointmentRequest(msg: string): boolean {
+    if (/agendar|cita|agenda|reservar|visita/i.test(msg)) return true;
+    if (/ver/i.test(msg) && /(moto|producto|local|tienda|negocio|laptop|computador)/i.test(msg) && !/(foto|imagen|picture|pic)/i.test(msg)) return true;
+    return false;
   }
   
   private static isProductSelection(msg: string): boolean {

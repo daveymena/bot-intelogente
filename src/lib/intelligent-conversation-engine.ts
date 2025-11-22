@@ -91,9 +91,20 @@ export class IntelligentConversationEngine {
     // 🎯 NUEVO: Intentar usar el sistema de agentes primero
     try {
       const { Orchestrator } = await import('@/agents/orchestrator');
+      const { SharedMemoryService } = await import('@/agents/shared-memory');
+      
       const orchestrator = new Orchestrator();
+      const sharedMemoryService = SharedMemoryService.getInstance();
       
       console.log('[IntelligentEngine] 🤖 Usando sistema de agentes especializados');
+      
+      // 🔄 SINCRONIZAR: Obtener memoria del Orchestrator ANTES de procesar
+      const sharedMemory = sharedMemoryService.get(chatId, userId);
+      console.log('[IntelligentEngine] 🔄 Memoria compartida:', {
+        producto: sharedMemory.currentProduct?.name || 'ninguno',
+        productosInteresados: sharedMemory.interestedProducts.length,
+        historial: sharedMemory.productHistory.length
+      });
       
       const agentResponse = await orchestrator.processMessage({
         chatId,
@@ -103,16 +114,45 @@ export class IntelligentConversationEngine {
       });
       
       console.log('[IntelligentEngine] ✅ Respuesta de agentes:', {
-        confianza: (agentResponse.confidence * 100).toFixed(0) + '%',
+        confianza: ((agentResponse.confidence || 0.8) * 100).toFixed(0) + '%',
         acciones: agentResponse.actions?.length || 0
       });
+      
+      // 🔄 SINCRONIZAR: Actualizar memoria local con la del Orchestrator DESPUÉS de procesar
+      const updatedSharedMemory = sharedMemoryService.get(chatId, userId);
+      const localMemory = this.getOrCreateMemory(chatId, userName);
+      
+      // Sincronizar producto actual
+      if (updatedSharedMemory.currentProduct) {
+        localMemory.context.currentProduct = updatedSharedMemory.currentProduct;
+        console.log('[IntelligentEngine] 🔄 Sincronizado producto actual:', updatedSharedMemory.currentProduct.name);
+      }
+      
+      // Sincronizar productos de interés
+      if (updatedSharedMemory.interestedProducts.length > 0) {
+        localMemory.context.interestedProducts = updatedSharedMemory.interestedProducts;
+        console.log('[IntelligentEngine] 🔄 Sincronizados productos de interés:', updatedSharedMemory.interestedProducts.length);
+      }
+      
+      // Sincronizar intención de pago
+      if (updatedSharedMemory.paymentIntent) {
+        localMemory.context.paymentIntent = true;
+        console.log('[IntelligentEngine] 🔄 Sincronizada intención de pago');
+      }
+      
+      // Sincronizar método de pago preferido
+      if (updatedSharedMemory.preferredPaymentMethod) {
+        localMemory.context.preferredPaymentMethod = updatedSharedMemory.preferredPaymentMethod;
+        console.log('[IntelligentEngine] 🔄 Sincronizado método de pago:', updatedSharedMemory.preferredPaymentMethod);
+      }
       
       // Convertir respuesta de agentes al formato esperado
       return {
         text: agentResponse.text,
         actions: agentResponse.actions || [],
         context: agentResponse.context || {},
-        confidence: agentResponse.confidence
+        confidence: agentResponse.confidence || 0.8,
+        metadata: agentResponse.metadata || undefined  // 🎯 PASAR METADATA DEL AGENTE
       };
     } catch (error) {
       console.error('[IntelligentEngine] ⚠️ Error con sistema de agentes, usando fallback:', error);
@@ -858,106 +898,38 @@ USA ESTE FORMATO CON EMOJIS Y ORGANIZACIÓN CLARA.`;
   }
 
   /**
-   * Busca productos relevantes usando búsqueda semántica mejorada
-   * MEJORADO: Usa razonamiento profundo local para entender contexto completo
+   * Busca productos relevantes usando el sistema mejorado de búsqueda
+   * CORRECCIÓN CRÍTICA: Ahora usa la función mejorada de conversacionController
    */
   private async searchRelevantProducts(query: string, userId: string): Promise<any[]> {
     try {
-      // 🧠 RAZONAMIENTO PROFUNDO: Traducir intención del cliente
-      const keywords = await this.extractKeywordsWithIntent(query);
-      
-      if (keywords.length === 0) {
-        return [];
-      }
+      console.log('[IntelligentEngine] 🔍 Usando sistema de búsqueda mejorado para:', query);
 
-      console.log('[IntelligentEngine] 🔍 Palabras clave finales:', keywords);
+      // Importar y usar la función mejorada de búsqueda
+      const { buscarProductos } = await import('../conversational-module/ai/conversacionController');
 
-      // Buscar productos que coincidan con TODAS las palabras clave (búsqueda más precisa)
-      const allProducts = await prisma.product.findMany({
-        where: {
-          userId,
-          status: 'AVAILABLE'
-        }
-      });
+      // Usar la función mejorada que filtra por subcategorías y categorías
+      const productosMejorados = await buscarProductos(query);
 
-      // Calcular relevancia de cada producto (MEJORADO)
-      const scoredProducts = allProducts.map(product => {
-        let score = 0;
-        
-        // Incluir TAGS en la búsqueda (muy importante)
-        const productName = product.name.toLowerCase();
-        const productDesc = (product.description || '').toLowerCase();
-        const productTags = Array.isArray(product.tags)
-          ? product.tags.join(' ').toLowerCase()
-          : (product.tags || '').toLowerCase();
-        const productSubcat = (product.subcategory || '').toLowerCase();
- 
-        // Texto completo para búsqueda
-        const fullText = `${productName} ${productDesc} ${productTags} ${productSubcat}`;
-        
-        // Contar cuántas palabras clave coinciden
-        let matchedKeywords = 0;
-        
-        // Dar puntos por cada palabra clave encontrada
-        keywords.forEach(keyword => {
-          const keywordLower = keyword.toLowerCase();
+      console.log(`[IntelligentEngine] ✅ Sistema mejorado encontró ${productosMejorados.length} productos`);
 
-          // Buscar en tags primero (máxima prioridad para tags inteligentes)
-          if (productTags.includes(keywordLower)) {
-            score += 20; // Aumentado para tags
-            matchedKeywords++;
-          }
-          // Buscar en nombre (alta prioridad)
-          else if (productName.includes(keywordLower)) {
-            score += 15;
-            matchedKeywords++;
-          }
-          // Buscar en descripción (media prioridad)
-          else if (productDesc.includes(keywordLower)) {
-            score += 8;
-            matchedKeywords++;
-          }
-          // Buscar en subcategoría (baja prioridad)
-          else if (productSubcat.includes(keywordLower)) {
-            score += 5;
-            matchedKeywords++;
-          }
-        });
+      // Convertir al formato esperado por IntelligentEngine
+      const productosConvertidos = productosMejorados.map(p => ({
+        id: p.id,
+        name: p.nombre,
+        description: p.descripcion,
+        price: p.precio,
+        category: p.categoria,
+        subcategory: p.tipoVenta,
+        images: p.imagenes,
+        tags: [], // No disponible en el formato mejorado
+        stock: p.stock,
+        status: 'AVAILABLE'
+      }));
 
-        // BONUS: Si coinciden TODAS las palabras clave (muy relevante)
-        if (matchedKeywords === keywords.length && keywords.length > 1) {
-          score += 30;
-        }
-        
-        // BONUS: Si coinciden más de la mitad de las palabras
-        if (matchedKeywords >= keywords.length / 2 && keywords.length > 2) {
-          score += 15;
-        }
-
-        // BONUS: Si el nombre empieza con alguna palabra clave importante
-        const importantKeywords = keywords.filter(kw => kw.length > 4);
-        if (importantKeywords.some(kw => productName.startsWith(kw.toLowerCase()))) {
-          score += 10;
-        }
-
-        return { product, score, matchedKeywords };
-      });
-
-      // Filtrar productos con score > 0 y ordenar por relevancia
-      const relevantProducts = scoredProducts
-        .filter(item => item.score > 0)
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 10)
-        .map(item => {
-          console.log(`[IntelligentEngine] 📊 ${item.product.name}: ${item.score} puntos (${item.matchedKeywords}/${keywords.length} palabras)`);
-          return item.product;
-        });
-
-      console.log(`[IntelligentEngine] ✅ Encontrados ${relevantProducts.length} productos relevantes`);
-
-      return relevantProducts;
+      return productosConvertidos;
     } catch (error) {
-      console.error('[IntelligentEngine] Error buscando productos:', error);
+      console.error('[IntelligentEngine] Error usando búsqueda mejorada:', error);
       return [];
     }
   }

@@ -179,24 +179,6 @@ async function trainConversations() {
               console.log(`🤖 Bot: ${response.text.substring(0, 150)}...`);
               console.log(`📊 Confianza: ${(response.confidence * 100).toFixed(0)}%`);
               console.log(`⚡ Acciones: ${response.actions.map(a => a.type).join(', ') || 'ninguna'}`);
-
-              // Guardar en base de conocimiento si la confianza es alta
-              if (response.confidence > 0.7) {
-                try {
-                  await LocalKnowledgeBase.saveSuccessfulResponse({
-                    userQuery: userMessage,
-                    botResponse: response.text,
-                    productId: product.id,
-                    confidence: response.confidence
-                  });
-                  result.savedToKnowledge++;
-                  totalKnowledgeSaved++;
-                  console.log(`✅ Guardado en base de conocimiento`);
-                } catch (error: any) {
-                  console.log(`⚠️  No se pudo guardar: ${error.message}`);
-                }
-              }
-
               // Pequeña pausa entre mensajes
               await new Promise(resolve => setTimeout(resolve, 500));
             }

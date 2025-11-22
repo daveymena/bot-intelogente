@@ -48,6 +48,16 @@ export class PaymentAgent extends BaseAgent {
         memoryService.setCurrentProduct(memory.chatId, product, 'payment_intent');
         memory.currentProduct = product;
         memory.salesStage = 'payment';
+      } else {
+        // 🔍 Si no se encontró producto exacto, intentar búsqueda inteligente
+        const searchResult = await this.searchProductFromQuery(message, memory.userId);
+        if (searchResult) {
+          this.log(`✅ Producto encontrado por búsqueda: ${searchResult.name}`);
+          product = searchResult;
+          memoryService.setCurrentProduct(memory.chatId, product, 'payment_intent');
+          memory.currentProduct = product;
+          memory.salesStage = 'payment';
+        }
       }
       
       // 2️⃣ Intentar obtener del historial de productos (más confiable)
@@ -93,7 +103,7 @@ export class PaymentAgent extends BaseAgent {
       // 5️⃣ Si definitivamente no hay producto
       if (!product) {
         return {
-          text: `Primero necesito saber qué producto quieres comprar 😊
+          text: `Primero necesito saber qué producto quieres comprar con Tecnovariedades D&S 😊
 
 ¿Qué te interesa?`,
           nextAgent: 'search',
@@ -135,9 +145,15 @@ export class PaymentAgent extends BaseAgent {
       return 'daviplata';
     }
     
-    // Consignación bancaria
-    if (msg.includes('consignacion') || msg.includes('consignación') || 
+    // Transferencia bancaria
+    if (msg.includes('transferencia') || msg.includes('transferir') ||
         msg.includes('bancaria') || msg.includes('banco') ||
+        msg === 'transferencia') {
+      return 'transferencia';
+    }
+    
+    // Consignación bancaria
+    if (msg.includes('consignacion') || msg.includes('consignación') ||
         msg === 'consignacion' || msg === 'consignación') {
       return 'consignacion';
     }
@@ -247,6 +263,68 @@ export class PaymentAgent extends BaseAgent {
   }
   
   /**
+   * Busca producto usando el sistema de búsqueda inteligente
+   */
+  private async searchProductFromQuery(query: string, userId: string): Promise<Product | null> {
+    try {
+      const { db } = await import('@/lib/db');
+      
+      // Extraer palabras clave del query
+      const keywords = ['curso', 'idioma', 'ingles', 'frances', 'piano', 'laptop', 'moto', 'megapack'];
+      const foundKeywords = keywords.filter(kw => query.toLowerCase().includes(kw));
+      
+      if (foundKeywords.length === 0) {
+        return null;
+      }
+      
+      // Buscar productos que coincidan con las keywords
+      const products = await db.product.findMany({
+        where: {
+          userId,
+          status: 'AVAILABLE',
+        },
+      });
+      
+      // Scoring simple
+      let bestMatch: { product: any; score: number } | null = null;
+      
+      for (const p of products) {
+        const productText = `${p.name} ${p.description || ''} ${p.category || ''}`.toLowerCase();
+        let score = 0;
+        
+        foundKeywords.forEach(kw => {
+          if (productText.includes(kw)) {
+            score += 10;
+          }
+        });
+        
+        if (score > 0 && (!bestMatch || score > bestMatch.score)) {
+          bestMatch = { product: p, score };
+        }
+      }
+      
+      if (bestMatch && bestMatch.score >= 10) {
+        this.log(`✅ Producto encontrado por búsqueda: ${bestMatch.product.name} (score: ${bestMatch.score})`);
+        return {
+          id: bestMatch.product.id,
+          name: bestMatch.product.name,
+          description: bestMatch.product.description || undefined,
+          price: bestMatch.product.price,
+          category: bestMatch.product.category,
+          images: bestMatch.product.images ? [bestMatch.product.images] : undefined,
+          stock: bestMatch.product.stock || undefined,
+          specs: undefined,
+        };
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('[PaymentAgent] Error buscando producto:', error);
+      return null;
+    }
+  }
+  
+  /**
    * Muestra todos los métodos de pago disponibles según el tipo de producto
    */
   private showAllPaymentMethods(product: any, memory: SharedMemory): AgentResponse {
@@ -255,13 +333,40 @@ export class PaymentAgent extends BaseAgent {
     const price = this.formatPrice(product.price);
     const isDigital = PaymentMethodsConfig.isDigitalProduct(product);
     
-    let text = `¡Perfecto! 💳 Puedes pagar *${product.name}* por:\n\n`;
-    text += `💰 *Monto:* ${price}\n\n`;
+    let text = `¡Excelente! 💳 Estás a un paso de adquirir *${product.name}*\n\n`;
+    text += `💰 *Inversión:* ${price}\n\n`;
     
-    // Usar configuración centralizada
-    text += PaymentMethodsConfig.formatMethodsList(isDigital);
+    // Mensaje diferenciado según tipo de producto
+    if (isDigital) {
+      text += `⚡ *Acceso INMEDIATO* después del pago\n\n`;
+    } else {
+      text += `📦 *Envío GRATIS* a toda Colombia\n\n`;
+    }
     
-    text += `¿Con cuál método prefieres pagar? 🤔`;
+    text += `💳 *Métodos de Pago Disponibles:*\n\n`;
+    
+    // Usar configuración centralizada con formato mejorado
+    const methods = PaymentMethodsConfig.getAvailableMethods(isDigital);
+    
+    methods.forEach((method, index) => {
+      text += `${index + 1}️⃣ *${method.name}* ${method.icon}\n`;
+      text += `   ${method.description}\n`;
+      
+      // Agregar beneficio específico
+      if (method.id === 'mercadopago') {
+        text += `   ✅ Protección al comprador\n`;
+      } else if (method.id === 'paypal') {
+        text += `   ✅ Garantía internacional\n`;
+      } else if (method.id === 'contraentrega') {
+        text += `   ✅ Pagas al recibir\n`;
+      } else if (method.id === 'nequi' || method.id === 'daviplata') {
+        text += `   ✅ Transferencia instantánea\n`;
+      }
+      text += `\n`;
+    });
+    
+    text += `🔒 *Todos los métodos son 100% seguros*\n\n`;
+    text += `¿Con cuál prefieres pagar? Escribe el nombre o número 😊`;
     
     // Marcar intención de pago
     memory.paymentIntent = true;
@@ -316,9 +421,30 @@ export class PaymentAgent extends BaseAgent {
       });
       
       this.log(`✅ Pago pendiente registrado para seguimiento automático`);
+
+      try {
+        const { HumanEscalationService } = await import('@/lib/human-escalation-service');
+        await HumanEscalationService.notifyAdmin(
+          memory.userId,
+          customerPhone,
+          memory.userName || 'Cliente',
+          'PAGO_LISTO',
+          `Cliente listo para pagar ${product.name} por ${price} (${method})`
+        );
+      } catch {}
+
+      try {
+        const { EmailService } = await import('@/lib/email-service');
+        const adminEmail = process.env.ADMIN_EMAIL || 'deinermena25@gmail.com';
+        await EmailService.sendEmail({
+          to: adminEmail,
+          subject: '🔔 Cliente listo para pagar',
+          html: `Cliente: ${memory.userName || 'Cliente'}<br/>Producto: ${product.name}<br/>Monto: ${price}<br/>Método: ${method}<br/>Teléfono: ${customerPhone}`,
+          text: `Cliente listo para pagar. Producto: ${product.name}. Monto: ${price}. Método: ${method}. Tel: ${customerPhone}`
+        });
+      } catch {}
     } catch (error) {
       this.log(`⚠️ Error registrando seguimiento de pago:`, error);
-      // Continuar sin seguimiento si falla
     }
     
     // Generar instrucciones usando la configuración
@@ -328,7 +454,7 @@ export class PaymentAgent extends BaseAgent {
       price
     );
     
-    let text = `¡Excelente elección! 💳\n\n`;
+    let text = `¡Excelente elección en Tecnovariedades D&S! 💳\n\n`;
     text += `📦 *Producto:* ${product.name}\n`;
     text += `💰 *Monto:* ${price}\n\n`;
     

@@ -141,47 +141,129 @@ export class ProductAgent extends BaseAgent {
         return {
           text: `¿Qué producto te interesa? 🤔
 
-Puedo ayudarte a buscar lo que necesitas.`,
+Desde Tecnovariedades D&S puedo ayudarte a buscar lo que necesitas.`,
           nextAgent: 'search',
           confidence: 0.8,
         };
       }
     }
     
-    // Marcar que se envió info del producto
-    memory.productInfoSent = true;
+    // Si hay múltiples productos interesados, guardarlos para selección
+    if (memory.interestedProducts.length > 1) {
+      const { SharedMemoryService } = await import('./shared-memory');
+      const memoryService = SharedMemoryService.getInstance();
+      memoryService.setProductList(memory.chatId, memory.interestedProducts);
+    }
     
     // Agregar a productos vistos
     if (!memory.viewedProducts.includes(product.id)) {
       memory.viewedProducts.push(product.id);
     }
     
-    // Generar descripción formateada
-    const description = this.formatProductInfo(product);
+    // 🎯 DECISIÓN: ¿Información breve o completa?
+    const cleanMsg = this.cleanMessage(message);
+    const wantsMoreInfo = cleanMsg.includes('mas informacion') || 
+                          cleanMsg.includes('mas info') || 
+                          cleanMsg.includes('mas detalles') ||
+                          cleanMsg.includes('cuentame mas') ||
+                          cleanMsg.includes('dime mas') ||
+                          cleanMsg.includes('quiero saber mas') ||
+                          cleanMsg.includes('caracteristicas') ||
+                          cleanMsg.includes('especificaciones');
     
-    // 📸 SIEMPRE enviar foto cuando se muestra un producto por primera vez
-    // El flag photoSent se resetea cuando cambia el producto
-    const shouldSendPhoto = product.images && product.images.length > 0;
+    // Si ya se envió info breve y ahora piden más, enviar completa
+    const shouldSendFullInfo = wantsMoreInfo || memory.productInfoSent;
+    
+    // Generar descripción formateada (breve o completa)
+    const description = shouldSendFullInfo 
+      ? this.formatProductInfo(product)  // Información completa
+      : this.formatProductInfoBrief(product);  // Información breve
+    
+    // Marcar que se envió info del producto
+    if (!memory.productInfoSent) {
+      memory.productInfoSent = true;
+    }
+    
+    // 📸 Determinar si enviar foto automáticamente usando lógica inteligente
+    const { ProductPhotoSender } = await import('../lib/product-photo-sender')
+    const photoDecision = ProductPhotoSender.shouldSendPhotosAutomatically(
+      message,
+      !!(product.images && product.images.length > 0),
+      memory.photoSent,
+      product.id,
+      (memory as any).imageSent
+    )
+
+    const shouldSendPhoto = photoDecision.shouldSend
+
+    this.log(`📸 Decisión de foto para ${product.name}: ${photoDecision.shouldSend ? 'ENVIAR' : 'NO ENVIAR'} - ${photoDecision.reason}`)
     
     // Marcar que se envió foto de este producto
     if (shouldSendPhoto) {
       memory.photoSent = true;
+      // Marcar con el ID del producto para evitar confusiones
+      if (memory.currentProduct) {
+        (memory as any).imageSent = memory.currentProduct.id;
+        this.log(`📸 Marcando fotos enviadas para producto: ${memory.currentProduct.name}`);
+      }
     }
     
+    // 🎯 CORRECCIÓN: Enviar foto CON el texto como caption, no como mensajes separados
     return {
       text: description,
       sendPhotos: shouldSendPhoto,
       photos: shouldSendPhoto ? product.images : undefined,
       nextAgent: 'payment',
       confidence: 0.9,
-      actions: shouldSendPhoto ? [
-        { type: 'send_photo', data: { product } }
-      ] : undefined,
+      // 📸 Usar metadata para indicar que la foto debe enviarse CON el texto
+      metadata: shouldSendPhoto ? {
+        sendAsImageWithCaption: true,
+        productId: product.id,
+        imageUrl: product.images?.[0]
+      } : undefined
     };
   }
   
   /**
-   * Formatea la información del producto usando metodología AIDA
+   * Formatea información BREVE del producto (para primera mención)
+   */
+  private formatProductInfoBrief(product: any): string {
+    const price = this.formatPrice(product.price);
+    const category = (product.category || '').toLowerCase();
+    const isCourse = category.includes('curso') || category.includes('digital') || product.name.toLowerCase().includes('curso') || product.name.toLowerCase().includes('mega pack');
+    
+    let text = '';
+    
+    // 🎯 Presentación breve
+    text += `🎯 *${product.name}*\n\n`;
+    
+    // 💡 Descripción corta (máximo 2 líneas)
+    if (product.description) {
+      const shortDesc = product.description.substring(0, 150);
+      text += `${shortDesc}${product.description.length > 150 ? '...' : ''}\n\n`;
+    }
+    
+    // 💰 Precio
+    text += `💰 *Precio:* ${price}\n\n`;
+    
+    // ✅ Disponibilidad simple
+    if (isCourse) {
+      text += `⚡ Acceso inmediato\n`;
+    } else {
+      text += `✅ Disponible ahora\n`;
+    }
+    
+    // 📸 Nota sobre la foto
+    text += `\n📸 _Te envío la foto para que lo veas_\n\n`;
+    
+    // 💬 Invitación a preguntar más
+    text += `¿Te gustaría saber más detalles? 😊`;
+    
+    return text;
+  }
+
+  /**
+   * Formatea la información COMPLETA del producto usando metodología AIDA
    * (Atención, Interés, Deseo, Acción)
    */
   private formatProductInfo(product: any): string {
@@ -192,7 +274,7 @@ Puedo ayudarte a buscar lo que necesitas.`,
     let text = '';
     
     // 🎯 ATENCIÓN: Gancho inicial emocionante
-    text += `¡Perfecto! 😊 Te cuento sobre el *${product.name}*\n\n`;
+    text += `¡Perfecto! 😊 En Tecnovariedades D&S te cuento sobre el *${product.name}*\n\n`;
     
     // 💡 INTERÉS: Descripción + Beneficios
     if (product.description) {
@@ -435,7 +517,7 @@ Puedo ayudarte a buscar lo que necesitas.`,
     return {
       text: `¿Qué producto te interesa? 🤔
 
-Puedo ayudarte a buscar lo que necesitas.`,
+Desde Tecnovariedades D&S puedo ayudarte a buscar lo que necesitas.`,
       nextAgent: 'search',
       confidence: 0.7,
       requiresAI: true,

@@ -9,8 +9,8 @@ const createProductSchema = z.object({
   currency: z.string().default('COP'),
   category: z.enum(['PHYSICAL', 'DIGITAL', 'SERVICE']),
   status: z.enum(['AVAILABLE', 'OUT_OF_STOCK', 'DISCONTINUED']).default('AVAILABLE'),
-  images: z.string().optional(),
-  tags: z.string().optional(),
+  images: z.union([z.string(), z.array(z.string())]).optional(),
+  tags: z.union([z.string(), z.array(z.string())]).optional(),
   autoResponse: z.string().optional(),
   stock: z.number().positive().optional(),
   userId: z.string()
@@ -82,11 +82,50 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const validatedData = createProductSchema.parse(body)
 
+    // Convertir images y tags a JSON string si vienen como array
+    let imagesJson = '[]'
+    if (validatedData.images) {
+      if (Array.isArray(validatedData.images)) {
+        imagesJson = JSON.stringify(validatedData.images)
+      } else if (typeof validatedData.images === 'string') {
+        // Si es string, intentar parsearlo o usarlo como está
+        try {
+          JSON.parse(validatedData.images)
+          imagesJson = validatedData.images
+        } catch {
+          // Si no es JSON válido, convertir a array
+          imagesJson = JSON.stringify([validatedData.images])
+        }
+      }
+    }
+
+    let tagsJson = '[]'
+    if (validatedData.tags) {
+      if (Array.isArray(validatedData.tags)) {
+        tagsJson = JSON.stringify(validatedData.tags)
+      } else if (typeof validatedData.tags === 'string') {
+        try {
+          JSON.parse(validatedData.tags)
+          tagsJson = validatedData.tags
+        } catch {
+          tagsJson = JSON.stringify([validatedData.tags])
+        }
+      }
+    }
+
     const product = await db.product.create({
       data: {
-        ...validatedData,
-        images: validatedData.images || '[]',
-        tags: validatedData.tags || '[]'
+        name: validatedData.name,
+        description: validatedData.description,
+        price: validatedData.price,
+        currency: validatedData.currency,
+        category: validatedData.category,
+        status: validatedData.status,
+        autoResponse: validatedData.autoResponse,
+        stock: validatedData.stock,
+        userId: validatedData.userId,
+        images: imagesJson,
+        tags: tagsJson
       },
       include: {
         user: {

@@ -50,39 +50,38 @@ export class AIAdvancedReasoning {
       messages = this.addReasoningPrompt(messages);
     }
 
-    // Intentar con Ollama primero
+    // 🔥 CAMBIO: Usar Groq como principal (Ollama eliminado)
     try {
-      console.log('[AI Advanced] 🔄 Intentando con Ollama...');
-      const ollamaResponse = await this.tryOllama(messages, { temperature, maxTokens });
-      
-      if (ollamaResponse.content) {
-        console.log('[AI Advanced] ✅ Éxito con Ollama');
-        return {
-          ...ollamaResponse,
-          confidence: 0.95
-        };
-      }
-    } catch (error: any) {
-      console.error('[AI Advanced] ❌ Ollama falló:', error.message);
-    }
-
-    // Si Ollama falla, usar Groq como respaldo
-    try {
-      console.log('[AI Advanced] 🔄 Usando Groq como respaldo...');
+      console.log('[AI Advanced] 🔄 Intentando con Groq...');
       const groqResponse = await this.tryGroq(messages, { temperature, maxTokens });
       
       if (groqResponse.content) {
         console.log('[AI Advanced] ✅ Éxito con Groq');
         return {
           ...groqResponse,
-          confidence: 0.90
+          confidence: 0.95
         };
       }
     } catch (error: any) {
       console.error('[AI Advanced] ❌ Groq falló:', error.message);
+      
+      // 🆕 Si Groq falla (rate limit), usar bot local
+      console.log('[AI Advanced] 🔄 Usando bot local como respaldo...');
+      try {
+        const localResponse = await this.tryLocalBot(messages);
+        if (localResponse.content) {
+          console.log('[AI Advanced] ✅ Éxito con bot local');
+          return {
+            ...localResponse,
+            confidence: 0.80
+          };
+        }
+      } catch (localError: any) {
+        console.error('[AI Advanced] ❌ Bot local falló:', localError.message);
+      }
     }
 
-    // Si ambos fallan, lanzar error
+    // Si todo falla, lanzar error
     throw new Error('Todas las IAs fallaron. Verifica tu configuración.');
   }
 
@@ -255,6 +254,79 @@ Si necesitas más información, pregunta de forma natural.
       
       throw error;
     }
+  }
+
+  /**
+   * 🤖 Intentar con bot local (fallback cuando falla Groq)
+   */
+  private static async tryLocalBot(
+    messages: Message[]
+  ): Promise<AIResponse> {
+    console.log('[Local Bot] 🤖 Usando respuestas locales predefinidas');
+
+    // Obtener el último mensaje del usuario
+    const userMessage = messages.filter(m => m.role === 'user').pop()?.content || '';
+    const messageLower = userMessage.toLowerCase();
+
+    // 🎯 RESPUESTAS LOCALES INTELIGENTES
+    
+    // Solicitud de fotos
+    if (messageLower.includes('foto') || messageLower.includes('imagen')) {
+      return {
+        content: '¡Claro! Te envío las fotos del producto 📸\n\n¿Necesitas más información sobre este modelo?',
+        provider: 'local',
+        model: 'predefined',
+        confidence: 0.80
+      };
+    }
+
+    // Consulta de precio
+    if (messageLower.includes('precio') || messageLower.includes('cuesta') || messageLower.includes('valor')) {
+      return {
+        content: 'Con gusto te informo sobre el precio. ¿De qué producto específico te gustaría saber?',
+        provider: 'local',
+        model: 'predefined',
+        confidence: 0.80
+      };
+    }
+
+    // Disponibilidad
+    if (messageLower.includes('disponible') || messageLower.includes('stock') || messageLower.includes('hay')) {
+      return {
+        content: 'Sí, tenemos disponibilidad. ¿Qué producto te interesa específicamente?',
+        provider: 'local',
+        model: 'predefined',
+        confidence: 0.80
+      };
+    }
+
+    // Métodos de pago
+    if (messageLower.includes('pago') || messageLower.includes('pagar') || messageLower.includes('forma')) {
+      return {
+        content: '💳 Aceptamos varios métodos de pago:\n\n✅ MercadoPago\n✅ PayPal\n✅ Nequi\n✅ Daviplata\n✅ Transferencia bancaria\n\n¿Cuál prefieres?',
+        provider: 'local',
+        model: 'predefined',
+        confidence: 0.85
+      };
+    }
+
+    // Saludo
+    if (messageLower.includes('hola') || messageLower.includes('buenos') || messageLower.includes('buenas')) {
+      return {
+        content: '¡Hola! 👋 Bienvenido a Tecnovariedades D&S.\n\n¿En qué puedo ayudarte hoy?',
+        provider: 'local',
+        model: 'predefined',
+        confidence: 0.90
+      };
+    }
+
+    // Respuesta genérica
+    return {
+      content: 'Entiendo. ¿Podrías darme más detalles sobre lo que necesitas? Así puedo ayudarte mejor 😊',
+      provider: 'local',
+      model: 'predefined',
+      confidence: 0.70
+    };
   }
 
   /**

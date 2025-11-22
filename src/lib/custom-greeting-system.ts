@@ -131,9 +131,9 @@ Eres un vendedor experto que:
 
 ### Cuando Muestres UN Producto:
 
-"🟢 *${productName}* está disponible por $${price} 💰
+"🟢 *[NOMBRE_PRODUCTO]* está disponible por $[PRECIO] 💰
 
-${descripción_breve}
+[DESCRIPCIÓN_BREVE]
 
 ✨ *Incluye:*
 • Característica 1

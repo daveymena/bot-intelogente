@@ -28,6 +28,11 @@ export class ObjectionHandler {
       return null; // Dejar que el PaymentAgent lo maneje
     }
     
+    // 🚫 NO interceptar confirmaciones de pago ni consultas de entrega/envío
+    if (this.isPaymentConfirmation(msg) || this.isDeliveryQuery(msg)) {
+      return null;
+    }
+    
     // 1. OBJECIÓN DE PRECIO
     if (this.isPriceObjection(msg)) {
       return this.handlePriceObjection(product, memory);
@@ -73,6 +78,23 @@ export class ObjectionHandler {
     
     // Si menciona un método de pago específico, NO es objeción
     return paymentKeywords.some(kw => msg.includes(kw));
+  }
+
+  private static isPaymentConfirmation(msg: string): boolean {
+    const patterns = [
+      'pague', 'pagúe', 'pagué', 'pago realizado', 'realice el pago', 'realicé el pago',
+      'envio el comprobante', 'envío el comprobante', 'envié el comprobante', 'adjunto comprobante',
+      'mandé el comprobante', 'mande el comprobante'
+    ];
+    return patterns.some(p => msg.includes(p));
+  }
+
+  private static isDeliveryQuery(msg: string): boolean {
+    const keywords = [
+      'entrega', 'envio', 'envío', 'domicilio', 'contrareembolso', 'contra reembolso',
+      'como me lo envias', 'cómo me lo envías', 'cuando llega', 'cuándo llega', 'tiempo de entrega'
+    ];
+    return keywords.some(k => msg.includes(k));
   }
   
   /**

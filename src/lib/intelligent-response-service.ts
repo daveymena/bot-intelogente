@@ -305,10 +305,11 @@ export class IntelligentResponseService {
   ): Promise<{ message: string; confidence: number }> {
     const lowerMessage = message.toLowerCase()
 
-    // Saludos
+    // Saludos - Usar el GreetingDetector para respuestas consistentes
     if (/^(hola|hi|hey|buenos días|buenas tardes|buenas noches)$/i.test(message)) {
+      const { GreetingDetector } = await import('./greeting-detector')
       return {
-        message: '👋 Hola ¡Bienvenido a Tecnovariedades D&S! 😄💻\n\nAquí encontrarás tecnología, soporte, cursos y herramientas digitales para potenciar tu día a día.\n\n📦 ¿Buscas algún producto, servicio o información en especial?',
+        message: GreetingDetector.generateGreetingResponse(),
         confidence: 0.95
       }
     }

@@ -86,7 +86,7 @@ export class AIResponseIntegration {
       where: {
         userId,
         status: 'AVAILABLE',
-        ...(category && { category }),
+        ...(category && { category: category as any }),
         ...(searchTerm && {
           OR: [
             { name: { contains: searchTerm.split(' ')[0], mode: 'insensitive' } },

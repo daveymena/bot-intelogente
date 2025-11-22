@@ -89,37 +89,31 @@ O si prefieres, puedo ayudarte con algo más 🤔`,
       };
     }
     
-    // Cliente nuevo
+    // Cliente nuevo - SALUDO NATURAL SIN LISTAR PRODUCTOS
     const greetings = [
-      `¡Hola! 👋 Bienvenido a *Tecnovariedades D&S*
+      `¡Hola! 👋 Bienvenido a *Tecnovariedades D&S* 😊
 
-¿Qué te gustaría ver?
-💻 Computadores y laptops
-🏍️ Motos
-💎 Cursos digitales (Megapacks)
-🔧 Servicios técnicos`,
+¿En qué puedo ayudarte hoy?`,
       
-      `¡Hola! 😊 Bienvenido a *Tecnovariedades D&S*
+      `¡Hola! 😊 ¿Cómo estás?
 
-Tenemos:
-• 💻 Tecnología (laptops, accesorios)
-• 🏍️ Motos
-• 💎 Cursos digitales
-• 🔧 Servicios
+Soy tu asistente de *Tecnovariedades D&S* ✨
 
-¿Qué te interesa?`,
+¿Qué necesitas?`,
       
-      `¡Hola! 👋 ¿Cómo estás?
+      `¡Hola! 👋 Bienvenido 😄
 
-Soy el asistente de *Tecnovariedades D&S*
+¿Qué estás buscando? Cuéntame y te ayudo 💬`,
 
-Puedo ayudarte con:
-✅ Información de productos
-✅ Precios y disponibilidad
-✅ Métodos de pago
-✅ Envíos
+      `¡Hola! 😊 ¿Cómo te va?
 
-¿Qué necesitas? 😊`,
+¿En qué te puedo ayudar hoy?`,
+      
+      `¡Hola! 👋 ¡Qué bueno verte por aquí!
+
+Estoy aquí para ayudarte con lo que necesites 🚀
+
+¿Buscas algo en particular?`,
     ];
     
     // Seleccionar saludo aleatorio
