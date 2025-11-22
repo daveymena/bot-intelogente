@@ -4,16 +4,27 @@
  */
 
 import Groq from 'groq-sdk'
-import OpenAI from 'openai'
 
-// Inicializar clientes
+// Inicializar cliente Groq
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY || ''
 })
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || ''
-})
+// OpenAI se importa dinámicamente solo si está habilitado
+let OpenAI: any = null
+let openai: any = null
+
+// Inicializar OpenAI solo si está habilitado
+if (process.env.OPENAI_ENABLED === 'true' && process.env.OPENAI_API_KEY) {
+  try {
+    OpenAI = require('openai').default
+    openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY || ''
+    })
+  } catch (error) {
+    console.warn('OpenAI no está instalado, usando solo Groq')
+  }
+}
 
 interface Product {
   name: string
@@ -39,7 +50,7 @@ export class LandingAIService {
   static async generateLandingContent(product: Product): Promise<LandingContent> {
     try {
       // Intentar con OpenAI primero (mejor para copywriting)
-      if (process.env.OPENAI_ENABLED === 'true' && process.env.OPENAI_API_KEY) {
+      if (openai && process.env.OPENAI_ENABLED === 'true') {
         return await this.generateWithOpenAI(product)
       }
       
@@ -56,6 +67,10 @@ export class LandingAIService {
    * Genera contenido usando OpenAI (GPT-4)
    */
   private static async generateWithOpenAI(product: Product): Promise<LandingContent> {
+    if (!openai) {
+      throw new Error('OpenAI no está disponible')
+    }
+
     const prompt = this.buildPrompt(product)
     
     const completion = await openai.chat.completions.create({
@@ -157,7 +172,7 @@ Responde SOLO con el JSON, sin texto adicional.
    */
   static async generateHeadline(productName: string, description: string): Promise<string> {
     try {
-      const useOpenAI = process.env.OPENAI_ENABLED === 'true' && process.env.OPENAI_API_KEY
+      const useOpenAI = openai && process.env.OPENAI_ENABLED === 'true'
 
       if (useOpenAI) {
         const completion = await openai.chat.completions.create({
@@ -207,7 +222,7 @@ Responde SOLO con el JSON, sin texto adicional.
    */
   static async improveText(text: string, context: string): Promise<string> {
     try {
-      const useOpenAI = process.env.OPENAI_ENABLED === 'true' && process.env.OPENAI_API_KEY
+      const useOpenAI = openai && process.env.OPENAI_ENABLED === 'true'
 
       const prompt = `Mejora este texto para una landing page (contexto: ${context}):
 
@@ -278,7 +293,7 @@ Hazlo más persuasivo, claro y orientado a conversión. Máximo 150 caracteres.`
    */
   static async generateHeadlineVariations(headline: string, count: number = 3): Promise<string[]> {
     try {
-      const useOpenAI = process.env.OPENAI_ENABLED === 'true' && process.env.OPENAI_API_KEY
+      const useOpenAI = openai && process.env.OPENAI_ENABLED === 'true'
 
       const prompt = `Genera ${count} variaciones del siguiente headline para A/B testing:
 
