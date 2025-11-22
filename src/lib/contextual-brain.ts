@@ -37,7 +37,7 @@ export interface ReasoningResult {
   
   // Para búsquedas nuevas
   searchQuery?: string;
-  searchType?: 'exact' | 'category' | 'brand';
+  searchType?: 'exact' | 'category' | 'brand' | 'specific';
   
   // Explicación del razonamiento
   reasoning: string;
@@ -235,12 +235,18 @@ export class ContextualBrain {
     const brands = ['asus', 'hp', 'dell', 'lenovo', 'acer', 'yamaha', 'bajaj'];
     const hasBrand = brands.some(b => message.includes(b));
     
+    // Detectar intención de especificidad
+    const specificKeywords = ['especifico', 'específico', 'solo', 'unicamente', 'únicamente', 'exactamente', 'puntual'];
+    const isSpecific = specificKeywords.some(k => message.includes(k));
+    
     const categories = ['laptop', 'portatil', 'moto', 'curso', 'megapack'];
     const hasCategory = categories.some(c => message.includes(c));
     
-    let searchType: 'exact' | 'category' | 'brand' = 'category';
+    let searchType: 'exact' | 'category' | 'brand' | 'specific' = 'category';
     
-    if (hasBrand) {
+    if (isSpecific) {
+      searchType = 'specific';
+    } else if (hasBrand) {
       searchType = 'brand';
     }
     

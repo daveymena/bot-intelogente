@@ -126,13 +126,22 @@ export class SearchAgent extends BaseAgent {
     memory: SharedMemory
   ): Promise<AgentResponse> {
     const query = reasoning.searchQuery;
+    const searchType = reasoning.searchType;
     
     // Búsqueda SIMPLE por nombre
-    const products = await this.simpleSearch(query, memory.userId);
+    const products = await this.simpleSearch(query, memory.userId, searchType);
     
-    this.log(`📦 Encontrados ${products.length} productos`);
+    this.log(`📦 Encontrados ${products.length} productos (Tipo: ${searchType})`);
     
     if (products.length === 0) {
+      // Si es búsqueda específica y falló, ser honesto
+      if (searchType === 'specific') {
+        return {
+          text: `No encontré un producto que coincida exactamente con "${query}". ¿Te gustaría ver opciones similares o de otra categoría?`,
+          confidence: 0.8
+        };
+      }
+      
       return {
         text: `No encontré productos para "${query}". ¿Quieres que te muestre otras opciones?`,
         confidence: 0.4
@@ -173,13 +182,24 @@ export class SearchAgent extends BaseAgent {
   /**
    * Búsqueda SIMPLE por nombre (sin scoring complejo)
    */
-  private async simpleSearch(query: string, userId: string): Promise<Product[]> {
+  private async simpleSearch(query: string, userId: string, searchType?: string): Promise<Product[]> {
     const cleanQuery = query.toLowerCase().trim();
-    const keywords = cleanQuery.split(' ').filter(w => w.length > 2);
+    
+    // Palabras a ignorar en la búsqueda (intención)
+    const ignoreWords = [
+      'busco', 'necesito', 'quiero', 'ver', 'muestrame', 'tienes',
+      'especifico', 'específico', 'solo', 'unicamente', 'únicamente',
+      'exactamente', 'puntual', 'el', 'la', 'los', 'las', 'un', 'una',
+      'de', 'del', 'en', 'para', 'con', 'y', 'o'
+    ];
+    
+    const keywords = cleanQuery.split(' ')
+      .map(w => w.trim())
+      .filter(w => w.length > 2 && !ignoreWords.includes(w));
     
     try {
       // Buscar productos que contengan las palabras clave
-      const products = await db.product.findMany({
+      const dbProducts = await db.product.findMany({
         where: {
           status: 'AVAILABLE',
           OR: [
@@ -188,11 +208,34 @@ export class SearchAgent extends BaseAgent {
             { tags: { contains: cleanQuery, mode: 'insensitive' } }
           ]
         },
-        take: 10,
+        take: 20, // Traer más para filtrar después
         orderBy: { createdAt: 'desc' }
       });
       
-      return products.map(p => this.mapProduct(p));
+      let products = dbProducts;
+      
+      // FILTRADO ESTRICTO para búsquedas específicas
+      if (searchType === 'specific' && keywords.length > 0) {
+        products = products.filter(p => {
+          const nameLower = p.name.toLowerCase();
+          const descLower = (p.description || '').toLowerCase();
+          
+          // Debe contener TODAS las palabras clave importantes en el nombre o descripción
+          return keywords.every(k => nameLower.includes(k) || descLower.includes(k));
+        });
+        
+        // Si después del filtrado estricto no queda nada, intentar ser un poco más flexible
+        // (ej: coincidir en nombre es más importante)
+        if (products.length === 0) {
+           products = dbProducts.filter(p => {
+             const nameLower = p.name.toLowerCase();
+             // Al menos una keyword en el nombre
+             return keywords.some(k => nameLower.includes(k));
+           });
+        }
+      }
+      
+      return products.slice(0, 10).map(p => this.mapProduct(p));
     } catch (error) {
       this.log('Error en búsqueda:', error);
       return [];
