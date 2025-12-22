@@ -1,10 +1,11 @@
-# Dockerfile simplificado para Easypanel
+# Dockerfile para Easypanel
 FROM node:20-slim
 
-# Instalar dependencias del sistema
+# Instalar dependencias del sistema incluyendo git
 RUN apt-get update && apt-get install -y \
     openssl \
     ca-certificates \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
