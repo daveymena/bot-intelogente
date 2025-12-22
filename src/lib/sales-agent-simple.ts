@@ -145,10 +145,10 @@ async function askGroq(prompt: string, context: string = '', products: any[] = [
 4. RESOLVER: Responde dudas sobre productos, pagos, entregas, garantías
 5. VENDER: Guía sutilmente hacia la compra destacando beneficios
 
-📦 CATÁLOGO - PRODUCTOS DIGITALES (${digitales.length}):
+📦 CATÁLOGO COMPLETO - PRODUCTOS DIGITALES (${digitales.length}):
 ${catalogoDigital || 'Sin productos digitales'}
 
-📦 CATÁLOGO - PRODUCTOS FÍSICOS (${fisicos.length}):
+📦 CATÁLOGO COMPLETO - PRODUCTOS FÍSICOS (${fisicos.length}):
 ${catalogoFisico || 'Sin productos físicos'}
 
 💳 MÉTODOS DE PAGO:
@@ -161,14 +161,16 @@ ${catalogoFisico || 'Sin productos físicos'}
 - DIGITALES: Inmediata por Google Drive después del pago
 - FÍSICOS: Contraentrega a toda Colombia o recoger en Cali
 
-⚠️ REGLAS CRÍTICAS:
-1. ❌ NUNCA inventes productos, precios o información que no esté en el catálogo
-2. ❌ NUNCA digas "no tenemos" sin antes buscar bien en el catálogo
-3. ✅ Si el cliente pide algo que no existe, sugiere alternativas del catálogo
-4. ✅ Usa el nombre EXACTO y precio del catálogo cuando menciones un producto
-5. ✅ Responde en español colombiano natural (puedes usar "parcero", "listo", "dale")
-6. ✅ Usa emojis con moderación (1-3 por mensaje)
-7. ✅ Mantén respuestas concisas pero completas (no más de 4-5 líneas)
+🚨🚨🚨 REGLAS CRÍTICAS - OBLIGATORIAS 🚨🚨🚨:
+1. ❌ PROHIBIDO INVENTAR: NO menciones productos que NO estén en el catálogo de arriba
+2. ❌ NO INVENTES MARCAS: Si no ves "Dell XPS", "Acer Aspire", "HP Pavilion" en el catálogo, NO los menciones
+3. ❌ NO INVENTES PRECIOS: Solo usa precios que aparezcan en el catálogo
+4. ✅ SOLO CATÁLOGO: Cuando el cliente pida "más referencias" o "otros modelos", lista SOLO productos del catálogo
+5. ✅ USA NOMBRES EXACTOS: Copia el nombre del producto tal cual aparece en el catálogo
+6. ✅ Si el cliente pide algo que no existe, di "actualmente tenemos estos modelos:" y lista los del catálogo
+7. ✅ Responde en español colombiano natural
+8. ✅ Usa emojis con moderación (1-3 por mensaje)
+9. ✅ Mantén respuestas concisas (máximo 5 líneas)
 
 🎯 ESTRATEGIA DE VENTA (AIDA):
 - Atención: Capta el interés con el beneficio principal
@@ -184,7 +186,7 @@ ${context ? `\n💬 CONVERSACIÓN PREVIA:\n${context}` : ''}`
         { role: 'system', content: systemPrompt },
         { role: 'user', content: prompt }
       ],
-      temperature: 0.6,
+      temperature: 0.3, // Más bajo para evitar que invente
       max_tokens: 400
     })
 
@@ -451,6 +453,59 @@ export class SalesAgentSimple {
         }
       }
 
+      // 🆕 Si pide más opciones/referencias y tiene producto en contexto
+      if (intent === 'more_options' && userCtx.lastProduct) {
+        console.log(`📋 Cliente pide más opciones de: ${userCtx.lastProduct.name}`)
+        // Detectar categoría del producto actual
+        const currentProduct = userCtx.lastProduct
+        const currentName = currentProduct.name.toLowerCase()
+        
+        let categoria = ''
+        let productosRelacionados: any[] = []
+        
+        // Detectar tipo de producto y buscar similares
+        if (currentName.includes('portátil') || currentName.includes('portatil') || currentName.includes('laptop') || currentName.includes('notebook') || currentName.includes('vivobook') || currentName.includes('macbook')) {
+          categoria = 'portátiles'
+          productosRelacionados = this.products.filter(p => {
+            const name = p.name.toLowerCase()
+            return (name.includes('portátil') || name.includes('portatil') || name.includes('laptop') || name.includes('vivobook') || name.includes('macbook')) && p.id !== currentProduct.id
+          })
+        } else if (currentName.includes('impresora')) {
+          categoria = 'impresoras'
+          productosRelacionados = this.products.filter(p => p.name.toLowerCase().includes('impresora') && p.id !== currentProduct.id)
+        } else if (currentName.includes('mega pack') || currentName.includes('curso')) {
+          categoria = 'cursos digitales'
+          productosRelacionados = this.products.filter(p => {
+            const name = p.name.toLowerCase()
+            return (name.includes('mega pack') || name.includes('curso')) && p.id !== currentProduct.id
+          })
+        } else if (currentName.includes('tablet') || currentName.includes('ipad')) {
+          categoria = 'tablets'
+          productosRelacionados = this.products.filter(p => {
+            const name = p.name.toLowerCase()
+            return (name.includes('tablet') || name.includes('ipad')) && p.id !== currentProduct.id
+          })
+        }
+        
+        if (productosRelacionados.length > 0) {
+          // Ordenar por precio y mostrar
+          const productosOrdenados = productosRelacionados.sort((a, b) => a.price - b.price)
+          userCtx.lastOptions = productosOrdenados.slice(0, 6) // Guardar hasta 6 opciones
+          userCtx.lastProduct = null // Limpiar producto actual para que pueda elegir
+          userCtx.stage = 'discovery'
+          
+          const response = this.generateCategoryResponse(productosOrdenados, categoria, `más ${categoria}`)
+          userCtx.history.push({ role: 'assistant', content: response })
+          return {
+            text: response,
+            intent: 'more_options',
+            salesStage: 'discovery',
+            sendPhotos: false,
+            photos: null
+          }
+        }
+      }
+
       // Verificar selección por número
       const selectedByNumber = this.detectNumberSelection(message, userCtx.lastOptions)
       if (selectedByNumber) {
@@ -622,6 +677,11 @@ export class SalesAgentSimple {
     // MÁS INFORMACIÓN
     if (/(más info|mas info|más información|mas informacion|cuéntame más|cuentame mas|qué incluye|que incluye|qué trae|que trae|para qué sirve|para que sirve|qué aprendo|que aprendo|beneficios|ventajas|detalles|explícame|explicame|dime más|dime mas|más detalles|mas detalles|quiero saber más|quiero saber mas|características|caracteristicas|especificaciones|specs)/i.test(msg)) {
       return 'more_info'
+    }
+
+    // 🆕 MÁS OPCIONES / OTRAS REFERENCIAS (cuando ya mostró un producto)
+    if (/(más referencias|mas referencias|otras referencias|otros modelos|otras opciones|más opciones|mas opciones|qué más tienes|que mas tienes|tienes más|tienes mas|hay más|hay mas|otros productos|otras marcas|ver más|ver mas|mostrar más|mostrar mas|dame más|dame mas|información sobre los demás|informacion sobre los demas|los demás|los demas|cuáles más|cuales mas|qué otros|que otros)/i.test(msg)) {
+      return 'more_options'
     }
 
     // CONFIRMACIÓN DE COMPRA
