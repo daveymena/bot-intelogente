@@ -10,11 +10,15 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Variables para el build
+# Variables para el build - Prisma necesita una URL válida
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
 ENV SKIP_ENV_VALIDATION=1
+
+# IMPORTANTE: Esta URL se usa SOLO durante el build para generar Prisma Client
+# En runtime, se usa la variable DATABASE_URL del entorno de Easypanel
+ARG DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+ENV DATABASE_URL=${DATABASE_URL}
 
 # Copiar package.json
 COPY package*.json ./
@@ -38,5 +42,5 @@ RUN mkdir -p /app/auth_sessions /app/whatsapp-sessions
 # Puerto
 EXPOSE 3000
 
-# Iniciar
-CMD ["sh", "-c", "npx prisma db push --accept-data-loss || true && npm start"]
+# Iniciar - Regenerar Prisma Client con la URL real del entorno
+CMD ["sh", "-c", "npx prisma generate && npx prisma db push --accept-data-loss || true && npm start"]
