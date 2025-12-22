@@ -9,23 +9,18 @@ ENV NODE_OPTIONS="--max-old-space-size=4096"
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NPM_CONFIG_LOGLEVEL=error
 
+# Variables de entorno DUMMY para el build (se sobreescriben en runtime)
+ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+ENV NEXTAUTH_SECRET="build-secret-placeholder"
+ENV NEXTAUTH_URL="http://localhost:3000"
+ENV JWT_SECRET="build-jwt-secret-placeholder"
+
 # Copiar archivos de dependencias
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Instalar dependencias en modo producción primero (menos memoria)
-# Luego instalar dev dependencies solo si es necesario
-RUN npm ci --only=production --no-audit --legacy-peer-deps || \
-    npm install --only=production --no-audit --legacy-peer-deps
-
-# Instalar dev dependencies necesarias para el build
-RUN npm install --no-save --no-audit --legacy-peer-deps \
-    typescript \
-    @types/node \
-    @types/react \
-    @types/react-dom \
-    eslint \
-    eslint-config-next
+# Instalar TODAS las dependencias (necesarias para build)
+RUN npm install --legacy-peer-deps --no-audit
 
 # Copiar el resto del código
 COPY . .
@@ -33,11 +28,10 @@ COPY . .
 # Generar Prisma Client
 RUN npx prisma generate
 
-# Build de Next.js (standalone mode para producción)
-# Ignorar errores de TypeScript y ESLint durante el build
+# Build de Next.js
 RUN npm run build
 
-# Verificar que el build se completó (si falla, continuar de todos modos)
+# Verificar que el build se completó
 RUN if [ -d .next/standalone ]; then \
       echo "✅ Standalone build found"; \
       mkdir -p .next/standalone/.next && \
@@ -63,5 +57,5 @@ ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 # Cambiar a usuario no-root
 USER pptruser
 
-# Comando de inicio simplificado
+# Comando de inicio
 CMD ["sh", "-c", "npx prisma db push --accept-data-loss || true && npm start"]
