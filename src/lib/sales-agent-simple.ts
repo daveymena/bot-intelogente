@@ -1,4 +1,4 @@
-﻿/**
+/**
  * SalesAgentSimple - Agente de ventas inteligente híbrido
  * Usa Ollama (local) primero, Groq para análisis profundo
  * NO rebota al menú - siempre intenta resolver
@@ -119,36 +119,64 @@ async function askGroq(prompt: string, context: string = '', products: any[] = [
       return null
     }
 
-    console.log('🧠 Consultando Groq para análisis profundo...')
+    console.log('🧠 Consultando Groq (Agente de Ventas Profesional)...')
 
-    // Crear resumen de productos para el contexto
-    const productSummary = products.slice(0, 10).map(p => 
-      `- ${p.name}: $${p.price.toLocaleString('es-CO')} COP`
-    ).join('\n')
+    // Crear catálogo organizado por categorías
+    const digitales = products.filter(p => p.category === 'DIGITAL' || p.name.toLowerCase().includes('mega') || p.name.toLowerCase().includes('curso'))
+    const fisicos = products.filter(p => p.category !== 'DIGITAL' && !p.name.toLowerCase().includes('mega') && !p.name.toLowerCase().includes('curso'))
+    
+    const formatProduct = (p: any) => `• ${p.name} - ${p.price?.toLocaleString('es-CO') || '?'} COP`
+    
+    const catalogoDigital = digitales.map(formatProduct).join('\n')
+    const catalogoFisico = fisicos.map(formatProduct).join('\n')
 
-    const systemPrompt = `Eres un agente de ventas profesional de Tecnovariedades D&S en Colombia.
+    const systemPrompt = `Eres un AGENTE DE VENTAS PROFESIONAL de Tecnovariedades D&S (Colombia).
 
-REGLAS CRÍTICAS - OBLIGATORIAS:
-1. ❌ NUNCA inventes información, precios, características o productos
-2. ❌ NUNCA menciones productos que no estén en la lista proporcionada
-3. ✅ USA SOLO la información proporcionada en el contexto
-4. ✅ Si no tienes la información exacta, di "déjame verificar eso"
-5. ✅ Responde en español, natural y amigable
-6. ✅ Guía sutilmente hacia la venta sin ser agresivo
-7. ✅ Usa emojis moderadamente (1-2 por mensaje)
+🎯 TU PERSONALIDAD:
+- Amigable, cercano y natural (como hablar con un amigo que sabe de tecnología)
+- Paciente y comprensivo (el cliente puede escribir mal o no saber qué busca)
+- Persuasivo pero NO agresivo (guías hacia la venta sin presionar)
+- Resolutivo (siempre das una respuesta útil, nunca dejas al cliente sin ayuda)
 
-PRODUCTOS DISPONIBLES:
-${productSummary || 'Consultar catálogo'}
+🧠 TUS CAPACIDADES:
+1. ENTENDER: Comprende lo que el cliente quiere aunque escriba mal, use jerga o sea ambiguo
+2. RAZONAR: Analiza qué producto le conviene según lo que dice
+3. DIALOGAR: Mantén conversaciones naturales, haz preguntas para entender mejor
+4. RESOLVER: Responde dudas sobre productos, pagos, entregas, garantías
+5. VENDER: Guía sutilmente hacia la compra destacando beneficios
 
-ENTREGA:
-- DIGITALES: Envío por Google Drive después del pago
-- FÍSICOS: Recoger en tienda (Cali) o Contraentrega
+📦 CATÁLOGO - PRODUCTOS DIGITALES (${digitales.length}):
+${catalogoDigital || 'Sin productos digitales'}
 
-PAGOS:
-- Nequi/Daviplata: 3136174267
-- MercadoPago y PayPal disponibles
+📦 CATÁLOGO - PRODUCTOS FÍSICOS (${fisicos.length}):
+${catalogoFisico || 'Sin productos físicos'}
 
-${context ? `\nHISTORIAL DE CONVERSACIÓN:\n${context}` : ''}`
+💳 MÉTODOS DE PAGO:
+- Nequi: 3136174267
+- Daviplata: 3136174267  
+- MercadoPago (tarjeta/PSE)
+- PayPal (internacional)
+
+📬 ENTREGA:
+- DIGITALES: Inmediata por Google Drive después del pago
+- FÍSICOS: Contraentrega a toda Colombia o recoger en Cali
+
+⚠️ REGLAS CRÍTICAS:
+1. ❌ NUNCA inventes productos, precios o información que no esté en el catálogo
+2. ❌ NUNCA digas "no tenemos" sin antes buscar bien en el catálogo
+3. ✅ Si el cliente pide algo que no existe, sugiere alternativas del catálogo
+4. ✅ Usa el nombre EXACTO y precio del catálogo cuando menciones un producto
+5. ✅ Responde en español colombiano natural (puedes usar "parcero", "listo", "dale")
+6. ✅ Usa emojis con moderación (1-3 por mensaje)
+7. ✅ Mantén respuestas concisas pero completas (no más de 4-5 líneas)
+
+🎯 ESTRATEGIA DE VENTA (AIDA):
+- Atención: Capta el interés con el beneficio principal
+- Interés: Explica qué incluye y por qué es valioso
+- Deseo: Destaca el ahorro o la oportunidad única
+- Acción: Invita a comprar de forma natural ("¿Te lo aparto?", "¿Quieres los datos de pago?")
+
+${context ? `\n💬 CONVERSACIÓN PREVIA:\n${context}` : ''}`
 
     const completion = await client.chat.completions.create({
       model: 'llama-3.1-8b-instant',
@@ -156,7 +184,7 @@ ${context ? `\nHISTORIAL DE CONVERSACIÓN:\n${context}` : ''}`
         { role: 'system', content: systemPrompt },
         { role: 'user', content: prompt }
       ],
-      temperature: 0.5,
+      temperature: 0.6,
       max_tokens: 400
     })
 
@@ -171,6 +199,100 @@ ${context ? `\nHISTORIAL DE CONVERSACIÓN:\n${context}` : ''}`
   } catch (error: any) {
     console.log(`⚠️ Error Groq: ${error.message}`)
     return null
+  }
+}
+
+/**
+ * 🧠 BÚSQUEDA INTELIGENTE CON IA
+ * Cuando la búsqueda local falla, usa IA para:
+ * 1. Entender la intención del usuario (aunque escriba mal)
+ * 2. Buscar el producto más relevante en el catálogo
+ * 3. Responder con información REAL de la BD
+ */
+async function searchProductWithAI(
+  query: string,
+  products: any[]
+): Promise<{ product: any | null; response: string | null }> {
+  try {
+    const client = getGroqClient()
+    if (!client || products.length === 0) {
+      return { product: null, response: null }
+    }
+
+    console.log(`🧠 Búsqueda inteligente IA para: "${query}"`)
+
+    // Crear lista de productos para que la IA busque
+    const productList = products.map((p, i) => {
+      const precio = p.price?.toLocaleString('es-CO') || '?'
+      return `${i + 1}. ${p.name} - ${precio} COP`
+    }).join('\n')
+
+    const systemPrompt = `Eres un buscador de productos inteligente para una tienda colombiana.
+
+TAREA: Analiza lo que el cliente busca y encuentra el producto más relevante del catálogo.
+
+CATÁLOGO (${products.length} productos):
+${productList}
+
+INSTRUCCIONES CRÍTICAS:
+1. Entiende la INTENCIÓN del cliente aunque escriba mal (typos, errores ortográficos)
+2. Busca coincidencias por: nombre, tema, categoría, palabras clave
+3. Si encuentras un producto relevante, responde SOLO con el número
+4. Si no hay coincidencia clara, responde "0"
+
+CORRECCIONES DE TYPOS COMUNES:
+- "megapak", "megapack", "mega pak" → buscar "Mega Pack"
+- "goldem", "golder", "goldenn" → buscar "Golden"
+- "pino", "pian" → buscar "Piano"
+- "exel", "exsel", "ecxel" → buscar "Excel"
+- "ingles", "inglés", "englis" → buscar "Inglés"
+- "tradign", "tradin", "traiding" → buscar "Trading"
+- "diseño", "diseno", "disenio" → buscar "Diseño"
+- "programasion", "programacion" → buscar "Programación" o "Hacking"
+
+EJEMPLOS DE BÚSQUEDA:
+- "megapak goldem" → buscar producto con "Golden" en el nombre
+- "curso de pino" → buscar producto con "Piano" en el nombre
+- "quiero aprender ingles" → buscar producto con "Inglés" en el nombre
+- "algo de diseño grafico" → buscar producto con "Diseño" en el nombre
+- "tradign forex" → buscar producto con "Trading" en el nombre
+- "exel avanzado" → buscar producto con "Excel" en el nombre
+- "resina epoxica" → buscar producto con "Resina" en el nombre
+
+INTENCIONES AMBIGUAS - Sugiere el producto más relevante:
+- "quiero ganar dinero" → Trading o Marketing
+- "necesito para mi negocio" → Marketing, Excel o Diseño
+- "algo para aprender música" → Piano
+- "mejorar mi trabajo" → Excel o Office
+- "emprender" → Marketing o Trading
+- "trabajar desde casa" → Diseño, Marketing o Excel
+
+Responde SOLO con el número del producto (1, 2, 3...) o "0" si no hay coincidencia.`
+
+    const completion = await client.chat.completions.create({
+      model: 'llama-3.1-8b-instant',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: `Cliente busca: "${query}"` }
+      ],
+      temperature: 0.1, // Más determinístico para búsquedas
+      max_tokens: 10
+    })
+
+    const answer = completion.choices[0]?.message?.content?.trim() || '0'
+    const productIndex = parseInt(answer) - 1
+
+    if (productIndex >= 0 && productIndex < products.length) {
+      const foundProduct = products[productIndex]
+      console.log(`✅ IA encontró: ${foundProduct.name}`)
+      return { product: foundProduct, response: null }
+    }
+
+    console.log(`❌ IA no encontró producto específico`)
+    return { product: null, response: null }
+  } catch (error: any) {
+    console.log(`⚠️ Error en búsqueda IA: ${error.message}`)
+    return { product: null, response: null }
   }
 }
 
@@ -351,7 +473,18 @@ export class SalesAgentSimple {
       }
 
       // Buscar producto específico
-      const product = this.buscarProducto(message)
+      let product = this.buscarProducto(message)
+      
+      // 🧠 Si búsqueda local falla, usar IA para buscar (entiende typos y errores)
+      if (!product && this.products.length > 0) {
+        console.log(`🧠 Búsqueda local falló, intentando con IA...`)
+        const aiSearch = await searchProductWithAI(message, this.products)
+        if (aiSearch.product) {
+          product = aiSearch.product
+          console.log(`✅ IA encontró producto: ${product.name}`)
+        }
+      }
+      
       if (product) {
         console.log(`✅ Producto específico encontrado: ${product.name}`)
         userCtx.lastProduct = product
@@ -606,32 +739,138 @@ export class SalesAgentSimple {
     const queryLower = query.toLowerCase()
     console.log(`🔍 Buscando producto en: "${queryLower}"`)
 
-    // Búsquedas específicas prioritarias
-    const specificSearches = [
-      { keywords: ['piano'], field: 'piano' },
-      { keywords: ['guitarra'], field: 'guitarra' },
-      { keywords: ['trading', 'forex'], field: 'trading' },
-      { keywords: ['hacking', 'seguridad', 'ciberseguridad'], field: 'hacking' },
-      { keywords: ['excel'], field: 'excel' },
-      { keywords: ['inglés', 'ingles', 'idioma'], field: 'inglés' },
-      { keywords: ['diseño', 'photoshop', 'illustrator'], field: 'diseño' },
-      { keywords: ['programación', 'programacion', 'python', 'javascript'], field: 'programación' }
-    ]
-
-    for (const search of specificSearches) {
-      if (search.keywords.some(k => queryLower.includes(k))) {
-        const product = this.products.find(p => 
-          search.keywords.some(k => p.name.toLowerCase().includes(k))
-        )
-        if (product) {
-          console.log(`✅ Encontrado por búsqueda específica: ${product.name}`)
+    // 🔥 BÚSQUEDA DIRECTA PRIMERO - Si el nombre del producto está en la consulta
+    // Esto captura casos como "mega pack golden", "megapack golden", etc.
+    for (const product of this.products) {
+      const productNameLower = product.name.toLowerCase()
+      // Buscar coincidencia directa del nombre completo o parcial significativo
+      const productWords = productNameLower.split(/\s+/)
+      
+      // Si todas las palabras del producto están en la consulta
+      const allWordsMatch = productWords.every(word => 
+        word.length > 2 && queryLower.includes(word)
+      )
+      if (allWordsMatch && productWords.length >= 2) {
+        console.log(`✅ Encontrado por coincidencia directa: ${product.name}`)
+        return product
+      }
+      
+      // Buscar palabras distintivas (no genéricas) del nombre del producto
+      const distinctiveWords = productWords.filter((w: string) => 
+        w.length > 4 && !['mega', 'pack', 'curso', 'cursos', 'de', 'para', 'desde', 'con', 'sin', 'usb', 'wifi', 'ram', 'ssd', 'ddr4', 'ddr5', 'fhd', 'intel', 'core', 'amd', 'ryzen', 'pantalla'].includes(w)
+      )
+      for (const word of distinctiveWords) {
+        if (queryLower.includes(word)) {
+          console.log(`✅ Encontrado por palabra distintiva "${word}": ${product.name}`)
           return product
         }
       }
     }
 
     // Palabras genéricas a ignorar
-    const stopWords = ['hola', 'buenos', 'buenas', 'dias', 'tardes', 'noches', 'quiero', 'necesito', 'tienes', 'tienen', 'hay', 'disponible', 'interesa', 'precio', 'costo', 'cuanto', 'cuánto', 'que', 'qué', 'cual', 'cuál', 'como', 'cómo', 'para', 'por', 'con', 'sin', 'una', 'uno', 'los', 'las', 'del', 'the', 'sobre', 'info', 'información', 'curso', 'cursos', 'mega', 'pack', 'me', 'un', 'estudiar', 'trabajar', 'usar', 'de']
+    const stopWords = ['hola', 'buenos', 'buenas', 'dias', 'tardes', 'noches', 'quiero', 'necesito', 'tienes', 'tienen', 'hay', 'disponible', 'interesa', 'precio', 'costo', 'cuanto', 'cuánto', 'que', 'qué', 'cual', 'cuál', 'como', 'cómo', 'para', 'por', 'con', 'sin', 'una', 'uno', 'los', 'las', 'del', 'the', 'sobre', 'info', 'información', 'curso', 'cursos', 'mega', 'pack', 'me', 'un', 'estudiar', 'trabajar', 'usar', 'de', 'algo', 'desde', 'casa', 'aprender']
+
+    // 🔧 CORRECCIÓN DE TYPOS COMUNES (búsqueda local rápida)
+    const typoCorrections: { [key: string]: string } = {
+      // Golden
+      'goldem': 'golden', 'golder': 'golden', 'goldenn': 'golden',
+      // Piano
+      'pino': 'piano', 'pianos': 'piano',
+      // Excel
+      'exel': 'excel', 'exsel': 'excel', 'ecxel': 'excel', 'excell': 'excel',
+      // Inglés
+      'ingles': 'inglés', 'englis': 'inglés', 'english': 'inglés', 'inlges': 'inglés',
+      // Trading
+      'tradign': 'trading', 'traiding': 'trading', 'tradng': 'trading',
+      // Diseño
+      'diseno': 'diseño', 'disenio': 'diseño',
+      // Programación
+      'programasion': 'programación', 'programacion': 'programación', 'programing': 'programación',
+      // MegaPack
+      'megapak': 'megapack', 'megapck': 'megapack',
+      // Resina
+      'recina': 'resina',
+      // Marketing
+      'marketin': 'marketing', 'markting': 'marketing',
+      // Office
+      'ofice': 'office', 'offic': 'office'
+    }
+
+    // Aplicar correcciones de typos a la consulta (palabra por palabra)
+    let correctedQuery = queryLower
+    const words = queryLower.split(/\s+/)
+    const correctedWords: string[] = []
+    let wasTypoCorrected = false
+    
+    for (const word of words) {
+      if (typoCorrections[word]) {
+        correctedWords.push(typoCorrections[word])
+        console.log(`🔧 Typo corregido: "${word}" → "${typoCorrections[word]}"`)
+        wasTypoCorrected = true
+      } else {
+        correctedWords.push(word)
+      }
+    }
+    
+    if (wasTypoCorrected) {
+      correctedQuery = correctedWords.join(' ')
+      console.log(`🔍 Buscando con consulta corregida: "${correctedQuery}"`)
+      for (const product of this.products) {
+        const productNameLower = product.name.toLowerCase()
+        // Buscar palabras distintivas en la consulta corregida
+        const searchWords = correctedWords.filter(w => w.length > 3 && !stopWords.includes(w))
+        for (const word of searchWords) {
+          if (productNameLower.includes(word)) {
+            console.log(`✅ Encontrado por typo corregido "${word}": ${product.name}`)
+            return product
+          }
+        }
+      }
+    }
+
+    // 🎯 DETECCIÓN DE INTENCIONES AMBIGUAS
+    // Mapea intenciones a productos relevantes
+    // IMPORTANTE: Usar frases completas para evitar falsos positivos
+    const intentionMap: { [key: string]: string[] } = {
+      'ganar dinero': ['trading', 'marketing'],
+      'dinero extra': ['trading', 'marketing'],
+      'ingresos pasivos': ['trading', 'marketing'],
+      'negocio propio': ['marketing', 'excel', 'diseño'],
+      'emprender': ['marketing', 'trading'],
+      'aprender música': ['piano'],
+      'tocar instrumento': ['piano'],
+      'mejorar trabajo': ['excel', 'office'],
+      'trabajo oficina': ['excel', 'office'],
+      'crear contenido': ['diseño', 'marketing'],
+      'redes sociales': ['marketing', 'redes'],
+      'freelance': ['diseño', 'programación'],
+      'trabajar desde casa': ['diseño', 'marketing', 'excel'],
+      'trabajo remoto': ['diseño', 'programación'],
+      'aprender ingles': ['inglés'],
+      'aprender inglés': ['inglés'],
+      'hablar ingles': ['inglés'],
+      'hablar inglés': ['inglés'],
+      'idioma ingles': ['inglés'],
+      'idioma inglés': ['inglés'],
+      'curso ingles': ['inglés'],
+      'curso inglés': ['inglés']
+    }
+
+    // Buscar intenciones completas (frases exactas primero)
+    for (const [intention, keywords] of Object.entries(intentionMap)) {
+      // Verificar que la frase completa esté en la consulta
+      if (queryLower.includes(intention)) {
+        for (const keyword of keywords) {
+          const producto = this.products.find(p => 
+            p.name.toLowerCase().includes(keyword)
+          )
+          if (producto) {
+            console.log(`✅ Encontrado por intención "${intention}": ${producto.name}`)
+            return producto
+          }
+        }
+      }
+    }
 
     const keywords = queryLower
       .replace(/[¿?!.,]/g, '')
