@@ -1,0 +1,14 @@
+✅ MEJORAS DEL BOT IMPLEMENTADAS
+
+🎯 Cambios:
+1. Anti-Repetición → NO repite precio/links
+2. Demora Humana → 2-10 segundos (más natural)
+
+📝 Archivos Modificados:
+- src/lib/ai-service.ts (regla anti-repetición)
+- src/lib/intelligent-response-service.ts (demora aumentada)
+
+🧪 Probar:
+npx tsx scripts/probar-mejoras-bot.ts
+
+✅ LISTO PARA USAR!

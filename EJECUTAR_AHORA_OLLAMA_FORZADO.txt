@@ -1,0 +1,64 @@
+========================================
+OLLAMA FORZADO - EJECUTAR AHORA
+========================================
+
+✅ ÚLTIMO CAMBIO APLICADO:
+
+Hybrid Learning System ahora SALTA el selector
+inteligente cuando FORCE_AI_FOR_ALL=true
+
+ANTES:
+   Selector Inteligente (75% confianza)
+   → Respuesta local (NO usaba Ollama)
+
+AHORA:
+   FORCE_AI_FOR_ALL=true
+   → SALTA selector
+   → Va directo a Ollama
+
+========================================
+LOGS ESPERADOS:
+========================================
+
+✅ CORRECTO:
+🦙 [FORCE_AI] Saltando respuestas locales - Usando Ollama directamente
+🦙 [OLLAMA] Consultando Ollama...
+[Ollama] 🤖 Generando respuesta con llama3
+[Ollama] ✅ Respuesta generada: ...
+✅ [OLLAMA] Respuesta obtenida: ...
+
+❌ INCORRECTO:
+🧠 [SELECTOR] Analizando mensaje...
+✅ [INTELLIGENT] Respuesta generada con multi_option
+
+========================================
+EJECUTAR:
+========================================
+
+npm run dev
+
+Luego enviar "Hola" por WhatsApp
+
+========================================
+ARCHIVOS MODIFICADOS:
+========================================
+
+1. src/lib/hybrid-learning-system.ts ⭐ NUEVO
+   - Check para FORCE_AI_FOR_ALL
+   - Salta selector inteligente
+   - Va directo a consultExternalAI()
+
+2. src/agents/greeting-agent.ts
+   - Check para FORCE_AI_FOR_ALL
+
+3. .env
+   - FORCE_AI_FOR_ALL=true
+
+========================================
+DOCUMENTACIÓN:
+========================================
+
+- OLLAMA_FORZADO_FINAL.md (completo)
+- OLLAMA_TODO_COMPLETO.md (anterior)
+
+========================================

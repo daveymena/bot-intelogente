@@ -1,0 +1,86 @@
+========================================
+  SINCRONIZAR TIENDA Y BOT
+  INSTRUCCIONES SIMPLES
+========================================
+
+PASO 1: EJECUTAR SINCRONIZACION
+--------------------------------
+Haz doble clic en:
+
+  sincronizar-tienda.bat
+
+Espera a que termine (1-2 minutos)
+
+
+PASO 2: VERIFICAR RESULTADOS
+-----------------------------
+1. Abre tu navegador
+2. Ve a: http://localhost:3000/tienda
+3. Verifica que no haya productos duplicados
+4. Verifica que las imagenes se vean bien
+
+
+PASO 3: PROBAR EL BOT
+----------------------
+1. Abre WhatsApp
+2. Envia: "Muestra los megapacks"
+3. Verifica que encuentre los productos
+4. Envia: "Info del Megapack 1"
+5. Verifica que envie la imagen correcta
+
+
+========================================
+  AGREGAR IMAGENES PERSONALIZADAS
+  (OPCIONAL)
+========================================
+
+Si quieres que cada megapack tenga su
+propia imagen:
+
+1. Sube las imagenes a:
+   https://postimages.org/
+
+2. Copia las URLs directas
+
+3. Abre el archivo:
+   scripts/actualizar-imagenes-megapacks.ts
+
+4. Busca: MEGAPACK_IMAGES
+
+5. Agrega tus URLs:
+   '1': 'https://tu-url.com/megapack-1.jpg',
+   '2': 'https://tu-url.com/megapack-2.jpg',
+   etc.
+
+6. Ejecuta:
+   actualizar-imagenes-megapacks.bat
+
+
+========================================
+  LISTO!
+========================================
+
+Tu tienda y bot ahora estan sincronizados:
+✅ Sin duplicados
+✅ Imagenes correctas
+✅ Todo organizado
+
+
+========================================
+  DOCUMENTACION COMPLETA
+========================================
+
+Para mas detalles, lee:
+📄 GUIA_SINCRONIZACION_TIENDA.md
+📄 RESUMEN_SINCRONIZACION.md
+
+
+========================================
+  SOPORTE
+========================================
+
+📱 WhatsApp: +57 304 274 8687
+📧 Email: deinermen25@gmail.com
+
+
+========================================

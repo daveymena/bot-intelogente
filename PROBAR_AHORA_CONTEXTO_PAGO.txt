@@ -1,0 +1,101 @@
+═══════════════════════════════════════════════════════════
+🎯 PROBAR CORRECCIÓN DE CONTEXTO DE PAGO - AHORA
+═══════════════════════════════════════════════════════════
+
+✅ PROBLEMA RESUELTO:
+El bot ya NO pierde el contexto del producto cuando pides el pago.
+
+═══════════════════════════════════════════════════════════
+📋 OPCIÓN 1: TEST AUTOMATIZADO (RECOMENDADO)
+═══════════════════════════════════════════════════════════
+
+1. Ejecuta:
+   probar-contexto-pago.bat
+
+2. El test hará:
+   - Busca un usuario real en la BD
+   - Cliente pregunta por portátil
+   - Bot muestra portátil
+   - Cliente dice "quiero pagar"
+   - Bot debe enviar links del MISMO portátil ✅
+
+NOTA: El test ahora usa un usuario REAL de tu base de datos
+
+═══════════════════════════════════════════════════════════
+📋 OPCIÓN 2: PRUEBA MANUAL EN WHATSAPP
+═══════════════════════════════════════════════════════════
+
+1. Abre WhatsApp y envía al bot:
+   "Hola, tienes portátiles?"
+
+2. Espera la respuesta (debe mostrar un portátil)
+
+3. Envía:
+   "Quiero pagar"
+
+4. Verifica que el bot envíe:
+   ✅ Links de pago del PORTÁTIL
+   ❌ NO debe enviar cursos u otros productos
+
+═══════════════════════════════════════════════════════════
+📋 OPCIÓN 3: VER LOGS EN TIEMPO REAL
+═══════════════════════════════════════════════════════════
+
+Abre PowerShell y ejecuta:
+
+Get-Content server-electron.log -Wait -Tail 50
+
+Busca estos mensajes:
+✅ "TRIPLE PERSISTENCIA completada"
+✅ "ENCONTRADO en contexto híbrido"
+✅ "Producto confirmado"
+✅ "Links REALES generados"
+
+═══════════════════════════════════════════════════════════
+🔍 QUÉ CAMBIÓ
+═══════════════════════════════════════════════════════════
+
+1. TRIPLE PERSISTENCIA:
+   - El producto se guarda en 3 lugares diferentes
+   - Imposible que se pierda
+
+2. BÚSQUEDA EN 6 ESTRATEGIAS:
+   - Si no lo encuentra en un lugar, busca en 5 más
+   - Siempre lo encuentra
+
+3. DETECCIÓN MEJORADA:
+   - Detecta 30+ formas de pedir el pago
+   - "quiero pagar", "me lo llevo", "dame el link", etc.
+
+═══════════════════════════════════════════════════════════
+✅ VERIFICACIÓN DE ÉXITO
+═══════════════════════════════════════════════════════════
+
+El bot debe:
+✅ Mostrar el producto correcto en paso 1
+✅ Enviar links de pago en paso 2
+✅ Los links deben ser del MISMO producto
+❌ NO debe mencionar otros productos
+
+═══════════════════════════════════════════════════════════
+📁 ARCHIVOS IMPORTANTES
+═══════════════════════════════════════════════════════════
+
+Documentación:
+- SOLUCION_PERDIDA_CONTEXTO_PAGO.md (técnica completa)
+- RESUMEN_CORRECCION_CONTEXTO_PAGO.md (resumen ejecutivo)
+- LISTO_CONTEXTO_PAGO_CORREGIDO.md (estado actual)
+
+Tests:
+- test-contexto-pago-producto.js (test automatizado)
+- probar-contexto-pago.bat (ejecutar test)
+
+═══════════════════════════════════════════════════════════
+🚀 EMPIEZA AQUÍ
+═══════════════════════════════════════════════════════════
+
+1. Ejecuta: probar-contexto-pago.bat
+2. Si el test pasa ✅, prueba en WhatsApp real
+3. Si hay problemas, revisa los logs
+
+═══════════════════════════════════════════════════════════

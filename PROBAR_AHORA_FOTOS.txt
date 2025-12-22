@@ -1,0 +1,92 @@
+========================================
+  PROBAR FOTOS CARD - INSTRUCCIONES
+========================================
+
+✅ CAMBIOS APLICADOS:
+- Conversión automática de URLs
+- Sistema híbrido CARD funcionando
+- Hot reload activado
+
+========================================
+  OPCIÓN 1: SCRIPT AUTOMÁTICO
+========================================
+
+Ejecutar:
+  PROBAR_FOTOS_CARD_AHORA.bat
+
+========================================
+  OPCIÓN 2: MANUAL
+========================================
+
+1. VERIFICAR URLs:
+   node verificar-urls-fotos.js
+
+   Debe mostrar:
+   ✅ URL absoluta válida
+   http://localhost:3000/fotos/curso de piano completo .jpg
+
+2. REINICIAR SERVIDOR:
+   npm run dev
+
+3. PROBAR EN WHATSAPP:
+   Enviar mensaje:
+   "tienes curso de piano?"
+
+========================================
+  RESULTADO ESPERADO
+========================================
+
+Deberías recibir:
+
+[FOTO DEL CURSO DE PIANO]
+
+📚 *Curso Piano Profesional Completo*
+━━━━━━━━━━━━━━━━━━━━
+
+💰 *PRECIO:* 60,000 COP
+
+📝 76 clases en video descargables para 
+aprender piano desde cero hasta nivel 
+profesional
+
+✅ *INCLUYE:*
+   • Acceso inmediato
+   • Entrega por WhatsApp
+   • Soporte incluido
+   • Actualizaciones gratis
+
+👉 *¿Te interesa?* Escribe "comprar" o "más info"
+━━━━━━━━━━━━━━━━━━━━
+
+========================================
+  SI NO FUNCIONA
+========================================
+
+1. Verificar que el servidor esté corriendo
+2. Revisar logs en la consola
+3. Ejecutar: node verificar-urls-fotos.js
+4. Verificar variable NEXT_PUBLIC_APP_URL en .env
+5. Consultar: SOLUCION_FOTOS_RUTAS_RELATIVAS.md
+
+========================================
+  DOCUMENTACIÓN
+========================================
+
+- SOLUCION_FOTOS_RUTAS_RELATIVAS.md
+- RESUMEN_SOLUCION_FOTOS_FINAL.md
+- VISUAL_ANTES_VS_AHORA_FOTOS.md
+- RESUMEN_EJECUTIVO_SESION_15_DIC.md
+
+========================================
+  ESTADO ACTUAL
+========================================
+
+✅ Código modificado
+✅ Hot reload aplicado
+✅ Scripts de prueba listos
+✅ Documentación completa
+⏳ PENDIENTE: Probar en WhatsApp
+
+========================================
+
+¡LISTO PARA PROBAR! 🚀

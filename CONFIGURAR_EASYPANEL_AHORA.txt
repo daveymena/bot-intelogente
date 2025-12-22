@@ -1,0 +1,66 @@
+========================================
+  CONFIGURAR RESEND EN EASYPANEL
+========================================
+
+✅ YA TIENES TU API KEY:
+   re_MMdpZetB_PuLUUbLh6QQMdqvGozjxAGya
+
+📋 PASOS PARA EASYPANEL:
+
+1. Abre Easypanel: https://easypanel.io
+
+2. Selecciona tu proyecto
+
+3. Ve a "Environment Variables"
+
+4. Agrega estas 3 variables:
+
+   ┌─────────────────────────────────────┐
+   │ Variable 1:                         │
+   │ Nombre: RESEND_API_KEY              │
+   │ Valor:  re_MMdpZetB_PuLUUbLh6QQMdqvGozjxAGya │
+   └─────────────────────────────────────┘
+
+   ┌─────────────────────────────────────┐
+   │ Variable 2:                         │
+   │ Nombre: RESEND_FROM_EMAIL           │
+   │ Valor:  onboarding@resend.dev       │
+   └─────────────────────────────────────┘
+
+   ┌─────────────────────────────────────┐
+   │ Variable 3:                         │
+   │ Nombre: EMAIL_FROM                  │
+   │ Valor:  Tecnovariedades D&S <onboarding@resend.dev> │
+   └─────────────────────────────────────┘
+
+5. Guarda cambios
+
+6. Redeploy (si no es automático)
+
+7. ¡LISTO! Los emails funcionarán
+
+========================================
+  VERIFICAR QUE FUNCIONA
+========================================
+
+Desde terminal de Easypanel:
+
+   npx tsx scripts/verificar-emails-llegan.ts
+
+Deberías ver:
+   ✅ Email enviado con Resend!
+
+========================================
+  CAPACIDAD
+========================================
+
+Plan Gratuito de Resend:
+   ✅ 3,000 emails/mes GRATIS
+   ✅ 100 emails/día
+   ✅ Sin tarjeta de crédito
+
+Para más:
+   - Verifica tu dominio → Ilimitados
+   - Upgrade a Pro → 50,000/mes
+
+========================================

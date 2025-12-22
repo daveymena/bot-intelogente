@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "phone": "+57 312 456 7890",
+    "lastMessage": "Me interesa el portátil Asus",
+    "lastSeen": "Hace 5 min",
+    "messages": 12,
+    "status": "active",
+    "unread": 2
+  },
+  {
+    "id": 2,
+    "phone": "+57 315 123 4567",
+    "lastMessage": "Quiero el curso de trading",
+    "lastSeen": "Hace 30 min",
+    "messages": 8,
+    "status": "active",
+    "unread": 0
+  },
+  {
+    "id": 3,
+    "phone": "+57 318 987 6543",
+    "lastMessage": "Gracias, ya hice el pago",
+    "lastSeen": "Hace 2 horas",
+    "messages": 15,
+    "status": "completed",
+    "unread": 0
+  },
+  {
+    "id": 4,
+    "phone": "+57 320 111 2222",
+    "lastMessage": "Tienen impresoras Epson?",
+    "lastSeen": "Hace 1 día",
+    "messages": 3,
+    "status": "pending",
+    "unread": 1
+  },
+  {
+    "id": 5,
+    "phone": "+57 301 333 4444",
+    "lastMessage": "Cuánto cuesta el pack completo?",
+    "lastSeen": "Hace 2 días",
+    "messages": 6,
+    "status": "pending",
+    "unread": 0
+  }
+]

@@ -1,0 +1,79 @@
+🚀 EJECUTA ESTO EN EASYPANEL AHORA
+
+═══════════════════════════════════════════════════════════
+PASO 1: ABRIR TERMINAL EN EASYPANEL
+═══════════════════════════════════════════════════════════
+
+1. Ve a Easypanel
+2. Abre tu aplicación (bot-whatsapp-what-auto2)
+3. Click en "Terminal" o "Console"
+
+═══════════════════════════════════════════════════════════
+PASO 2: EJECUTAR ESTOS COMANDOS
+═══════════════════════════════════════════════════════════
+
+# 1. Crear las tablas (si no lo hiciste)
+npx prisma db push
+
+# 2. Inicializar configuración de pagos
+npx tsx scripts/inicializar-config-pagos.ts
+
+═══════════════════════════════════════════════════════════
+PASO 3: ACCEDER AL DASHBOARD
+═══════════════════════════════════════════════════════════
+
+URL: https://bot-whatsapp-what-auto2.sqaoeo.easypanel.host
+
+Login:
+Email: daveymena16@gmail.com
+Password: 6715320Dvd.
+
+═══════════════════════════════════════════════════════════
+PASO 4: CONFIGURAR EN EL DASHBOARD
+═══════════════════════════════════════════════════════════
+
+Una vez dentro, busca estas secciones:
+
+📦 PRODUCTOS
+- Edita cada producto
+- Agrega TAGS (palabras clave):
+  Ejemplo: "piano, curso piano, aprender piano"
+- Agrega LINKS DE PAGO (opcional):
+  - Link MercadoPago
+  - Link PayPal
+  - Link Personalizado (Hotmart, etc.)
+
+💳 INTEGRACIONES DE PAGO (si aparece)
+- Configura tus credenciales de pago
+- Activa los métodos que uses
+- El bot generará links automáticamente
+
+═══════════════════════════════════════════════════════════
+RESULTADO ESPERADO
+═══════════════════════════════════════════════════════════
+
+Antes:
+Cliente: "Quiero el curso de piano"
+Bot: "¡Perfecto! Aquí está el enlace de compra 🎹
+👉 [ENLACE DE ARRIBA]"  ❌
+
+Después:
+Cliente: "Quiero el curso de piano"
+Bot: "¡Perfecto! Aquí está el enlace de compra 🎹
+👉 https://mpago.la/tu-link-real"  ✅
+
+═══════════════════════════════════════════════════════════
+¿PROBLEMAS?
+═══════════════════════════════════════════════════════════
+
+Si no ves el panel de integraciones:
+- Es normal, puedes configurar links directamente en cada producto
+- Los tags son lo más importante para que el bot identifique productos
+
+Si el bot no encuentra productos:
+- Verifica que los tags estén configurados
+- Prueba con las palabras exactas de los tags
+
+═══════════════════════════════════════════════════════════
+
+Lee CONFIGURAR_TODO_AHORA.md para más detalles.

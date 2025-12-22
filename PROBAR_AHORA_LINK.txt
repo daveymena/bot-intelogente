@@ -1,0 +1,62 @@
+========================================
+  PROBAR CORRECCION: "Enviame el link"
+========================================
+
+PROBLEMA RESUELTO:
+  El bot NO detectaba "Enviame el link de pago"
+
+SOLUCION:
+  Ahora detecta frases como:
+  - "Enviame el link"
+  - "Dame el link"
+  - "Manda el link"
+  - "El link por favor"
+
+========================================
+
+PROBAR AHORA:
+
+1. Test automatico:
+   ./PROBAR_ENVIAR_LINK.bat
+
+2. Menu interactivo:
+   ./EJECUTAR_CORRECCION_LINK.bat
+
+3. Prueba manual:
+   - npm run dev
+   - Conecta WhatsApp
+   - Envia: "Me interesa el mega pack 01"
+   - Envia: "Enviame el link de pago"
+   - Debe mostrar TODOS los metodos con links
+
+========================================
+
+RESULTADO ESPERADO:
+
+Usuario: "Enviame el link de pago"
+
+Bot: "¡Perfecto! 💪 Puedes pagarlo por:
+
+🟦 MercadoPago
+👉 https://mpago.la/...
+
+🟨 PayPal
+👉 https://paypal.me/...
+
+📱 Nequi: 3136174267
+🟩 Daviplata: 3136174267
+
+¿Con cual prefieres continuar? 😄"
+
+========================================
+
+ARCHIVOS MODIFICADOS:
+  ✅ intelligent-conversation-engine.ts
+  ✅ test-enviar-link.ts
+  ✅ PROBAR_ENVIAR_LINK.bat
+
+DOCUMENTACION:
+  📄 CORRECCION_ENVIAR_LINK_PAGO.md
+  📄 RESUMEN_CORRECCION_LINK_PAGO.md
+
+========================================

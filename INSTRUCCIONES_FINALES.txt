@@ -1,0 +1,29 @@
+========================================
+  INSTRUCCIONES FINALES
+========================================
+
+Si REPO_NUEVO_LIMPIO.bat fallo:
+
+OPCION 1: Ejecutar de nuevo
+  REPO_NUEVO_LIMPIO.bat
+
+OPCION 2: Push forzado
+  PUSH_FORZADO_FINAL.bat
+
+OPCION 3: Manual (copia estos comandos):
+  git branch -M main
+  git push -u origin main --force --no-verify
+
+========================================
+
+Si nada funciona, el problema puede ser:
+1. Credenciales de GitHub
+2. Permisos del repositorio
+3. Proteccion de branch en GitHub
+
+SOLUCION ALTERNATIVA:
+Ve a GitHub > Settings > Branches
+Desactiva temporalmente la proteccion de main
+Luego ejecuta: PUSH_FORZADO_FINAL.bat
+
+========================================

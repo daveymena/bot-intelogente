@@ -1,0 +1,283 @@
+Entendido. Tienes una arquitectura de software excepcional y muy completa. Usar Baileys con Next.js, Prisma y un servicio de IA multi-proveedor es una estructura de nivel de producción.
+
+El problema que describes es increíblemente común. Tienes toda la "fontanería" (plomería) conectada, pero el "agua" (la conversación) no fluye como debería.
+
+El "fallo" no está en tu código, sino en tu estrategia de IA conversacional.
+
+Tu arquitectura actual, según la veo en ai-service.ts, es reactiva:
+
+Usuario envía mensaje.
+
+Cargas el historial de 24h.
+
+Lo envías todo a Groq (Llama 3.1) con un prompt de sistema genérico ("eres un vendedor...").
+
+La IA genera una respuesta.
+
+Tú la envías.
+
+Esto crea un "loro inteligente", no un "vendedor profesional". Un vendedor dirige la conversación, tiene un objetivo claro y no se limita a responder preguntas. Tu bot actual está jugando a la defensiva; un vendedor profesional juega a la ofensiva (guiando al cliente).
+
+Para que tu sistema funcione como un vendedor profesional, debes pasar de un modelo Reactivo a un modelo Proactivo Basado en Estados (State-Driven).
+
+Aquí está la solución técnica y estratégica, usando los nombres de tus propios archivos.
+
+🧠 La Solución: El Agente de Ventas Basado en Estados
+El núcleo de tu "fallo" es que tratas a la IA como un único cerebro monolítico. Debes tratarla como un equipo de especialistas (Agentes) y usar un Supervisor (Router) para decidir qué especialista debe hablar.
+
+Tu archivo ai-service.ts no debe ser el que genera la respuesta; debe ser el Supervisor que decide quién la genera.
+
+Este es el plan de acción para arreglarlo:
+
+Paso 1: Modifica tu "Memoria" (Base de Datos)
+La memoria conversacional no es solo el historial de 24 horas. Es saber en qué etapa del embudo de ventas está el cliente.
+
+Añade esto a tu schema.prisma en el modelo Conversation:
+
+Fragmento de código
+
+// prisma/schema.prisma
+
+model Conversation {
+  id              String   @id @default(cuid())
+  // ... tus otros campos
+  customerPhone   String
+  status          ConversationStatus @default(ACTIVE)
+
+  // --- NUEVOS CAMPOS CRÍTICOS ---
+  // El "Megaflujo" activo (Ej: "VENTA_PRODUCTO_FISICO", "SOPORTE_MEMBRESIA")
+  salesFunnel     String?
+  // La etapa exacta dentro de ese flujo
+  salesStage      String   @default("GREETING") 
+  // Productos o temas que se están discutiendo
+  contextualData  Json?    
+  // --- FIN NUEVOS CAMPOS ---
+
+  messages        Message[]
+  createdAt       DateTime @default(now())
+}
+
+// Define los estados posibles para que seas ordenado
+// (Puedes manejar esto como un enum en tu código)
+// GREETING -> DISCOVERY -> PRESENTING -> OBJECTION_HANDLING -> CLOSING -> POST_SALE
+No olvides ejecutar npm run db:generate y npm run db:migrate (o db:push si estás en desarrollo).
+
+Paso 2: Rediseña tu ai-service.ts (El Supervisor/Router)
+Este es el cambio más importante. ai-service.ts dejará de llamar a Groq directamente. Su nuevo trabajo será:
+
+Cargar la conversación desde la BD (incluyendo el salesStage).
+
+Llamar a un Agente de IA especializado basado en ese salesStage.
+
+Recibir la respuesta y el nuevo estado del Agente.
+
+Actualizar el salesStage en la BD.
+
+Devolver la respuesta.
+
+TypeScript
+
+// src/lib/ai-service.ts
+import { db } from './db';
+import { GreetingAgent } from './agents/greeting-agent';
+import { DiscoveryAgent } from './agents/discovery-agent';
+import { ProductAgent } from './agents/product-agent';
+import { ObjectionAgent } from './agents/objection-agent';
+import { ClosingAgent } from './agents/closing-agent';
+
+// ... otros imports
+
+static async generateResponse(userId, message, phone, history) {
+  // 1. Cargar la conversación COMPLETA, no solo mensajes
+  let conversation = await db.conversation.findFirst({
+    where: { customerPhone: phone, userId: userId, status: 'ACTIVE' },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  if (!conversation) {
+    conversation = await db.conversation.create({
+      data: {
+        userId,
+        customerPhone: phone,
+        customerName: 'Cliente', // Puedes obtener esto del perfil de WA
+        status: 'ACTIVE',
+        salesStage: 'GREETING', // Estado inicial
+      },
+    });
+  }
+  
+  const currentState = conversation.salesStage;
+  const context = conversation.contextualData;
+  let agentResponse;
+
+  // 2. EL SUPERVISOR (Router de Megaflujos)
+  // Aquí es donde tus "megaflujos-service.ts" cobran vida
+  switch (currentState) {
+    case 'GREETING':
+      agentResponse = await GreetingAgent.handle(message, history, context);
+      break;
+    case 'DISCOVERY': // El bot está haciendo preguntas
+      agentResponse = await DiscoveryAgent.handle(message, history, context);
+      break;
+    case 'PRESENTING': // El bot está mostrando productos
+      // Aquí tu agente usará 'product-intelligence-service.ts'
+      agentResponse = await ProductAgent.handle(message, history, context, userId);
+      break;
+    case 'OBJECTION_HANDLING': // El cliente dijo "es muy caro"
+      agentResponse = await ObjectionAgent.handle(message, history, context);
+      break;
+    case 'CLOSING': // El cliente dijo "listo, quiero comprar"
+      // Aquí tu agente usará 'bot-payment-link-generator.ts'
+      agentResponse = await ClosingAgent.handle(message, history, context, userId);
+      break;
+    default:
+      // Un estado de "perdido" que intenta re-encaminar
+      agentResponse = await GreetingAgent.handle(message, history, context);
+  }
+
+  // 3. Actualizar la "Memoria" (El Estado)
+  await db.conversation.update({
+    where: { id: conversation.id },
+    data: {
+      salesStage: agentResponse.nextState, // El Agente nos dice cuál es el siguiente paso
+      contextualData: agentResponse.newContext, // El Agente actualiza el contexto
+      lastMessageAt: new Date(),
+    },
+  });
+
+  // 4. Retornar solo la respuesta de texto
+  return { message: agentResponse.responseMessage, confidence: agentResponse.confidence };
+}
+Paso 3: Crea tus Agentes Especializados (Los Vendedores)
+Aquí es donde usas tus data/*.json. Cada agente tiene un prompt de sistema diferente y especializado y se le inyectan ejemplos específicos (few-shot learning) de tus archivos JSON.
+
+Crea una nueva carpeta src/lib/agents/ y añade los archivos:
+
+Ejemplo: src/lib/agents/objection-agent.ts (El experto en objeciones)
+
+TypeScript
+
+// src/lib/agents/objection-agent.ts
+import { groq } from '../ai-multi-provider'; // Asumiendo que así lo exportas
+import { loadObjectionExamples } from '../training-service'; // Debes crear este helper
+
+export class ObjectionAgent {
+  static async handle(message, history, context) {
+    // 1. Cargar ejemplos específicos para este agente
+    // Esto es mucho más efectivo que un JSON gigante
+    const examples = await loadObjectionExamples('megaflujos-parte-4.json');
+
+    const systemPrompt = `
+      Eres un experto en cierre de ventas. El cliente está en la etapa de 'Manejo de Objeciones'.
+      Tu único objetivo es rebatir su objeción y llevarlo al cierre.
+      
+      CONTEXTO ACTUAL: ${JSON.stringify(context)}
+      OBJECIÓN DEL CLIENTE: ${message}
+
+      Técnicas que DEBES usar:
+      1. Validar su preocupación (Ej: "Entiendo perfectamente tu punto sobre el precio...").
+      2. Refutar con VALOR, no con descuento (Ej: "Sin embargo, considera que este producto incluye...").
+      3. Terminar con una pregunta de cierre (Ej: "¿Verdad que esos beneficios justifican la inversión?").
+      
+      NO ofrezcas descuentos a menos que el contexto (context.discount_allowed) sea 'true'.
+      Tu respuesta DEBE ser corta y directa al grano.
+    `;
+
+    const aiResponse = await groq.chat.completions.create({
+      model: "llama-3.1-70b-versatile",
+      messages: [
+        { role: 'system', content: systemPrompt },
+        ...history, // El historial sigue siendo útil
+        ...examples, // <-- ¡MÁGIA! (Ejemplos de objeciones resueltas)
+        { role: 'user', content: message }
+      ],
+      // ¡Usa JSON Mode si tu IA lo soporta!
+      // response_format: { type: "json_object" }, 
+    });
+
+    const responseContent = aiResponse.choices[0].message.content;
+    
+    // Aquí podrías tener otra llamada de IA para "decidir" el próximo estado
+    // Por ahora, lo haremos simple:
+    let nextState = 'OBJECTION_HANDLING';
+    if (responseContent.includes("listo para comprar")) { // Simplificación
+      nextState = 'CLOSING';
+    }
+
+    return {
+      responseMessage: responseContent,
+      nextState: nextState, // Decide si la objeción fue resuelta o no
+      newContext: context, // Pudo haber actualizado el contexto
+      confidence: 0.95
+    };
+  }
+}
+Paso 4: Humaniza las Respuestas (Tu baileys-stable-service.ts)
+Un vendedor profesional no responde en 50 milisegundos. Usa tus archivos anti-ban-middleware.ts y humanized-response-generator.ts para hacer esto:
+
+En baileys-stable-service.ts, antes de enviar la respuesta:
+
+TypeScript
+
+// baileys-stable-service.ts
+// ... dentro de 'messages.upsert'
+  
+  // 3. Procesar con IA (que ahora es el Supervisor)
+  const response = await AIService.generateResponse(...)
+  
+  // --- ¡NUEVO PASO DE HUMANIZACIÓN! ---
+  
+  // A. Simular "Escribiendo..."
+  await socket.presenceSubscribe(from)
+  await socket.sendPresenceUpdate('composing', from)
+
+  // B. Calcular un delay realista
+  const delay = HumanizedResponseGenerator.calculateDelay(response.message);
+  await new Promise(resolve => setTimeout(resolve, delay)); // Ej: 1-3 segundos
+
+  // C. Aplicar formato (negritas, cursivas)
+  const formattedMessage = HumanizedResponseGenerator.formatText(response.message);
+
+  // D. Dejar de escribir y enviar
+  await socket.sendPresenceUpdate('paused', from)
+  
+  // 4. Enviar respuesta humanizada
+  await socket.sendMessage(from, { text: formattedMessage })
+  
+// ...
+Resumen de tu Nueva Arquitectura de Ventas
+Baileys Service: Recibe el mensaje.
+
+AI Service (Supervisor):
+
+Carga la Conversation desde la BD (incluyendo salesStage).
+
+Usa un switch para rutear la tarea al Agente correcto (Greeting, Discovery, Objection, Closing).
+
+Agente Especializado (Ej: ObjectionAgent):
+
+Carga un Prompt de Sistema súper-específico.
+
+Carga ejemplos específicos (few-shot) desde tus archivos .json.
+
+Llama a Groq (Llama 3.1) para generar la respuesta.
+
+Devuelve { responseMessage, nextState, newContext } al Supervisor.
+
+AI Service (Supervisor):
+
+Recibe la respuesta del Agente.
+
+Actualiza la BD con el nextState y newContext.
+
+Devuelve responseMessage a Baileys.
+
+Baileys Service:
+
+Simula "escribiendo...".
+
+Aplica un delay.
+
+Envía el mensaje formateado.
+
+Este modelo es más complejo de implementar, pero es la única forma de construir un sistema de ventas profesional y robusto. Tu bot dejará de ser un "asistente" y se convertirá en un "vendedor" que guía activamente al cliente hacia la compra.

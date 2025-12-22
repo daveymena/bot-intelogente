@@ -1,0 +1,127 @@
+═══════════════════════════════════════════════════════════════
+  📧 CHECKLIST: Configurar Gmail OAuth2
+═══════════════════════════════════════════════════════════════
+
+🎯 OBJETIVO:
+   Enviar emails sin límites usando tu Gmail
+
+⏱️ TIEMPO: 15-20 minutos
+
+═══════════════════════════════════════════════════════════════
+
+✅ PASO 1: CREAR PROYECTO EN GOOGLE CLOUD
+
+   [ ] Ir a: https://console.cloud.google.com/
+   [ ] Crear nuevo proyecto: "Smart Sales Bot"
+   [ ] Seleccionar el proyecto creado
+
+═══════════════════════════════════════════════════════════════
+
+✅ PASO 2: HABILITAR GMAIL API
+
+   [ ] Ir a: https://console.cloud.google.com/apis/library
+   [ ] Buscar: "Gmail API"
+   [ ] Click en "Habilitar"
+
+═══════════════════════════════════════════════════════════════
+
+✅ PASO 3: CONFIGURAR PANTALLA DE CONSENTIMIENTO
+
+   [ ] Ir a: https://console.cloud.google.com/apis/credentials/consent
+   [ ] Tipo: "Externo"
+   [ ] Nombre: "Smart Sales Bot"
+   [ ] Email soporte: daveymena16@gmail.com
+   [ ] Ámbitos: gmail.send y gmail.compose
+   [ ] Usuario de prueba: daveymena16@gmail.com
+   [ ] Guardar
+
+═══════════════════════════════════════════════════════════════
+
+✅ PASO 4: CREAR CREDENCIALES OAUTH 2.0
+
+   [ ] Ir a: https://console.cloud.google.com/apis/credentials
+   [ ] Crear credenciales → OAuth 2.0
+   [ ] Tipo: "Aplicación web"
+   [ ] URI redirección: https://developers.google.com/oauthplayground
+   [ ] Copiar Client ID
+   [ ] Copiar Client Secret
+
+═══════════════════════════════════════════════════════════════
+
+✅ PASO 5: OBTENER REFRESH TOKEN
+
+   [ ] Ir a: https://developers.google.com/oauthplayground
+   [ ] Configurar (⚙️): Usar tus credenciales
+   [ ] Pegar Client ID y Client Secret
+   [ ] Seleccionar: https://mail.google.com/
+   [ ] Autorizar con tu Gmail
+   [ ] Exchange code for tokens
+   [ ] Copiar Refresh Token
+
+═══════════════════════════════════════════════════════════════
+
+✅ PASO 6: CONFIGURAR .ENV
+
+   [ ] Abrir archivo .env
+   [ ] Agregar:
+   
+       GMAIL_USER=daveymena16@gmail.com
+       GMAIL_CLIENT_ID=tu_client_id
+       GMAIL_CLIENT_SECRET=tu_client_secret
+       GMAIL_REFRESH_TOKEN=tu_refresh_token
+       EMAIL_SERVICE=gmail
+   
+   [ ] Guardar archivo
+
+═══════════════════════════════════════════════════════════════
+
+✅ PASO 7: PROBAR
+
+   [ ] Ejecutar: npx tsx scripts/test-gmail-oauth.ts
+   [ ] Verificar que llegue email de prueba
+   [ ] ✅ ¡Listo!
+
+═══════════════════════════════════════════════════════════════
+
+📝 VALORES QUE NECESITAS COPIAR:
+
+   1. Client ID (de Google Console)
+      Ejemplo: 123456-abc.apps.googleusercontent.com
+      
+   2. Client Secret (de Google Console)
+      Ejemplo: GOCSPX-abcdefghijk
+      
+   3. Refresh Token (de OAuth Playground)
+      Ejemplo: 1//0abcdefghijklmnop
+
+═══════════════════════════════════════════════════════════════
+
+🆘 PROBLEMAS COMUNES:
+
+   ❌ "Invalid grant"
+   → Generar nuevo refresh token
+   
+   ❌ "Access denied"
+   → Agregar email a usuarios de prueba
+   
+   ❌ "API not enabled"
+   → Habilitar Gmail API
+   
+   ❌ Email no llega
+   → Verificar credenciales en .env
+
+═══════════════════════════════════════════════════════════════
+
+🎉 DESPUÉS DE CONFIGURAR:
+
+   ✅ Podrás enviar a cualquier email
+   ✅ Sin límites de Resend
+   ✅ Gratis (500 emails/día)
+   ✅ Sistema automático funcionando
+
+═══════════════════════════════════════════════════════════════
+
+📖 GUÍA COMPLETA:
+   Ver: CONFIGURAR_GMAIL_CONSOLE_PASO_A_PASO.md
+
+═══════════════════════════════════════════════════════════════

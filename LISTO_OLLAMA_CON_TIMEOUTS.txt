@@ -1,0 +1,75 @@
+========================================
+OLLAMA LISTO CON TIMEOUTS GENEROSOS
+========================================
+
+✅ CAMBIOS APLICADOS:
+
+1. Baileys → Usa Orchestrator (no IntelligentConversationEngine)
+2. Hybrid Learning → Ollama primero, Groq fallback
+3. Timeouts generosos:
+   - OLLAMA_TIMEOUT=180000 (3 minutos)
+   - Suficiente para respuestas complejas
+
+========================================
+TIEMPOS ESPERADOS:
+========================================
+
+Saludo simple:      5-15 segundos
+Pregunta producto:  10-30 segundos
+Conversación:       15-60 segundos
+Máximo timeout:     180 segundos
+
+========================================
+LOGS ESPERADOS:
+========================================
+
+✅ CORRECTO:
+[Baileys] 🦙 Usando SISTEMA DE AGENTES CON OLLAMA
+🦙 [OLLAMA] Consultando Ollama...
+[Ollama] 🤖 Generando respuesta con llama3:8b
+[Ollama] ✅ Respuesta generada: ...
+✅ [OLLAMA] Respuesta obtenida de Ollama
+
+❌ INCORRECTO:
+[IntelligentEngine] 🔑 0 API keys de Groq
+Error: GROQ_API_KEY no está configurada
+
+========================================
+PROBAR AHORA:
+========================================
+
+1. npm run dev
+2. Enviar "Hola" por WhatsApp
+3. ESPERAR 5-30 segundos (es normal)
+4. Verificar logs: [Ollama] ✅
+
+========================================
+IMPORTANTE:
+========================================
+
+⏱️ Ollama TARDA MÁS que Groq
+   - Groq: < 1 segundo
+   - Ollama: 5-30 segundos
+   - Esto es NORMAL y ESPERADO
+
+💰 Pero es GRATIS
+   - Sin límites de tokens
+   - Sin rate limits
+   - Responde siempre
+
+========================================
+SI TARDA MUCHO (>60s):
+========================================
+
+1. Es normal en primera respuesta
+2. Espera hasta 180 segundos
+3. Si falla, aumenta timeout:
+   OLLAMA_TIMEOUT=300000 (5 min)
+
+========================================
+EJECUTAR:
+========================================
+
+npm run dev
+
+========================================

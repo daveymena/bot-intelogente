@@ -1,0 +1,66 @@
+========================================
+OLLAMA CON COHERENCIA CONTEXTUAL
+========================================
+
+✅ CONFIGURACIÓN APLICADA:
+
+Ollama SIEMPRE analiza mensajes para:
+- Mantener coherencia conversacional
+- Interpretar referencias ("el primero", "ese")
+- Recordar productos mencionados
+- No perder el hilo de la conversación
+
+========================================
+VARIABLES CLAVE:
+========================================
+
+OLLAMA_HANDLES_ALL=true
+USE_AI_FOR_SIMPLE_QUERIES=true
+OLLAMA_MAINTAINS_CONTEXT=true
+OLLAMA_VALIDATES_RESPONSES=true
+
+========================================
+PROBAR COHERENCIA:
+========================================
+
+npm run dev
+
+Luego probar esta conversación:
+
+1. "Me interesa un computador"
+   → Debe mostrar lista de laptops
+
+2. "Cuánto cuesta el primero?"
+   → Debe identificar "el primero" = primer laptop
+   → NO debe preguntar "¿cuál producto?"
+
+3. "Me lo llevo"
+   → Debe recordar el producto
+   → Debe generar links de pago
+
+4. "Tiene garantía?"
+   → Debe saber que pregunta por ese producto
+   → NO debe perder contexto
+
+========================================
+LOGS ESPERADOS:
+========================================
+
+✅ CORRECTO:
+[Ollama] Analizando con contexto...
+[Ollama] Identificado: "el primero" = HP Pavilion
+[Ollama] Manteniendo coherencia conversacional
+✅ Respuesta coherente con historial
+
+❌ INCORRECTO:
+[Local] Respondiendo sin contexto
+"¿Cuál producto te interesa?" ← Pierde contexto
+
+========================================
+DOCUMENTACIÓN:
+========================================
+
+- OLLAMA_COHERENCIA_CONTEXTUAL.md (completo)
+- PROMPT_OLLAMA_COHERENCIA.md (prompt exacto)
+
+========================================

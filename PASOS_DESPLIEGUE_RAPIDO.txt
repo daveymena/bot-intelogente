@@ -1,0 +1,84 @@
+========================================
+DESPLIEGUE RÁPIDO EN EASYPANEL
+========================================
+
+PASO 1: SUBIR A GIT
+========================================
+
+# Opción A: Script automático
+SUBIR_A_GIT_AHORA.bat
+
+# Opción B: Manual
+git add .
+git commit -m "feat: 4 mejoras criticas"
+git push origin main
+
+
+PASO 2: ACTUALIZAR EN EASYPANEL
+========================================
+
+1. Ve a https://easypanel.io
+2. Selecciona tu proyecto
+3. Click en "Deploy" → "Redeploy"
+4. Espera 2-3 minutos
+
+
+PASO 3: EJECUTAR MIGRACIONES
+========================================
+
+En la terminal de Easypanel:
+
+npx prisma generate
+npx prisma db push
+
+
+PASO 4: ENTRENAR BOT (OPCIONAL)
+========================================
+
+# Entrenamiento rápido (5-10 min)
+npx tsx scripts/entrenar-bot-automatico.ts
+
+# O entrenamiento completo (20-25 min)
+npx tsx scripts/entrenar-bot-automatico.ts
+npx tsx scripts/entrenar-conversaciones-completas.ts
+
+
+PASO 5: REINICIAR SERVICIO
+========================================
+
+En Easypanel UI:
+- Click en "Restart"
+
+O en terminal:
+pm2 restart all
+
+
+PASO 6: VERIFICAR
+========================================
+
+Ver logs:
+pm2 logs
+
+Deberías ver:
+✅ "🔑 8 API keys de Groq disponibles"
+✅ "🧠 Inicializando base de conocimiento local..."
+✅ "✅ Usuario conectado"
+
+Probar con WhatsApp:
+- Envía un mensaje
+- Verifica que responde correctamente
+
+
+========================================
+LISTO
+========================================
+
+El bot ahora tiene:
+✅ Métodos de pago correctos
+✅ 8x más capacidad (800k tokens/día)
+✅ Aprendizaje local
+✅ Entrenamiento automático
+
+Documentación completa:
+- DESPLEGAR_EN_EASYPANEL.md
+- RESUMEN_FINAL_3_MEJORAS.md

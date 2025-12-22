@@ -1,0 +1,199 @@
+═══════════════════════════════════════════════════════════════
+🚨 EJECUTAR ESTO EN LA CONSOLA DE EASYPANEL - AHORA
+═══════════════════════════════════════════════════════════════
+
+🔥 OPCIÓN RÁPIDA: TODO EN UN COMANDO
+────────────────────────────────────────────────────────────────
+
+Ejecuta este comando y espera 2 minutos:
+
+npx tsx scripts/diagnostico-y-test-qr.ts
+
+
+Esto ejecuta automáticamente:
+✅ Diagnóstico completo
+✅ Test de QR por consola
+✅ Verificación de estado en DB
+
+Si prefieres ejecutar paso a paso, continúa abajo ↓
+
+
+═══════════════════════════════════════════════════════════════
+OPCIÓN PASO A PASO
+═══════════════════════════════════════════════════════════════
+
+PASO 1: Diagnóstico Completo
+────────────────────────────────────────────────────────────────
+
+Copia y pega este comando:
+
+npx tsx scripts/diagnostico-completo-whatsapp.ts
+
+
+Esto te va a decir:
+✅ Qué está bien
+❌ Qué está mal
+💡 Cómo solucionarlo
+
+Espera 10 segundos para ver el resultado.
+
+
+PASO 2: Test de QR por Consola
+────────────────────────────────────────────────────────────────
+
+Si el diagnóstico dice que todo está OK, ejecuta:
+
+npx tsx scripts/test-qr-console.ts
+
+
+Esto va a:
+✅ Generar un QR real
+✅ Mostrarlo en la terminal
+✅ Detectar errores
+
+Espera 30 segundos para ver el QR.
+
+
+PASO 3: Verificar Estado en Base de Datos
+────────────────────────────────────────────────────────────────
+
+Ejecuta:
+
+npx tsx scripts/verificar-estado-whatsapp.ts
+
+
+Esto te muestra:
+📊 Conexiones registradas
+📡 Estado actual
+📱 Si hay QR guardado
+💡 Qué hacer
+
+
+═══════════════════════════════════════════════════════════════
+INTERPRETACIÓN DE RESULTADOS
+═══════════════════════════════════════════════════════════════
+
+CASO A: El diagnóstico muestra problemas
+────────────────────────────────────────────────────────────────
+
+Si ves:
+❌ Node.js: v16.x.x - ACTUALIZAR
+❌ Baileys: NO INSTALADO
+❌ Base de datos: ERROR
+
+Entonces:
+1. Actualiza Node.js en Easypanel (Settings → Runtime → v18+)
+2. Instala Baileys: npm install @whiskeysockets/baileys@latest
+3. Verifica DATABASE_URL en variables de entorno
+
+
+CASO B: El QR se genera en consola pero no en frontend
+────────────────────────────────────────────────────────────────
+
+Si ves:
+✅ QR GENERADO EXITOSAMENTE
+[QR CODE ASCII ART]
+
+Pero no aparece en el dashboard, entonces:
+
+1. Verifica que esté en DB:
+   npx tsx scripts/verificar-estado-whatsapp.ts
+
+2. Si está en DB, reinicia la app:
+   npm run build
+
+3. Prueba desde el dashboard
+
+
+CASO C: El QR NO se genera
+────────────────────────────────────────────────────────────────
+
+Si ves:
+❌ QR nunca fue generado
+⏱️  TIMEOUT
+
+Entonces:
+
+1. Limpia sesiones:
+   rm -rf auth_sessions/*
+
+2. Reinstala Baileys:
+   npm install @whiskeysockets/baileys@latest
+
+3. Verifica conectividad:
+   curl -I https://web.whatsapp.com
+
+4. Reintenta:
+   npx tsx scripts/test-qr-console.ts
+
+
+═══════════════════════════════════════════════════════════════
+SOLUCIÓN RÁPIDA (si todo falla)
+═══════════════════════════════════════════════════════════════
+
+Ejecuta estos comandos en orden:
+
+# 1. Limpiar todo
+rm -rf auth_sessions/*
+rm -rf .next
+
+# 2. Reinstalar Baileys
+npm install @whiskeysockets/baileys@latest
+
+# 3. Rebuild
+npm run build
+
+# 4. Reintentar
+npx tsx scripts/test-qr-console.ts
+
+
+═══════════════════════════════════════════════════════════════
+OPCIÓN NUCLEAR (último recurso)
+═══════════════════════════════════════════════════════════════
+
+Si NADA funciona:
+
+1. Exporta variables de entorno (cópialas desde Easypanel UI)
+2. Elimina la aplicación en Easypanel
+3. Crea nueva aplicación desde GitHub
+4. Pega las variables de entorno
+5. Despliega
+
+Ver: RECREAR_APP_EASYPANEL.md
+
+
+═══════════════════════════════════════════════════════════════
+COMANDOS ÚTILES
+═══════════════════════════════════════════════════════════════
+
+# Ver logs en tiempo real
+tail -f /var/log/app.log | grep -i whatsapp
+
+# Verificar versión de Node
+node --version
+
+# Verificar Baileys instalado
+npm list @whiskeysockets/baileys
+
+# Verificar variables de entorno
+env | grep DATABASE_URL
+
+# Limpiar sesiones
+rm -rf auth_sessions/*
+
+# Resetear WhatsApp completo
+npx tsx scripts/resetear-whatsapp-completo.ts
+
+
+═══════════════════════════════════════════════════════════════
+EMPIEZA AQUÍ
+═══════════════════════════════════════════════════════════════
+
+Ejecuta este comando AHORA:
+
+npx tsx scripts/diagnostico-completo-whatsapp.ts
+
+
+Luego comparte el resultado completo.
+
+═══════════════════════════════════════════════════════════════

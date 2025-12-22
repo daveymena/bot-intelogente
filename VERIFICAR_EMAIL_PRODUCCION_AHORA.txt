@@ -1,0 +1,167 @@
+═══════════════════════════════════════════════════════════════════════════════
+                   🔍 VERIFICAR EMAIL EN PRODUCCIÓN - 5 MINUTOS
+═══════════════════════════════════════════════════════════════════════════════
+
+📧 EMAIL DESTINO: daveymena16@gmail.com
+🌐 URL: https://bot-whatsapp-bot-whatsapp-inteligente.sqaoeo.easypanel.host
+
+═══════════════════════════════════════════════════════════════════════════════
+                   PASO 1: VERIFICAR VARIABLES EN EASYPANEL (2 MIN)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Ir a: https://easypanel.io
+2. Seleccionar: bot-whatsapp
+3. Click en: Environment Variables
+4. Verificar que EXISTAN estas 8 variables:
+
+   ✅ EMAIL_USER=deinermena25@gmail.com
+   ✅ EMAIL_PASS=uccj yqpq vqlt vcie
+   ✅ EMAIL_FROM=deinermena25@gmail.com
+   ✅ EMAIL_HOST=smtp.gmail.com
+   ✅ EMAIL_PORT=587
+   ✅ NEXT_PUBLIC_APP_URL=https://bot-whatsapp-bot-whatsapp-inteligente.sqaoeo.easypanel.host
+   ✅ NEXTAUTH_URL=https://bot-whatsapp-bot-whatsapp-inteligente.sqaoeo.easypanel.host
+   ✅ NODE_ENV=production
+
+5. Si falta alguna → Agregarla → Guardar
+
+═══════════════════════════════════════════════════════════════════════════════
+                   PASO 2: REINICIAR APLICACIÓN (1 MIN)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. En Easypanel → bot-whatsapp
+2. Click en: Restart
+3. Esperar 2-3 minutos
+4. Verificar estado: Running ✅
+
+═══════════════════════════════════════════════════════════════════════════════
+                   PASO 3: VER LOGS (1 MIN)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. En Easypanel → bot-whatsapp → Logs
+2. Buscar mensajes de inicio:
+
+   ✅ "Server running on port 4000"
+   ✅ "Email service configured"
+   ✅ "Database connected"
+
+3. Si ves errores de email:
+   
+   ❌ "Invalid login" → App Password incorrecto
+   ❌ "Authentication failed" → Regenerar App Password
+   ❌ "ECONNREFUSED" → Puerto 587 bloqueado
+
+═══════════════════════════════════════════════════════════════════════════════
+                   PASO 4: PROBAR RECUPERACIÓN (1 MIN)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Ir a: https://bot-whatsapp-bot-whatsapp-inteligente.sqaoeo.easypanel.host/forgot-password
+
+2. Ingresar: daveymena16@gmail.com
+
+3. Click: "Enviar"
+
+4. Revisar Gmail:
+   ☐ Bandeja de entrada
+   ☐ Spam
+   ☐ Promociones
+   ☐ Actualizaciones
+
+═══════════════════════════════════════════════════════════════════════════════
+                   PASO 5: VERIFICAR LOGS DESPUÉS DE ENVIAR
+═══════════════════════════════════════════════════════════════════════════════
+
+Volver a Easypanel → Logs y buscar:
+
+✅ ÉXITO:
+   "Email enviado exitosamente a daveymena16@gmail.com"
+   "Reset token generado"
+
+❌ ERROR:
+   "Invalid login" → App Password incorrecto
+   "User not found" → Email no registrado
+   "Email service not configured" → Variables faltantes
+
+═══════════════════════════════════════════════════════════════════════════════
+                   🔧 SOLUCIONES RÁPIDAS
+═══════════════════════════════════════════════════════════════════════════════
+
+PROBLEMA 1: "Invalid login: 535-5.7.8 Username and Password not accepted"
+SOLUCIÓN:
+   1. Ir a: https://myaccount.google.com/apppasswords
+   2. Generar nueva App Password
+   3. Actualizar EMAIL_PASS en Easypanel
+   4. Restart
+
+PROBLEMA 2: Email no llega
+SOLUCIÓN:
+   1. Verificar que EMAIL_USER = deinermena25@gmail.com (el que ENVÍA)
+   2. Verificar que EMAIL_PASS no tenga espacios extra
+   3. Verificar que NEXT_PUBLIC_APP_URL sea correcta
+   4. Restart
+
+PROBLEMA 3: Link en email da 404
+SOLUCIÓN:
+   1. Verificar NEXT_PUBLIC_APP_URL en variables
+   2. Debe ser: https://bot-whatsapp-bot-whatsapp-inteligente.sqaoeo.easypanel.host
+   3. Restart
+
+PROBLEMA 4: No veo logs de email
+SOLUCIÓN:
+   1. App no se reinició correctamente
+   2. Hacer Restart manual
+   3. Esperar 3 minutos
+   4. Probar de nuevo
+
+═══════════════════════════════════════════════════════════════════════════════
+                   📝 CHECKLIST FINAL
+═══════════════════════════════════════════════════════════════════════════════
+
+☐ Variables de email agregadas en Easypanel
+☐ URL correcta configurada (NEXT_PUBLIC_APP_URL)
+☐ Aplicación reiniciada
+☐ Logs muestran "Server running"
+☐ Probado forgot-password
+☐ Email recibido en Gmail
+☐ Link funciona correctamente
+☐ Contraseña cambiada exitosamente
+
+═══════════════════════════════════════════════════════════════════════════════
+                   ✅ RESULTADO ESPERADO
+═══════════════════════════════════════════════════════════════════════════════
+
+EMAIL RECIBIDO:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+De: deinermena25@gmail.com
+Para: daveymena16@gmail.com
+Asunto: 🔐 Restablecer contraseña - Smart Sales Bot
+
+Hola,
+
+Para restablecer tu contraseña, haz clic en el siguiente enlace:
+
+https://bot-whatsapp-bot-whatsapp-inteligente.sqaoeo.easypanel.host/reset-password?token=XXXXX
+
+Este enlace expirará en 1 hora.
+
+Si no solicitaste este cambio, ignora este correo.
+
+Saludos,
+Smart Sales Bot Pro
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+AL HACER CLICK:
+✅ Página carga correctamente (no 404)
+✅ Formulario para nueva contraseña
+✅ Cambio exitoso
+✅ Redirección al dashboard
+
+═══════════════════════════════════════════════════════════════════════════════
+                   📖 DOCUMENTACIÓN COMPLETA
+═══════════════════════════════════════════════════════════════════════════════
+
+Ver: DIAGNOSTICO_EMAIL_PRODUCCION.md
+Ver: URL_CORRECTA_EASYPANEL.md
+Ver: CONFIGURAR_GMAIL_APP_PASSWORD.md
+
+═══════════════════════════════════════════════════════════════════════════════

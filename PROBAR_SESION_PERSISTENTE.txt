@@ -1,0 +1,135 @@
+╔══════════════════════════════════════════════════════════════╗
+║     ✅ SESIÓN PERSISTENTE - INSTRUCCIONES DE PRUEBA         ║
+╚══════════════════════════════════════════════════════════════╝
+
+🎯 PROBLEMA RESUELTO:
+   La sesión ahora persiste cuando cambias de app o pestaña.
+   Solo se cierra cuando haces logout explícito.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 PRUEBAS MANUALES:
+
+1️⃣ PRUEBA DE PERSISTENCIA BÁSICA:
+   ✓ Hacer login en el dashboard
+   ✓ Cambiar a otra app (WhatsApp, Chrome, etc.)
+   ✓ Esperar 1-2 minutos
+   ✓ Volver a la app
+   ✅ RESULTADO: Deberías seguir logueado
+
+2️⃣ PRUEBA DE CIERRE DE NAVEGADOR:
+   ✓ Hacer login en el dashboard
+   ✓ Cerrar completamente el navegador
+   ✓ Abrir el navegador de nuevo
+   ✓ Ir a la URL del dashboard
+   ✅ RESULTADO: Deberías seguir logueado (hasta 7 días)
+
+3️⃣ PRUEBA DE CAMBIO DE PESTAÑA:
+   ✓ Hacer login en el dashboard
+   ✓ Abrir nueva pestaña
+   ✓ Navegar por otros sitios
+   ✓ Volver a la pestaña del dashboard
+   ✅ RESULTADO: Deberías seguir logueado
+
+4️⃣ PRUEBA DE LOGOUT:
+   ✓ Hacer login en el dashboard
+   ✓ Click en "Cerrar Sesión"
+   ✅ RESULTADO: Deberías ser redirigido a login
+   ✅ RESULTADO: No deberías poder acceder al dashboard
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🧪 PRUEBAS AUTOMÁTICAS:
+
+Ejecutar el script de prueba:
+
+   npx tsx scripts/test-session-persistence.ts
+
+Este script prueba:
+   ✓ Login y establecimiento de cookies
+   ✓ Verificación de sesión
+   ✓ Persistencia después de "cambio de app"
+   ✓ Logout y limpieza de sesión
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔍 VERIFICAR EN DEVTOOLS:
+
+1. Abrir DevTools (F12)
+2. Ir a "Application" > "Cookies"
+3. Buscar:
+   ✓ auth-token (HTTP-only, 7 días)
+   ✓ auth-status (7 días)
+
+4. Ir a "Console"
+5. Buscar logs:
+   ✓ "🔄 Refrescando sesión después de volver a la app"
+   ✓ "🔄 Verificación periódica de sesión"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚙️ CONFIGURACIÓN:
+
+Duración de sesión: 7 días (configurable en .env)
+
+   JWT_EXPIRES_IN=7d
+
+Verificación automática:
+   • Cada 10 minutos si estás activo
+   • Al volver a la app (si han pasado >5 min)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📁 ARCHIVOS MODIFICADOS:
+
+   ✅ src/hooks/use-auth.tsx
+   ✅ src/app/api/auth/login/route.ts
+   ✅ src/app/api/auth/logout/route.ts
+   ✅ src/app/api/auth/me/route.ts (nuevo)
+   ✅ src/middleware.ts
+   ✅ scripts/test-session-persistence.ts (nuevo)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 DESPLEGAR EN PRODUCCIÓN:
+
+1. Commit de cambios:
+   git add .
+   git commit -m "feat: implementar persistencia de sesión"
+
+2. Push a repositorio:
+   git push origin main
+
+3. Redesplegar en Easypanel:
+   • Los cambios se aplicarán automáticamente
+   • Verificar que JWT_SECRET esté configurado
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❓ SOLUCIÓN DE PROBLEMAS:
+
+Si la sesión no persiste:
+   1. Verificar que las cookies estén habilitadas
+   2. Verificar JWT_SECRET en .env
+   3. Revisar logs del servidor
+   4. Limpiar cookies y volver a hacer login
+
+Si hay errores:
+   1. Revisar consola del navegador
+   2. Revisar logs del servidor
+   3. Verificar que el servidor esté corriendo
+   4. Verificar variables de entorno
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 DOCUMENTACIÓN COMPLETA:
+
+Ver: SESION_PERSISTENTE_IMPLEMENTADA.md
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Estado: LISTO PARA USAR
+📅 Fecha: 2 de Noviembre, 2025
+🔧 Versión: 1.0.0
+
+╚══════════════════════════════════════════════════════════════╝

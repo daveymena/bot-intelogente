@@ -1,0 +1,145 @@
+{
+  "fecha": "2025-11-18T03:55:23.523Z",
+  "totalProblemas": 19,
+  "porSeveridad": {
+    "criticos": 10,
+    "altos": 8,
+    "medios": 1,
+    "bajos": 0
+  },
+  "problemas": [
+    {
+      "categoria": "CONTEXTO",
+      "problema": "Bot pierde contexto entre mensajes - Usuario pregunta por \"idiomas\" y bot olvida el producto",
+      "severidad": "CRITICO",
+      "ubicacion": "src/lib/conversation-context-service.ts",
+      "solucion": "Implementar memoria persistente de producto seleccionado en contexto"
+    },
+    {
+      "categoria": "CONTEXTO",
+      "problema": "No se mantiene el producto en memoria cuando usuario pregunta por método de pago",
+      "severidad": "CRITICO",
+      "ubicacion": "src/agents/payment-agent.ts",
+      "solucion": "Guardar productId en contexto y recuperarlo antes de generar link de pago"
+    },
+    {
+      "categoria": "PAYPAL",
+      "problema": "Enviando email de PayPal en vez de link dinámico",
+      "severidad": "CRITICO",
+      "ubicacion": "src/lib/payment-link-generator.ts",
+      "solucion": "Usar PAYPAL_LINK_TEMPLATE con variables dinámicas, NO enviar email"
+    },
+    {
+      "categoria": "BUSQUEDA",
+      "problema": "Muestra productos irrelevantes - Usuario pregunta \"idiomas\" y aparece \"Curso de Piano\"",
+      "severidad": "CRITICO",
+      "ubicacion": "src/lib/product-intelligence-service.ts",
+      "solucion": "Mejorar scoring semántico y filtrar productos con score < 0.6"
+    },
+    {
+      "categoria": "AGENTES",
+      "problema": "Payment Agent no valida que el producto en contexto coincida con el solicitado",
+      "severidad": "CRITICO",
+      "ubicacion": "src/agents/payment-agent.ts - método handlePaymentRequest",
+      "solucion": "Agregar validación: if (context.lastProductId !== requestedProductId) { clarify }"
+    },
+    {
+      "categoria": "MEMORIA",
+      "problema": "SharedMemory no persiste el producto seleccionado entre diferentes agentes",
+      "severidad": "CRITICO",
+      "ubicacion": "src/agents/shared-memory.ts",
+      "solucion": "Agregar campo selectedProduct: { id, name, price } que persista en toda la conversación"
+    },
+    {
+      "categoria": "MEMORIA",
+      "problema": "Contexto se limpia cuando usuario pregunta por método de pago",
+      "severidad": "CRITICO",
+      "ubicacion": "src/agents/orchestrator.ts",
+      "solucion": "No limpiar contexto hasta que se complete la venta o usuario cambie de tema"
+    },
+    {
+      "categoria": "CONFIGURACION",
+      "problema": "Variable de entorno PAYPAL_LINK_TEMPLATE no configurada",
+      "severidad": "CRITICO",
+      "ubicacion": ".env",
+      "solucion": "Agregar PAYPAL_LINK_TEMPLATE al archivo .env"
+    },
+    {
+      "categoria": "CONFIGURACION",
+      "problema": "Variable de entorno PAYPAL_BUSINESS_ID no configurada",
+      "severidad": "CRITICO",
+      "ubicacion": ".env",
+      "solucion": "Agregar PAYPAL_BUSINESS_ID al archivo .env"
+    },
+    {
+      "categoria": "FLUJO",
+      "problema": "Cuando usuario pregunta por método de pago, bot no recuerda qué producto estaba viendo",
+      "severidad": "CRITICO",
+      "ubicacion": "src/agents/payment-agent.ts",
+      "solucion": "Recuperar producto del contexto: const product = context.selectedProduct || await findLastMentionedProduct()"
+    },
+    {
+      "categoria": "PAYPAL",
+      "problema": "Variable PAYPAL_EMAIL siendo usada en respuestas cuando debería usar link",
+      "severidad": "ALTO",
+      "ubicacion": "src/agents/payment-agent.ts",
+      "solucion": "Eliminar referencias a PAYPAL_EMAIL y usar solo generatePaymentLink()"
+    },
+    {
+      "categoria": "BUSQUEDA",
+      "problema": "No diferencia entre \"MegaPack de idiomas\" y \"Curso de Piano\"",
+      "severidad": "ALTO",
+      "ubicacion": "src/agents/search-agent.ts",
+      "solucion": "Agregar validación de categoría y tags antes de mostrar productos"
+    },
+    {
+      "categoria": "PRODUCTOS",
+      "problema": "288 productos sin links de pago configurados",
+      "severidad": "ALTO",
+      "ubicacion": "Base de datos - tabla products",
+      "solucion": "Configurar paymentLinkPayPal, paymentLinkMercadoPago o paymentLinkCustom"
+    },
+    {
+      "categoria": "AGENTES",
+      "problema": "Search Agent devuelve múltiples productos cuando usuario ya seleccionó uno",
+      "severidad": "ALTO",
+      "ubicacion": "src/agents/search-agent.ts",
+      "solucion": "Verificar contexto antes de buscar: si hay producto seleccionado, no buscar de nuevo"
+    },
+    {
+      "categoria": "AGENTES",
+      "problema": "Photo Agent envía fotos sin verificar si el producto es el correcto",
+      "severidad": "ALTO",
+      "ubicacion": "src/agents/photo-agent.ts",
+      "solucion": "Validar productId del contexto antes de enviar fotos"
+    },
+    {
+      "categoria": "ENTRENAMIENTO",
+      "problema": "Datos de entrenamiento tienen ejemplos contradictorios sobre PayPal",
+      "severidad": "ALTO",
+      "ubicacion": "data/entrenamiento-*.json",
+      "solucion": "Revisar y unificar todos los ejemplos de PayPal para usar solo links dinámicos"
+    },
+    {
+      "categoria": "FLUJO",
+      "problema": "Bot no confirma el producto antes de pedir método de pago",
+      "severidad": "ALTO",
+      "ubicacion": "src/agents/orchestrator.ts",
+      "solucion": "Agregar paso de confirmación: \"Perfecto, entonces el MegaPack de Idiomas. ¿Cómo deseas pagar?\""
+    },
+    {
+      "categoria": "RESPUESTAS",
+      "problema": "Bot genera respuestas genéricas sin mencionar el producto específico",
+      "severidad": "ALTO",
+      "ubicacion": "src/lib/intelligent-response-service.ts",
+      "solucion": "Siempre incluir nombre del producto en respuestas: \"Para el {productName}, puedes pagar con...\""
+    },
+    {
+      "categoria": "PRODUCTOS",
+      "problema": "38 productos sin imágenes",
+      "severidad": "MEDIO",
+      "ubicacion": "Base de datos - campo images",
+      "solucion": "Agregar imágenes placeholder o scraper automático"
+    }
+  ]
+}

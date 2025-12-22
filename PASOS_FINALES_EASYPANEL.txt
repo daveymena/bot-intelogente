@@ -1,0 +1,79 @@
+🚀 PASOS FINALES PARA EASYPANEL
+
+═══════════════════════════════════════════════════════════
+1️⃣ COPIAR VARIABLES DE ENTORNO
+═══════════════════════════════════════════════════════════
+
+✅ Abre el archivo: ENV_EASYPANEL_COMPLETO.txt
+✅ Copia TODO el contenido
+✅ Ve a Easypanel > Tu App > Environment Variables
+✅ Pega las variables
+
+⚠️ IMPORTANTE: Cambia estas 2 líneas con tu dominio real:
+
+NEXT_PUBLIC_APP_URL=https://tu-dominio-easypanel.com
+NEXTAUTH_URL=https://tu-dominio-easypanel.com
+
+Ejemplo:
+NEXT_PUBLIC_APP_URL=https://bot-whatsapp.sqaoeo.easypanel.host
+NEXTAUTH_URL=https://bot-whatsapp.sqaoeo.easypanel.host
+
+═══════════════════════════════════════════════════════════
+2️⃣ REDESPLEGAR
+═══════════════════════════════════════════════════════════
+
+✅ Click en "Deploy" o "Redeploy"
+✅ Espera 2-5 minutos a que termine el build
+✅ Verifica que no haya errores en los logs
+
+═══════════════════════════════════════════════════════════
+3️⃣ CREAR TABLAS EN LA BASE DE DATOS
+═══════════════════════════════════════════════════════════
+
+Una vez desplegado, abre la terminal de tu app en Easypanel:
+
+npx prisma db push
+
+Deberías ver:
+✅ "Your database is now in sync with your schema"
+✅ Todas las tablas creadas
+
+═══════════════════════════════════════════════════════════
+4️⃣ VERIFICAR QUE FUNCIONA
+═══════════════════════════════════════════════════════════
+
+✅ Abre tu dominio en el navegador
+✅ Deberías ver la página de login
+✅ No debe haber errores de base de datos
+✅ Revisa los logs - todo debe estar verde
+
+═══════════════════════════════════════════════════════════
+5️⃣ CREAR USUARIO ADMIN (OPCIONAL)
+═══════════════════════════════════════════════════════════
+
+Si necesitas crear un usuario admin, en la terminal de Easypanel:
+
+npx tsx scripts/create-admin.ts
+
+O usa las credenciales que ya están en el .env:
+Email: daveymena16@gmail.com
+Password: 6715320Dvd.
+
+═══════════════════════════════════════════════════════════
+✅ LISTO!
+═══════════════════════════════════════════════════════════
+
+Tu aplicación debería funcionar perfectamente en Easypanel con PostgreSQL.
+
+El error "the URL must start with the protocol" está solucionado.
+
+═══════════════════════════════════════════════════════════
+📝 NOTAS IMPORTANTES:
+═══════════════════════════════════════════════════════════
+
+1. La DATABASE_URL ya está correcta para Easypanel
+2. Todas las APIs están configuradas
+3. Los métodos de pago están listos
+4. WhatsApp está configurado
+
+Si algo falla, revisa los logs en Easypanel y avísame.

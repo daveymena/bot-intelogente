@@ -1,0 +1,115 @@
+🚀 DEPLOY A EASYPANEL - GUÍA RÁPIDA
+
+═══════════════════════════════════════════════════════════════
+
+✅ SISTEMA VERIFICADO Y LISTO
+
+El sistema de rotación de 8 APIs está implementado y listo para
+deploy en Easypanel.
+
+═══════════════════════════════════════════════════════════════
+
+📋 PASOS RÁPIDOS:
+
+1. VERIFICAR (ya hecho ✅)
+   node verificar-sistema-easypanel.js
+
+2. COMMIT Y PUSH
+   git add .
+   git commit -m "Sistema de rotación de APIs listo"
+   git push origin main
+
+3. CONFIGURAR EN EASYPANEL
+   • Crear nueva aplicación
+   • Conectar repositorio GitHub
+   • Build Command: npm run build
+   • Start Command: npm start
+   • Puerto: 3000
+
+4. AGREGAR VARIABLES DE ENTORNO
+   DATABASE_URL=postgresql://...
+   NEXTAUTH_SECRET=genera_un_secret_aleatorio
+   NEXTAUTH_URL=https://tu-app.easypanel.host
+   NODE_ENV=production
+
+5. DEPLOY
+   Click en "Deploy" y espera
+
+6. VERIFICAR LOGS
+   Busca: "[Groq Rotator] Sistema iniciado con 8 APIs"
+
+═══════════════════════════════════════════════════════════════
+
+🔧 VARIABLES REQUERIDAS EN EASYPANEL:
+
+DATABASE_URL=postgresql://user:password@host:5432/database
+NEXTAUTH_SECRET=tu_secret_aqui
+NEXTAUTH_URL=https://tu-dominio.easypanel.host
+NODE_ENV=production
+PORT=3000
+
+═══════════════════════════════════════════════════════════════
+
+❌ VARIABLES QUE YA NO NECESITAS:
+
+GROQ_API_KEY - Ya NO es necesaria
+El sistema usa 8 APIs configuradas internamente
+
+═══════════════════════════════════════════════════════════════
+
+🎯 QUÉ HACE EL SISTEMA:
+
+• 8 APIs de Groq configuradas
+• 4 modelos por API (32 combinaciones)
+• Rotación automática cuando se agotan tokens
+• Reactivación automática cada 1 hora
+• ~230 mensajes/día de capacidad
+• Sin intervención manual
+
+═══════════════════════════════════════════════════════════════
+
+📚 DOCUMENTACIÓN COMPLETA:
+
+• LISTO_PARA_EASYPANEL.md - Resumen completo
+• DEPLOY_EASYPANEL_ROTACION.md - Guía detallada
+• VARIABLES_EASYPANEL_ACTUALIZADAS.txt - Variables
+• SISTEMA_ROTACION_APIS.md - Documentación técnica
+
+═══════════════════════════════════════════════════════════════
+
+🧪 PROBAR DESPUÉS DEL DEPLOY:
+
+1. Verificar logs en Easypanel:
+   "[Groq Rotator] Sistema iniciado con 8 APIs"
+   "[Baileys] Conexión establecida"
+
+2. Enviar mensaje de prueba en WhatsApp:
+   "Me interesa el ryzen 3 7320u"
+
+3. Verificar rotación en logs:
+   "[Groq Rotator] ✅ Éxito con API-X"
+
+═══════════════════════════════════════════════════════════════
+
+✅ CHECKLIST PRE-DEPLOY:
+
+[✅] Sistema verificado
+[✅] 7 APIs configuradas (funcional)
+[✅] Búsqueda inteligente integrada
+[✅] Archivos críticos presentes
+[✅] Scripts de build/start configurados
+[ ] Commit y push a GitHub
+[ ] Variables configuradas en Easypanel
+[ ] Deploy realizado
+[ ] Logs verificados
+
+═══════════════════════════════════════════════════════════════
+
+🚀 ¡LISTO PARA DEPLOY!
+
+Todo está configurado. Solo necesitas:
+1. Push a GitHub
+2. Configurar variables en Easypanel
+3. Deploy
+
+═══════════════════════════════════════════════════════════════

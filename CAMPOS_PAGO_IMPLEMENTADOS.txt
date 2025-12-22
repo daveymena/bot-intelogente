@@ -1,0 +1,34 @@
+✅ CAMPOS DE PAGO IMPLEMENTADOS
+
+🎯 Cambios Realizados:
+
+1. ✅ Dashboard (ProductsManagement.tsx)
+   - Campo: Link de MercadoPago
+   - Campo: Link de PayPal
+   - Campo: Link Personalizado (Hotmart, etc.)
+
+2. ✅ Exportación (JSON/CSV)
+   - Incluye todos los campos de pago
+   - Compatible con Excel
+   - scripts/exportar-productos-completo.ts
+
+3. ✅ Bot (ai-service.ts)
+   - Usa links dinámicos del producto
+   - Nunca pide datos de tarjeta
+   - Menciona todas las opciones
+
+📋 Cómo Usar:
+
+1. Dashboard → Productos → Crear/Editar
+2. Scroll hasta "Métodos de Pago"
+3. Agregar links (opcional)
+4. El bot los usará automáticamente
+
+🏪 Tienda Pública:
+
+Actual: /catalogo (todos los productos)
+Futuro: /tienda/[username] (por usuario)
+
+Ver detalles: TIENDA_PUBLICA_POR_USUARIO.md
+
+✅ LISTO PARA USAR!

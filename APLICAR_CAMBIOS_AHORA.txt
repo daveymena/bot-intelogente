@@ -1,0 +1,63 @@
+========================================
+🔄 APLICAR CAMBIOS AHORA
+========================================
+
+⚠️ PROBLEMA:
+Los cambios están en el código pero el bot
+sigue usando la versión ANTERIOR porque el
+servidor NO se ha reiniciado.
+
+✅ SOLUCIÓN:
+
+1. DETENER el servidor actual
+   - Presiona Ctrl+C en la consola
+   - O cierra la ventana de npm run dev
+
+2. INICIAR el servidor de nuevo
+   npm run dev
+
+3. ESPERAR a que diga:
+   "Server running on port 4000"
+
+4. PROBAR en WhatsApp:
+   "Curso de Piano"
+
+========================================
+📊 RESPUESTA ESPERADA:
+========================================
+
+¡Hola! 👋 Bienvenido a **Tecnovariedades D&S**
+
+🎹 **Curso de Piano Completo**
+
+Aprende piano desde cero con este curso completo
+
+💰 **Precio:** 50,000 COP
+
+✨ **Características destacadas:**
+• Excelente calidad
+• Disponible inmediatamente
+• Garantía incluida
+
+📦 **Disponible ahora**
+
+💳 **¿Cómo prefieres pagar?**
+- MercadoPago (tarjetas, PSE)
+- PayPal (internacional)
+- Nequi / Daviplata
+
+========================================
+❌ SI SIGUE SIN FUNCIONAR:
+========================================
+
+1. Verifica que Ollama esté corriendo:
+   curl http://localhost:11434/api/tags
+
+2. Verifica que WhatsApp esté conectado:
+   Busca en logs: "✅ conectado exitosamente"
+
+3. Limpia y reinicia:
+   rmdir /s /q .next
+   npm run dev
+
+========================================

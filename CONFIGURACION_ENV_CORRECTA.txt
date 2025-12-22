@@ -1,0 +1,45 @@
+✅ CONFIGURACIÓN .ENV CORRECTA
+
+📝 Sección de IA (Cómo debe quedar):
+
+# ===== INTELIGENCIA ARTIFICIAL =====
+
+# Groq API (Principal - Rápido)
+GROQ_API_KEY=gsk_TU_API_KEY_AQUI
+GROQ_MODEL=llama-3.1-8b-instant
+GROQ_FALLBACK_MODELS=llama-3.3-70b-versatile
+GROQ_MAX_TOKENS=500
+GROQ_TIMEOUT=60000
+
+# Ollama (Fallback - Ilimitado)
+OLLAMA_BASE_URL=https://bot-whatsapp-ollama.sqaoeo.easypanel.host
+OLLAMA_MODEL=gemma:2b
+OLLAMA_ENABLED=true
+OLLAMA_TIMEOUT=30000
+OLLAMA_MAX_TOKENS=400
+
+# Sistema de Fallback
+AI_PROVIDER=groq
+DEFAULT_AI_PROVIDER=groq
+AI_FALLBACK_ENABLED=true
+AI_FALLBACK_ORDER=groq,ollama
+
+# Sistema de Razonamiento (Desactivado para velocidad)
+AI_USE_REASONING=false
+
+🎯 CAMBIOS IMPORTANTES:
+
+1. GROQ_MAX_TOKENS=500 (aumentado de 350)
+2. GROQ_TIMEOUT=60000 (aumentado de 30000)
+3. OLLAMA_ENABLED=true (habilitado)
+4. AI_FALLBACK_ENABLED=true (habilitado)
+5. AI_FALLBACK_ORDER=groq,ollama (solo estos dos)
+
+✅ RESULTADO:
+
+- Groq responde primero (rápido)
+- Si Groq falla → Ollama responde (ilimitado)
+- Nunca se queda sin IA
+- Respuestas garantizadas 24/7
+
+🚀 LISTO PARA USAR!

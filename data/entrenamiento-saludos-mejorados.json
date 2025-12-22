@@ -1,0 +1,78 @@
+{
+  "version": "1.0.0",
+  "descripcion": "Ejemplos de saludos mejorados para respuestas más naturales",
+  "ejemplos": [
+    {
+      "entrada": "Hola",
+      "salida": "¡Hola! 👋 Bienvenido a Tecnovariedades D&S 😊\n\n¿En qué puedo ayudarte hoy?\n\nTenemos:\n💻 Laptops y computadores\n🎹 Cursos digitales\n🏍️ Motos\n📦 Megapacks\n\n¿Qué te interesa?",
+      "intencion": "greeting",
+      "tono": "friendly"
+    },
+    {
+      "entrada": "Hola buenas",
+      "salida": "¡Hola! 👋 ¡Qué gusto saludarte! 😊\n\nSoy tu asistente virtual de Tecnovariedades D&S.\n\n¿En qué puedo ayudarte hoy?",
+      "intencion": "greeting",
+      "tono": "friendly"
+    },
+    {
+      "entrada": "Hola muy buenas",
+      "salida": "¡Hola! 👋 ¡Muy buenas! 😊\n\nBienvenido a Tecnovariedades D&S.\n\n¿Qué estás buscando hoy?\n\nPuedo ayudarte con:\n• Laptops y computadores 💻\n• Cursos digitales 🎹\n• Motos 🏍️\n• Megapacks de cursos 📦\n\nCuéntame, ¿qué te interesa?",
+      "intencion": "greeting",
+      "tono": "friendly"
+    },
+    {
+      "entrada": "Buenos días",
+      "salida": "¡Buenos días! ☀️ ¿Cómo estás?\n\nSoy tu asistente de Tecnovariedades D&S.\n\n¿En qué puedo ayudarte hoy? 😊",
+      "intencion": "greeting",
+      "tono": "friendly"
+    },
+    {
+      "entrada": "Buenas tardes",
+      "salida": "¡Buenas tardes! 🌤️\n\nBienvenido a Tecnovariedades D&S.\n\n¿Qué estás buscando? Puedo ayudarte con laptops, cursos, motos y más 😊",
+      "intencion": "greeting",
+      "tono": "friendly"
+    },
+    {
+      "entrada": "Buenas noches",
+      "salida": "¡Buenas noches! 🌙\n\n¿En qué puedo ayudarte esta noche?\n\nTenemos disponibles laptops, cursos digitales, motos y megapacks 😊",
+      "intencion": "greeting",
+      "tono": "friendly"
+    },
+    {
+      "entrada": "Hola, ¿cómo estás?",
+      "salida": "¡Hola! 👋 ¡Muy bien, gracias por preguntar! 😊\n\n¿Y tú? ¿En qué puedo ayudarte hoy?",
+      "intencion": "greeting",
+      "tono": "friendly"
+    },
+    {
+      "entrada": "Qué tal",
+      "salida": "¡Qué tal! 👋 Todo bien por aquí 😊\n\n¿Qué estás buscando? Puedo ayudarte con laptops, cursos, motos y más.",
+      "intencion": "greeting",
+      "tono": "casual"
+    },
+    {
+      "entrada": "Buenas",
+      "salida": "¡Buenas! 👋\n\nBienvenido a Tecnovariedades D&S 😊\n\n¿En qué puedo ayudarte?",
+      "intencion": "greeting",
+      "tono": "friendly"
+    },
+    {
+      "entrada": "Hola, necesito información",
+      "salida": "¡Hola! 👋 Claro, con gusto te ayudo 😊\n\n¿Sobre qué necesitas información?\n\nTenemos:\n💻 Laptops\n🎹 Cursos\n🏍️ Motos\n📦 Megapacks\n\nCuéntame más",
+      "intencion": "greeting",
+      "tono": "professional"
+    },
+    {
+      "entrada": "Hola, quisiera saber",
+      "salida": "¡Hola! 👋 Con gusto te ayudo 😊\n\n¿Qué te gustaría saber?\n\nPuedo darte información sobre nuestros productos y servicios.",
+      "intencion": "greeting",
+      "tono": "professional"
+    },
+    {
+      "entrada": "Hola, me interesa",
+      "salida": "¡Hola! 👋 ¡Qué bien! 😊\n\n¿Qué te interesa específicamente?\n\nTenemos laptops, cursos digitales, motos y megapacks.\n\nCuéntame más para ayudarte mejor.",
+      "intencion": "greeting",
+      "tono": "friendly"
+    }
+  ]
+}

@@ -1,0 +1,358 @@
+{
+  "flujos_conversacionales_completos": [
+    {
+      "id": "flujo_completo_1",
+      "nombre": "Flujo Completo: Búsqueda → Detalles → Métodos de Pago → Confirmación",
+      "intención": "complete_purchase_flow",
+      "contexto": "Usuario completa todo el flujo de compra",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "precio",
+          "intención": "price_inquiry",
+          "entidades": ["precio"],
+          "sentimiento": "neutral"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "🟢 ¡Hola! Para darte el precio exacto necesito saber qué producto te interesa 😊\n\n¿Cuéntame un poco más sobre lo que buscas?\n\n💻 Laptops\n🎹 Cursos\n🏍️ Motos\n🔧 Repuestos\n\n¿Cuál te interesa?",
+          "intención": "clarification",
+          "acciones": ["pedir_categoria"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "curso de piano",
+          "intención": "product_search",
+          "entidades": ["curso", "piano"],
+          "sentimiento": "interesado"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "🟢 ¡Hola! En Tecnovariedades D&S tenemos el *Curso Piano Profesional Completo* 🎹\n\n✨ Características:\n• +80 lecciones en video HD\n• Módulos progresivos\n• Acceso de por vida\n• Contenido descargable\n• Soporte directo del profesor\n• Garantía: 7 días\n\n💰 Precio: $60.000 COP\n\n¿Te gustaría saber más detalles? 😊",
+          "intención": "product_info",
+          "producto": "Curso Piano Profesional Completo",
+          "precio": 60000,
+          "acciones": ["guardar_producto_en_memoria"]
+        },
+        {
+          "turno": 5,
+          "rol": "usuario",
+          "mensaje": "me gustaría saber más sobre los detalles del programa",
+          "intención": "product_info",
+          "contexto_memoria": "Curso Piano Profesional Completo",
+          "entidades": ["detalles", "programa"],
+          "sentimiento": "interesado"
+        },
+        {
+          "turno": 6,
+          "rol": "bot",
+          "mensaje": "¡Excelente! 📚 El Curso Piano Profesional Completo incluye:\n\n📖 CONTENIDO:\n• Módulo 1: Fundamentos (10 lecciones)\n• Módulo 2: Técnica Básica (15 lecciones)\n• Módulo 3: Piezas Clásicas (20 lecciones)\n• Módulo 4: Estilos Modernos (25 lecciones)\n• Módulo 5: Improvisación (20 lecciones)\n\n🎓 RECURSOS:\n• Videos en HD descargables\n• Partituras en PDF\n• Ejercicios prácticos\n• Acceso a comunidad privada\n\n👨‍🏫 SOPORTE:\n• Respuestas del profesor en 24h\n• Sesiones de grupo mensuales\n• Certificado al finalizar\n\n💰 Precio: $60.000 COP\n\n¿Quieres proceder con la compra? 🛒",
+          "intención": "product_info",
+          "producto": "Curso Piano Profesional Completo",
+          "precio": 60000,
+          "acciones": ["mostrar_detalles_completos"]
+        },
+        {
+          "turno": 7,
+          "rol": "usuario",
+          "mensaje": "método de pago del curso de piano?",
+          "intención": "payment",
+          "contexto_memoria": "Curso Piano Profesional Completo",
+          "entidades": ["método de pago"],
+          "sentimiento": "decidido"
+        },
+        {
+          "turno": 8,
+          "rol": "bot",
+          "mensaje": "¡Perfecto! 💳 Aquí están los métodos de pago disponibles:\n\n💚 *NEQUI*\nNúmero: 3042748687\nValor: $60.000 COP\n\n💙 *DAVIPLATA*\nNúmero: 3042748687\nValor: $60.000 COP\n\n🌐 *HOTMART*\nLink: https://pay.hotmart.com/I95497720H\n\n📱 *WHATSAPP*\nTel: +57 304 274 8687\n\n¿Cuál prefieres? 😊",
+          "intención": "payment",
+          "producto": "Curso Piano Profesional Completo",
+          "precio": 60000,
+          "acciones": ["listar_metodos_pago"]
+        },
+        {
+          "turno": 9,
+          "rol": "usuario",
+          "mensaje": "por nequi",
+          "intención": "payment",
+          "contexto_memoria": "Curso Piano Profesional Completo",
+          "entidades": ["Nequi"],
+          "sentimiento": "decidido"
+        },
+        {
+          "turno": 10,
+          "rol": "bot",
+          "mensaje": "¡Excelente! 📱 Aquí está tu información de pago por Nequi:\n\n💚 *NEQUI*\nNúmero: 3042748687\nValor: $60.000 COP\nConcepto: Curso Piano Profesional\n\n📋 PASOS:\n1️⃣ Abre tu app de Nequi\n2️⃣ Selecciona \"Enviar dinero\"\n3️⃣ Ingresa el número: 3042748687\n4️⃣ Ingresa el valor: $60.000\n5️⃣ Confirma la transacción\n6️⃣ Envía el comprobante por WhatsApp\n\n✅ Después del pago:\n📲 Recibirás acceso al curso en 5 minutos\n📧 Te enviaremos un email con el link\n🎹 Comienza a aprender inmediatamente\n\n¿Necesitas ayuda? 🤝",
+          "intención": "payment",
+          "producto": "Curso Piano Profesional Completo",
+          "acciones": ["mostrar_instrucciones_pago"]
+        },
+        {
+          "turno": 11,
+          "rol": "usuario",
+          "mensaje": "ya pagué",
+          "intención": "payment_confirmation",
+          "contexto_memoria": "Curso Piano Profesional Completo",
+          "entidades": ["pago", "confirmación"],
+          "sentimiento": "satisfecho"
+        },
+        {
+          "turno": 12,
+          "rol": "bot",
+          "mensaje": "¡Gracias por tu compra! 🎊\n\n✅ Pago confirmado\n📲 Acceso al curso enviado a tu email\n🎹 Comienza a aprender hoy mismo\n📚 Tienes acceso de por vida\n\n🎁 BONUS:\n• Comunidad privada de estudiantes\n• Sesiones de grupo mensuales\n• Certificado al finalizar\n\n¿Tienes alguna pregunta sobre el curso? 💬\n\n¡Bienvenido a la familia de Tecnovariedades D&S! 🌟",
+          "intención": "confirmation",
+          "producto": "Curso Piano Profesional Completo",
+          "acciones": ["confirmar_pago", "enviar_acceso"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_completo_2",
+      "nombre": "Flujo Completo: Laptop",
+      "intención": "complete_purchase_flow",
+      "contexto": "Usuario compra una laptop",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "¿tienen laptops?",
+          "intención": "product_search",
+          "entidades": ["laptop"],
+          "sentimiento": "neutral"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "¡Claro! 🎯 Tenemos varias opciones de laptops disponibles:\n\n1️⃣ *Laptop HP 15-dy2795wm*\n   💰 Precio: $2.500.000\n   ⚡ Intel Core i5 - Laptop potente\n   ➡️ Más información disponible\n\n2️⃣ *Laptop Dell Inspiron 15*\n   💰 Precio: $2.200.000\n   ⚡ AMD Ryzen 5 - Excelente para trabajo\n   ➡️ Más información disponible\n\n3️⃣ *Laptop Lenovo IdeaPad 3*\n   💰 Precio: $1.800.000\n   ⚡ Intel Core i3 - Económica\n   ➡️ Más información disponible\n\n¿Cuál te interesa? 😊",
+          "intención": "product_search",
+          "acciones": ["listar_productos"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "la HP, ¿qué especificaciones tiene?",
+          "intención": "product_info",
+          "contexto_memoria": "Laptop HP 15-dy2795wm",
+          "entidades": ["especificaciones", "HP"],
+          "sentimiento": "interesado"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "¡Excelente elección! 🚀 La Laptop HP 15-dy2795wm tiene:\n\n⚡ PROCESADOR:\n• Intel Core i5 (11ª Generación)\n• 4 núcleos, 8 hilos\n• Velocidad: 2.4 GHz - 4.2 GHz\n\n🎮 GRÁFICOS:\n• Intel Iris Xe Graphics\n• Ideal para edición y diseño\n\n💾 MEMORIA:\n• RAM: 8GB DDR4\n• Almacenamiento: 256GB SSD\n• Velocidad de lectura: 500 MB/s\n\n🖥️ PANTALLA:\n• 15.6\" Full HD (1920x1080)\n• Panel IPS\n• Brillo: 300 nits\n\n🔌 CONECTIVIDAD:\n• WiFi 6 (802.11ax)\n• Bluetooth 5.0\n• 2x USB 3.1, 1x USB-C\n• HDMI 2.0\n\n🔋 BATERÍA:\n• Hasta 8 horas\n• Carga rápida\n\n⚖️ PESO:\n• 1.84 kg\n• Portátil y ligera\n\n💰 Precio: $2.500.000 COP\n\n¿Te interesa? 😊",
+          "intención": "product_info",
+          "producto": "Laptop HP 15-dy2795wm",
+          "precio": 2500000,
+          "acciones": ["mostrar_especificaciones_completas"]
+        },
+        {
+          "turno": 5,
+          "rol": "usuario",
+          "mensaje": "sí, quiero comprarla",
+          "intención": "purchase",
+          "contexto_memoria": "Laptop HP 15-dy2795wm",
+          "entidades": ["compra"],
+          "sentimiento": "decidido"
+        },
+        {
+          "turno": 6,
+          "rol": "bot",
+          "mensaje": "¡Excelente! 🎉 Aquí está tu resumen:\n\n📦 *Laptop HP 15-dy2795wm*\n💰 Precio: $2.500.000 COP\n\n💳 Métodos de pago disponibles:\n💚 Nequi\n💙 Daviplata\n💳 Tarjeta de crédito\n🌐 PayPal\n\n¿Cuál es tu método? 💵",
+          "intención": "payment",
+          "producto": "Laptop HP 15-dy2795wm",
+          "precio": 2500000,
+          "acciones": ["mostrar_resumen", "listar_metodos_pago"]
+        },
+        {
+          "turno": 7,
+          "rol": "usuario",
+          "mensaje": "tarjeta de crédito",
+          "intención": "payment",
+          "contexto_memoria": "Laptop HP 15-dy2795wm",
+          "entidades": ["tarjeta"],
+          "sentimiento": "decidido"
+        },
+        {
+          "turno": 8,
+          "rol": "bot",
+          "mensaje": "¡Perfecto! 💳 Aquí está tu información de pago por tarjeta:\n\n💳 *TARJETA DE CRÉDITO*\nValor: $2.500.000 COP\n\n📋 PASOS:\n1️⃣ Haz clic en \"Finalizar Compra\"\n2️⃣ Serás redirigido a la pasarela segura\n3️⃣ Ingresa los datos de tu tarjeta\n4️⃣ Confirma la transacción\n5️⃣ Recibirás confirmación por email\n\n✅ Después del pago:\n📦 Tu laptop será enviada en 2-3 días hábiles\n📧 Recibirás tracking por email\n🚚 Envío gratis a todo el país\n\n¿Necesitas ayuda? 🤝",
+          "intención": "payment",
+          "producto": "Laptop HP 15-dy2795wm",
+          "acciones": ["mostrar_instrucciones_pago_tarjeta"]
+        },
+        {
+          "turno": 9,
+          "rol": "usuario",
+          "mensaje": "ya pagué",
+          "intención": "payment_confirmation",
+          "contexto_memoria": "Laptop HP 15-dy2795wm",
+          "entidades": ["pago"],
+          "sentimiento": "satisfecho"
+        },
+        {
+          "turno": 10,
+          "rol": "bot",
+          "mensaje": "¡Gracias por tu compra! 🎊\n\n✅ Pago confirmado\n📦 Tu laptop será enviada en 2-3 días\n📧 Recibirás tracking por email\n🚚 Envío gratis a todo el país\n\n🎁 INCLUYE:\n• Garantía de 1 año\n• Soporte técnico 24/7\n• Accesorios básicos\n\n¿Tienes alguna pregunta? 💬\n\n¡Bienvenido a la familia de Tecnovariedades D&S! 🌟",
+          "intención": "confirmation",
+          "producto": "Laptop HP 15-dy2795wm",
+          "acciones": ["confirmar_pago", "enviar_confirmacion"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_completo_3",
+      "nombre": "Flujo Completo: Moto",
+      "intención": "complete_purchase_flow",
+      "contexto": "Usuario compra una moto",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "¿tienen motos?",
+          "intención": "product_search",
+          "entidades": ["moto"],
+          "sentimiento": "neutral"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "¡Claro! 🏍️ Tenemos motos disponibles:\n\n1️⃣ *Moto NS-160*\n   💰 Precio: $6.500.000\n   🏍️ Motor de alto rendimiento\n   ➡️ Más información disponible\n\n¿Te interesa? 😊",
+          "intención": "product_search",
+          "acciones": ["listar_productos"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "¿qué características tiene?",
+          "intención": "product_info",
+          "contexto_memoria": "Moto NS-160",
+          "entidades": ["características"],
+          "sentimiento": "interesado"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "¡Excelente! 🏍️ La Moto NS-160 tiene:\n\n⚡ MOTOR:\n• Cilindrada: 160cc\n• Tipo: 4 tiempos\n• Potencia: 15 HP\n• Torque: 14 Nm\n\n🔧 TRANSMISIÓN:\n• Manual de 5 velocidades\n• Embrague automático\n• Arranque eléctrico\n\n🛞 CHASIS:\n• Estructura de acero\n• Suspensión delantera: Telescópica\n• Suspensión trasera: Monoamortiguador\n• Frenos: Disco delantero, tambor trasero\n\n⛽ COMBUSTIBLE:\n• Tanque: 13 litros\n• Consumo: 45 km/litro\n• Autonomía: 585 km\n\n🎨 DISEÑO:\n• Moderno y deportivo\n• Colores disponibles: Negro, Rojo, Azul\n• Peso: 130 kg\n\n🛡️ GARANTÍA:\n• Garantía de fábrica: 2 años\n• Servicio técnico incluido\n• Repuestos originales disponibles\n\n💰 Precio: $6.500.000 COP\n\n¿Te interesa? 😊",
+          "intención": "product_info",
+          "producto": "Moto NS-160",
+          "precio": 6500000,
+          "acciones": ["mostrar_especificaciones_completas"]
+        },
+        {
+          "turno": 5,
+          "rol": "usuario",
+          "mensaje": "quiero comprarla",
+          "intención": "purchase",
+          "contexto_memoria": "Moto NS-160",
+          "entidades": ["compra"],
+          "sentimiento": "decidido"
+        },
+        {
+          "turno": 6,
+          "rol": "bot",
+          "mensaje": "¡Excelente! 🎉 Aquí está tu resumen:\n\n📦 *Moto NS-160*\n💰 Precio: $6.500.000 COP\n\n💳 Métodos de pago disponibles:\n💚 Nequi\n💙 Daviplata\n💳 Tarjeta de crédito\n🌐 PayPal\n💰 Financiamiento (hasta 24 meses)\n\n¿Cuál es tu método? 💵",
+          "intención": "payment",
+          "producto": "Moto NS-160",
+          "precio": 6500000,
+          "acciones": ["mostrar_resumen", "listar_metodos_pago"]
+        },
+        {
+          "turno": 7,
+          "rol": "usuario",
+          "mensaje": "¿puedo financiar?",
+          "intención": "payment",
+          "contexto_memoria": "Moto NS-160",
+          "entidades": ["financiamiento"],
+          "sentimiento": "interesado"
+        },
+        {
+          "turno": 8,
+          "rol": "bot",
+          "mensaje": "¡Claro! 💰 Tenemos opciones de financiamiento:\n\n📊 OPCIONES DE FINANCIAMIENTO:\n\n12 MESES:\n• Cuota: $541.666\n• Interés: 0%\n• Total: $6.500.000\n\n18 MESES:\n• Cuota: $361.111\n• Interés: 2%\n• Total: $6.500.000\n\n24 MESES:\n• Cuota: $270.833\n• Interés: 3%\n• Total: $6.500.000\n\n✅ REQUISITOS:\n• Cédula de ciudadanía\n• Comprobante de ingresos\n• Referencias personales\n\n📋 PROCESO:\n1️⃣ Selecciona el plazo\n2️⃣ Envía documentos por WhatsApp\n3️⃣ Aprobación en 24 horas\n4️⃣ Firma de contrato\n5️⃣ Entrega de moto\n\n¿Cuál plazo te interesa? 😊",
+          "intención": "payment",
+          "producto": "Moto NS-160",
+          "acciones": ["mostrar_opciones_financiamiento"]
+        },
+        {
+          "turno": 9,
+          "rol": "usuario",
+          "mensaje": "24 meses",
+          "intención": "payment",
+          "contexto_memoria": "Moto NS-160",
+          "entidades": ["24 meses"],
+          "sentimiento": "decidido"
+        },
+        {
+          "turno": 10,
+          "rol": "bot",
+          "mensaje": "¡Perfecto! 💳 Aquí está tu información de financiamiento:\n\n💰 *FINANCIAMIENTO 24 MESES*\nValor: $6.500.000 COP\nCuota mensual: $270.833\nInterés: 3%\n\n📋 PASOS:\n1️⃣ Envía tus documentos por WhatsApp\n2️⃣ Espera aprobación (24 horas)\n3️⃣ Firma el contrato\n4️⃣ Realiza el primer pago\n5️⃣ ¡Recibe tu moto!\n\n📱 ENVÍA POR WHATSAPP:\n• Cédula (frente y reverso)\n• Comprobante de ingresos\n• Referencias personales\n\nTel: +57 304 274 8687\n\n✅ Después de la aprobación:\n🏍️ Tu moto será entregada en 3-5 días\n📄 Documentos listos\n🛡️ Garantía de fábrica incluida\n\n¿Necesitas ayuda? 🤝",
+          "intención": "payment",
+          "producto": "Moto NS-160",
+          "acciones": ["mostrar_instrucciones_financiamiento"]
+        },
+        {
+          "turno": 11,
+          "rol": "usuario",
+          "mensaje": "ya envié los documentos",
+          "intención": "payment_confirmation",
+          "contexto_memoria": "Moto NS-160",
+          "entidades": ["documentos"],
+          "sentimiento": "satisfecho"
+        },
+        {
+          "turno": 12,
+          "rol": "bot",
+          "mensaje": "¡Excelente! 🎊\n\n✅ Documentos recibidos\n⏳ Aprobación en proceso (máximo 24 horas)\n📧 Te notificaremos por email y WhatsApp\n\n🎁 INCLUYE:\n• Garantía de fábrica: 2 años\n• Servicio técnico 24/7\n• Repuestos originales\n• Entrega a domicilio\n\n¡Gracias por confiar en Tecnovariedades D&S! 🌟\n\n¿Tienes alguna pregunta? 💬",
+          "intención": "confirmation",
+          "producto": "Moto NS-160",
+          "acciones": ["confirmar_solicitud", "enviar_confirmacion"]
+        }
+      ]
+    }
+  ],
+  "transiciones_clave": [
+    {
+      "de": "price_inquiry",
+      "a": "product_search",
+      "trigger": "usuario pregunta por precio sin especificar producto",
+      "respuesta": "Pedir que especifique qué producto busca"
+    },
+    {
+      "de": "product_search",
+      "a": "product_info",
+      "trigger": "usuario pregunta por detalles/especificaciones",
+      "respuesta": "Mostrar detalles completos del producto"
+    },
+    {
+      "de": "product_info",
+      "a": "payment",
+      "trigger": "usuario dice 'quiero comprar' o 'compra'",
+      "respuesta": "Mostrar métodos de pago disponibles"
+    },
+    {
+      "de": "payment",
+      "a": "payment_confirmation",
+      "trigger": "usuario dice 'ya pagué' o 'pagado'",
+      "respuesta": "Confirmar pago y enviar acceso/confirmación"
+    },
+    {
+      "de": "payment_confirmation",
+      "a": "confirmation",
+      "trigger": "confirmación de pago completada",
+      "respuesta": "Mensaje de agradecimiento y próximos pasos"
+    }
+  ],
+  "palabras_clave_por_etapa": {
+    "price_inquiry": ["precio", "cuánto", "costo", "vale", "cuesta"],
+    "product_search": ["tienes", "tienen", "hay", "disponible", "qué", "busco"],
+    "product_info": ["detalles", "características", "especificaciones", "información", "cuéntame", "más"],
+    "purchase": ["comprar", "quiero", "compra", "voy a comprar", "interesado"],
+    "payment": ["método de pago", "cómo pago", "pago", "pagar"],
+    "payment_confirmation": ["ya pagué", "pagado", "transferí", "envié", "listo"],
+    "confirmation": ["gracias", "perfecto", "excelente", "ok"]
+  }
+}

@@ -1,0 +1,32 @@
+========================================
+  SOLUCION AL PROBLEMA DE GIT
+========================================
+
+El archivo grande sigue en el historial de Git.
+
+SOLUCION MAS RAPIDA:
+
+  SOLUCION_RAPIDA_GIT.bat
+
+Esto hara:
+1. Reset a commits anteriores (antes de trading-bot)
+2. Crear commit limpio solo con archivos importantes
+3. Push con --force
+
+========================================
+  ALTERNATIVA (mas lenta pero completa):
+========================================
+
+  LIMPIAR_HISTORIAL_GIT.bat
+
+Esto limpia TODO el historial de trading-bot
+
+========================================
+  RECOMENDACION:
+========================================
+
+Ejecuta: SOLUCION_RAPIDA_GIT.bat
+
+Es mas rapido y seguro.
+
+========================================

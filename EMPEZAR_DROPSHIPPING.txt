@@ -1,0 +1,80 @@
+🛍️ SISTEMA DE DROPSHIPPING - SMARTJOYS
+========================================
+
+¡Listo para importar productos automáticamente!
+
+📋 COMANDOS RÁPIDOS:
+-------------------
+
+1️⃣ Scrapear productos de SmartJoys:
+   npm run scrape:smartjoys
+
+2️⃣ Importar a tu base de datos:
+   npm run import:smartjoys
+
+3️⃣ Hacer ambos (actualización completa):
+   npm run dropship:update
+
+
+🎯 FLUJO COMPLETO:
+-----------------
+
+1. Ejecuta: npm run dropship:update
+2. Espera 2-3 minutos mientras se extraen los productos
+3. Los productos aparecerán automáticamente en tu dashboard
+4. Tu bot ya puede venderlos por WhatsApp
+
+
+✨ CARACTERÍSTICAS:
+------------------
+
+✅ Extrae productos automáticamente
+✅ Detecta precios y descuentos
+✅ Descarga imágenes
+✅ Categoriza inteligentemente
+✅ Evita duplicados
+✅ Actualiza precios automáticamente
+✅ Genera respuestas del bot
+
+
+💡 CONSEJOS:
+-----------
+
+• Ejecuta la actualización 1-2 veces al día
+• Revisa los precios antes de vender
+• Agrega tu margen de ganancia
+• Personaliza las descripciones
+• Prueba el bot con los productos
+
+
+📊 CATEGORÍAS AUTOMÁTICAS:
+-------------------------
+
+🎧 Audífonos
+🔌 Cargadores y Cables
+⌚ Smartwatches
+🔊 Parlantes
+🔋 Power Banks
+📱 Accesorios
+🖱️ Periféricos
+📷 Cámaras
+💡 Iluminación
+
+
+🚀 PRÓXIMOS PASOS:
+-----------------
+
+1. Ejecuta: npm run dropship:update
+2. Ve al dashboard: http://localhost:3000/dashboard
+3. Revisa los productos importados
+4. Prueba el bot en WhatsApp
+5. ¡Empieza a vender!
+
+
+📖 MÁS INFORMACIÓN:
+------------------
+
+Lee: DROPSHIPPING_SMARTJOYS.md
+
+
+¡Éxito con tu negocio! 💰

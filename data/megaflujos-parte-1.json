@@ -1,0 +1,36 @@
+{
+  "megaflujos": [
+    {
+      "id": "megaflujo_1",
+      "nombre": "TECNOLOGÍA - CONTRAENTREGA (Laptop para Ingeniería)",
+      "categoria": "tecnologia_contraentrega",
+      "complejidad": "alta",
+      "duracion_promedio": "15-20 minutos",
+      "conversacion": [
+        {"turno": 1, "rol": "usuario", "mensaje": "Hola, ¿tienes portátiles económicos?", "intención": "product_search", "sentimiento": "neutral"},
+        {"turno": 2, "rol": "bot", "mensaje": "¡Hola! 👋 Claro, ¿qué tipo de portátil buscas? ¿Para estudio, trabajo o algo más específico?", "intención": "clarification", "acciones": ["pedir_contexto"]},
+        {"turno": 3, "rol": "usuario", "mensaje": "Para estudiar ingeniería, pero no quiero que se trabe.", "intención": "product_search", "entidades": ["ingeniería", "rendimiento"], "sentimiento": "preocupado"},
+        {"turno": 4, "rol": "bot", "mensaje": "Perfecto 🙌 Para ingeniería básica necesitas mínimo:\n✔ 8GB RAM\n✔ SSD 256GB o más\n✔ Procesador i3/Ryzen 3 o mejor\n\n¿Cuánto es tu presupuesto máximo?", "intención": "product_info", "acciones": ["mostrar_requisitos", "pedir_presupuesto"]},
+        {"turno": 5, "rol": "usuario", "mensaje": "No más de 1.5 millones.", "intención": "price_inquiry", "entidades": ["presupuesto"], "sentimiento": "decidido"},
+        {"turno": 6, "rol": "bot", "mensaje": "Listo. Tengo estas 2 opciones top:\n\n💻 HP 14 – i3 – 8GB RAM – 256GB SSD\n💲 1.249.900\n✔ Zoom, VSCode, AutoCAD básico, Office\n\n💻 ASUS 14 – Ryzen 3 – 8GB RAM – 512GB SSD\n💲 1.449.900\n✔ Mejor multitarea\n✔ Arranque más rápido\n✔ Mejor rendimiento para ingeniería ligera\n\n¿Quieres que te envíe fotos o videos reales?", "intención": "product_comparison", "productos": ["HP 14", "ASUS 14"], "acciones": ["comparar_opciones", "ofrecer_multimedia"]},
+        {"turno": 7, "rol": "usuario", "mensaje": "Sí, mándame fotos.", "intención": "media_request", "sentimiento": "interesado"},
+        {"turno": 8, "rol": "bot", "mensaje": "Aquí van 📸👇\n(envía 3 imágenes reales de ambas laptops)\n\nSi quieres, te muestro video del encendido.", "intención": "media_delivery", "acciones": ["enviar_fotos", "ofrecer_video"]},
+        {"turno": 9, "rol": "usuario", "mensaje": "¿Es nueva o usada?", "intención": "product_verification", "entidades": ["condición"], "sentimiento": "desconfiado"},
+        {"turno": 10, "rol": "bot", "mensaje": "Totalmente nueva y sellada, garantía + factura. Incluye Windows 11 activado.", "intención": "reassurance", "acciones": ["confirmar_nuevo", "mencionar_garantía"]},
+        {"turno": 11, "rol": "usuario", "mensaje": "¿Y si la pido contraentrega no me estafas?", "intención": "objection_trust", "entidades": ["estafa", "seguridad"], "sentimiento": "desconfiado"},
+        {"turno": 12, "rol": "bot", "mensaje": "Tranquilo 😊 El proceso es así:\n\n1️⃣ El mensajero te entrega el portátil\n2️⃣ Lo revisas tú mismo antes de pagar\n3️⃣ Si está perfecto → pagas\n4️⃣ Si algo no coincide → NO pagas y devuelves sin costo\n\nEs 100% seguro.", "intención": "objection_response", "acciones": ["explicar_contraentrega", "garantizar_seguridad"]},
+        {"turno": 13, "rol": "usuario", "mensaje": "Ah bueno, así sí. ¿Cuánto demora en llegar a Cali?", "intención": "logistics_inquiry", "entidades": ["ubicación", "tiempo"], "sentimiento": "interesado"},
+        {"turno": 14, "rol": "bot", "mensaje": "Para Cali entregamos hoy en la tarde o mañana en la mañana.", "intención": "logistics_info", "acciones": ["confirmar_tiempo_entrega"]},
+        {"turno": 15, "rol": "usuario", "mensaje": "Vi uno igual más barato en Marketplace.", "intención": "objection_price", "entidades": ["competencia"], "sentimiento": "dudoso"},
+        {"turno": 16, "rol": "bot", "mensaje": "Sí, pero ojo: muchos en Marketplace son usados, sin garantía o reacondicionados. El nuestro es:\n\n✔ Nuevo sellado\n✔ Garantía real\n✔ Factura\n✔ Contraentrega seguro\n\nAhí está la diferencia.", "intención": "objection_response", "acciones": ["diferenciar_competencia", "destacar_valor"]},
+        {"turno": 17, "rol": "usuario", "mensaje": "Bueno, la ASUS me gusta.", "intención": "product_selection", "entidades": ["ASUS"], "sentimiento": "decidido"},
+        {"turno": 18, "rol": "bot", "mensaje": "¡Excelente elección! 🙌 ¿Deseas envío contraentrega o recoger en tienda?", "intención": "delivery_method", "acciones": ["confirmar_selección", "pedir_método_entrega"]},
+        {"turno": 19, "rol": "usuario", "mensaje": "Contraentrega.", "intención": "delivery_selection", "sentimiento": "decidido"},
+        {"turno": 20, "rol": "bot", "mensaje": "Perfecto ✔️ Para generar la guía necesito:\n\n📍 Dirección\n👤 Nombre\n📱 Teléfono", "intención": "data_collection", "acciones": ["pedir_datos_entrega"]},
+        {"turno": 21, "rol": "usuario", "mensaje": "Listo, te los paso…", "intención": "data_provision", "sentimiento": "cooperativo"},
+        {"turno": 22, "rol": "bot", "mensaje": "Perfecto 🙌 Tu entrega queda programada para hoy. Cuando el mensajero recoja tu portátil te envío foto + factura.", "intención": "confirmation", "acciones": ["confirmar_pedido", "prometer_seguimiento"]},
+        {"turno": 23, "rol": "bot", "mensaje": "(Después de 2 horas)\n\nHola 👋 ¿Todo bien con tu ASUS? ¿Funciona como esperabas? 😊", "intención": "post_sale_followup", "acciones": ["verificar_satisfacción"]}
+      ]
+    }
+  ]
+}

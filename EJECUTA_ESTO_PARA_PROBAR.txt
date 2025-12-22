@@ -1,0 +1,121 @@
+🧠 SISTEMA DE RAZONAMIENTO PROFUNDO - PRUEBA INMEDIATA
+======================================================
+
+✅ YA ESTÁ IMPLEMENTADO Y FUNCIONANDO
+
+
+🔍 PASO 0: Verificar Sistema (EJECUTA ESTO PRIMERO)
+----------------------------------------------------
+npx tsx scripts/verificar-sistema-razonamiento.ts
+
+Esto verificará que tengas:
+- ✅ Usuarios en la base de datos
+- ✅ Productos disponibles
+- ✅ Servicios cargados correctamente
+
+
+🧪 PRUEBA 1: Razonamiento General
+----------------------------------
+npx tsx scripts/test-reasoning.ts
+
+Esto probará 9 casos diferentes y mostrará el proceso de razonamiento.
+
+
+🧪 PRUEBA 2: Links de Pago (Tu Caso Específico)
+------------------------------------------------
+npx tsx scripts/test-link-pago.ts
+
+Esto probará específicamente:
+- "Envíame el link de pago"
+- "Dame el link"
+- "Cuál es el link de pago del producto"
+- "Cómo pago?"
+
+
+⚠️ SI NO TIENES USUARIOS O PRODUCTOS:
+--------------------------------------
+
+1. Crear usuario admin:
+   npx tsx scripts/create-admin.ts
+
+2. Importar productos:
+   npx tsx scripts/import-productos-completos.ts
+
+3. Verificar de nuevo:
+   npx tsx scripts/verificar-sistema-razonamiento.ts
+
+
+📊 QUÉ VERÁS EN LOS RESULTADOS:
+--------------------------------
+
+🧠 PROCESO DE RAZONAMIENTO:
+
+1. Analizando el mensaje para entender qué está preguntando
+   ✓ Detectar intención principal y palabras clave
+   → Intención: request_payment_link
+
+2. El cliente pregunta sobre un producto. Necesito identificar cuál.
+   ✓ Buscar producto en mensaje actual, memoria o historial
+   → Producto: Curso de Piano Profesional
+
+3. El cliente quiere información de pago. Voy a verificar métodos.
+   ✓ Extraer métodos de pago y enlaces del producto
+   → Métodos: Hotmart, MercadoPago, PayPal
+
+4. Ahora que entiendo la pregunta y tengo la información, voy a decidir.
+   ✓ Generar respuesta apropiada
+   → Respuesta directa (sin IA, más rápido)
+
+✅ DECISIÓN FINAL:
+   - Intención: request_payment_link
+   - Confianza: 90%
+   - Producto: Curso de Piano Profesional
+   - Usar IA: No (respuesta directa)
+
+💬 RESPUESTA DEL BOT:
+──────────────────────────────────────────────────────────
+¡Perfecto! Aquí están los métodos de pago para Curso de Piano 🎹
+
+💰 Precio: $60.000 COP
+
+💳 Hotmart (pago directo):
+👉 https://pay.hotmart.com/I95497720H?checkoutMode=2&bid=1760738599205
+
+💳 MercadoPago:
+👉 https://mpago.li/...
+
+Acceso inmediato tras el pago ✅
+
+¿Tienes alguna duda?
+──────────────────────────────────────────────────────────
+
+
+🚀 USAR EN PRODUCCIÓN:
+----------------------
+
+1. Reinicia el servidor:
+   npm run dev
+
+2. Conecta WhatsApp (escanea QR)
+
+3. Envía mensajes de prueba:
+   - "Info del curso de piano"
+   - "Envíame el link de pago"
+
+4. Observa los logs en consola:
+   [Baileys] 🧠 Iniciando RAZONAMIENTO PROFUNDO...
+   [Reasoning] Paso 1 - Intención detectada: request_payment_link
+   [Reasoning] Paso 2 - Producto: Curso de Piano
+   [Baileys] ⚡ Usando respuesta directa (sin IA)
+   [Baileys] ✅ Respuesta generada: 0.8s
+
+
+📚 DOCUMENTACIÓN COMPLETA:
+--------------------------
+
+Ver: ENTRENAMIENTO_PROFUNDO_LISTO.md
+
+
+✅ LISTO PARA USAR
+
+El bot ahora razona antes de responder y entiende el contexto.

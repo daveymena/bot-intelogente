@@ -1,0 +1,28 @@
+{
+  "name": "Smart Sales Bot Pro - Tecnovariedades D&S",
+  "short_name": "Smart Sales",
+  "description": "Sistema de ventas inteligente con WhatsApp - Gestiona tu negocio desde tu móvil",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "lang": "es-CO",
+  "dir": "ltr"
+}

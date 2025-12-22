@@ -1,0 +1,149 @@
+🚀 DESPLEGAR A EASYPANEL - COMANDOS EXACTOS
+============================================
+
+✅ VERIFICACIÓN COMPLETADA: TODO LISTO
+
+📋 PASO 1: SUBIR A GIT
+-----------------------
+
+git add .
+git commit -m "Sistema de emails configurado - Listo para producción con Resend"
+git push origin main
+
+
+📋 PASO 2: CONFIGURAR EASYPANEL
+--------------------------------
+
+1. Crear PostgreSQL:
+   - Name: botwhatsapp-db
+   - Database: botwhatsapp
+   - Username: postgres
+   - Password: [GUARDAR ESTE PASSWORD]
+
+2. Crear App:
+   - Name: smart-sales-bot
+   - Source: Tu repositorio Git
+   - Branch: main
+   - Build: Dockerfile
+   - Port: 3000
+
+3. Variables de Entorno (copiar y pegar):
+
+NODE_ENV=production
+PORT=3000
+NEXT_PUBLIC_APP_URL=https://tu-app.easypanel.host
+
+DATABASE_PROVIDER=postgresql
+DATABASE_URL=postgresql://postgres:TU_PASSWORD_AQUI@botwhatsapp-db:5432/botwhatsapp
+
+NEXTAUTH_SECRET=GENERAR_CON_openssl_rand_base64_32
+JWT_SECRET=GENERAR_OTRO_SECRET_DIFERENTE
+
+RESEND_API_KEY=tu_resend_api_key_aqui
+RESEND_FROM_EMAIL=onboarding@resend.dev
+EMAIL_FROM=Tecnovariedades D&S <onboarding@resend.dev>
+
+ADMIN_EMAIL=daveymena16@gmail.com
+ADMIN_PASSWORD=TU_PASSWORD_SEGURO
+
+GROQ_API_KEY=tu_groq_api_key_aqui
+GROQ_MODEL=llama-3.1-8b-instant
+AI_PROVIDER=groq
+AI_FALLBACK_ENABLED=true
+
+WHATSAPP_PROVIDER=baileys
+BUSINESS_PHONE=+57 300 556 0186
+NEXT_PUBLIC_WHATSAPP_NUMBER=573005560186
+
+MERCADO_PAGO_PUBLIC_KEY=tu_mercadopago_public_key
+MERCADO_PAGO_ACCESS_TOKEN=tu_mercadopago_access_token
+MERCADO_PAGO_CLIENT_ID=tu_mercadopago_client_id
+
+PAYPAL_CLIENT_ID=tu_paypal_client_id
+PAYPAL_CLIENT_SECRET=tu_paypal_client_secret
+PAYPAL_MODE=live
+
+NEQUI_NUMBER=3005560186
+DAVIPLATA_NUMBER=3005560186
+
+DROPI_AGENT_TOKEN=tu_dropi_token_aqui
+DROPI_API_URL=https://app.dropi.co/api/v1
+DROPI_ENABLED=true
+
+
+📋 PASO 3: GENERAR SECRETS
+---------------------------
+
+Para generar NEXTAUTH_SECRET y JWT_SECRET, ejecuta en tu terminal:
+
+# En Windows PowerShell:
+[Convert]::ToBase64String((1..32 | ForEach-Object { Get-Random -Maximum 256 }))
+
+# O usa este generador online:
+https://generate-secret.vercel.app/32
+
+
+📋 PASO 4: DESPLEGAR
+---------------------
+
+1. En Easypanel, click "Deploy"
+2. Esperar build (5-10 minutos)
+3. Verificar logs para errores
+
+
+📋 PASO 5: INICIALIZAR BASE DE DATOS
+-------------------------------------
+
+En la terminal de Easypanel (o SSH):
+
+npx prisma generate
+npx prisma db push
+npx tsx scripts/create-admin.ts
+
+
+📋 PASO 6: PROBAR SISTEMA
+--------------------------
+
+1. Registro:
+   https://tu-dominio/register
+   
+2. Reenviar código:
+   https://tu-dominio/resend-verification
+   
+3. Login:
+   https://tu-dominio/login
+
+
+✅ SISTEMA INCLUYE:
+-------------------
+
+✅ Emails con Resend (3,000/mes gratis)
+✅ Registro de usuarios
+✅ Verificación por email
+✅ Reenvío de códigos
+✅ Recuperación de contraseña
+✅ 10 días gratis automáticos
+✅ WhatsApp Bot
+✅ IA integrada (Groq)
+✅ Pagos (MercadoPago, PayPal, Nequi)
+✅ Dropshipping (Dropi)
+
+
+📖 DOCUMENTACIÓN COMPLETA:
+---------------------------
+
+DESPLEGAR_EASYPANEL_COMPLETO.md - Guía paso a paso detallada
+SISTEMA_EMAILS_LISTO_EASYPANEL.md - Info del sistema de emails
+
+
+🆘 SOPORTE:
+-----------
+
+Si algo falla:
+1. Revisa logs en Easypanel
+2. Verifica variables de entorno
+3. Asegúrate de que DATABASE_URL sea correcto
+4. Verifica que PostgreSQL esté corriendo
+
+
+¡LISTO PARA DESPLEGAR! 🚀

@@ -1,0 +1,44 @@
+{
+  "megaflujos": [
+    {
+      "id": "megaflujo_3",
+      "nombre": "SERVICIOS - CITAS (Barbería/Estética/Odontología)",
+      "categoria": "servicios_citas",
+      "complejidad": "media",
+      "duracion_promedio": "5-8 minutos",
+      "conversacion": [
+        {"turno": 1, "rol": "usuario", "mensaje": "Hola, quiero agendar una cita de barbería.", "intención": "appointment_request", "entidades": ["barbería"], "sentimiento": "neutral"},
+        {"turno": 2, "rol": "bot", "mensaje": "Claro 💈 Tenemos estos horarios:\n\n🕒 Hoy: 3:00 – 4:30 – 6:00\n🕒 Mañana: 10:00 – 1:00 – 5:00\n\n¿Cuál te sirve?", "intención": "availability_offer", "acciones": ["mostrar_horarios"]},
+        {"turno": 3, "rol": "usuario", "mensaje": "Mañana a las 10.", "intención": "appointment_selection", "entidades": ["mañana", "10:00"], "sentimiento": "decidido"},
+        {"turno": 4, "rol": "bot", "mensaje": "Perfecto ✂️ Cita agendada para:\n\n📅 Mañana\n🕙 10:00 am\n📍 Tecnovariedades Barber\n\n¿A nombre de quién la programo?", "intención": "confirmation", "acciones": ["confirmar_cita", "pedir_nombre"]},
+        {"turno": 5, "rol": "usuario", "mensaje": "Soy Andrés.", "intención": "data_provision", "sentimiento": "cooperativo"},
+        {"turno": 6, "rol": "bot", "mensaje": "Listo Andrés. ¿Deseas agregar cejas o barba? Tengo combo económico 😄", "intención": "upsell", "acciones": ["ofrecer_servicios_adicionales"]},
+        {"turno": 7, "rol": "usuario", "mensaje": "Sí, agrégame cejas también.", "intención": "service_addition", "sentimiento": "interesado"},
+        {"turno": 8, "rol": "bot", "mensaje": "Perfecto 🙌 Tu cita queda así:\n\n✂️ Corte de cabello\n✂️ Cejas\n💲 Total: $45.000\n\nTe envío recordatorio mañana a las 9:30.", "intención": "final_confirmation", "acciones": ["confirmar_servicios", "prometer_recordatorio"]},
+        {"turno": 9, "rol": "usuario", "mensaje": "(Mañana a las 9:30)\n\nRecibido, gracias.", "intención": "acknowledgment", "sentimiento": "neutral"},
+        {"turno": 10, "rol": "bot", "mensaje": "(Después de la cita)\n\n¿Cómo te fue? ¿Te gustó el corte? 😊", "intención": "post_service_feedback", "acciones": ["pedir_feedback"]}
+      ]
+    },
+    {
+      "id": "megaflujo_4",
+      "nombre": "SOPORTE TÉCNICO (Laptop Lenta - Diagnóstico + Solución)",
+      "categoria": "soporte_tecnico",
+      "complejidad": "alta",
+      "duracion_promedio": "10-15 minutos",
+      "conversacion": [
+        {"turno": 1, "rol": "usuario", "mensaje": "Mi laptop está muy lenta, ¿qué puede ser?", "intención": "support_request", "entidades": ["lentitud"], "sentimiento": "frustrado"},
+        {"turno": 2, "rol": "bot", "mensaje": "Vamos a revisar:\n\n1️⃣ ¿Se demora al encender o solo al usarla?\n2️⃣ ¿Qué Windows tiene?\n3️⃣ ¿Hace ruidos o se calienta?\n\nCon eso te digo si es disco, RAM, virus o limpieza.", "intención": "diagnostic_questions", "acciones": ["hacer_preguntas_diagnostico"]},
+        {"turno": 3, "rol": "usuario", "mensaje": "Solo se demora al encender.", "intención": "diagnostic_info", "entidades": ["encendido"], "sentimiento": "neutral"},
+        {"turno": 4, "rol": "bot", "mensaje": "Eso suele ser:\n\n✔ Disco viejo\n✔ Windows saturado\n✔ Programas al inicio\n\nLa solución ideal: cambiar a SSD → queda 10 veces más rápida. ¿Quieres diagnóstico sin costo?", "intención": "solution_offer", "acciones": ["diagnosticar", "ofrecer_solución"]},
+        {"turno": 5, "rol": "usuario", "mensaje": "Sí, ¿cuánto cuesta el SSD?", "intención": "price_inquiry", "sentimiento": "interesado"},
+        {"turno": 6, "rol": "bot", "mensaje": "Desde $69.900 instalado. Tiempo de entrega: 40 minutos.", "intención": "pricing_info", "acciones": ["mostrar_precio", "informar_tiempo"]},
+        {"turno": 7, "rol": "usuario", "mensaje": "¿Pierdo mis archivos?", "intención": "objection_data_loss", "entidades": ["datos"], "sentimiento": "preocupado"},
+        {"turno": 8, "rol": "bot", "mensaje": "No, tranquilo. Hacemos backup de todo antes. Tus archivos quedan intactos.", "intención": "reassurance", "acciones": ["garantizar_datos"]},
+        {"turno": 9, "rol": "usuario", "mensaje": "Dale, hazlo.", "intención": "service_approval", "sentimiento": "decidido"},
+        {"turno": 10, "rol": "bot", "mensaje": "Perfecto 🙌 Trae tu laptop hoy. En 40 minutos queda lista.", "intención": "confirmation", "acciones": ["confirmar_servicio"]},
+        {"turno": 11, "rol": "usuario", "mensaje": "(Después de 40 minutos)\n\nWow, está increíble de rápida. Gracias.", "intención": "satisfaction", "sentimiento": "muy_satisfecho"},
+        {"turno": 12, "rol": "bot", "mensaje": "¡Excelente! 🎉 Si necesitas algo más, aquí estoy. Cuéntale a tus amigos 😊", "intención": "post_service_followup", "acciones": ["pedir_referencia"]}
+      ]
+    }
+  ]
+}

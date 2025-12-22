@@ -1,0 +1,104 @@
+========================================
+  CORREGIR PRODUCTOS SIN FOTOS
+========================================
+
+PROBLEMA:
+---------
+Importaste productos desde el dashboard
+pero las fotos no aparecen.
+
+
+CAUSA:
+------
+El código de importación no convertía
+correctamente los arrays de imágenes a JSON.
+
+
+SOLUCION:
+---------
+✅ Código corregido
+✅ Script de corrección creado
+
+
+EJECUTAR AHORA:
+---------------
+  corregir-productos-sin-fotos.bat
+
+
+QUE HACE:
+---------
+1. Busca productos sin fotos en BD
+2. Lee archivos JSON en C:\catalogos
+3. Actualiza productos con sus fotos
+
+
+RESULTADO ESPERADO:
+-------------------
+📄 Procesando: productos.json
+   📦 Productos en archivo: 68
+   ✅ Laptop HP 15 (+5 fotos)
+   ✅ Monitor LG 24 (+3 fotos)
+   ✅ Audífonos TWS (+2 fotos)
+   ...
+
+📊 RESUMEN:
+✅ Actualizados: 65
+⚠️  Sin fotos: 3
+📦 Total: 68
+
+
+VERIFICAR:
+----------
+Dashboard:
+  http://localhost:3000/dashboard
+
+Ir a Productos y verificar que
+ahora tengan fotos.
+
+
+PARA FUTURAS IMPORTACIONES:
+----------------------------
+El código ya está corregido.
+Las próximas importaciones desde
+el dashboard funcionarán correctamente.
+
+
+FORMATO CORRECTO JSON:
+-----------------------
+[
+  {
+    "name": "Producto",
+    "price": 10000,
+    "images": [
+      "https://tienda.com/foto1.jpg",
+      "https://tienda.com/foto2.jpg"
+    ]
+  }
+]
+
+
+IMPORTANTE:
+-----------
+- images debe ser un ARRAY
+- URLs completas con https://
+- No usar placeholders (unsplash)
+
+
+COMANDO:
+--------
+  corregir-productos-sin-fotos.bat
+
+
+DOCUMENTACION:
+--------------
+📖 SOLUCION_PRODUCTOS_SIN_FOTOS.md
+
+
+========================================
+  ¡EJECUTA AHORA PARA CORREGIR!
+========================================
+
+  corregir-productos-sin-fotos.bat
+
+
+========================================

@@ -1,0 +1,47 @@
+# Dockerfile simple para Easypanel
+FROM node:18-alpine
+
+# Instalar dependencias del sistema
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
+
+# Configurar Puppeteer
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
+# Configurar directorio de trabajo
+WORKDIR /app
+
+# Variables de entorno
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Copiar archivos de dependencias
+COPY package*.json ./
+COPY prisma ./prisma/
+
+# Instalar dependencias
+RUN npm ci --only=production --legacy-peer-deps
+
+# Copiar código fuente
+COPY . .
+
+# Generar Prisma Client
+RUN npx prisma generate
+
+# Build de Next.js
+RUN npm run build
+
+# Crear directorios necesarios
+RUN mkdir -p /app/whatsapp-sessions /app/auth_sessions /app/data
+
+# Exponer puerto
+EXPOSE 3000
+
+# Comando de inicio
+CMD ["sh", "-c", "npx prisma db push --accept-data-loss || true && npm start"]

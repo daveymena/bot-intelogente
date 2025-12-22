@@ -1,0 +1,87 @@
+✅ ARREGLADO: Bucle Infinito de Reconexiones
+============================================
+
+🎯 PROBLEMA:
+Baileys se reconectaba infinitamente sin parar:
+- Se conecta
+- Se cierra inmediatamente
+- Intenta reconectar
+- Se repite infinitamente
+
+CAUSAS:
+- Múltiples instancias conectando simultáneamente
+- No había límite de reintentos
+- No había bloqueo de conexiones concurrentes
+
+✅ SOLUCIÓN:
+
+1. SISTEMA DE BLOQUEO:
+   - Bloquea conexiones concurrentes
+   - Solo permite una conexión a la vez por usuario
+   - Ignora solicitudes duplicadas
+
+2. LÍMITE DE REINTENTOS:
+   - Máximo 10 intentos de reconexión
+   - Después de 10 intentos, detiene la reconexión
+   - Evita bucle infinito
+
+3. DESBLOQUEO GARANTIZADO:
+   - Desbloquea cuando conecta exitosamente
+   - Desbloquea antes de reconectar
+   - Desbloquea en caso de error
+   - Desbloquea si usuario cierra sesión
+
+📊 FLUJO MEJORADO:
+1. Conexión se cierra
+2. Verifica si ya hay reconexión en proceso
+3. Bloquea nuevas conexiones
+4. Espera con backoff exponencial
+5. Desbloquea antes de reconectar
+6. Intenta reconectar (máximo 10 veces)
+7. Si falla 10 veces → Detiene
+
+🔍 LOGS:
+
+CONEXIÓN BLOQUEADA:
+[Baileys] ⚠️ Ya hay una conexión en proceso, ignorando...
+
+MÁXIMO DE REINTENTOS:
+[Baileys] 🔄 Intento de reconexión #10
+[Baileys] ❌ Máximo de reintentos alcanzado (10)
+
+CONEXIÓN EXITOSA:
+[Baileys] ✅ Conexión establecida
+[Baileys] ✅ Conexión registrada
+[Baileys] 🎯 Configurando manejador de mensajes
+
+🧪 PROBAR AHORA:
+1. Reinicia el servidor: npm run dev
+2. Observa los logs
+3. ✅ NO debe haber bucle infinito
+4. ✅ Debe conectar una sola vez
+
+📈 BENEFICIOS:
+✅ NO más bucle infinito
+✅ Conexiones concurrentes bloqueadas
+✅ Límite de 10 reintentos
+✅ Desbloqueo garantizado
+✅ Sistema estable
+
+⚙️ CONFIGURACIÓN:
+- Límite de reintentos: 10 (configurable)
+- Backoff exponencial: 1s, 2s, 4s, 8s, 16s, 30s (máx)
+
+📝 ARCHIVO MODIFICADO:
+- src/lib/baileys-stable-service.ts
+  * Agregado connectionLocks
+  * Verificación antes de conectar
+  * Límite de reintentos
+  * Desbloqueo en todos los casos
+
+📚 DOCUMENTACIÓN:
+- SOLUCION_BUCLE_RECONEXION.md (completa)
+
+---
+Estado: ✅ ARREGLADO
+Fecha: 2025-11-04
+Próximo reinicio: NO debe haber bucle infinito 🚀

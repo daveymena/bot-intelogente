@@ -1,0 +1,42 @@
+# 🚀 EJECUTAR VERIFICACIÓN DE USUARIOS - COMANDOS RÁPIDOS
+
+## 📋 PASO 1: Ver estado actual de usuarios
+
+npx tsx scripts/listar-estado-usuarios.ts
+
+
+## ✅ PASO 2: Verificar TODOS los usuarios no verificados (RECOMENDADO)
+
+npx tsx scripts/verificar-todos-usuarios.ts
+
+
+## 🎯 PASO 3 (Alternativa): Verificar solo daveymena162@gmail.com
+
+npx tsx scripts/verificar-usuario-especifico.ts
+
+
+## 🔍 PASO 4: Confirmar que funcionó
+
+npx tsx scripts/listar-estado-usuarios.ts
+
+
+## 📝 NOTAS:
+
+- Ejecuta estos comandos en tu terminal local
+- O en la terminal de Easypanel si estás en producción
+- Los scripts son seguros y no borran datos
+- Solo marcan usuarios como verificados
+
+
+## ✅ RESULTADO ESPERADO:
+
+Después de ejecutar el paso 2, todos los usuarios tendrán:
+- emailVerified: true ✅
+- phoneVerified: true ✅
+
+Y podrán hacer login sin problemas.
+
+
+## 🎉 ¡LISTO!
+
+Ejecuta el PASO 2 y todos los usuarios estarán verificados.

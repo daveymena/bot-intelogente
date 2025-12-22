@@ -1,0 +1,32 @@
+feat: Mejorar sistema de fotos y optimizar respuestas de productos
+
+✨ Nuevas Funcionalidades
+- Soporte para rutas locales de imágenes (/fotos/...)
+- Conversión automática a URLs completas para WhatsApp
+- Sistema de envío inteligente de fotos con caption
+
+🐛 Correcciones Críticas
+- Mensajes "duplicados": Acortada respuesta AIDA de 800 a 400 caracteres
+- Fotos incorrectas: Actualizados 42 productos con imágenes correctas
+- Fotos no se enviaban: Corregido filtro en photoService.ts
+
+📸 Sistema de Fotos
+- Piano → /fotos/curso de piano completo.jpg
+- Mega Pack 17 (Idiomas) → /fotos/megapack2.jpg
+- Otros Megapacks → /fotos/megapack completo.png
+
+🔧 Optimizaciones
+- flujoDigital.ts: Respuesta AIDA compacta (400 chars)
+- photoService.ts: Soporte para paths locales y HTTP URLs
+- conversacionController.ts: Mejora en contexto de búsqueda
+
+📊 Archivos Modificados
+- src/conversational-module/flows/flujoDigital.ts
+- src/conversational-module/services/photoService.ts
+- src/conversational-module/ai/conversacionController.ts
+- .gitignore (exclusión de scripts temporales)
+
+🧪 Testing
+✅ Verificado envío automático de fotos
+✅ Verificado respuesta en 1 solo mensaje
+✅ Verificado imágenes correctas por producto

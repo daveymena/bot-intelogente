@@ -1,0 +1,311 @@
+{
+  "nombre": "Entrenamiento de Preguntas de Seguimiento",
+  "descripcion": "Ejemplos de cómo manejar preguntas de seguimiento usando contexto",
+  "version": "1.0",
+  "fecha": "2025-11-16",
+  "ejemplos": [
+    {
+      "contexto": "Usuario preguntó por Megapack de Piano",
+      "conversacion": [
+        {
+          "usuario": "Hola, vi el Megapack de Piano",
+          "bot": "🎹 ¡Hola! El *Megapack de Piano \"De Cero a Avanzado\"* está disponible por $20.000 COP\n\n✅ Acceso inmediato\n✅ Entrega automática por WhatsApp\n✅ Contenido completo\n\n¿Te gustaría saber más? 😊",
+          "producto_guardado": "Megapack de Piano",
+          "precio": 20000
+        },
+        {
+          "usuario": "más información",
+          "bot": "📚 *Megapack de Piano \"De Cero a Avanzado\"* es un producto digital:\n\n✅ Acceso inmediato después del pago\n✅ Entrega automática por WhatsApp\n✅ Disponible 24/7 (stock ilimitado)\n✅ Acceso de por vida\n💰 Precio: $20.000 COP\n\n¿Te gustaría proceder con la compra? 😊",
+          "usa_contexto": true,
+          "tipo_seguimiento": "more_info"
+        },
+        {
+          "usuario": "métodos de pago",
+          "bot": "💳 *Métodos de pago disponibles para Megapack de Piano:*\n\n1️⃣ Nequi\n2️⃣ Daviplata\n3️⃣ Tarjeta de crédito\n4️⃣ PSE\n\n💰 Precio: $20.000 COP\n\n¿Con cuál prefieres pagar? 😊",
+          "usa_contexto": true,
+          "tipo_seguimiento": "payment_methods"
+        },
+        {
+          "usuario": "Nequi",
+          "bot": "¡Perfecto! 📱 Aquí está tu link de pago por Nequi:\n\n🔗 [Link de pago]\n\n⏱️ El link expira en 24 horas\n✅ Recibirás confirmación por WhatsApp\n📲 Acceso automático después del pago\n\n¿Necesitas ayuda? 🤝",
+          "usa_contexto": true,
+          "tipo_seguimiento": "confirmation"
+        }
+      ]
+    },
+    {
+      "contexto": "Usuario preguntó por Laptop HP",
+      "conversacion": [
+        {
+          "usuario": "¿Tienen laptops?",
+          "bot": "¡Claro! 💻 Tengo la *Laptop HP 15-dy2795wm*\n\n⚡ Intel Core i5 (11ª Gen)\n💾 8GB RAM + 256GB SSD\n🖥️ Pantalla 15.6\" Full HD\n💰 Precio: $2.500.000 COP\n\n¿Te interesa? 😊",
+          "producto_guardado": "Laptop HP 15-dy2795wm",
+          "precio": 2500000
+        },
+        {
+          "usuario": "cuánto cuesta",
+          "bot": "💰 *Precio de Laptop HP 15-dy2795wm:*\n\n💵 $2.500.000 COP\n\n📦 Envío disponible\n\n¿Te interesa? 😊",
+          "usa_contexto": true,
+          "tipo_seguimiento": "price"
+        },
+        {
+          "usuario": "especificaciones",
+          "bot": "⚡ *Especificaciones de Laptop HP 15-dy2795wm:*\n\n🔹 Procesador: Intel Core i5 (11ª Gen)\n🔹 GPU: Intel Iris Xe Graphics\n🔹 RAM: 8GB DDR4\n🔹 Almacenamiento: 256GB SSD\n🔹 Pantalla: 15.6\" Full HD\n🔹 Batería: Hasta 8 horas\n\n💰 Precio: $2.500.000 COP\n\n¿Te gustaría comprarla? 😊",
+          "usa_contexto": true,
+          "tipo_seguimiento": "specs"
+        },
+        {
+          "usuario": "está disponible",
+          "bot": "✅ *Laptop HP 15-dy2795wm* está disponible!\n\n📦 En stock\n🚚 Listo para envío\n💰 Precio: $2.500.000 COP\n\n¿Te interesa? 😊",
+          "usa_contexto": true,
+          "tipo_seguimiento": "availability"
+        },
+        {
+          "usuario": "cómo es el envío",
+          "bot": "🚚 *Envío de Laptop HP 15-dy2795wm:*\n\n📍 Envío a toda Colombia\n⏱️ 2-5 días hábiles\n📦 Empaque seguro\n🔍 Rastreo incluido\n\n¿Quieres comprarla? 😊",
+          "usa_contexto": true,
+          "tipo_seguimiento": "delivery"
+        },
+        {
+          "usuario": "garantía",
+          "bot": "🛡️ *Garantía de Laptop HP 15-dy2795wm:*\n\n✅ Garantía del fabricante\n✅ Producto nuevo y original\n✅ Cambios y devoluciones\n✅ Soporte técnico\n\n¿Te interesa comprarla? 😊",
+          "usa_contexto": true,
+          "tipo_seguimiento": "warranty"
+        }
+      ]
+    },
+    {
+      "contexto": "Usuario preguntó por Curso de Guitarra",
+      "conversacion": [
+        {
+          "usuario": "Curso de guitarra",
+          "bot": "🎸 ¡Excelente! El *Curso de Guitarra Completo* está disponible:\n\n✅ De principiante a avanzado\n✅ 50+ horas de contenido\n✅ Certificado incluido\n💰 Precio: $55.000 COP\n\n¿Te gustaría saber más? 😊",
+          "producto_guardado": "Curso de Guitarra Completo",
+          "precio": 55000
+        },
+        {
+          "usuario": "qué incluye",
+          "bot": "📚 *Curso de Guitarra Completo* incluye:\n\n✅ 50+ horas de video\n✅ Ejercicios prácticos\n✅ Partituras y tablaturas\n✅ Soporte del instructor\n✅ Certificado al finalizar\n✅ Acceso de por vida\n\n💰 Precio: $55.000 COP\n\n¿Te interesa? 😊",
+          "usa_contexto": true,
+          "tipo_seguimiento": "more_info"
+        },
+        {
+          "usuario": "cómo pago",
+          "bot": "💳 *Métodos de pago para Curso de Guitarra:*\n\n1️⃣ Nequi\n2️⃣ Daviplata\n3️⃣ Tarjeta de crédito\n4️⃣ PSE\n\n💰 Precio: $55.000 COP\n\n¿Con cuál prefieres pagar? 😊",
+          "usa_contexto": true,
+          "tipo_seguimiento": "payment_methods"
+        },
+        {
+          "usuario": "sí quiero",
+          "bot": "¡Excelente! 🎉 Aquí está tu resumen:\n\n📦 *Curso de Guitarra Completo*\n💰 Precio: $55.000 COP\n\n¿Cómo prefieres pagar?\n\n💳 Nequi\n💳 Daviplata\n💳 Tarjeta de crédito\n💳 PSE\n\n¿Cuál es tu método? 💵",
+          "usa_contexto": true,
+          "tipo_seguimiento": "confirmation"
+        }
+      ]
+    },
+    {
+      "contexto": "Preguntas genéricas de seguimiento",
+      "ejemplos_usuario": [
+        "más información",
+        "cuéntame más",
+        "qué más",
+        "más detalles",
+        "dime más",
+        "quiero saber más",
+        "amplía",
+        "explica mejor",
+        "métodos de pago",
+        "cómo pago",
+        "formas de pago",
+        "puedo pagar con",
+        "aceptan",
+        "confirmar",
+        "sí quiero",
+        "lo compro",
+        "proceder",
+        "adelante",
+        "ok",
+        "dale",
+        "listo",
+        "comprar",
+        "me interesa",
+        "cuánto cuesta",
+        "precio",
+        "valor",
+        "cuánto es",
+        "cuánto vale",
+        "costo",
+        "especificaciones",
+        "características",
+        "qué incluye",
+        "qué trae",
+        "detalles técnicos",
+        "disponible",
+        "hay stock",
+        "tienen",
+        "cuándo llega",
+        "entrega",
+        "envío",
+        "tiempo de entrega",
+        "cómo lo recibo",
+        "garantía",
+        "devolución",
+        "cambio",
+        "reembolso"
+      ],
+      "reglas": [
+        "SIEMPRE usar el producto del contexto si existe",
+        "NO preguntar '¿de qué producto?' si hay contexto",
+        "Responder directamente con la información solicitada",
+        "Mantener el tono amigable y profesional",
+        "Incluir el precio en cada respuesta",
+        "Terminar con una pregunta para continuar la conversación"
+      ]
+    },
+    {
+      "contexto": "Manejo de contexto perdido",
+      "conversacion": [
+        {
+          "usuario": "más información",
+          "bot_sin_contexto": "¡Claro! 😊 ¿Sobre qué producto te gustaría más información?\n\nTengo:\n🎹 Cursos de música\n💻 Laptops\n📱 Accesorios\n📚 Megapacks\n\n¿Cuál te interesa?",
+          "nota": "Solo preguntar si NO hay contexto guardado"
+        },
+        {
+          "usuario": "métodos de pago",
+          "bot_sin_contexto": "💳 Nuestros métodos de pago son:\n\n1️⃣ Nequi\n2️⃣ Daviplata\n3️⃣ Tarjeta de crédito\n4️⃣ PSE\n5️⃣ Transferencia bancaria\n\n¿Qué producto te interesa comprar? 😊",
+          "nota": "Mostrar métodos generales si no hay producto en contexto"
+        }
+      ]
+    },
+    {
+      "contexto": "Cambio de producto en medio de conversación",
+      "conversacion": [
+        {
+          "usuario": "Megapack de Piano",
+          "bot": "🎹 *Megapack de Piano* - $20.000 COP\n\n¿Te interesa? 😊",
+          "producto_guardado": "Megapack de Piano"
+        },
+        {
+          "usuario": "Y el de guitarra?",
+          "bot": "🎸 ¡Claro! El *Curso de Guitarra* cuesta $55.000 COP\n\n✅ Contenido completo\n✅ Certificado incluido\n\n¿Te interesa? 😊",
+          "producto_guardado": "Curso de Guitarra",
+          "nota": "Detectar cambio de producto y actualizar contexto"
+        },
+        {
+          "usuario": "métodos de pago",
+          "bot": "💳 *Métodos de pago para Curso de Guitarra:*\n\n1️⃣ Nequi\n2️⃣ Daviplata\n3️⃣ Tarjeta de crédito\n4️⃣ PSE\n\n💰 Precio: $55.000 COP\n\n¿Con cuál prefieres pagar? 😊",
+          "usa_contexto": true,
+          "nota": "Usar el NUEVO producto en contexto (Guitarra, no Piano)"
+        }
+      ]
+    }
+  ],
+  "patrones_comunes": {
+    "mas_informacion": [
+      "más información",
+      "cuéntame más",
+      "qué más",
+      "más detalles",
+      "información adicional",
+      "dime más",
+      "quiero saber más",
+      "más sobre",
+      "amplía",
+      "explica mejor"
+    ],
+    "metodos_pago": [
+      "métodos de pago",
+      "cómo pago",
+      "formas de pago",
+      "puedo pagar",
+      "aceptan",
+      "nequi",
+      "daviplata",
+      "tarjeta",
+      "efectivo",
+      "transferencia",
+      "pse"
+    ],
+    "confirmacion": [
+      "confirmar",
+      "sí quiero",
+      "lo compro",
+      "proceder",
+      "adelante",
+      "ok",
+      "dale",
+      "listo",
+      "comprar",
+      "me interesa"
+    ],
+    "precio": [
+      "cuánto cuesta",
+      "precio",
+      "valor",
+      "cuánto es",
+      "cuánto vale",
+      "costo",
+      "cuánto sale"
+    ],
+    "especificaciones": [
+      "especificaciones",
+      "características",
+      "qué incluye",
+      "qué trae",
+      "detalles técnicos",
+      "ficha técnica",
+      "specs"
+    ],
+    "disponibilidad": [
+      "disponible",
+      "hay stock",
+      "tienen",
+      "cuándo llega",
+      "en stock",
+      "disponibilidad"
+    ],
+    "entrega": [
+      "entrega",
+      "envío",
+      "cuándo llega",
+      "tiempo de entrega",
+      "cómo lo recibo",
+      "domicilio",
+      "shipping"
+    ],
+    "garantia": [
+      "garantía",
+      "warranty",
+      "devolución",
+      "cambio",
+      "reembolso",
+      "refund"
+    ]
+  },
+  "reglas_implementacion": [
+    {
+      "regla": "Detectar pregunta de seguimiento ANTES de buscar producto",
+      "razon": "Evitar búsquedas innecesarias si hay contexto"
+    },
+    {
+      "regla": "Usar contexto de conversación si existe",
+      "razon": "Responder directamente sin preguntar '¿de qué producto?'"
+    },
+    {
+      "regla": "Actualizar contexto cuando cambia el producto",
+      "razon": "Mantener coherencia en la conversación"
+    },
+    {
+      "regla": "Incluir precio en cada respuesta",
+      "razon": "Recordar al cliente el valor del producto"
+    },
+    {
+      "regla": "Terminar con pregunta para continuar",
+      "razon": "Mantener la conversación activa"
+    },
+    {
+      "regla": "Si no hay contexto, preguntar amablemente",
+      "razon": "No asumir, pedir clarificación"
+    }
+  ]
+}

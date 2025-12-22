@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # Ollama - IA Local
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+    command: >
+      sh -c "ollama serve & sleep 10 && ollama pull gemma:2b && wait"
+
+  # Bot Principal
+  bot:
+    build: .
+    container_name: smart-sales-bot
+    ports:
+      - "3000:3000"
+    environment:
+      # IA
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - AI_FALLBACK_ORDER=groq,openrouter,ollama
+      - AI_AUTO_MODEL_DETECTION=true
+      
+      # Next.js
+      - NODE_ENV=production
+      - PORT=3000
+      
+      # WhatsApp
+      - WHATSAPP_PROVIDER=baileys
+      
+      # Database
+      - DATABASE_URL=file:/data/dev.db
+    volumes:
+      - bot_data:/data
+      - whatsapp_sessions:/app/.wwebjs_auth
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
+  bot_data:
+  whatsapp_sessions:

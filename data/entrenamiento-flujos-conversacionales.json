@@ -1,0 +1,436 @@
+{
+  "flujos_conversacionales": [
+    {
+      "id": "flujo_1",
+      "nombre": "Búsqueda de Megapack - Piano",
+      "intención": "product_search",
+      "contexto": "Usuario busca información sobre Megapack de Piano",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "Hola, vi su publicación del Megapack de Piano",
+          "intención": "product_search",
+          "entidades": ["megapack", "piano"],
+          "sentimiento": "interesado"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "🟢 ¡Hola! 👋 Qué gusto saludarte 😊\n\nEl *Megapack de Piano \"De Cero a Avanzado\"* está en oferta especial 🎹\n\n¿Te gustaría saber el precio o prefieres que te cuente qué incluye?",
+          "intención": "product_info",
+          "producto": "Megapack de Piano",
+          "precio": 20000,
+          "acciones": ["guardar_producto_en_memoria"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "¿Cuánto cuesta?",
+          "intención": "price_inquiry",
+          "contexto_memoria": "Megapack de Piano",
+          "entidades": ["precio", "costo"],
+          "sentimiento": "interesado"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "🟢 El Megapack de Piano \"De Cero a Avanzado\" está en oferta especial por $20.000 💰\n\nEs un infoproducto digital completo, ideal si quieres aprender a tu ritmo, sin depender de clases presenciales.\n\n✅ Siempre disponible (stock ilimitado)\n📲 Entrega AUTOMÁTICA por WhatsApp después del pago\n⚡ Acceso instantáneo\n\n¿Te gustaría proceder con la compra? 😊",
+          "intención": "purchase",
+          "producto": "Megapack de Piano",
+          "precio": 20000,
+          "acciones": ["mostrar_precio", "aclarar_digital", "generar_link_pago"]
+        },
+        {
+          "turno": 5,
+          "rol": "usuario",
+          "mensaje": "Sí, quiero comprarlo",
+          "intención": "purchase",
+          "contexto_memoria": "Megapack de Piano",
+          "entidades": ["compra", "confirmación"],
+          "sentimiento": "decidido"
+        },
+        {
+          "turno": 6,
+          "rol": "bot",
+          "mensaje": "¡Excelente! 🎉 Aquí está tu resumen:\n\n📦 *Megapack de Piano \"De Cero a Avanzado\"*\n💰 Precio: $20.000 COP\n\n¿Cómo prefieres pagar?\n\n💳 Nequi\n💳 Daviplata\n💳 Hotmart\n💳 Tarjeta de crédito\n\n¿Cuál es tu método? 💵",
+          "intención": "payment",
+          "producto": "Megapack de Piano",
+          "precio": 20000,
+          "acciones": ["mostrar_resumen", "listar_metodos_pago"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_2",
+      "nombre": "Búsqueda de Laptop",
+      "intención": "product_search",
+      "contexto": "Usuario pregunta por laptops disponibles",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "¿Tienen laptops disponibles?",
+          "intención": "product_search",
+          "entidades": ["laptop", "disponible"],
+          "sentimiento": "neutral"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "¡Claro! 🎯 Tenemos varias opciones de laptops disponibles:\n\n1️⃣ *Laptop HP 15-dy2795wm*\n   � Perecio: $2.500.000\n   ⚡ Intel Core i5 - Laptop potente\n   ➡️ Más información disponible\n\n2️⃣ *Laptop Dell Inspiron 15*\n   💰 Precio: $2.200.000\n   ⚡ AMD Ryzen 5 - Excelente para trabajo\n   ➡️ Más información disponible\n\n3️⃣ *Laptop Lenovo IdeaPad 3*\n   💰 Precio: $1.800.000\n   ⚡ Intel Core i3 - Económica\n   ➡️ Más información disponible\n\n¿Cuál te interesa? 😊",
+          "intención": "product_search",
+          "acciones": ["listar_productos", "guardar_intención"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "La HP, ¿qué especificaciones tiene?",
+          "intención": "product_info",
+          "contexto_memoria": "Laptop HP 15-dy2795wm",
+          "entidades": ["especificaciones", "características"],
+          "sentimiento": "interesado"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "¡Excelente elección! 🚀 La Laptop HP 15-dy2795wm tiene:\n\n⚡ Procesador: Intel Core i5 (11ª Gen)\n🎮 GPU: Intel Iris Xe Graphics\n💾 RAM: 8GB DDR4\n� Almactenamiento: 256GB SSD\n🖥️ Pantalla: 15.6\" Full HD\n🔌 Batería: Hasta 8 horas\n\n💰 Precio: $2.500.000 COP\n\n¿Te interesa? 😊",
+          "intención": "product_info",
+          "producto": "Laptop HP 15-dy2795wm",
+          "precio": 2500000,
+          "acciones": ["mostrar_especificaciones", "mantener_contexto"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_3",
+      "nombre": "Proceso de Compra - Megapack Piano",
+      "intención": "purchase",
+      "contexto": "Usuario quiere comprar Megapack de Piano",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "Quiero comprar el Megapack de Piano",
+          "intención": "purchase",
+          "entidades": ["comprar", "megapack", "piano"],
+          "sentimiento": "decidido"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "¡Excelente! 🎉 Vamos a procesar tu compra.\n\n📋 Resumen:\n• Producto: Megapack de Piano \"De Cero a Avanzado\"\n• Precio: $20.000 COP\n• Tipo: Infoproducto Digital\n• Entrega: Automática por WhatsApp\n\n¿Cómo prefieres pagar? 💳",
+          "intención": "payment",
+          "producto": "Megapack de Piano",
+          "precio": 20000,
+          "acciones": ["mostrar_resumen", "listar_metodos_pago"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "Por Nequi",
+          "intención": "payment",
+          "contexto_memoria": "Megapack de Piano",
+          "entidades": ["Nequi", "pago"],
+          "sentimiento": "decidido"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "¡Perfecto! 📱 Aquí está tu link de pago por Nequi:\n\n🔗 https://pago.tecnovariedades.com/nequi/megapack-piano-20000\n\n⏱️ El link expira en 24 horas\n✅ Recibirás confirmación por WhatsApp\n📲 Acceso automático después del pago\n\n¿Necesitas ayuda? 🤝",
+          "intención": "payment",
+          "producto": "Megapack de Piano",
+          "acciones": ["generar_link_pago", "establecer_timeout", "enviar_confirmacion"]
+        },
+        {
+          "turno": 5,
+          "rol": "usuario",
+          "mensaje": "Listo, ya pagué",
+          "intención": "payment_confirmation",
+          "contexto_memoria": "Megapack de Piano",
+          "entidades": ["pago", "confirmación"],
+          "sentimiento": "satisfecho"
+        },
+        {
+          "turno": 6,
+          "rol": "bot",
+          "mensaje": "¡Gracias por tu compra! 🎊\n\n✅ Pago confirmado\n�  Acceso automático enviado a WhatsApp\n� Comienoza a aprender hoy mismo\n📚 Tienes acceso de por vida\n\n¿Tienes alguna pregunta? 💬",
+          "intención": "confirmation",
+          "producto": "Megapack de Piano",
+          "acciones": ["confirmar_pago", "enviar_acceso", "guardar_compra_en_bd"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_4",
+      "nombre": "Manejo de Objeciones",
+      "intención": "objection_handling",
+      "contexto": "Usuario tiene dudas o objeciones",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "Es muy caro",
+          "intención": "objection",
+          "entidades": ["precio", "caro"],
+          "sentimiento": "dudoso"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "Entiendo tu preocupación 💭 Pero mira los beneficios:\n\n✅ Acceso de por vida\n✅ 50+ horas de contenido\n✅ Certificado profesional\n✅ Soporte incluido\n\nEs una inversión en tu futuro 🚀 ¿Quieres un descuento especial? 🎁",
+          "intención": "objection_response",
+          "acciones": ["validar_objeción", "mostrar_valor", "ofrecer_descuento"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "¿Hay descuento?",
+          "intención": "discount_inquiry",
+          "entidades": ["descuento", "oferta"],
+          "sentimiento": "interesado"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "¡Claro! 🎁 Tenemos ofertas especiales:\n\n🔥 Hoy: 50% descuento (primer mes)\n📅 Esta semana: 30% descuento permanente\n👥 Referir amigos: 20% para ambos\n\n¿Cuál te interesa? 💰",
+          "intención": "discount_offer",
+          "acciones": ["listar_descuentos", "crear_urgencia"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_5",
+      "nombre": "Seguimiento Post-Compra",
+      "intención": "post_purchase",
+      "contexto": "Usuario ya compró, seguimiento",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "Hola, ya compré el curso hace 3 días",
+          "intención": "post_purchase",
+          "contexto_memoria": "Curso de Piano",
+          "entidades": ["compra", "curso"],
+          "sentimiento": "neutral"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "¡Hola! 👋 ¡Qué emoción que ya estés en el curso! 🎹\n\n¿Cómo va tu experiencia? ¿Tienes alguna pregunta sobre las lecciones? 📚",
+          "intención": "post_purchase_support",
+          "acciones": ["recuperar_historial_compra", "ofrecer_soporte"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "Tengo problema con la lección 5",
+          "intención": "support",
+          "contexto_memoria": "Curso de Piano",
+          "entidades": ["problema", "lección"],
+          "sentimiento": "frustrado"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "Entiendo 😟 Lamento que tengas problemas con la lección 5.\n\n¿Cuál es el problema específico?\n• ¿No carga el video?\n• ¿No entiendes el contenido?\n• ¿Problema técnico?\n\nCuéntame para ayudarte 🤝",
+          "intención": "support",
+          "acciones": ["validar_problema", "hacer_preguntas_diagnostico"]
+        },
+        {
+          "turno": 5,
+          "rol": "usuario",
+          "mensaje": "No carga el video",
+          "intención": "technical_support",
+          "contexto_memoria": "Curso de Piano - Lección 5",
+          "entidades": ["video", "problema técnico"],
+          "sentimiento": "frustrado"
+        },
+        {
+          "turno": 6,
+          "rol": "bot",
+          "mensaje": "Entendido 🔧 Aquí están las soluciones:\n\n1️⃣ Limpia el caché del navegador\n2️⃣ Intenta en otro navegador\n3️⃣ Verifica tu conexión a internet\n4️⃣ Reinicia tu dispositivo\n\nSi persiste, te conectaré con soporte técnico 👨‍💻",
+          "intención": "technical_support",
+          "acciones": ["proporcionar_soluciones", "escalar_si_necesario"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_6",
+      "nombre": "Recomendación de Productos",
+      "intención": "recommendation",
+      "contexto": "Bot recomienda productos basado en contexto",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "Me encantó el curso de piano",
+          "intención": "satisfaction",
+          "contexto_memoria": "Curso de Piano",
+          "entidades": ["satisfecho", "curso"],
+          "sentimiento": "muy_satisfecho"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "¡Qué alegría! 🎉 Me encanta escuchar eso.\n\nYa que te encantó el piano, te recomiendo:\n\n🎸 Curso de Guitarra - $55.000\n🎤 Curso de Canto - $45.000\n🎵 Teoría Musical - $35.000\n\n¿Te interesa alguno? 🎶",
+          "intención": "recommendation",
+          "acciones": ["analizar_satisfacción", "recomendar_productos_relacionados"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "Sí, el de guitarra",
+          "intención": "product_interest",
+          "contexto_memoria": "Curso de Piano, Curso de Guitarra",
+          "entidades": ["guitarra", "interesado"],
+          "sentimiento": "interesado"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "¡Excelente! 🎸 El Curso de Guitarra es perfecto para ti.\n\n💡 Bonus: Como ya compraste un curso, tienes 40% descuento en este:\n\n💰 Precio normal: $55.000\n🎁 Tu precio: $33.000\n\n¿Lo compras ahora? 🛒",
+          "intención": "purchase",
+          "producto": "Curso de Guitarra",
+          "precio": 55000,
+          "descuento": 40,
+          "acciones": ["aplicar_descuento_cliente_frecuente", "generar_link_pago"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_7",
+      "nombre": "Escalación a Humano",
+      "intención": "escalation",
+      "contexto": "Bot no puede resolver, escala a humano",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "Necesito hablar con un gerente",
+          "intención": "escalation",
+          "entidades": ["gerente", "humano"],
+          "sentimiento": "molesto"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "Entiendo 🤝 Te conectaré con un agente humano ahora mismo.\n\n⏳ Espera un momento, estoy buscando disponibilidad...",
+          "intención": "escalation",
+          "acciones": ["detectar_escalación", "buscar_agente_disponible"]
+        },
+        {
+          "turno": 3,
+          "rol": "bot",
+          "mensaje": "¡Perfecto! 👨‍💼 Te conectaré con Carlos, nuestro gerente de ventas.\n\n📞 Está disponible ahora\n⏱️ Tiempo de espera: 0 minutos\n\n¡Que disfrutes la conversación! 😊",
+          "intención": "escalation",
+          "acciones": ["conectar_con_agente", "transferir_contexto"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_8",
+      "nombre": "Manejo de Errores y Confusión",
+      "intención": "clarification",
+      "contexto": "Usuario confundido o bot no entiende",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "xyzabc123",
+          "intención": "unclear",
+          "entidades": [],
+          "sentimiento": "neutral"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "Disculpa, no entendí bien 😅\n\n¿Podrías reformular tu pregunta? Estoy aquí para ayudarte con:\n\n🛍️ Productos y precios\n💳 Compras y pagos\n📚 Información de cursos\n🤝 Soporte técnico\n\n¿Qué necesitas? 😊",
+          "intención": "clarification",
+          "acciones": ["reconocer_error", "pedir_aclaración", "mostrar_opciones"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "Quiero saber sobre los cursos",
+          "intención": "product_search",
+          "entidades": ["cursos", "información"],
+          "sentimiento": "neutral"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "¡Perfecto! 📚 Tenemos varios cursos disponibles:\n\n🎹 Curso de Piano - $65.000\n🎸 Curso de Guitarra - $55.000\n🎤 Curso de Canto - $45.000\n🎵 Teoría Musical - $35.000\n\n¿Cuál te interesa? 🎶",
+          "intención": "product_search",
+          "acciones": ["listar_cursos", "esperar_selección"]
+        }
+      ]
+    }
+  ],
+  "patrones_memoria": [
+    {
+      "tipo": "producto_actual",
+      "descripción": "Producto que el usuario está considerando",
+      "ejemplo": "Curso de Piano",
+      "duración": "sesión_actual"
+    },
+    {
+      "tipo": "historial_compras",
+      "descripción": "Productos que el usuario ya compró",
+      "ejemplo": ["Curso de Piano", "Laptop Gaming"],
+      "duración": "permanente"
+    },
+    {
+      "tipo": "preferencias",
+      "descripción": "Preferencias del usuario",
+      "ejemplo": "Paga por Nequi, prefiere descuentos",
+      "duración": "permanente"
+    },
+    {
+      "tipo": "contexto_conversación",
+      "descripción": "Contexto de la conversación actual",
+      "ejemplo": "Hablando sobre especificaciones de laptop",
+      "duración": "sesión_actual"
+    },
+    {
+      "tipo": "intención_actual",
+      "descripción": "Intención actual del usuario",
+      "ejemplo": "purchase, product_search, support",
+      "duración": "turno_actual"
+    }
+  ],
+  "reglas_conversacionales": [
+    {
+      "regla": "Siempre mantener contexto del producto anterior",
+      "ejemplo": "Si pregunta 'más información', usar el producto anterior"
+    },
+    {
+      "regla": "Validar objeciones antes de responder",
+      "ejemplo": "Si dice 'es caro', reconocer la objeción y mostrar valor"
+    },
+    {
+      "regla": "Hacer preguntas calificadoras",
+      "ejemplo": "¿Cuál es tu nivel? ¿Cuándo necesitas? ¿Cuál es tu presupuesto?"
+    },
+    {
+      "regla": "Usar emojis para mejorar engagement",
+      "ejemplo": "🎹 para piano, 💰 para precio, ✅ para confirmación"
+    },
+    {
+      "regla": "Ofrecer descuentos estratégicamente",
+      "ejemplo": "Después de objeción de precio, ofrecer descuento"
+    },
+    {
+      "regla": "Escalar a humano si es necesario",
+      "ejemplo": "Si usuario pide gerente o problema complejo, escalar"
+    },
+    {
+      "regla": "Confirmar antes de procesar pago",
+      "ejemplo": "Mostrar resumen y pedir confirmación"
+    },
+    {
+      "regla": "Seguimiento post-compra",
+      "ejemplo": "Preguntar cómo va la experiencia después de compra"
+    }
+  ]
+}

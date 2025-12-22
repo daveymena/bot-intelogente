@@ -1,0 +1,87 @@
+========================================
+  ARREGLAR PULL EN EASYPANEL - RÁPIDO
+========================================
+
+PROBLEMA: "Failed to pull changes"
+
+========================================
+SOLUCIÓN RÁPIDA (2 minutos)
+========================================
+
+OPCIÓN 1: Desde Easypanel UI (MÁS FÁCIL)
+-----------------------------------------
+1. Abre tu app en Easypanel
+2. Ve a la pestaña "Source" o "Git"
+3. Busca el botón "Force Pull" o "Reset & Pull"
+4. Haz clic
+5. Espera a que termine
+6. Reinicia la app (botón "Restart")
+
+✅ LISTO!
+
+
+OPCIÓN 2: Desde Terminal SSH
+-----------------------------
+1. En Easypanel, abre "Terminal" o "SSH"
+2. Ejecuta estos comandos:
+
+cd /app
+git reset --hard origin/main
+git clean -fd
+git pull origin main
+npm install
+npx prisma generate
+
+3. Reinicia la app desde Easypanel UI
+
+✅ LISTO!
+
+
+OPCIÓN 3: Redeploy Completo (Si nada funciona)
+-----------------------------------------------
+1. En Easypanel, haz clic en "Redeploy"
+2. Espera 5-10 minutos
+3. Verifica que funcione
+
+✅ LISTO!
+
+
+========================================
+VERIFICACIÓN
+========================================
+
+Después de arreglar, verifica:
+
+1. Dashboard accesible: https://tu-dominio.com
+2. WhatsApp conectado
+3. Productos visibles (68 productos)
+4. Sin errores en logs
+
+
+========================================
+¿POR QUÉ PASÓ ESTO?
+========================================
+
+Causas comunes:
+- Archivos modificados localmente en Easypanel
+- Conflictos con .env o node_modules
+- Cambios en archivos de sesión (auth_sessions/)
+
+Prevención:
+- No editar archivos directamente en Easypanel
+- Todos los cambios en local → commit → push
+- Dejar que Easypanel haga pull automático
+
+
+========================================
+CONTACTO
+========================================
+
+Si el problema persiste:
+1. Revisa logs en Easypanel
+2. Contacta soporte de Easypanel
+3. O haz redeploy completo (Opción 3)
+
+
+Fecha: 4 nov 2025
+Estado: Solución lista

@@ -1,0 +1,111 @@
+========================================
+  USAR CATALOGOS LOCALES
+========================================
+
+QUE HACE:
+---------
+1. Lee archivos JSON/CSV en C:\catalogos
+2. Identifica fotos REALES (no Unsplash)
+3. Busca productos en tu base de datos
+4. Actualiza con fotos reales
+
+
+PREPARACION:
+------------
+Paso 1: Crear carpeta
+  mkdir C:\catalogos
+
+Paso 2: Copiar tus archivos JSON/CSV ahi
+  C:\catalogos\productos.json
+  C:\catalogos\catalogo.csv
+
+
+EJECUTAR:
+---------
+  analizar-catalogos-locales.bat
+
+
+FOTOS REALES vs PLACEHOLDERS:
+------------------------------
+✅ ACEPTA (Fotos reales):
+   - megacomputer.com.co/images/...
+   - smartjoys.co/cdn/...
+   - disyvar.com.co/productos/...
+   - cdn.shopify.com/...
+   - cloudinary.com/...
+
+❌ RECHAZA (Placeholders):
+   - unsplash.com/...
+   - placeholder.com/...
+   - via.placeholder.com/...
+
+
+FORMATO JSON:
+-------------
+[
+  {
+    "name": "Laptop HP 15",
+    "images": [
+      "https://megacomputer.com.co/images/laptop-1.jpg",
+      "https://megacomputer.com.co/images/laptop-2.jpg"
+    ]
+  }
+]
+
+
+FORMATO CSV:
+------------
+name,images
+Laptop HP 15,https://megacomputer.com.co/images/laptop-1.jpg|https://megacomputer.com.co/images/laptop-2.jpg
+
+
+EJEMPLO SALIDA:
+---------------
+📄 Analizando: productos.json
+   📦 Total productos: 156
+   📸 Con fotos reales: 142
+   🖼️  Total fotos reales: 487
+
+💾 ACTUALIZANDO BASE DE DATOS
+   ✅ Actualizado: Laptop HP 15 (+5 fotos)
+   ✅ Actualizado: Monitor LG 24 (+3 fotos)
+   ⚠️  No encontrado: Producto XYZ
+
+📊 RESUMEN:
+✅ Actualizados: 142
+⚠️  No encontrados: 14
+📦 Total: 156
+
+
+VERIFICAR:
+----------
+Dashboard:
+  http://localhost:3000/dashboard
+
+Ver productos:
+  npx tsx scripts/ver-productos.ts
+
+
+PROBLEMAS COMUNES:
+------------------
+❌ "No existe la carpeta"
+   ✅ mkdir C:\catalogos
+
+❌ "No se encontraron archivos"
+   ✅ Copiar archivos .json o .csv
+
+❌ "No encontrado en BD"
+   ✅ Producto no existe, importar primero
+
+
+DOCUMENTACION:
+--------------
+📖 GUIA_CATALOGOS_LOCALES.md
+
+
+COMANDO:
+--------
+  analizar-catalogos-locales.bat
+
+
+========================================

@@ -1,0 +1,82 @@
+🎯 PROBAR SOLUCIÓN "CONNECTION CLOSED"
+=====================================
+
+✅ CAMBIOS IMPLEMENTADOS:
+- Sistema de estabilización de conexión (espera 3 segundos después de reconectar)
+- Verificación antes de enviar mensajes
+- Encolado inteligente si la conexión no está lista
+- Logs mejorados para diagnóstico
+
+📋 PASOS PARA PROBAR:
+
+1. REINICIAR EL SERVIDOR:
+   npm run dev
+
+2. VERIFICAR ESTADO DE CONEXIÓN:
+   npx tsx scripts/test-estabilizacion-conexion.ts
+
+3. MONITOREAR EN TIEMPO REAL (OPCIONAL):
+   npx tsx scripts/monitorear-estabilidad-conexion.ts
+   
+   Muestra cada 500ms:
+   - Estado de la conexión
+   - Si está lista (isReady)
+   - Tiempo desde última conexión
+   - Tiempo restante para estabilizar
+   - Mensajes en cola
+
+4. PROBAR RECONEXIÓN AUTOMÁTICA:
+   a) Desconecta WhatsApp Web en tu teléfono
+   b) Envía un mensaje al bot desde otro número
+   c) Reconecta WhatsApp Web en tu teléfono
+   d) Observa los logs - deberías ver:
+      ✅ Conexión establecida
+      ⏳ Esperando 3000ms para estabilizar...
+      ✅ Conexión estabilizada y lista
+      📤 Enviando respuesta...
+      ✅ Respuesta enviada exitosamente
+
+4. VERIFICAR QUE NO HAY ERRORES:
+   - NO deberías ver "Connection Closed"
+   - Los mensajes se envían correctamente
+   - La cola procesa mensajes pendientes
+
+🔍 QUÉ OBSERVAR EN LOS LOGS:
+
+✅ CORRECTO:
+[WhatsApp Web] ✅ Conexión establecida
+[WhatsApp Web] ⏳ Esperando 3000ms para estabilizar...
+[WhatsApp Web] ✅ Conexión estabilizada y lista
+[WhatsApp Web] 📤 Enviando respuesta...
+[WhatsApp Web] ✅ Respuesta enviada exitosamente
+
+❌ INCORRECTO (ya no debería pasar):
+[WhatsApp Web] ✅ Conexión establecida
+[WhatsApp Web] 📤 Enviando respuesta...
+[WhatsApp Web] ❌ Error: Connection Closed
+
+📊 VERIFICAR COLA DE MENSAJES:
+
+npx tsx scripts/test-estabilizacion-conexion.ts
+
+Muestra:
+- Status de la sesión
+- Si está lista (isReady)
+- Tiempo desde última conexión
+- Mensajes pendientes en cola
+
+⚙️ AJUSTAR TIEMPO DE ESPERA (si es necesario):
+
+Editar en src/lib/whatsapp-web-service.ts:
+private static readonly CONNECTION_STABLE_DELAY = 3000
+
+Valores recomendados:
+- Desarrollo: 2000ms
+- Producción: 3000ms
+- Conexión inestable: 5000ms
+
+🎯 RESULTADO ESPERADO:
+- ✅ Cero errores "Connection Closed"
+- ✅ Mensajes se envían correctamente después de reconectar
+- ✅ Cola procesa mensajes pendientes
+- ✅ Reconexión automática funciona sin errores

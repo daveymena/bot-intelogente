@@ -1,0 +1,170 @@
+🚀 IMPORTAR PRODUCTOS COMPLETOS - GUÍA RÁPIDA
+
+═══════════════════════════════════════════════════════════
+✅ TODO LISTO PARA IMPORTAR
+═══════════════════════════════════════════════════════════
+
+Tienes un archivo JSON con 15 productos listos:
+- 9 Laptops de MegaComputer (con imágenes y links reales)
+- 2 Monitores LG
+- 2 Cursos digitales
+- 2 Accesorios gaming
+
+Cada producto incluye:
+✅ Nombre optimizado
+✅ Descripción completa
+✅ Precio en COP
+✅ Imágenes reales
+✅ TAGS inteligentes (palabras clave)
+✅ Links de pago (listos para configurar)
+
+═══════════════════════════════════════════════════════════
+PASO 1: SUBIR ARCHIVOS A EASYPANEL
+═══════════════════════════════════════════════════════════
+
+Necesitas subir estos 2 archivos a Easypanel:
+
+1. productos-listos-importar.json
+2. scripts/importar-productos-completos-con-tags.ts
+
+OPCIÓN A: Hacer commit y push (Recomendado)
+```bash
+git add productos-listos-importar.json scripts/importar-productos-completos-con-tags.ts
+git commit -m "Add: Productos completos con tags"
+git push
+```
+
+Luego redesplegar en Easypanel.
+
+OPCIÓN B: Copiar manualmente
+- Usa el editor de archivos de Easypanel
+- O sube los archivos vía SFTP/SCP
+
+═══════════════════════════════════════════════════════════
+PASO 2: EJECUTAR EN EASYPANEL
+═══════════════════════════════════════════════════════════
+
+Abre la terminal de tu app en Easypanel y ejecuta:
+
+```bash
+npx tsx scripts/importar-productos-completos-con-tags.ts
+```
+
+Verás algo como:
+```
+🚀 IMPORTANDO PRODUCTOS COMPLETOS
+📦 Productos a importar: 15
+👤 Usuario: daveymena16@gmail.com
+
+✅ Importado: MacBook Pro M4...
+✅ Importado: Portátil Acer A15...
+✅ Importado: Monitor Curvo LG...
+...
+
+📊 RESUMEN DE IMPORTACIÓN
+✅ Productos nuevos: 15
+🔄 Productos actualizados: 0
+❌ Errores: 0
+```
+
+═══════════════════════════════════════════════════════════
+PASO 3: CONFIGURAR LINKS DE PAGO
+═══════════════════════════════════════════════════════════
+
+Ve al dashboard: https://bot-whatsapp-what-auto2.sqaoeo.easypanel.host
+
+Para cada producto:
+1. Click en "Editar"
+2. Agrega tus links de pago:
+   - Link MercadoPago: (tu link)
+   - Link PayPal: (tu link)
+   - Link Personalizado: (Hotmart, etc.)
+3. Guarda
+
+Los productos de MegaComputer ya tienen el link en "Link Personalizado"
+
+═══════════════════════════════════════════════════════════
+PASO 4: PROBAR EL BOT
+═══════════════════════════════════════════════════════════
+
+Envía mensajes al bot con los tags:
+
+Ejemplos:
+"Quiero un laptop" → Encuentra laptops
+"Necesito un macbook" → Encuentra MacBook
+"Curso de piano" → Encuentra el curso
+"Monitor gaming" → Encuentra monitores
+"Audífonos bluetooth" → Encuentra audífonos
+
+El bot responderá con:
+✅ Información del producto
+✅ Precio
+✅ Link de pago REAL
+✅ Opciones de pago disponibles
+
+═══════════════════════════════════════════════════════════
+📋 TAGS INCLUIDOS POR PRODUCTO
+═══════════════════════════════════════════════════════════
+
+MacBook Pro:
+- macbook, mac, apple, laptop, portatil, m4, profesional
+
+Laptops Acer/ASUS:
+- laptop, portatil, acer, asus, intel, ryzen, estudiante, trabajo
+
+Monitores:
+- monitor, pantalla, lg, curvo, gaming, fhd
+
+Curso Piano:
+- curso, piano, musica, aprender, clases, online
+
+Megapack:
+- megapack, cursos, digital, marketing, programacion
+
+Accesorios:
+- audifonos, mouse, teclado, webcam, gaming, rgb
+
+═══════════════════════════════════════════════════════════
+💡 PERSONALIZAR PRODUCTOS
+═══════════════════════════════════════════════════════════
+
+Puedes editar el archivo productos-listos-importar.json:
+
+1. Cambiar precios
+2. Agregar más tags
+3. Cambiar descripciones
+4. Agregar tus propios productos
+5. Configurar links de pago
+
+Luego vuelve a ejecutar el script para actualizar.
+
+═══════════════════════════════════════════════════════════
+🎯 RESULTADO ESPERADO
+═══════════════════════════════════════════════════════════
+
+Cliente: "Quiero un laptop económico"
+Bot: "¡Perfecto! Te recomiendo:
+
+ASUS Vivobook Go 15 Ryzen 3
+💰 Precio: $1.329.900 COP
+
+✨ Características:
+- AMD Ryzen 3 7320U
+- 8GB RAM DDR5
+- 512GB SSD
+- Pantalla 15.6\" Full HD
+
+🛒 Comprar ahora:
+👉 https://megacomputer.com.co/producto/...
+
+💳 Métodos de pago:
+- MercadoPago
+- PayPal
+- Nequi/Daviplata
+- Transferencia bancaria
+
+¿Te interesa este producto?"
+
+═══════════════════════════════════════════════════════════
+
+¿Listo para importar? ¡Ejecuta el script en Easypanel!

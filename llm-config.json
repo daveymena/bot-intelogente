@@ -1,0 +1,169 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-01-09",
+  "description": "Configuración del Sistema LLM del Bot WhatsApp",
+  
+  "provider": {
+    "primary": "groq",
+    "fallback": "none",
+    "reasoning": false
+  },
+  
+  "groq": {
+    "model": "llama-3.1-8b-instant",
+    "maxTokens": 300,
+    "temperature": 0.7,
+    "topP": 0.9,
+    "timeout": 60000,
+    "fallbackModels": [
+      "llama-3.1-8b-instant",
+      "gemma2-9b-it"
+    ]
+  },
+  
+  "systemPrompt": {
+    "role": "Asistente de ventas experto",
+    "business": "Tecnovariedades D&S",
+    "products": [
+      "Laptops y computadoras",
+      "Motos y vehículos",
+      "Cursos digitales",
+      "Megapacks de contenido"
+    ],
+    "tone": "amigable y conversacional",
+    "style": {
+      "useEmojis": true,
+      "maxLines": 4,
+      "focusOnBenefits": true,
+      "alwaysOfferHelp": true
+    },
+    "rules": [
+      "Describe beneficios primero, no especificaciones técnicas",
+      "Si mencionan presupuesto, busca opciones en ese rango",
+      "Si piden fotos, confirma que las enviarás",
+      "Si preguntan por pago, lista los métodos disponibles",
+      "Si no entiendes, pide aclaración de forma amable",
+      "NUNCA inventes información que no tienes",
+      "NUNCA copies ejemplos literalmente",
+      "NUNCA seas demasiado técnico",
+      "NUNCA presiones al cliente"
+    ]
+  },
+  
+  "responseOptimization": {
+    "minLength": 50,
+    "maxLength": 500,
+    "preferredLength": 200,
+    "formatting": {
+      "useEmojis": true,
+      "useBulletPoints": true,
+      "useLineBreaks": true,
+      "highlightPrices": true
+    }
+  },
+  
+  "contextManagement": {
+    "historyLength": 10,
+    "historyTimeWindow": 24,
+    "maintainProductContext": true,
+    "maintainBudgetContext": true,
+    "contextTimeout": 3600
+  },
+  
+  "intentDetection": {
+    "enabled": true,
+    "confidence": {
+      "high": 0.9,
+      "medium": 0.7,
+      "low": 0.5
+    },
+    "intents": {
+      "product_search": {
+        "keywords": ["busco", "necesito", "quiero", "tienes"],
+        "priority": "high"
+      },
+      "price_inquiry": {
+        "keywords": ["precio", "cuesta", "valor", "cuánto"],
+        "priority": "high"
+      },
+      "photo_request": {
+        "keywords": ["foto", "imagen", "ver", "muestra"],
+        "priority": "medium"
+      },
+      "payment_inquiry": {
+        "keywords": ["pago", "comprar", "link", "método"],
+        "priority": "high"
+      },
+      "greeting": {
+        "keywords": ["hola", "buenos", "buenas", "saludos"],
+        "priority": "low"
+      },
+      "gratitude": {
+        "keywords": ["gracias", "perfecto", "excelente"],
+        "priority": "low"
+      },
+      "business_info": {
+        "keywords": ["horario", "ubicación", "dirección", "dónde"],
+        "priority": "medium"
+      }
+    }
+  },
+  
+  "productIntelligence": {
+    "enabled": true,
+    "searchAlgorithm": "semantic",
+    "minConfidence": 0.7,
+    "maxResults": 5,
+    "includeAlternatives": true,
+    "considerBudget": true
+  },
+  
+  "autoFeatures": {
+    "autoPhotoSending": true,
+    "autoPaymentLinks": true,
+    "autoProductRecommendations": true,
+    "autoFollowUp": false
+  },
+  
+  "humanEscalation": {
+    "enabled": true,
+    "triggers": [
+      "complaint",
+      "refund",
+      "technical_issue",
+      "custom_request"
+    ],
+    "notifyAdmin": true
+  },
+  
+  "performance": {
+    "caching": {
+      "enabled": true,
+      "ttl": 3600,
+      "maxSize": 1000
+    },
+    "rateLimit": {
+      "enabled": false,
+      "maxRequestsPerMinute": 60
+    },
+    "monitoring": {
+      "logResponses": true,
+      "logErrors": true,
+      "trackMetrics": true
+    }
+  },
+  
+  "training": {
+    "useTrainingData": true,
+    "trainingDataPath": "./src/lib/sales-training-data.ts",
+    "autoLearn": false,
+    "feedbackLoop": false
+  },
+  
+  "experimental": {
+    "advancedReasoning": false,
+    "multiStepPlanning": false,
+    "sentimentAnalysis": false,
+    "voiceGeneration": false
+  }
+}

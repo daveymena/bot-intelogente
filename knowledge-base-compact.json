@@ -1,0 +1,725 @@
+{
+  "negocio": "Tecnovariedades D&S",
+  "telefono": "313 617 4267",
+  "productos": [
+    {
+      "id": "cmi6ypoz80001kmwon9cey1xm",
+      "nombre": "Curso Completo de Piano Online",
+      "precio": 60000,
+      "categoria": "DIGITAL",
+      "descripcion": "🎵 Curso Completo de Piano Online 🎹\n\n✅ Aprende piano desde cero hasta nivel avanzado\n✅ Lecciones en"
+    },
+    {
+      "id": "cmi6yppcn0003kmwo01xyxszq",
+      "nombre": "Portatil Asus Vivobook Go 15 E1504fa-Nj1961 Amd Ryzen 3 7320u Ram 8gb Ddr5 512 Ssd Pantalla 15.6 Fhd",
+      "precio": 1329900,
+      "categoria": "PHYSICAL",
+      "descripcion": "💻 Laptop ASUS VivoBook GO 15\n\n✅ AMD Ryzen 3 7320U\n✅ 8GB DDR5 RAM\n✅ 512GB SSD\n✅ Pantalla 15.6\" FHD\n✅"
+    },
+    {
+      "id": "cmi6yppli0005kmwoztqkjywt",
+      "nombre": "Portatil Asus Vivobook 15 X1502za-Ej2443 Intel core I5-12500h Ram 8gb Ddr4 512gb Ssd Pantalla 15.6",
+      "precio": 1749900,
+      "categoria": "PHYSICAL",
+      "descripcion": "💻 Laptop ASUS VivoBook 15\n\n✅ Intel Core i5-12500H\n✅ 8GB DDR4 RAM\n✅ 512GB SSD\n✅ Pantalla 15.6\" FHD\n✅"
+    },
+    {
+      "id": "cmi6yppuc0007kmwohkr8uw67",
+      "nombre": "Portátil Asus Vivobook Go 15 E1504FA-NJ1382 Amd Ryzen 5 7520u Pantalla 15.6 Ram 16gb Ddr5 512 Ssd",
+      "precio": 1769900,
+      "categoria": "PHYSICAL",
+      "descripcion": "💻 Laptop ASUS VivoBook GO 15\n\n✅ AMD Ryzen 5 7520U\n✅ 16GB DDR5 RAM\n✅ 512GB SSD\n✅ Pantalla 15.6\" FHD\n"
+    },
+    {
+      "id": "cmi6ypq390009kmworgbve8ha",
+      "nombre": "Macbook Pro M4 Pro Max 24gb Ram 512gb Ssd Pantalla 14\" Retina Xdr Mac os Space Black",
+      "precio": 10899900,
+      "categoria": "PHYSICAL",
+      "descripcion": "💻 MacBook Pro M4 Pro Max\n\n✅ Chip M4 Pro Max\n✅ 24GB RAM\n✅ 512GB SSD\n✅ Pantalla 14\" Retina XDR\n✅ macO"
+    },
+    {
+      "id": "cmi6ypqc5000bkmwohlt047ql",
+      "nombre": "Impresora Hp Laserjet M111W Monocromática",
+      "precio": 585900,
+      "categoria": "PHYSICAL",
+      "descripcion": "🖨️ Impresora HP LaserJet M111W\n\n✅ Monocromática\n✅ WiFi\n✅ Compacta\n✅ Ideal para oficina\n\n📦 Producto"
+    },
+    {
+      "id": "cmi6ypql0000dkmwoshq5guov",
+      "nombre": "Impresora Epson Ecotank L1250 Imprime (Copia y Scanea Desde La App) Usb y Wifi",
+      "precio": 719900,
+      "categoria": "PHYSICAL",
+      "descripcion": "🖨️ Impresora Epson EcoTank L1250\n\n✅ Sistema de tanques\n✅ WiFi y USB\n✅ Copia y escanea desde app\n✅ B"
+    },
+    {
+      "id": "cmi6ypqtx000fkmwojyvovenh",
+      "nombre": "Mega Pack 01: Cursos Diseño Gráfico",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 01: Cursos Diseño Gráfico\n\n✅ Colección digital de cursos y recursos\n✅ Contenido descarg"
+    },
+    {
+      "id": "cmi6ypr76000hkmwo5z2frabr",
+      "nombre": "Mega Pack 02: Cursos Microsoft Office",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 02: Cursos Microsoft Office\n\n✅ Colección digital de cursos y recursos\n✅ Contenido desca"
+    },
+    {
+      "id": "cmi6yprg2000jkmwo0e3aefnq",
+      "nombre": "Mega Pack 03: Cursos Inglés",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 03: Cursos Inglés\n\n✅ Colección digital de cursos y recursos\n✅ Contenido descargable\n✅ E"
+    },
+    {
+      "id": "cmi6yprp6000lkmwoqnqli5g4",
+      "nombre": "Mega Pack 04: Cursos Excel",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 04: Cursos Excel\n\n✅ Colección digital de cursos y recursos\n✅ Contenido descargable\n✅ En"
+    },
+    {
+      "id": "cmi6ypry7000nkmwo9b37uv8m",
+      "nombre": "PACK COMPLETO 40 Mega Packs",
+      "precio": 60000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 PACK COMPLETO 40 Mega Packs\n\n✅ Colección digital de cursos y recursos\n✅ Contenido descargable\n✅ E"
+    },
+    {
+      "id": "cmi6yps72000pkmwov3r7pxb8",
+      "nombre": "Moto Bajaj Pulsar NS 160 FI1 (2020)",
+      "precio": 6500000,
+      "categoria": "PHYSICAL",
+      "descripcion": "🏍️ BAJAJ PULSAR NS 160 FI1 - MODELO 2020\n\n¡Moto en excelentes condiciones, lista para rodar! 🔥\n\n📋"
+    },
+    {
+      "id": "cmi6ypsfy000rkmwo8yzm5obb",
+      "nombre": "Tablet Acer Iconia M10 Wifi 10.1 Wxga Ips 4gb-64gb Champagne",
+      "precio": 498900,
+      "categoria": "PHYSICAL",
+      "descripcion": "📱 Tablet Acer Iconia M10\n\n✅ Pantalla 10.1\" IPS Full HD\n✅ 4GB RAM + 64GB almacenamiento\n✅ Android\n✅ "
+    },
+    {
+      "id": "cmi6ypsou000tkmwock85mw3s",
+      "nombre": "Smartwatch Serie 9 Plus Ultra",
+      "precio": 89000,
+      "categoria": "PHYSICAL",
+      "descripcion": "⌚ Smartwatch Serie 9 Plus\n\n✅ Pantalla AMOLED 1.9\"\n✅ Monitor de salud completo\n✅ Llamadas Bluetooth\n✅"
+    },
+    {
+      "id": "cmi6ypsxn000vkmwoqfu4c0no",
+      "nombre": "AirPods Pro (Segunda Generación) Calidad 1:1",
+      "precio": 120000,
+      "categoria": "PHYSICAL",
+      "descripcion": "🎧 AirPods Pro 2da Gen\n\n✅ Cancelación de ruido activa\n✅ Audio espacial\n✅ Resistentes al agua\n✅ Estuc"
+    },
+    {
+      "id": "cmi6ypt6g000xkmwobp4atdir",
+      "nombre": "Proyector Portátil HY320 Android WiFi Bluetooth",
+      "precio": 250000,
+      "categoria": "PHYSICAL",
+      "descripcion": "📽️ Proyector Portátil HY320\n\n✅ Android integrado\n✅ WiFi y Bluetooth\n✅ 1080P Full HD\n✅ Portátil y co"
+    },
+    {
+      "id": "cmi6yrnf50001kmw4mwgqly0w",
+      "nombre": "Portátil Asus Vivobook 15 M1502ya-Nj694 Ryzen 7 5825u Ddr4 16Gb 1Tb Ssd 15.6 Fhd",
+      "precio": 1819900,
+      "categoria": "PHYSICAL",
+      "descripcion": "💻 Laptop ASUS VivoBook 15\n\n✅ AMD Ryzen 7 5825U\n✅ 16GB DDR4 RAM\n✅ 1TB SSD\n✅ Pantalla 15.6\" FHD\n✅ Fre"
+    },
+    {
+      "id": "cmi6yrnsz0003kmw4l4tedkqo",
+      "nombre": "Portatil Acer A15-51p-591e Intel 5 (Serie 1) 120u Ram 16gb Lpddr5 512gb Ssd Pantalla 15.6 Fhd Ips",
+      "precio": 1899900,
+      "categoria": "PHYSICAL",
+      "descripcion": "💻 Laptop Acer A15\n\n✅ Intel Core 5 120U\n✅ 16GB LPDDR5 RAM\n✅ 512GB SSD\n✅ Pantalla 15.6\" FHD IPS\n✅ Lin"
+    },
+    {
+      "id": "cmi6yro280005kmw4zud3i1im",
+      "nombre": "Portátil Asus Vivobook Go E1504fa-L1745 Amd Ryzen 5-7520u Ram 16gb Ddr5 512 Ssd Pantalla 15.6 Oled Fhd",
+      "precio": 1899900,
+      "categoria": "PHYSICAL",
+      "descripcion": "💻 Laptop ASUS VivoBook GO OLED\n\n✅ AMD Ryzen 5 7520U\n✅ 16GB DDR5 RAM\n✅ 512GB SSD\n✅ Pantalla 15.6\" OL"
+    },
+    {
+      "id": "cmi6yrobh0007kmw4g5yibmu0",
+      "nombre": "Portatil Acer Al15-41p-R8f7 Amd Ryzen 7 7500u Ram 16gb Ddr4 1tb Ssd Pantalla 15.6 Fhd Ips",
+      "precio": 2179900,
+      "categoria": "PHYSICAL",
+      "descripcion": "💻 Laptop Acer AL15\n\n✅ AMD Ryzen 7 7500U\n✅ 16GB DDR4 RAM\n✅ 1TB SSD\n✅ Pantalla 15.6\" FHD IPS\n✅ Window"
+    },
+    {
+      "id": "cmi6yrokq0009kmw4pjd25kxn",
+      "nombre": "Portatil Asus Vivobook 15 X1502va-Nj929 Intel Ci7-13620h 15,6 Fhd 16gb 512gb Ssd",
+      "precio": 2249900,
+      "categoria": "PHYSICAL",
+      "descripcion": "💻 Laptop ASUS VivoBook 15\n\n✅ Intel Core i7-13620H\n✅ 16GB DDR5 RAM\n✅ 512GB SSD\n✅ Pantalla 15.6\" FHD\n"
+    },
+    {
+      "id": "cmi6yrou0000bkmw4dblv7eh6",
+      "nombre": "Portatil Asus Vivobook 16 X1605va-Mb1235 Intel Ci7-13620h Ram 16gb Ddr5 512gb Ssd Pantalla 16.0",
+      "precio": 2449900,
+      "categoria": "PHYSICAL",
+      "descripcion": "💻 Laptop ASUS VivoBook 16\n\n✅ Intel Core i7-13620H\n✅ 16GB DDR5 RAM\n✅ 512GB SSD\n✅ Pantalla 16.0\" WUXG"
+    },
+    {
+      "id": "cmi6yrp38000dkmw4e6n2o8zf",
+      "nombre": "Portátil Asus Vivobook 15 X1502va-Nj893 Intel Core I7-13620h Ram 16gb Ddr4 1tb Ssd Pantalla 15.6 Fhd",
+      "precio": 2499900,
+      "categoria": "PHYSICAL",
+      "descripcion": "💻 Laptop ASUS VivoBook 15\n\n✅ Intel Core i7-13620H\n✅ 16GB DDR4 RAM\n✅ 1TB SSD\n✅ Pantalla 15.6\" FHD\n✅ "
+    },
+    {
+      "id": "cmi6yrpcf000fkmw40xoy0az3",
+      "nombre": "Portatil Asus Vivobook S16 M3607ha-Rp111 Amd Ryzen™ 9 270 Ddr5 16gb + Slot Adic 512gb Ssd 16″ Wuxga",
+      "precio": 3019900,
+      "categoria": "PHYSICAL",
+      "descripcion": "💻 Laptop ASUS VivoBook S16\n\n✅ AMD Ryzen 9 270\n✅ 16GB DDR5 RAM\n✅ 512GB SSD\n✅ Pantalla 16\" WUXGA\n✅ Fr"
+    },
+    {
+      "id": "cmi6yrplk000hkmw4jmokeizf",
+      "nombre": "Impresora Canon Multifuncional G3170 Tinta Continua Wifi",
+      "precio": 789900,
+      "categoria": "PHYSICAL",
+      "descripcion": "🖨️ Impresora Canon G3170\n\n✅ Sistema de tanques\n✅ WiFi\n✅ Multifuncional\n✅ Bajo costo por página\n\n📦 "
+    },
+    {
+      "id": "cmi6yrpuq000jkmw4rf8qxn6m",
+      "nombre": "Impresora Epson Multifuncional Wifi Ecotank L3251",
+      "precio": 990000,
+      "categoria": "PHYSICAL",
+      "descripcion": "🖨️ Impresora Epson EcoTank L3251\n\n✅ Sistema de tanques\n✅ WiFi\n✅ Multifuncional\n✅ Bajo costo por pág"
+    },
+    {
+      "id": "cmi6yrq3w000lkmw4o89t4rz4",
+      "nombre": "Impresora Hp Smart Tank 530 Multifuncional Wi-Fi Adf",
+      "precio": 1059900,
+      "categoria": "PHYSICAL",
+      "descripcion": "🖨️ Impresora HP Smart Tank 530\n\n✅ Sistema de tanques\n✅ WiFi\n✅ ADF (alimentador automático)\n✅ Multif"
+    },
+    {
+      "id": "cmi6yrqd3000nkmw4ujcl41eg",
+      "nombre": "Impresora Multifuncional Epson L5590 Wifi Ecotank",
+      "precio": 1329900,
+      "categoria": "PHYSICAL",
+      "descripcion": "🖨️ Impresora Epson EcoTank L5590\n\n✅ Sistema de tanques\n✅ WiFi\n✅ Multifuncional\n✅ ADF\n✅ Fax\n\n📦 Prod"
+    },
+    {
+      "id": "cmi6yrqmb000pkmw4upwpt75x",
+      "nombre": "Mega Pack 05: Cursos Hacking Ético",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 05: Cursos Hacking Ético\n\n✅ Colección digital de cursos y recursos\n✅ Contenido descarga"
+    },
+    {
+      "id": "cmi6yrr0s000rkmw45eykqasf",
+      "nombre": "Mega Pack 11: Cursos Marketing Digital",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 11: Cursos Marketing Digital\n\n✅ Colección digital de cursos y recursos\n✅ Contenido desc"
+    },
+    {
+      "id": "cmi6yrra7000tkmw496ihol2n",
+      "nombre": "Mega Pack 16: Cursos Premium +900 GB",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 16: Cursos Premium +900 GB\n\n✅ Colección digital de cursos y recursos\n✅ Contenido descar"
+    },
+    {
+      "id": "cmi6yrrjd000vkmw47izwjwc8",
+      "nombre": "Mega Pack 18: Reparación de teléfonos y tablets",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 18: Reparación de teléfonos y tablets\n\n✅ Colección digital de cursos y recursos\n✅ Conte"
+    },
+    {
+      "id": "cmi6yrrsh000xkmw4udistnl4",
+      "nombre": "Mega Pack 19: WordPress",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 19: WordPress\n\n✅ Colección digital de cursos y recursos\n✅ Contenido descargable\n✅ Entre"
+    },
+    {
+      "id": "cmi6yrs1n000zkmw459oewzbu",
+      "nombre": "Mega Pack 34: Plantillas Canva MEGA Pro",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 34: Plantillas Canva MEGA Pro\n\n✅ Colección digital de cursos y recursos\n✅ Contenido des"
+    },
+    {
+      "id": "cmi6yrsat0011kmw4s1b3i5b5",
+      "nombre": "Mega Pack 37: Marketing & Ventas",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 37: Marketing & Ventas\n\n✅ Colección digital de cursos y recursos\n✅ Contenido descargabl"
+    },
+    {
+      "id": "cmi6yrsjz0013kmw4qpxwyiqk",
+      "nombre": "Mega Pack 38: Redes Sociales",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 38: Redes Sociales\n\n✅ Colección digital de cursos y recursos\n✅ Contenido descargable\n✅ "
+    },
+    {
+      "id": "cmi6yrst20015kmw4jraai8ut",
+      "nombre": "Mega Pack 39: Trading",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 39: Trading\n\n✅ Colección digital de cursos y recursos\n✅ Contenido descargable\n✅ Entrega"
+    },
+    {
+      "id": "cmi6yx36d0001kmwk8oe6bf19",
+      "nombre": "Audífonos Bluetooth TWS Pro",
+      "precio": 89900,
+      "categoria": "PHYSICAL",
+      "descripcion": "🎧 Audífonos Bluetooth TWS Pro\n\n✅ Bluetooth 5.0\n✅ Cancelación de ruido\n✅ Estuche de carga\n✅ 20 horas"
+    },
+    {
+      "id": "cmi6yx3km0003kmwk7eqsefc7",
+      "nombre": "Audífonos Gamer RGB con Micrófono",
+      "precio": 129900,
+      "categoria": "PHYSICAL",
+      "descripcion": "🎮 Audífonos Gamer RGB\n\n✅ Sonido envolvente 7.1\n✅ Micrófono con cancelación de ruido\n✅ Iluminación R"
+    },
+    {
+      "id": "cmi6yx48e0005kmwkg1gdi91c",
+      "nombre": "Smartwatch Deportivo GPS",
+      "precio": 149900,
+      "categoria": "PHYSICAL",
+      "descripcion": "⌚ Smartwatch Deportivo GPS\n\n✅ GPS integrado\n✅ Monitor cardíaco\n✅ Resistente al agua 5ATM\n✅ Batería 1"
+    },
+    {
+      "id": "cmi6yx4hw0007kmwk9uis3e2x",
+      "nombre": "Parlante Bluetooth Portátil 20W",
+      "precio": 79900,
+      "categoria": "PHYSICAL",
+      "descripcion": "🔊 Parlante Bluetooth Portátil\n\n✅ 20W de potencia\n✅ Bluetooth 5.0\n✅ Resistente al agua IPX7\n✅ Baterí"
+    },
+    {
+      "id": "cmi6yx4rc0009kmwkzeln0xcu",
+      "nombre": "Parlante Karaoke con Micrófono",
+      "precio": 199900,
+      "categoria": "PHYSICAL",
+      "descripcion": "🎤 Parlante Karaoke\n\n✅ 2 micrófonos inalámbricos\n✅ Bluetooth y USB\n✅ Luces LED disco\n✅ Control remot"
+    },
+    {
+      "id": "cmi6yx50r000bkmwk046frd40",
+      "nombre": "Cargador Rápido 65W USB-C",
+      "precio": 69900,
+      "categoria": "PHYSICAL",
+      "descripcion": "⚡ Cargador Rápido 65W\n\n✅ Carga rápida PD 3.0\n✅ 3 puertos (2 USB-C + 1 USB-A)\n✅ Compatible con laptop"
+    },
+    {
+      "id": "cmi6yx5a9000dkmwk6nu33oor",
+      "nombre": "Cable USB-C a Lightning 2m",
+      "precio": 29900,
+      "categoria": "PHYSICAL",
+      "descripcion": "🔌 Cable USB-C a Lightning\n\n✅ Certificado MFi\n✅ Carga rápida 20W\n✅ 2 metros de largo\n✅ Trenzado refo"
+    },
+    {
+      "id": "cmi6yx5jo000fkmwkvhe6tq9p",
+      "nombre": "Power Bank 20000mAh Carga Rápida",
+      "precio": 89900,
+      "categoria": "PHYSICAL",
+      "descripcion": "🔋 Power Bank 20000mAh\n\n✅ 20000mAh capacidad\n✅ Carga rápida 22.5W\n✅ 3 puertos de salida\n✅ Display LE"
+    },
+    {
+      "id": "cmi6yx5t6000hkmwkk0tjkud4",
+      "nombre": "Power Bank Solar 30000mAh",
+      "precio": 119900,
+      "categoria": "PHYSICAL",
+      "descripcion": "☀️ Power Bank Solar 30000mAh\n\n✅ Panel solar integrado\n✅ 30000mAh capacidad\n✅ 4 puertos USB\n✅ Lintern"
+    },
+    {
+      "id": "cmi6yx62m000jkmwk46oyvbuj",
+      "nombre": "Soporte Celular para Auto Magnético",
+      "precio": 39900,
+      "categoria": "PHYSICAL",
+      "descripcion": "🚗 Soporte Magnético para Auto\n\n✅ Montaje magnético fuerte\n✅ Rotación 360°\n✅ Compatible con todos lo"
+    },
+    {
+      "id": "cmi6yx6c1000lkmwkt2ffxz08",
+      "nombre": "Anillo de Luz LED para Selfies",
+      "precio": 59900,
+      "categoria": "PHYSICAL",
+      "descripcion": "💡 Anillo de Luz LED\n\n✅ 10\" de diámetro\n✅ 3 modos de iluminación\n✅ Brillo ajustable\n✅ Trípode inclui"
+    },
+    {
+      "id": "cmi6yx6lh000nkmwkoiarzu9c",
+      "nombre": "Control Inalámbrico para PC/PS3/Android",
+      "precio": 79900,
+      "categoria": "PHYSICAL",
+      "descripcion": "🎮 Control Inalámbrico Universal\n\n✅ Bluetooth y cable USB\n✅ Compatible PC/PS3/Android\n✅ Vibración du"
+    },
+    {
+      "id": "cmi6yx6ux000pkmwksszvyai1",
+      "nombre": "Mouse Gamer RGB 7200 DPI",
+      "precio": 49900,
+      "categoria": "PHYSICAL",
+      "descripcion": "🖱️ Mouse Gamer RGB\n\n✅ 7200 DPI ajustable\n✅ 7 botones programables\n✅ Iluminación RGB\n✅ Cable trenzad"
+    },
+    {
+      "id": "cmi6yx74c000rkmwkqoyvan2n",
+      "nombre": "Teclado Mecánico RGB Gamer",
+      "precio": 149900,
+      "categoria": "PHYSICAL",
+      "descripcion": "⌨️ Teclado Mecánico RGB\n\n✅ Switches mecánicos\n✅ Iluminación RGB personalizable\n✅ Anti-ghosting\n✅ Rep"
+    },
+    {
+      "id": "cmi6yx7dr000tkmwkbz7rmm2j",
+      "nombre": "Cámara de Seguridad WiFi 1080P",
+      "precio": 99900,
+      "categoria": "PHYSICAL",
+      "descripcion": "📷 Cámara de Seguridad WiFi\n\n✅ Resolución 1080P Full HD\n✅ Visión nocturna\n✅ Detección de movimiento\n"
+    },
+    {
+      "id": "cmi6yx7n7000vkmwkq4nc407z",
+      "nombre": "Webcam Full HD 1080P con Micrófono",
+      "precio": 79900,
+      "categoria": "PHYSICAL",
+      "descripcion": "🎥 Webcam Full HD 1080P\n\n✅ Resolución 1080P\n✅ Micrófono estéreo\n✅ Enfoque automático\n✅ Clip universa"
+    },
+    {
+      "id": "cmi6yx7wm000xkmwkqf9pztuo",
+      "nombre": "Tira LED RGB 5m con Control Remoto",
+      "precio": 49900,
+      "categoria": "PHYSICAL",
+      "descripcion": "💡 Tira LED RGB 5 metros\n\n✅ 5 metros de longitud\n✅ RGB multicolor\n✅ Control remoto\n✅ Adhesivo 3M\n✅ S"
+    },
+    {
+      "id": "cmi6yx866000zkmwk4j9b1300",
+      "nombre": "Lámpara de Escritorio LED Recargable",
+      "precio": 59900,
+      "categoria": "PHYSICAL",
+      "descripcion": "💡 Lámpara LED de Escritorio\n\n✅ 3 niveles de brillo\n✅ Batería recargable\n✅ Cuello flexible\n✅ Protecc"
+    },
+    {
+      "id": "cmi6z2cc80001kmn0ak017hlk",
+      "nombre": "Silla plástica para niños",
+      "precio": 74087,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\nSilla plástica para niños: ¡El complemento ideal para el espacio de juego de tus pequeño"
+    },
+    {
+      "id": "cmi6z2cpk0003kmn0oywrkb13",
+      "nombre": "Cepillo deslanador",
+      "precio": 25987,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\n¡Mima a tu gato con este cepillo decorado con una hermosa flor! Con cerdas suaves y deli"
+    },
+    {
+      "id": "cmi6z2cyh0005kmn0dpjl07fc",
+      "nombre": "SILLA PLEGABLE REDONDA BUTACA",
+      "precio": 45487,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\nSILLA BUTACO PLEGABLE RETRACTIL PORTATIL La silla ideal para comodidad y facilidad de tr"
+    },
+    {
+      "id": "cmi6z2d7b0007kmn0axbrts4e",
+      "nombre": "ENVASE CAMPANA JABON DE MANOS",
+      "precio": 3237,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\nEl Envase Campana Transparente para Jabón de Manos con Válvula de 500 ml es el complemen"
+    },
+    {
+      "id": "cmi6z2dg80009kmn0k5103v2x",
+      "nombre": "SEPARADOR PLASTICO DELGADO",
+      "precio": 4537,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\nEl Separador Plástico Delgado x 5 Unidades es la solución perfecta para mantener tus doc"
+    },
+    {
+      "id": "cmi6z2dp3000bkmn0xtebdenq",
+      "nombre": "MASAJEADOR FACIAL REDUCTOR PAPADA",
+      "precio": 68887,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\nEl \"Masajeador Facial Reductor Papada\" es la solución ideal para lucir una piel más firm"
+    },
+    {
+      "id": "cmi6z2dxy000dkmn08jlq3007",
+      "nombre": "ROLLO DE ETIQUETAS 25mmX54mm (30336) COMPATIBLES IMPRESORA DYMO 450, 4XL, ZEBRA 500 ETIQUETAS",
+      "precio": 32487,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\nOptimiza tus procesos de etiquetado con el Rollo de Etiquetas 25mmX54mm (30336), compati"
+    },
+    {
+      "id": "cmi6z2e6u000fkmn02kktkrf6",
+      "nombre": "ROLLO DE ETIQUETAS 25mmX25mm (30332) COMPATIBLES IMPRESORA DYMO 450, 4XL, ROLLO Y ZEBRA 750 ETIQUETAS",
+      "precio": 37687,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\nDescubre nuestro Rollo de 750 Etiquetas 25mmX25mm (30332), diseñado específicamente para"
+    },
+    {
+      "id": "cmi6z2efv000hkmn0uwy2aha2",
+      "nombre": "Set de cocina",
+      "precio": 118950,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\nEl Set de cocina es el aliado perfecto para cualquier amante de la cocina. Este set incl"
+    },
+    {
+      "id": "cmi6z2eou000jkmn0gwqgx8hq",
+      "nombre": "Papel air fryer por 100",
+      "precio": 19487,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\nOptimiza tus comidas con nuestro Papel air fryer por 100. Este producto es ideal para fa"
+    },
+    {
+      "id": "cmi6z2exs000lkmn082myokub",
+      "nombre": "Maleta antirrobo",
+      "precio": 74087,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\n¡Lleva tus aventuras al siguiente nivel con esta mochila innovadora que te mantiene cone"
+    },
+    {
+      "id": "cmi6z2f6r000nkmn0qo4mq6b7",
+      "nombre": "Aspiradora de carro",
+      "precio": 45487,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\nUna potente aspiradora portátil con caja, ideal para mantener tu hogar impecable. Con un"
+    },
+    {
+      "id": "cmi6z2ffn000pkmn0yqitz92o",
+      "nombre": "Mini máquina de coser",
+      "precio": 71487,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\nLa mini máquina de coser es perfecta para reparaciones rápidas y proyectos de costura en"
+    },
+    {
+      "id": "cmi6z2foj000rkmn0igo8by09",
+      "nombre": "Bolso antirrobo",
+      "precio": 64987,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\nProtege tus pertenencias con este bolso antirrobo de alta calidad. Con cierres ocultos y"
+    },
+    {
+      "id": "cmi6z2fxg000tkmn0mfqk9es8",
+      "nombre": "TOALLA MANOS ROLLO - NUBE",
+      "precio": 53950,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción \n \nToalla de Manos NUBE (2 Rollos)\nLa Toalla de Manos NUBE es un producto de papel desec"
+    },
+    {
+      "id": "cmi6z2g6d000vkmn0n9lj3mxo",
+      "nombre": "CEPILLO DE DIENTES HAPPY TOOTH PAQUETE X 12 UNIDADES",
+      "precio": 23400,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción \n \nEl Cepillo de Dientes Happy Tooth es un producto de higiene oral básico, práctico y e"
+    },
+    {
+      "id": "cmi6z2gfa000xkmn0dmsw9im8",
+      "nombre": "DESENGRASANTE GL X 3750 CC ORION",
+      "precio": 50700,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción \n \nSu exclusiva formula 3 en 1 permite la eliminación rápida de toda la suciedad grasa d"
+    },
+    {
+      "id": "cmi6z2go5000zkmn0fo934cea",
+      "nombre": "LAPIZ CON BORRADOR CAJA X 12 UNIDES",
+      "precio": 11700,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción \n \nLápiz grafito con Borrador, para dibujo, oficina y la escuela. Caja x 12 unidades\n \nS"
+    },
+    {
+      "id": "cmi6z2gx00011kmn0xlzq3vyn",
+      "nombre": "BORRADOR DE NATA PEQUEÑO",
+      "precio": 650,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción \n \nBorrador de nata, pequeño Para borrar trazo de lápiz, \n \nSKU 3137\n\n💰 Precio: $650 CO"
+    },
+    {
+      "id": "cmi6z2h5w0013kmn0afu5506z",
+      "nombre": "STRECH TRANSPARENTE 50cmX500mts",
+      "precio": 42900,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\n \nEl STRECH TRANSPARENTE 50cmX500mts es un aliado imprescindible para el embalaje y la p"
+    },
+    {
+      "id": "cmi6z2heq0015kmn0ddx4gc0r",
+      "nombre": "COPA STAR 0.5 CON TAPA X 50 UN",
+      "precio": 6500,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\nLa Copa Star 0.5 es un pequeño recipiente desechable de plástico diseñado para el servic"
+    },
+    {
+      "id": "cmi6z2hnm0017kmn0ckfedkuz",
+      "nombre": "MOUSE ECONOMICO",
+      "precio": 19487,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\nMouse Linea Economica\nSKU 5014\n\n💰 Precio: $19.487 COP\n📦 Producto de dropshipping\n🚚 En"
+    },
+    {
+      "id": "cmi6z2hwj0019kmn0jz85omff",
+      "nombre": "MOUSE OPTICO ALAMBRICO",
+      "precio": 23387,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\nMouse Optico USB Alambrico Genius\nSKU 5013\n\n💰 Precio: $23.387 COP\n📦 Producto de dropsh"
+    },
+    {
+      "id": "cmi6z2i5d001bkmn0vc5bsakh",
+      "nombre": "BASE PARA PORTATIL",
+      "precio": 59787,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\nBase Para Portatil 2 Ventiladores\n2 Puertos USB 4 Posicion\nSKU 5012\n\n💰 Precio: $59.787 "
+    },
+    {
+      "id": "cmi6z2ie9001dkmn015hlr8bg",
+      "nombre": "PAPEL HIGIENICO INSTITUCIONAL",
+      "precio": 51337,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\nPapel Higienico Jumbo 250M Paca X 4 Sofi, es una opción altamente eficiente y económica "
+    },
+    {
+      "id": "cmi6z2in2001fkmn0860vct14",
+      "nombre": "MANILLA DE PAPEL TYVEK PARA EVENTOS",
+      "precio": 71500,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\nManilla Tyvek para eventos paquete x 100 unidades.\nManillas para eventos de seguridad en"
+    },
+    {
+      "id": "cmi6z2iw2001hkmn0rx9clh1k",
+      "nombre": "PILA ALCALINA 9V MAXELL",
+      "precio": 19487,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\n \nObtén la energía necesaria para tus dispositivos esenciales con la pila alcalina de 9V"
+    },
+    {
+      "id": "cmi6z2j4w001jkmn0h4u0ycav",
+      "nombre": "MINI PARLANTE G63 SMART LIGHT",
+      "precio": 64987,
+      "categoria": "PHYSICAL",
+      "descripcion": "El PARLANTE G63 SMART LIGHT es la elección perfecta para los amantes de la tecnología. Con una calid"
+    },
+    {
+      "id": "cmi6z2jdr001lkmn0f7jfdigy",
+      "nombre": "TINTA PARA SELLOS PELIKAN",
+      "precio": 11687,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\n \nLa tinta para sellos Pelikan es un producto de alta calidad, diseñado para rellenar al"
+    },
+    {
+      "id": "cmi6z2jmp001nkmn0b54zr2du",
+      "nombre": "CINTA TRANSPARENTE 2\"X 100MTS",
+      "precio": 12870,
+      "categoria": "PHYSICAL",
+      "descripcion": "Descripción\nLa Cinta Ancha Transparente para sellar cajas 2\" x 100 Mts es la solución perfecta para "
+    },
+    {
+      "id": "cmi70njrd0001kmaoaglry2wr",
+      "nombre": "Mega Pack 06: Cursos Programación",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 06: Cursos Programación\n\n✅ Colección digital de cursos y recursos\n✅ Contenido descargab"
+    },
+    {
+      "id": "cmi70nk240003kmaomvdrr435",
+      "nombre": "Mega Pack 07: Cursos Marketing Digital",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 07: Cursos Marketing Digital\n\n✅ Colección digital de cursos y recursos\n✅ Contenido desc"
+    },
+    {
+      "id": "cmi70nk6q0005kmaobhdyw108",
+      "nombre": "Mega Pack 08: Cursos Fotografía",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 08: Cursos Fotografía\n\n✅ Colección digital de cursos y recursos\n✅ Contenido descargable"
+    },
+    {
+      "id": "cmi70nkbd0007kmaoia45baw9",
+      "nombre": "Mega Pack 09: Cursos Video Edición",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 09: Cursos Video Edición\n\n✅ Colección digital de cursos y recursos\n✅ Contenido descarga"
+    },
+    {
+      "id": "cmi70nkfz0009kmaoyf2z2ckj",
+      "nombre": "Mega Pack 10: Cursos Música Producción",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 10: Cursos Música Producción\n\n✅ Colección digital de cursos y recursos\n✅ Contenido desc"
+    },
+    {
+      "id": "cmi70nkkm000bkmaon4nzkt70",
+      "nombre": "Mega Pack 12: Cursos Emprendimiento",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 12: Cursos Emprendimiento\n\n✅ Colección digital de cursos y recursos\n✅ Contenido descarg"
+    },
+    {
+      "id": "cmi70nkqk000dkmaowrw5i3gs",
+      "nombre": "Mega Pack 13: Cursos Finanzas Personales",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 13: Cursos Finanzas Personales\n\n✅ Colección digital de cursos y recursos\n✅ Contenido de"
+    },
+    {
+      "id": "cmi70nkv8000fkmaoyn6l1brn",
+      "nombre": "Mega Pack 14: Cursos Desarrollo Web",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 14: Cursos Desarrollo Web\n\n✅ Colección digital de cursos y recursos\n✅ Contenido descarg"
+    },
+    {
+      "id": "cmi70nkzv000hkmaoiysnd3el",
+      "nombre": "Mega Pack 15: Cursos Inteligencia Artificial",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 15: Cursos Inteligencia Artificial\n\n✅ Colección digital de cursos y recursos\n✅ Contenid"
+    },
+    {
+      "id": "cmi70nl4h000jkmaofyzbbz58",
+      "nombre": "Mega Pack 17: Cursos Idiomas",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 17: Cursos Idiomas\n\n✅ Colección digital de cursos y recursos\n✅ Contenido descargable\n✅ "
+    },
+    {
+      "id": "cmi70nl95000lkmaozaffwj4w",
+      "nombre": "Mega Pack 20: Cursos Cocina",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 20: Cursos Cocina\n\n✅ Colección digital de cursos y recursos\n✅ Contenido descargable\n✅ E"
+    },
+    {
+      "id": "cmi70nlds000nkmaoydmfp5d6",
+      "nombre": "Mega Pack 21: Cursos Fitness",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 21: Cursos Fitness\n\n✅ Colección digital de cursos y recursos\n✅ Contenido descargable\n✅ "
+    },
+    {
+      "id": "cmi70nlie000pkmaojzs65ol3",
+      "nombre": "Mega Pack 22: Cursos Yoga y Meditación",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 22: Cursos Yoga y Meditación\n\n✅ Colección digital de cursos y recursos\n✅ Contenido desc"
+    },
+    {
+      "id": "cmi70nln0000rkmao4mr5p5fv",
+      "nombre": "Mega Pack 23: Cursos Belleza y Maquillaje",
+      "precio": 20000,
+      "categoria": "DIGITAL",
+      "descripcion": "📚 Mega Pack 23: Cursos Belleza y Maquillaje\n\n✅ Colección digital de cursos y recursos\n✅ Contenido d"
+    }
+  ],
+  "pagos": {
+    "online": [
+      "MercadoPago",
+      "PayPal"
+    ],
+    "local": [
+      "Nequi: 313 617 4267",
+      "Daviplata: 313 617 4267",
+      "Transferencia Bancaria",
+      "Efectivo"
+    ]
+  },
+  "plantillas": {
+    "greeting": "¡Hola! 👋 Bienvenido a **Tecnovariedades D&S**\n\nAquí encontrarás:\n💻 Laptops y computadores\n🏍️ Motos y vehículos\n🎓 Cursos digitales y megapacks\n📱 Accesorios tecnológicos\n\n¿Qué estás buscando? 🔍",
+    "singleProduct": "¡Hola! 👋 Bienvenido a **Tecnovariedades D&S**\n\n{emoji} **{productName}**\n\n{description}\n\n💰 **Precio:** {price} COP\n\n✨ **Características destacadas:**\n• Excelente calidad\n• Disponible inmediatamente\n• Garantía incluida\n\n📦 **Disponible ahora**\n\n💳 **¿Cómo prefieres pagar?**\n- MercadoPago / PayPal\n- Nequi / Daviplata",
+    "multipleProducts": "¡Hola! 👋 Bienvenido a **Tecnovariedades D&S**\n\nTengo estas opciones para ti:\n\n{productList}\n\n¿Cuál te interesa más? Dime el número 😊",
+    "noProducts": "¡Hola! 👋 Bienvenido a **Tecnovariedades D&S**\n\nNo encontré productos específicos para esa búsqueda.\n\n¿Quieres ver nuestras categorías?\n💻 Laptops y computadores\n🏍️ Motos\n🎓 Cursos digitales\n📱 Accesorios\n\n¿Qué te interesa? 🔍",
+    "paymentInfo": "💳 **Métodos de Pago Disponibles:**\n\n🌐 **Online:**\n• MercadoPago (tarjetas, PSE)\n• PayPal (internacional)\n\n📱 **Local:**\n• Nequi: 313 617 4267\n• Daviplata: 313 617 4267\n• Transferencia bancaria\n• Efectivo (contraentrega)\n\n¿Con cuál método prefieres pagar? 😊"
+  }
+}

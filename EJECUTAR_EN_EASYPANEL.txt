@@ -1,0 +1,79 @@
+========================================
+  LIMPIAR USUARIOS EN EASYPANEL
+========================================
+
+✅ 3 FORMAS DE HACERLO:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1️⃣  TERMINAL DE EASYPANEL (MÁS FÁCIL)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Abre Easypanel
+2. Ve a tu proyecto → Terminal/Console
+3. Ejecuta:
+
+   npx tsx scripts/limpiar-usuarios-excepto-admin.ts
+
+4. Listo! ✅
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2️⃣  API ENDPOINT (MÁS SEGURO)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+A. Primero agrega en Easypanel → Environment:
+
+   ADMIN_SECRET_TOKEN=tu-token-secreto-123
+
+B. Verifica usuarios (sin eliminar):
+
+   curl -X GET https://tu-app.easypanel.host/api/admin/limpiar-usuarios \
+     -H "Authorization: Bearer tu-token-secreto-123"
+
+C. Elimina usuarios:
+
+   curl -X POST https://tu-app.easypanel.host/api/admin/limpiar-usuarios \
+     -H "Content-Type: application/json" \
+     -d '{"adminToken": "tu-token-secreto-123"}'
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+3️⃣  SSH DIRECTO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ssh user@tu-servidor
+cd /app
+npx tsx scripts/limpiar-usuarios-excepto-admin.ts
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔒 SEGURIDAD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Usuario protegido: daveymena16@gmail.com
+✅ Nunca se eliminará
+✅ Todos los demás usuarios se eliminarán
+✅ Se eliminan todas sus relaciones
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 VERIFICACIÓN DE LÍMITES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+El script confirma que NO HAY LÍMITES en:
+
+✅ Usuarios: Ilimitados
+✅ Productos: Ilimitados
+✅ Conversaciones: Ilimitadas
+✅ Mensajes: Ilimitados
+✅ Sesiones WhatsApp: Ilimitadas
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚡ RECOMENDACIÓN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+USA LA OPCIÓN 1 (Terminal de Easypanel)
+Es la más rápida y directa.
+
+========================================

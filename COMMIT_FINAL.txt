@@ -1,0 +1,50 @@
+feat: Sistema de contexto completo + fix SearchAgent + video tutorial
+
+CAMBIOS PRINCIPALES:
+
+1. Sistema de Contexto Completo (ContextualBrain)
+   - Prioriza búsquedas específicas sobre referencias al contexto
+   - Detecta productos específicos automáticamente (piano, laptop, etc.)
+   - Mantiene contexto completo de conversación
+   - Maneja cambios de producto correctamente
+   - 5 escenarios probados exitosamente
+
+2. Fix SearchAgent
+   - Agregados métodos canHandleLocally() y handleLocally()
+   - Mejorada extracción de keywords (ignora palabras de intención)
+   - Agregados logs detallados para debugging
+   - Fix error "agent.canHandleLocally is not a function"
+
+3. Video Tutorial en Dashboard
+   - Agregado video de YouTube embebido
+   - URL: https://www.youtube.com/watch?v=kQclScVbkJg
+   - Diseño responsive y profesional
+
+4. Fix Build de Producción
+   - Import condicional de OpenAI
+   - Build de Easypanel funciona sin errores
+
+ARCHIVOS MODIFICADOS:
+- src/lib/contextual-brain.ts (razonamiento mejorado)
+- src/agents/search-agent.ts (fix métodos + logs)
+- src/lib/landing-ai-service.ts (fix OpenAI import)
+- src/components/dashboard/DemoSection.tsx (video tutorial)
+
+ARCHIVOS NUEVOS:
+- scripts/test-curso-piano-especifico.ts
+- scripts/test-contexto-completo-productos.ts
+- probar-curso-piano.bat
+- probar-contexto-completo.bat
+- CORRECCION_BUSQUEDA_CURSO_PIANO.md
+- RESUMEN_SISTEMA_CONTEXTO_COMPLETO.md
+- PROBAR_CURSO_PIANO_WHATSAPP.md
+- LISTO_PARA_SUBIR_GIT.md
+
+TESTS:
+✅ Test Curso de Piano: 5/5 PASS
+✅ Test Contexto Completo: 5/5 escenarios PASS
+✅ Build local: OK
+
+PRÓXIMO PASO:
+Reiniciar servidor y probar en WhatsApp con:
+"Estoy interesado en el curso de piano"

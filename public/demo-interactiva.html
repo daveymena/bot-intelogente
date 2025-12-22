@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Sales Bot Pro - Demo Interactiva</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow-x: hidden;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Intro Screen */
+        .intro-screen {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .logo {
+            font-size: 4rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(255,255,255,0.5);
+            animation: pulse 2s infinite;
+        }
+
+        .subtitle {
+            font-size: 1.8rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+            animation: slideUp 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        .feature-card:nth-child(1) { animation-delay: 0.2s; }
+        .feature-card:nth-child(2) { animation-delay: 0.4s; }
+        .feature-card:nth-child(3) { animation-delay: 0.6s; }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .feature-desc {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .start-btn {
+            margin-top: 60px;
+            padding: 20px 60px;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4);
+            transition: all 0.3s ease;
+            animation: bounce 2s infinite;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(37, 211, 102, 0.6);
+        }
+
+        /* Demo Screens */
+        .demo-screen {
+            min-height: 100vh;
+            display: none;
+            padding: 60px 20px;
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        .demo-screen.active {
+            display: block;
+        }
+
+        .screen-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .screen-title {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .screen-subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+        }
+
+        .screenshot-container {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin: 40px auto;
+            max-width: 1200px;
+            animation: zoomIn 0.8s ease-out;
+        }
+
+        .screenshot-container img {
+            width: 100%;
+            border-radius: 10px;
+            display: block;
+        }
+
+        .info-box {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px auto;
+            max-width: 900px;
+            border: 2px solid rgba(255,255,255,0.3);
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        .info-box h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #FFD700;
+        }
+
+        .info-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .info-box li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .info-box li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #25D366;
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+
+        .bonus-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #000;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+            animation: wiggle 1s ease-in-out infinite;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #25D366 0%, #FFD700 100%);
+            transition: width 0.3s ease;
+            z-index: 1001;
+        }
+
+        .step-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            z-index: 1000;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-3deg); }
+            75% { transform: rotate(3deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .logo {
+                font-size: 2.5rem;
+            }
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            .screen-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <!-- Step Indicator -->
+    <div class="step-indicator" id="stepIndicator">Paso 1 de 10</div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <button class="nav-btn" onclick="previousScreen()" id="prevBtn">←</button>
+        <button class="nav-btn" onclick="nextScreen()" id="nextBtn">→</button>
+    </div>
+
+    <!-- Intro Screen -->
+    <div class="intro-screen" id="screen0">
+        <div class="container">
+            <div class="logo">🤖 Smart Sales Bot Pro</div>
+            <div class="subtitle">Tu Asistente de Ventas Inteligente por WhatsApp</div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <div class="feature-title">Inteligencia Artificial</div>
+                    <div class="feature-desc">Respuestas naturales y contextuales con múltiples proveedores de IA</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🛍️</div>
+                    <div class="feature-title">Catálogo Inteligente</div>
+                    <div class="feature-desc">Búsqueda semántica y recomendaciones personalizadas de productos</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <div class="feature-title">Tienda Online GRATIS</div>
+                    <div class="feature-desc">Sin necesidad de dominio ni hosting adicional</div>
+                </div>
+            </div>
+
+            <button class="start-btn" onclick="startDemo()">Comenzar Demo →</button>
+        </div>
+    </div>
+
+    <!-- Screen 1: Dashboard Principal -->
+    <div class="demo-screen" id="screen1">
+        <div class="container">
+            <div class="screen-header">
+                <h1 class="screen-title">📊 Dashboard Principal</h1>
+                <p class="screen-subtitle">Control total de tu bot desde una interfaz intuitiva</p>
+            </div>
+
+            <div class="screenshot-container">
+                <img src="Captura de pantalla 2025-11-01 115218.png" alt="Dashboard">
+            </div>
+
+            <div class="info-box">
+                <h3>Panel de Control Completo</h3>
+                <ul>
+                    <li>Visualiza todas las conversaciones en tiempo real</li>
+                    <li>Estadísticas de ventas y rendimiento del bot</li>
+                    <li>Gestión de productos y configuración de IA</li>
+                    <li>Interfaz estilo WhatsApp familiar y fácil de usar</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 2: Conexión WhatsApp -->
+    <div class="demo-screen" id="screen2">
+        <div class="container">
+            <div class="screen-header">
+                <h1 class="screen-title">📱 Conexión con WhatsApp</h1>
+                <p class="screen-subtitle">Conecta tu número real en segundos</p>
+            </div>
+
+            <div class="screenshot-container">
+                <img src="Captura de pantalla 2025-11-01 115252.png" alt="WhatsApp Connection">
+            </div>
+
+            <div class="info-box">
+                <h3>Conexión Simple y Segura</h3>
+                <ul>
+                    <li>Escanea el código QR con tu WhatsApp</li>
+                    <li>Conexión directa sin APIs de pago</li>
+                    <li>Sesión persistente y reconexión automática</li>
+                    <li>Funciona con WhatsApp personal o Business</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 3: Gestión de Productos -->
+    <div class="demo-screen" id="screen3">
+        <div class="container">
+            <div class="screen-header">
+                <h1 class="screen-title">📦 Gestión de Productos</h1>
+                <p class="screen-subtitle">Administra tu catálogo fácilmente</p>
+            </div>
+
+            <div class="screenshot-container">
+                <img src="Captura de pantalla 2025-11-01 115343.png" alt="Products Management">
+            </div>
+
+            <div class="info-box">
+                <h3>Catálogo Inteligente</h3>
+                <ul>
+                    <li>Importación masiva desde CSV/JSON</li>
+                    <li>Búsqueda semántica avanzada</li>
+                    <li>Categorías y etiquetas automáticas</li>
+                    <li>Actualización de precios en tiempo real</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 4: Configuración de IA -->
+    <div class="demo-screen" id="screen4">
+        <div class="container">
+            <div class="screen-header">
+                <h1 class="screen-title">🧠 Configuración de IA</h1>
+                <p class="screen-subtitle">Personaliza la inteligencia de tu bot</p>
+            </div>
+
+            <div class="screenshot-container">
+                <img src="Captura de pantalla 2025-11-01 115409.png" alt="AI Configuration">
+            </div>
+
+            <div class="info-box">
+                <h3>Multi-Proveedor de IA</h3>
+                <ul>
+                    <li>Groq (Llama 3.1) - Ultra rápido y gratuito</li>
+                    <li>OpenAI GPT-4 - Máxima calidad</li>
+                    <li>Claude, Gemini, Mistral - Alternativas potentes</li>
+                    <li>Fallback automático si un proveedor falla</li>
+                    <li>Personalidad del bot configurable</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 5: Conversación en Vivo -->
+    <div class="demo-screen" id="screen5">
+        <div class="container">
+            <div class="screen-header">
+                <h1 class="screen-title">💬 Conversación Inteligente</h1>
+                <p class="screen-subtitle">El bot responde como un humano</p>
+            </div>
+
+            <div class="screenshot-container">
+                <img src="Captura de pantalla 2025-11-01 115443.png" alt="Live Conversation">
+            </div>
+
+            <div class="info-box">
+                <h3>Respuestas Contextuales</h3>
+                <ul>
+                    <li>Memoria de conversación de 24 horas</li>
+                    <li>Comprende preguntas en lenguaje natural</li>
+                    <li>Recomendaciones personalizadas de productos</li>
+                    <li>Maneja objeciones y preguntas complejas</li>
+                    <li>Escalamiento a humano cuando es necesario</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 6: Búsqueda de Productos -->
+    <div class="demo-screen" id="screen6">
+        <div class="container">
+            <div class="screen-header">
+                <h1 class="screen-title">🔍 Búsqueda Inteligente</h1>
+                <p class="screen-subtitle">Encuentra productos por descripción natural</p>
+            </div>
+
+            <div class="screenshot-container">
+                <img src="Captura de pantalla 2025-11-01 120520.png" alt="Product Search">
+            </div>
+
+            <div class="info-box">
+                <h3>Búsqueda Semántica Avanzada</h3>
+                <ul>
+                    <li>"Laptop para diseño gráfico" → Encuentra el ideal</li>
+                    <li>"Algo para aprender piano" → Recomienda cursos</li>
+                    <li>Fuzzy matching para errores de escritura</li>
+                    <li>Filtros por precio, categoría y disponibilidad</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 7: Información de Pagos -->
+    <div class="demo-screen" id="screen7">
+        <div class="container">
+            <div class="screen-header">
+                <h1 class="screen-title">💳 Sistema de Pagos</h1>
+                <p class="screen-subtitle">Múltiples métodos de pago integrados</p>
+            </div>
+
+            <div class="screenshot-container">
+                <img src="Captura de pantalla 2025-11-01 120605.png" alt="Payment Methods">
+            </div>
+
+            <div class="info-box">
+                <h3>Pagos Flexibles</h3>
+                <ul>
+                    <li>MercadoPago - Links de pago automáticos</li>
+                    <li>PayPal - Pagos internacionales</li>
+                    <li>Nequi, Daviplata - Métodos locales Colombia</li>
+                    <li>Hotmart - Para productos digitales</li>
+                    <li>El bot envía links de pago personalizados</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 8: BONUS - Catálogo Público -->
+    <div class="demo-screen" id="screen8">
+        <div class="container">
+            <div class="screen-header">
+                <h1 class="screen-title">🎁 BONUS: Catálogo Público</h1>
+                <div class="bonus-badge">✨ INCLUIDO GRATIS ✨</div>
+                <p class="screen-subtitle">Tu catálogo online sin costo adicional</p>
+            </div>
+
+            <div class="screenshot-container">
+                <img src="Captura de pantalla 2025-11-01 120637.png" alt="Public Catalog">
+            </div>
+
+            <div class="info-box">
+                <h3>Catálogo Web Profesional</h3>
+                <ul>
+                    <li>URL única para compartir: tubot.com/catalogo</li>
+                    <li>Sin necesidad de comprar dominio</li>
+                    <li>Diseño responsive y moderno</li>
+                    <li>Actualización automática desde el dashboard</li>
+                    <li>Botón de WhatsApp directo en cada producto</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 9: BONUS - Tienda Individual -->
+    <div class="demo-screen" id="screen9">
+        <div class="container">
+            <div class="screen-header">
+                <h1 class="screen-title">🎁 BONUS: Tienda Personal</h1>
+                <div class="bonus-badge">✨ INCLUIDO GRATIS ✨</div>
+                <p class="screen-subtitle">Cada usuario tiene su propia tienda online</p>
+            </div>
+
+            <div class="screenshot-container">
+                <img src="Captura de pantalla 2025-11-01 120859.png" alt="Personal Store">
+            </div>
+
+            <div class="info-box">
+                <h3>Tienda Completa Sin Inversión</h3>
+                <ul>
+                    <li>URL personalizada: tubot.com/tienda/tu-usuario</li>
+                    <li>Carrito de compras funcional</li>
+                    <li>Integración con métodos de pago</li>
+                    <li>SEO optimizado para Google</li>
+                    <li>Compartible en redes sociales</li>
+                    <li>Todo sin pagar hosting ni dominio</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 10: Resumen Final -->
+    <div class="demo-screen" id="screen10">
+        <div class="container">
+            <div class="screen-header">
+                <h1 class="screen-title">🚀 Todo en Uno</h1>
+                <p class="screen-subtitle">La solución completa para automatizar tus ventas</p>
+            </div>
+
+            <div class="screenshot-container">
+                <img src="Captura de pantalla 2025-11-01 120921.png" alt="Complete System">
+            </div>
+
+            <div class="info-box" style="background: linear-gradient(135deg, rgba(37, 211, 102, 0.3) 0%, rgba(18, 140, 126, 0.3) 100%);">
+                <h3>🎯 Lo Que Obtienes</h3>
+                <ul>
+                    <li><strong>Bot de WhatsApp con IA</strong> - Respuestas inteligentes 24/7</li>
+                    <li><strong>Dashboard Completo</strong> - Gestiona todo desde un solo lugar</li>
+                    <li><strong>Catálogo Inteligente</strong> - Búsqueda semántica avanzada</li>
+                    <li><strong>Multi-Proveedor IA</strong> - Groq, OpenAI, Claude, Gemini</li>
+                    <li><strong>Sistema de Pagos</strong> - MercadoPago, PayPal, Nequi, etc.</li>
+                    <li><strong>BONUS: Catálogo Web</strong> - Sin costo de dominio</li>
+                    <li><strong>BONUS: Tienda Online</strong> - Sin costo de hosting</li>
+                </ul>
+            </div>
+
+            <div class="info-box" style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.3) 0%, rgba(255, 165, 0, 0.3) 100%);">
+                <h3>💡 Por Qué Es Diferente</h3>
+                <ul>
+                    <li>No necesitas pagar WhatsApp Business API</li>
+                    <li>No necesitas comprar dominio para tu tienda</li>
+                    <li>No necesitas contratar hosting adicional</li>
+                    <li>Todo incluido en una sola plataforma</li>
+                    <li>Instalación en minutos, no días</li>
+                    <li>Soporte en español y documentación completa</li>
+                </ul>
+            </div>
+
+            <div style="text-align: center; margin-top: 60px;">
+                <button class="start-btn" onclick="restartDemo()">🔄 Ver Demo Nuevamente</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentScreen = 0;
+        const totalScreens = 11; // 0 (intro) + 10 screens
+
+        function updateUI() {
+            // Hide all screens
+            document.querySelectorAll('.intro-screen, .demo-screen').forEach(screen => {
+                screen.classList.remove('active');
+                screen.style.display = 'none';
+            });
+
+            // Show current screen
+            const screenId = currentScreen === 0 ? 'screen0' : `screen${currentScreen}`;
+            const currentScreenElement = document.getElementById(screenId);
+            if (currentScreenElement) {
+                currentScreenElement.style.display = 'block';
+                setTimeout(() => currentScreenElement.classList.add('active'), 10);
+            }
+
+            // Update progress bar
+            const progress = (currentScreen / (totalScreens - 1)) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            // Update step indicator
+            if (currentScreen === 0) {
+                document.getElementById('stepIndicator').textContent = 'Inicio';
+            } else {
+                document.getElementById('stepIndicator').textContent = `Paso ${currentScreen} de ${totalScreens - 1}`;
+            }
+
+            // Update navigation buttons
+            document.getElementById('prevBtn').style.display = currentScreen === 0 ? 'none' : 'block';
+            document.getElementById('nextBtn').style.display = currentScreen === totalScreens - 1 ? 'none' : 'block';
+        }
+
+        function startDemo() {
+            currentScreen = 1;
+            updateUI();
+        }
+
+        function nextScreen() {
+            if (currentScreen < totalScreens - 1) {
+                currentScreen++;
+                updateUI();
+            }
+        }
+
+        function previousScreen() {
+            if (currentScreen > 0) {
+                currentScreen--;
+                updateUI();
+            }
+        }
+
+        function restartDemo() {
+            currentScreen = 0;
+            updateUI();
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextScreen();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousScreen();
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                restartDemo();
+            }
+        });
+
+        // Auto-advance option (uncomment to enable)
+        // setInterval(() => {
+        //     if (currentScreen < totalScreens - 1) {
+        //         nextScreen();
+        //     } else {
+        //         restartDemo();
+        //     }
+        // }, 5000); // Change screen every 5 seconds
+
+        // Initialize
+        updateUI();
+    </script>
+</body>
+</html>

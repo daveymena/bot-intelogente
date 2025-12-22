@@ -1,0 +1,572 @@
+{
+  "flujos_conversacionales": [
+    {
+      "id": "flujo_1",
+      "nombre": "Búsqueda de Curso Piano - Datos Reales",
+      "intención": "product_search",
+      "contexto": "Usuario busca información sobre Curso de Piano",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "Hola, ¿tienes curso de piano?",
+          "intención": "product_search",
+          "entidades": ["piano", "curso"],
+          "sentimiento": "neutral"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "🟢 ¡Hola! 👋 Qué gusto saludarte 😊\n\nSí, tenemos el *Curso Piano Profesional Completo* 🎹\n\n✨ Características:\n• +80 lecciones en video HD\n• Módulos progresivos\n• Acceso de por vida\n• Contenido descargable\n• Soporte directo del profesor\n\n¿Te gustaría saber el precio? 💰",
+          "intención": "product_info",
+          "producto": "Curso Piano Profesional Completo",
+          "precio": 60000,
+          "acciones": ["guardar_producto_en_memoria"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "¿Cuánto cuesta?",
+          "intención": "price_inquiry",
+          "contexto_memoria": "Curso Piano Profesional Completo",
+          "entidades": ["precio", "costo"],
+          "sentimiento": "interesado"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "🟢 El Curso Piano Profesional Completo cuesta $60.000 COP 💰\n\n✅ Acceso de por vida\n📲 Entrega automática por WhatsApp\n⚡ Acceso instantáneo después del pago\n🎁 Garantía: 7 días incluida\n\n¿Te gustaría proceder con la compra? 😊",
+          "intención": "purchase",
+          "producto": "Curso Piano Profesional Completo",
+          "precio": 60000,
+          "acciones": ["mostrar_precio"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_2",
+      "nombre": "Búsqueda de Laptops - Datos Reales",
+      "intención": "product_search",
+      "contexto": "Usuario pregunta por laptops disponibles",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "¿Tienen laptops disponibles?",
+          "intención": "product_search",
+          "entidades": ["laptop", "disponible"],
+          "sentimiento": "neutral"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "¡Claro! 🎯 Tenemos varias opciones de laptops disponibles:\n\n1️⃣ *Laptop HP 15-dy2795wm*\n   💰 Precio: $2.500.000\n   ⚡ Intel Core i5 - Laptop potente\n   ➡️ Más información disponible\n\n2️⃣ *Laptop Dell Inspiron 15*\n   💰 Precio: $2.200.000\n   ⚡ AMD Ryzen 5 - Excelente para trabajo\n   ➡️ Más información disponible\n\n3️⃣ *Laptop Lenovo IdeaPad 3*\n   💰 Precio: $1.800.000\n   ⚡ Intel Core i3 - Económica\n   ➡️ Más información disponible\n\n¿Cuál te interesa? 😊",
+          "intención": "product_search",
+          "acciones": ["listar_productos"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "La HP, ¿qué especificaciones tiene?",
+          "intención": "product_info",
+          "contexto_memoria": "Laptop HP 15-dy2795wm",
+          "entidades": ["especificaciones", "características"],
+          "sentimiento": "interesado"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "¡Excelente elección! 🚀 La Laptop HP 15-dy2795wm tiene:\n\n⚡ Procesador: Intel Core i5 (11ª Gen)\n🎮 GPU: Intel Iris Xe Graphics\n💾 RAM: 8GB DDR4\n🔋 Almacenamiento: 256GB SSD\n🖥️ Pantalla: 15.6\" Full HD\n🔌 Batería: Hasta 8 horas\n\n💰 Precio: $2.500.000 COP\n\n¿Te interesa? 😊",
+          "intención": "product_info",
+          "producto": "Laptop HP 15-dy2795wm",
+          "precio": 2500000,
+          "acciones": ["mostrar_especificaciones"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_3",
+      "nombre": "Búsqueda de Moto NS-160 - Datos Reales",
+      "intención": "product_search",
+      "contexto": "Usuario busca información sobre motos",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "¿Tienen motos disponibles?",
+          "intención": "product_search",
+          "entidades": ["moto", "disponible"],
+          "sentimiento": "neutral"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "¡Claro! 🏍️ Tenemos motos disponibles:\n\n1️⃣ *Moto NS-160*\n   💰 Precio: $6.500.000\n   🏍️ Motor de alto rendimiento\n   ➡️ Más información disponible\n\n¿Te interesa? 😊",
+          "intención": "product_search",
+          "acciones": ["listar_productos"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "¿Qué características tiene?",
+          "intención": "product_info",
+          "contexto_memoria": "Moto NS-160",
+          "entidades": ["características", "detalles"],
+          "sentimiento": "interesado"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "¡Excelente! 🏍️ La Moto NS-160 tiene:\n\n✅ Motor de alto rendimiento\n✅ Diseño moderno\n✅ Garantía de fábrica\n✅ Servicio técnico incluido\n✅ Financiamiento disponible\n\n💰 Precio: $6.500.000 COP\n\n¿Te interesa? 😊",
+          "intención": "product_info",
+          "producto": "Moto NS-160",
+          "precio": 6500000,
+          "acciones": ["mostrar_detalles"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_4",
+      "nombre": "Compra de Curso Piano - Métodos de Pago",
+      "intención": "payment",
+      "contexto": "Usuario quiere comprar Curso Piano",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "Quiero comprar el curso de piano",
+          "intención": "purchase",
+          "entidades": ["comprar", "curso", "piano"],
+          "sentimiento": "decidido"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "¡Excelente! 🎉 Aquí está tu resumen:\n\n📦 *Curso Piano Profesional Completo*\n💰 Precio: $60.000 COP\n\n💳 Métodos de pago disponibles:\n💚 Nequi: 3042748687\n💙 Daviplata: 3042748687\n🌐 Hotmart: https://pay.hotmart.com/I95497720H\n📱 WhatsApp: +57 304 274 8687\n\n¿Cuál es tu método? 💵",
+          "intención": "payment",
+          "producto": "Curso Piano Profesional Completo",
+          "precio": 60000,
+          "acciones": ["mostrar_resumen", "listar_metodos_pago"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "Por Nequi",
+          "intención": "payment",
+          "contexto_memoria": "Curso Piano Profesional Completo",
+          "entidades": ["Nequi"],
+          "sentimiento": "decidido"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "¡Perfecto! 📱 Aquí está tu información de pago por Nequi:\n\n💚 *NEQUI*\nNúmero: 3042748687\nValor: $60.000 COP\n\n✅ Envía el comprobante por WhatsApp\n📲 Recibirás acceso al curso inmediatamente\n⚡ Acceso de por vida\n\n¿Necesitas ayuda? 🤝",
+          "intención": "payment",
+          "producto": "Curso Piano Profesional Completo",
+          "acciones": ["mostrar_metodo_pago"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_5",
+      "nombre": "Compra de Laptop - Métodos de Pago",
+      "intención": "payment",
+      "contexto": "Usuario quiere comprar Laptop",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "Quiero comprar la Laptop HP",
+          "intención": "purchase",
+          "entidades": ["comprar", "laptop", "HP"],
+          "sentimiento": "decidido"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "¡Excelente! 🎉 Aquí está tu resumen:\n\n📦 *Laptop HP 15-dy2795wm*\n💰 Precio: $2.500.000 COP\n\n💳 Métodos de pago disponibles:\n💚 Nequi\n💙 Daviplata\n💳 Tarjeta de crédito\n🌐 PayPal\n\n¿Cuál es tu método? 💵",
+          "intención": "payment",
+          "producto": "Laptop HP 15-dy2795wm",
+          "precio": 2500000,
+          "acciones": ["mostrar_resumen", "listar_metodos_pago"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "Por tarjeta de crédito",
+          "intención": "payment",
+          "contexto_memoria": "Laptop HP 15-dy2795wm",
+          "entidades": ["tarjeta"],
+          "sentimiento": "decidido"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "¡Perfecto! 💳 Aquí está tu información de pago por tarjeta:\n\n💳 *TARJETA DE CRÉDITO*\nValor: $2.500.000 COP\n\n✅ Serás redirigido a la pasarela de pago segura\n📲 Recibirás confirmación por WhatsApp\n🚚 Envío a tu domicilio\n\n¿Necesitas ayuda? 🤝",
+          "intención": "payment",
+          "producto": "Laptop HP 15-dy2795wm",
+          "acciones": ["mostrar_metodo_pago"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_6",
+      "nombre": "Compra de Moto NS-160 - Métodos de Pago",
+      "intención": "payment",
+      "contexto": "Usuario quiere comprar Moto NS-160",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "Quiero comprar la moto",
+          "intención": "purchase",
+          "entidades": ["comprar", "moto"],
+          "sentimiento": "decidido"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "¡Excelente! 🎉 Aquí está tu resumen:\n\n📦 *Moto NS-160*\n💰 Precio: $6.500.000 COP\n\n💳 Métodos de pago disponibles:\n💚 Nequi\n� qDaviplata\n💳 Tarjeta de crédito\n🌐 PayPal\n💰 Financiamiento\n\n¿Cuál es tu método? 💵",
+          "intención": "payment",
+          "producto": "Moto NS-160",
+          "precio": 6500000,
+          "acciones": ["mostrar_resumen", "listar_metodos_pago"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "¿Puedo financiar?",
+          "intención": "payment",
+          "contexto_memoria": "Moto NS-160",
+          "entidades": ["financiamiento"],
+          "sentimiento": "interesado"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "¡Claro! � TenAemos opciones de financiamiento:\n\n✅ Hasta 24 meses\n✅ Tasas competitivas\n✅ Aprobación rápida\n✅ Sin trámites complicados\n\n💰 Valor: $6.500.000 COP\n\n¿Te interesa conocer más sobre el financiamiento? 🤝",
+          "intención": "payment",
+          "producto": "Moto NS-160",
+          "acciones": ["mostrar_opciones_financiamiento"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_7",
+      "nombre": "Objeción de Precio - Todos los Productos",
+      "intención": "objection_handling",
+      "contexto": "Usuario tiene objeción sobre el precio",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "Es muy caro",
+          "intención": "objection",
+          "entidades": ["precio", "caro"],
+          "sentimiento": "dudoso"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "Entiendo tu preocupación 💭 Pero mira los beneficios:\n\n✅ Calidad garantizada\n✅ Soporte incluido\n✅ Garantía de satisfacción\n✅ Mejor precio del mercado\n\nEs una inversión en tu futuro 🚀 ¿Quieres proceder? 😊",
+          "intención": "objection_response",
+          "acciones": ["validar_objeción", "mostrar_valor"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "Está bien, adelante",
+          "intención": "purchase",
+          "entidades": ["confirmación"],
+          "sentimiento": "decidido"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "¡Excelente! 🎉 Vamos a procesar tu compra.\n\n¿Cuál es tu método de pago preferido?\n\n💚 Nequi\n💙 Daviplata\n💳 Tarjeta de crédito\n🌐 PayPal\n\n¿Cuál prefieres? 💵",
+          "intención": "payment",
+          "acciones": ["mostrar_resumen"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_8",
+      "nombre": "Seguimiento Post-Compra",
+      "intención": "post_purchase",
+      "contexto": "Usuario ya compró, seguimiento",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "Hola, ya compré hace 3 días",
+          "intención": "post_purchase",
+          "contexto_memoria": "Producto comprado",
+          "entidades": ["compra"],
+          "sentimiento": "neutral"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "¡Hola! 👋 ¡Qué emoción que ya tengas tu producto! 🎉\n\n¿Cómo va tu experiencia? ¿Tienes alguna pregunta o necesitas soporte? 📚",
+          "intención": "post_purchase_support",
+          "acciones": ["recuperar_historial_compra", "ofrecer_soporte"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "Tengo un problema",
+          "intención": "support",
+          "contexto_memoria": "Producto comprado",
+          "entidades": ["problema"],
+          "sentimiento": "frustrado"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "Entiendo 😟 Lamento que tengas problemas.\n\n¿Cuál es el problema específico?\n• ¿No funciona?\n• ¿No entiendes cómo usarlo?\n• ¿Problema técnico?\n\nCuéntame para ayudarte 🤝",
+          "intención": "support",
+          "acciones": ["validar_problema", "hacer_preguntas_diagnostico"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_9",
+      "nombre": "Recomendación de Productos",
+      "intención": "recommendation",
+      "contexto": "Bot recomienda productos basado en contexto",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "Me encantó el curso de piano",
+          "intención": "satisfaction",
+          "contexto_memoria": "Curso Piano Profesional Completo",
+          "entidades": ["satisfecho", "curso"],
+          "sentimiento": "muy_satisfecho"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "¡Qué alegría! 🎉 Me encanta escuchar eso.\n\nYa que te encantó el piano, tenemos otros productos que te pueden interesar:\n\n💻 Laptops para producción musical\n🔧 Accesorios para música\n📚 Otros cursos relacionados\n\n¿Te interesa conocer más? 🎶",
+          "intención": "recommendation",
+          "acciones": ["analizar_satisfacción", "recomendar_productos_relacionados"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "Sí, cuéntame más",
+          "intención": "product_interest",
+          "contexto_memoria": "Curso Piano Profesional Completo",
+          "entidades": ["interesado"],
+          "sentimiento": "interesado"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "¡Excelente! 🎵 Aquí están nuestras opciones:\n\n💡 Bonus: Como ya compraste un curso, tienes acceso a contenido exclusivo.\n\n¿Qué te interesa?\n• Laptops para producción\n• Accesorios musicales\n• Otros cursos\n\nCuéntame 😊",
+          "intención": "recommendation",
+          "acciones": ["mostrar_opciones"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_10",
+      "nombre": "Escalación a Humano",
+      "intención": "escalation",
+      "contexto": "Bot no puede resolver, escala a humano",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "Necesito hablar con un gerente",
+          "intención": "escalation",
+          "entidades": ["gerente", "humano"],
+          "sentimiento": "molesto"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "Entiendo 🤝 Te conectaré con un agente humano ahora mismo.\n\n⏳ Espera un momento, estoy buscando disponibilidad...",
+          "intención": "escalation",
+          "acciones": ["detectar_escalación", "buscar_agente_disponible"]
+        },
+        {
+          "turno": 3,
+          "rol": "bot",
+          "mensaje": "¡Perfecto! 👨‍💼 Te conectaré con nuestro equipo de soporte.\n\n📞 Disponible ahora\n⏱️ Tiempo de espera: 0 minutos\n\n¡Que disfrutes la conversación! 😊",
+          "intención": "escalation",
+          "acciones": ["conectar_con_agente", "transferir_contexto"]
+        }
+      ]
+    }
+  ],
+  "productos_reales": [
+    {
+      "id": "curso-piano-001",
+      "nombre": "Curso Piano Profesional Completo",
+      "precio": 60000,
+      "tipo": "Digital",
+      "descripcion": "Curso 100% en línea con +80 lecciones en video HD, acceso de por vida, contenido descargable y soporte del profesor",
+      "caracteristicas": [
+        "+80 lecciones en video HD",
+        "Módulos progresivos",
+        "Acceso de por vida",
+        "Contenido descargable",
+        "Soporte directo del profesor",
+        "Garantía: 7 días"
+      ],
+      "metodos_pago": [
+        "Nequi: 3042748687",
+        "Daviplata: 3042748687",
+        "Hotmart: https://pay.hotmart.com/I95497720H",
+        "WhatsApp: +57 304 274 8687"
+      ]
+    },
+    {
+      "id": "laptop-hp-001",
+      "nombre": "Laptop HP 15-dy2795wm",
+      "precio": 2500000,
+      "tipo": "Física",
+      "descripcion": "Laptop potente con Intel Core i5, ideal para trabajo y entretenimiento",
+      "especificaciones": {
+        "procesador": "Intel Core i5 (11ª Gen)",
+        "gpu": "Intel Iris Xe Graphics",
+        "ram": "8GB DDR4",
+        "almacenamiento": "256GB SSD",
+        "pantalla": "15.6\" Full HD",
+        "bateria": "Hasta 8 horas"
+      },
+      "metodos_pago": [
+        "Nequi",
+        "Daviplata",
+        "Tarjeta de crédito",
+        "PayPal"
+      ]
+    },
+    {
+      "id": "laptop-dell-001",
+      "nombre": "Laptop Dell Inspiron 15",
+      "precio": 2200000,
+      "tipo": "Física",
+      "descripcion": "Laptop excelente para trabajo con AMD Ryzen 5",
+      "especificaciones": {
+        "procesador": "AMD Ryzen 5",
+        "ram": "8GB",
+        "almacenamiento": "256GB SSD",
+        "pantalla": "15.6\" Full HD"
+      },
+      "metodos_pago": [
+        "Nequi",
+        "Daviplata",
+        "Tarjeta de crédito",
+        "PayPal"
+      ]
+    },
+    {
+      "id": "laptop-lenovo-001",
+      "nombre": "Laptop Lenovo IdeaPad 3",
+      "precio": 1800000,
+      "tipo": "Física",
+      "descripcion": "Laptop económica con Intel Core i3, perfecta para tareas básicas",
+      "especificaciones": {
+        "procesador": "Intel Core i3",
+        "ram": "4GB",
+        "almacenamiento": "128GB SSD",
+        "pantalla": "15.6\" HD"
+      },
+      "metodos_pago": [
+        "Nequi",
+        "Daviplata",
+        "Tarjeta de crédito",
+        "PayPal"
+      ]
+    },
+    {
+      "id": "moto-ns-160-001",
+      "nombre": "Moto NS-160",
+      "precio": 6500000,
+      "tipo": "Física",
+      "descripcion": "Motocicleta NS-160 de excelente calidad y rendimiento",
+      "caracteristicas": [
+        "Motor de alto rendimiento",
+        "Diseño moderno",
+        "Garantía de fábrica",
+        "Servicio técnico incluido",
+        "Financiamiento disponible"
+      ],
+      "metodos_pago": [
+        "Nequi",
+        "Daviplata",
+        "Tarjeta de crédito",
+        "PayPal",
+        "Financiamiento"
+      ]
+    }
+  ],
+  "patrones_memoria": [
+    {
+      "tipo": "producto_actual",
+      "descripción": "Producto que el usuario está considerando",
+      "ejemplo": "Curso Piano Profesional Completo",
+      "duración": "sesión_actual"
+    },
+    {
+      "tipo": "historial_compras",
+      "descripción": "Productos que el usuario ya compró",
+      "ejemplo": ["Curso Piano Profesional Completo"],
+      "duración": "permanente"
+    },
+    {
+      "tipo": "preferencias",
+      "descripción": "Preferencias del usuario",
+      "ejemplo": "Paga por Nequi, prefiere cursos",
+      "duración": "permanente"
+    },
+    {
+      "tipo": "contexto_conversación",
+      "descripción": "Contexto de la conversación actual",
+      "ejemplo": "Hablando sobre especificaciones de laptop",
+      "duración": "sesión_actual"
+    },
+    {
+      "tipo": "intención_actual",
+      "descripción": "Intención actual del usuario",
+      "ejemplo": "purchase, product_search, support",
+      "duración": "turno_actual"
+    }
+  ],
+  "reglas_conversacionales": [
+    {
+      "regla": "Siempre mantener contexto del producto anterior",
+      "ejemplo": "Si pregunta 'más información', usar el producto anterior"
+    },
+    {
+      "regla": "Aclarar que cursos son digitales",
+      "ejemplo": "Mencionar 'entrega automática', 'acceso instantáneo', 'por WhatsApp'"
+    },
+    {
+      "regla": "Usar 🟢 antes de información importante",
+      "ejemplo": "🟢 El Curso Piano cuesta $60.000"
+    },
+    {
+      "regla": "Mostrar métodos de pago reales",
+      "ejemplo": "Nequi: 3042748687, Daviplata: 3042748687, Hotmart, WhatsApp"
+    },
+    {
+      "regla": "Validar objeciones antes de responder",
+      "ejemplo": "Si dice 'es caro', reconocer y mostrar valor"
+    },
+    {
+      "regla": "Hacer preguntas calificadoras",
+      "ejemplo": "¿Cuál es tu nivel? ¿Cuándo necesitas? ¿Cuál es tu presupuesto?"
+    },
+    {
+      "regla": "Escalar a humano si es necesario",
+      "ejemplo": "Si usuario pide gerente o problema complejo, escalar"
+    },
+    {
+      "regla": "Seguimiento post-compra",
+      "ejemplo": "Preguntar cómo va la experiencia después de compra"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+✅ DIAGNÓSTICO DE BÚSQUEDA DE PRODUCTOS
+
+PROBLEMA DETECTADO:
+❌ Tests no encontraban productos (userId incorrecto)
+✅ CORREGIDO: Tests ahora usan userId real de la BD
+
+ARCHIVOS ACTUALIZADOS:
+✅ scripts/test-curso-piano-vs-megapack.ts (usa userId real)
+✅ scripts/test-seleccion-producto-especifico.ts (usa userId real)
+✅ scripts/test-busqueda-simple.ts (nuevo - diagnóstico)
+✅ scripts/get-user-id.ts (nuevo - obtener userId)
+
+EJECUTAR DIAGNÓSTICO AHORA:
+
+Paso 1: Test de búsqueda simple
+   npx tsx scripts/test-busqueda-simple.ts
+   O ejecutar: PROBAR_BUSQUEDA_SIMPLE.bat
+
+   Esto verifica:
+   ✅ Conexión a BD
+   ✅ Usuario existe
+   ✅ Productos existen
+   ✅ Búsqueda funciona
+
+Paso 2: Test de curso vs megapack
+   npx tsx scripts/test-curso-piano-vs-megapack.ts
+   O ejecutar: PROBAR_CURSO_VS_MEGAPACK.bat
+
+   Esto verifica:
+   ✅ "curso de piano" NO muestra mega packs
+   ✅ "mega pack" SÍ muestra mega packs
+   ✅ Scoring funciona correctamente
+
+Paso 3: Test de selección específica
+   npx tsx scripts/test-seleccion-producto-especifico.ts
+
+   Esto verifica:
+   ✅ Selección de producto específico
+   ✅ Contexto se mantiene
+   ✅ Método de pago correcto
+
+ORDEN RECOMENDADO:
+1. PROBAR_BUSQUEDA_SIMPLE.bat (diagnóstico)
+2. PROBAR_CURSO_VS_MEGAPACK.bat (corrección principal)
+3. test-seleccion-producto-especifico.ts (flujo completo)
+
+SI ALGO FALLA:
+- Ver: DIAGNOSTICO_BUSQUEDA_PRODUCTOS.md
+- Verificar que hay usuario en BD
+- Verificar que hay productos en BD
+- Ejecutar: npx tsx scripts/ver-productos.ts
+
+RESULTADO ESPERADO:
+✅ Test 1: Búsqueda simple - PASS
+✅ Test 2: Curso vs megapack - PASS
+✅ Test 3: Selección específica - PASS
+
+DESPUÉS DE LOS TESTS:
+Si todos pasan, el bot está listo para usar:
+   npm run dev
+   Probar en WhatsApp

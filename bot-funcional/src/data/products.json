@@ -1,0 +1,1056 @@
+[
+  {
+    "name": "Tablet Acer Iconia M10 Wifi 10.1 Wxga Ips 4gb-64gb Champagne",
+    "description": "Tablet Android de 10.1 pulgadas con pantalla IPS Full HD, procesador MediaTek, 4GB RAM, 64GB almacenamiento.",
+    "price": 498900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "tablet",
+      "acer",
+      "iconia",
+      "10.1",
+      "android"
+    ]
+  },
+  {
+    "name": "Impresora Hp Laserjet M111W Monocromática",
+    "description": "Impresora láser monocromática HP M111W. Producto original con garantía.",
+    "price": 585900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "impresora",
+      "hp",
+      "laser",
+      "monocromatica",
+      "oficina"
+    ]
+  },
+  {
+    "name": "Impresora Epson Ecotank L1250 Imprime Usb y Wifi",
+    "description": "Impresora Epson Ecotank L1250 multifuncional. Imprime, copia y escanea desde app.",
+    "price": 719900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "impresora",
+      "epson",
+      "ecotank",
+      "multifuncional",
+      "wifi"
+    ]
+  },
+  {
+    "name": "Impresora Canon Multifuncional G3170 Tinta Continua Wifi",
+    "description": "Impresora Canon multifuncional G3170 con tinta continua y WiFi.",
+    "price": 789900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "impresora",
+      "canon",
+      "multifuncional",
+      "tinta continua",
+      "wifi"
+    ]
+  },
+  {
+    "name": "Impresora Epson Multifuncional Wifi Ecotank L3251",
+    "description": "Impresora Epson multifuncional WiFi Ecotank L3251. Producto original.",
+    "price": 990000,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "impresora",
+      "epson",
+      "ecotank",
+      "multifuncional",
+      "wifi"
+    ]
+  },
+  {
+    "name": "Impresora Hp Smart Tank 530 Multifuncional Wi-Fi Adf",
+    "description": "Impresora HP Smart Tank 530 multifuncional con WiFi y ADF.",
+    "price": 1059900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "impresora",
+      "hp",
+      "smart tank",
+      "multifuncional",
+      "wifi"
+    ]
+  },
+  {
+    "name": "Portatil Asus Vivobook Go 15 Amd Ryzen 3 8gb 512gb",
+    "description": "Portátil ASUS Vivobook Go 15 con AMD Ryzen 3 7320U, 8GB DDR5, 512GB SSD, pantalla 15.6 FHD.",
+    "price": 1329900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "laptop",
+      "asus",
+      "vivobook",
+      "ryzen",
+      "15.6"
+    ]
+  },
+  {
+    "name": "Impresora Multifuncional Epson L5590 Wifi Ecotank",
+    "description": "Impresora multifuncional Epson L5590 WiFi Ecotank.",
+    "price": 1329900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "impresora",
+      "epson",
+      "ecotank",
+      "multifuncional",
+      "wifi"
+    ]
+  },
+  {
+    "name": "Portatil Asus Vivobook 15 Intel I5 8gb 512gb",
+    "description": "Portátil ASUS Vivobook 15 con Intel Core i5-12500H, 8GB DDR4, 512GB SSD.",
+    "price": 1749900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "laptop",
+      "asus",
+      "vivobook",
+      "intel",
+      "i5",
+      "15.6"
+    ],
+    "paymentLinks": {
+      "mercadoPago": "https://www.mercadopago.com.co/checkout/v1/redirect?pref_id=2021591453-e65cc103-b45d-40cd-abf0-547f535a51c0",
+      "paypal": "https://www.paypal.com/checkoutnow?token=0S424822U2707052V"
+    }
+  },
+  {
+    "name": "Portátil Asus Vivobook Go 15 Ryzen 5 16gb 512gb",
+    "description": "Portátil ASUS Vivobook Go 15 con AMD Ryzen 5 7520U, 16GB DDR5, 512GB SSD.",
+    "price": 1769900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "laptop",
+      "asus",
+      "vivobook",
+      "ryzen",
+      "16gb",
+      "15.6"
+    ],
+    "paymentLinks": {
+      "mercadoPago": "https://www.mercadopago.com.co/checkout/v1/redirect?pref_id=2021591453-94a5acb0-d1cc-469b-b0fe-508836c368d5",
+      "paypal": "https://www.paypal.com/checkoutnow?token=8W6084350T067013T"
+    }
+  },
+  {
+    "name": "Portátil Asus Vivobook 15 Ryzen 7 16gb 1tb",
+    "description": "Portátil ASUS Vivobook 15 con AMD Ryzen 7 5825U, 16GB DDR4, 1TB SSD.",
+    "price": 1819900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "laptop",
+      "asus",
+      "vivobook",
+      "ryzen",
+      "16gb",
+      "1tb"
+    ],
+    "paymentLinks": {
+      "mercadoPago": "https://www.mercadopago.com.co/checkout/v1/redirect?pref_id=2021591453-17728036-f568-4647-a6e5-b8f7f25c5c0e",
+      "paypal": "https://www.paypal.com/checkoutnow?token=6HJ04947H1086842D"
+    }
+  },
+  {
+    "name": "Portatil Acer Intel 5 16gb 512gb 15.6 FHD",
+    "description": "Portátil Acer con Intel Core i5, 16GB LPDDR5, 512GB SSD, pantalla 15.6 FHD IPS.",
+    "price": 1899900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "laptop",
+      "acer",
+      "intel",
+      "16gb",
+      "15.6"
+    ]
+  },
+  {
+    "name": "Portátil Asus Vivobook Go Ryzen 5 16gb OLED",
+    "description": "Portátil ASUS Vivobook Go con AMD Ryzen 5 7520U, 16GB DDR5, 512GB SSD, pantalla OLED.",
+    "price": 1899900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "laptop",
+      "asus",
+      "vivobook",
+      "ryzen",
+      "oled",
+      "16gb"
+    ]
+  },
+  {
+    "name": "Escáner Epson DS-C490 Automático Color Dúplex",
+    "description": "Escáner Epson DS-C490 automático a color dúplex.",
+    "price": 2139900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "escaner",
+      "epson",
+      "color",
+      "duplex",
+      "oficina"
+    ]
+  },
+  {
+    "name": "Impresora Epson EcoTank L6490",
+    "description": "Impresora Epson EcoTank L6490. Producto original con garantía.",
+    "price": 2169900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "impresora",
+      "epson",
+      "ecotank",
+      "color"
+    ]
+  },
+  {
+    "name": "Portatil Acer Ryzen 7 16gb 1tb 15.6 FHD",
+    "description": "Portátil Acer con AMD Ryzen 7 7500U, 16GB DDR4, 1TB SSD.",
+    "price": 2179900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "laptop",
+      "acer",
+      "ryzen",
+      "16gb",
+      "1tb"
+    ]
+  },
+  {
+    "name": "Impresora Epson Multifuncional EcoTank L6270",
+    "description": "Impresora Epson multifuncional EcoTank L6270.",
+    "price": 2189900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "impresora",
+      "epson",
+      "ecotank",
+      "multifuncional"
+    ]
+  },
+  {
+    "name": "Portatil Asus Vivobook 15 Intel I7 16gb 512gb",
+    "description": "Portátil ASUS Vivobook 15 con Intel Core i7-13620H, 16GB DDR4, 512GB SSD.",
+    "price": 2249900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "laptop",
+      "asus",
+      "vivobook",
+      "intel",
+      "i7",
+      "16gb"
+    ]
+  },
+  {
+    "name": "Portatil Asus Vivobook 16 Intel I7 16gb DDR5",
+    "description": "Portátil ASUS Vivobook 16 con Intel Core i7-13620H, 16GB DDR5, 512GB SSD.",
+    "price": 2449900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "laptop",
+      "asus",
+      "vivobook",
+      "intel",
+      "i7",
+      "16gb",
+      "16"
+    ]
+  },
+  {
+    "name": "Portátil Asus Vivobook 15 Intel I7 16gb 1tb",
+    "description": "Portátil ASUS Vivobook 15 con Intel Core i7-13620H, 16GB DDR4, 1TB SSD.",
+    "price": 2499900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "laptop",
+      "asus",
+      "vivobook",
+      "intel",
+      "i7",
+      "1tb"
+    ]
+  },
+  {
+    "name": "Portatil Asus Vivobook S16 Ryzen 9 16gb",
+    "description": "Portátil ASUS Vivobook S16 con AMD Ryzen 9 7940HS, 16GB DDR5, 512GB SSD.",
+    "price": 3019900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "laptop",
+      "asus",
+      "vivobook",
+      "ryzen",
+      "16gb",
+      "16"
+    ]
+  },
+  {
+    "name": "Impresora Brother Multifuncional MFC-T4500DW",
+    "description": "Impresora Brother multifuncional MFC-T4500DW.",
+    "price": 3049900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "impresora",
+      "brother",
+      "multifuncional",
+      "tinta continua"
+    ]
+  },
+  {
+    "name": "Escáner Epson Dúplex Color DS-770 II",
+    "description": "Escáner Epson dúplex a color DS-770 II.",
+    "price": 3289900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "escaner",
+      "epson",
+      "color",
+      "duplex",
+      "profesional"
+    ]
+  },
+  {
+    "name": "Impresora Epson Workforce Pro WF-m5799",
+    "description": "Impresora Epson Workforce Pro WF-M5799 multifuncional monocromática.",
+    "price": 3839900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "impresora",
+      "epson",
+      "workforce",
+      "monocromatica",
+      "profesional"
+    ]
+  },
+  {
+    "name": "Moto Bajaj Pulsar NS 160 FI1 (2020)",
+    "description": "Moto Bajaj Pulsar NS 160 FI1 modelo 2020. Motor 160cc inyección electrónica. Papeles al día.",
+    "price": 6500000,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "moto",
+      "bajaj",
+      "pulsar",
+      "160cc",
+      "cali"
+    ]
+  },
+  {
+    "name": "Macbook Pro M4 Pro Max 24gb Ram 512gb Ssd",
+    "description": "MacBook Pro M4 Pro Max con 24GB RAM, 512GB SSD, pantalla 14 Retina XDR.",
+    "price": 10899900,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "laptop",
+      "apple",
+      "macbook",
+      "m4",
+      "profesional"
+    ]
+  },
+  {
+    "name": "Mega Pack 01: Cursos Diseño Gráfico",
+    "description": "Cursos completos de Photoshop, Illustrator, InDesign. +50 cursos incluidos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "diseño",
+      "grafico",
+      "photoshop",
+      "illustrator"
+    ],
+    "image": "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=600&q=80",
+    "paymentLinks": {
+      "mercadoPago": "https://www.mercadopago.com.co/checkout/v1/redirect?pref_id=2021591453-b0ffada6-9f8d-4100-972f-624bb690eb53",
+      "paypal": "https://www.paypal.com/checkoutnow?token=9SC67255DK4058934"
+    }
+  },
+  {
+    "name": "Mega Pack 02: Cursos Microsoft Office",
+    "description": "Cursos de Word, Excel, PowerPoint y Access. +30 cursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "office",
+      "word",
+      "excel",
+      "powerpoint"
+    ],
+    "image": "https://images.unsplash.com/photo-1633419461186-7d40a38105ec?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 03: Cursos Inglés",
+    "description": "Cursos de inglés básico a avanzado. Conversación y negocios. +40 cursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "ingles",
+      "idiomas",
+      "conversacion"
+    ],
+    "image": "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 04: Cursos Excel Avanzado",
+    "description": "Excel con fórmulas, tablas dinámicas, macros y VBA. +25 cursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "excel",
+      "office",
+      "formulas",
+      "macros"
+    ],
+    "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 05: Cursos Hacking Ético",
+    "description": "Seguridad informática, pentesting, Kali Linux. +35 cursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "hacking",
+      "seguridad",
+      "pentesting",
+      "ciberseguridad"
+    ],
+    "image": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 06: Mega Pack Infografías",
+    "description": "Plantillas para crear infografías profesionales. +500 plantillas. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "infografias",
+      "diseño",
+      "plantillas"
+    ],
+    "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 07: Archivos Editables Diseño",
+    "description": "Archivos PSD, AI, EPS para diseño gráfico. +1000 archivos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "diseño",
+      "editables",
+      "plantillas",
+      "psd"
+    ],
+    "image": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 08: Instaladores Software",
+    "description": "Software profesional: Adobe, Office, Antivirus y más. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "software",
+      "instaladores",
+      "herramientas",
+      "programas"
+    ],
+    "image": "https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 09: Curso Memoria Poderosa",
+    "description": "Técnicas de memorización y lectura rápida. +15 cursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "memoria",
+      "aprendizaje",
+      "tecnicas",
+      "lectura"
+    ],
+    "image": "https://images.unsplash.com/photo-1456406644174-8ddd4cd52a06?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 10: 3700 Libros Digitales",
+    "description": "Biblioteca digital con 3700 libros PDF. Negocios, desarrollo personal y más. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "libros",
+      "digital",
+      "biblioteca",
+      "ebooks"
+    ],
+    "image": "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 11: Cursos Marketing Digital",
+    "description": "SEO, SEM, Google Ads, Facebook Ads. +45 cursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "marketing",
+      "digital",
+      "seo",
+      "sem",
+      "ads"
+    ],
+    "image": "https://images.unsplash.com/photo-1533750349088-cd871a92f312?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 12: Gastronomía Internacional",
+    "description": "Recetas y técnicas culinarias. +200 recetas en video. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "gastronomia",
+      "cocina",
+      "recetas",
+      "chef"
+    ],
+    "image": "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 13: Ingeniería y Arquitectura",
+    "description": "AutoCAD, Revit, SketchUp, Civil 3D. +40 cursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "ingenieria",
+      "arquitectura",
+      "autocad",
+      "revit"
+    ],
+    "image": "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 14: Plantillas 100% Editables",
+    "description": "Plantillas para CV, flyers, tarjetas y más. +2000 plantillas. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "plantillas",
+      "editables",
+      "diseño",
+      "presentaciones"
+    ],
+    "image": "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 15: FX Presets After Effects Premiere",
+    "description": "Efectos y transiciones para video. +500 presets. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "video",
+      "efectos",
+      "premiere",
+      "aftereffects"
+    ],
+    "image": "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 16: Cursos Programación +900GB",
+    "description": "Python, JavaScript, Java, C++, desarrollo web. +100 cursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "programacion",
+      "python",
+      "javascript",
+      "java",
+      "desarrollo"
+    ],
+    "image": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 17: Apps Android Premium",
+    "description": "Desarrollo Android con Kotlin y Java. +30 cursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "android",
+      "apps",
+      "desarrollo",
+      "kotlin"
+    ],
+    "image": "https://images.unsplash.com/photo-1607252650355-f7fd0460ccdb?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 18: Reparación Teléfonos Tablets",
+    "description": "Reparación de dispositivos móviles iPhone y Android. +25 cursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "reparacion",
+      "moviles",
+      "tablets",
+      "celulares"
+    ],
+    "image": "https://images.unsplash.com/photo-1580910051074-3eb694886f8b?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 19: WordPress Completo",
+    "description": "Landing Pages, Plugins, Themes, WooCommerce. +40 cursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "wordpress",
+      "web",
+      "plugins",
+      "themes",
+      "woocommerce"
+    ],
+    "image": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 20: AudioLibros Premium",
+    "description": "Colección de +500 audiolibros. Desarrollo personal y negocios. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "audiolibros",
+      "audio",
+      "libros",
+      "podcast"
+    ],
+    "image": "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 21: Pack Sublimado Profesional",
+    "description": "Diseños para sublimación. +1500 plantillas tazas, camisetas. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "sublimado",
+      "diseño",
+      "tecnicas",
+      "estampado"
+    ],
+    "image": "https://images.unsplash.com/photo-1503602642458-232111445657?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 22: Crecimiento Personal",
+    "description": "Desarrollo personal, liderazgo, productividad. +50 cursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "desarrollo",
+      "personal",
+      "motivacion",
+      "liderazgo"
+    ],
+    "image": "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 23: Ensamblaje Mantenimiento PC",
+    "description": "Ensamblaje y reparación de computadores. +20 cursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "computadores",
+      "ensamblaje",
+      "mantenimiento",
+      "hardware"
+    ],
+    "image": "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 24: Recursos Diseño Arquitectura",
+    "description": "Bloques CAD, texturas, materiales. +5000 recursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "arquitectura",
+      "diseño",
+      "recursos",
+      "cad",
+      "bloques"
+    ],
+    "image": "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 25: Construcción Drywall",
+    "description": "Técnicas de construcción en drywall. +15 cursos prácticos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "drywall",
+      "construccion",
+      "tecnicas",
+      "acabados"
+    ],
+    "image": "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 26: Macros Excel VBA",
+    "description": "Automatización con macros en Excel y VBA. +20 cursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "macros",
+      "excel",
+      "automatizacion",
+      "vba"
+    ],
+    "image": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 27: Cursos MultiProfesiones",
+    "description": "Electricidad, plomería, carpintería, soldadura. +60 cursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "oficios",
+      "profesiones",
+      "electricidad",
+      "plomeria"
+    ],
+    "image": "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 28: PreUniversitario Psicología",
+    "description": "Preparación ICFES, Saber Pro y cursos de psicología. +35 cursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "psicologia",
+      "universidad",
+      "icfes",
+      "preuniversitario"
+    ],
+    "image": "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 29: Curso Resina Epóxica",
+    "description": "Trabajo con resinas epóxicas y manualidades. +18 cursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "resina",
+      "manualidades",
+      "epoxica",
+      "artesanias"
+    ],
+    "image": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 30: Bartender Producción Musical",
+    "description": "Coctelería y producción musical FL Studio, Ableton. +30 cursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "eventos",
+      "bartender",
+      "musica",
+      "produccion",
+      "dj"
+    ],
+    "image": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 31: 550 Planos Muebles Melamina",
+    "description": "Planos para fabricación de muebles. +550 planos con medidas. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "muebles",
+      "planos",
+      "melamina",
+      "carpinteria"
+    ],
+    "image": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 32: Universitario Completo",
+    "description": "Recursos para todas las carreras universitarias. +1000 recursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "universidad",
+      "recursos",
+      "estudio",
+      "carreras"
+    ],
+    "image": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 33: Filmora Completo",
+    "description": "Recursos, efectos y tutoriales para Filmora. +200 efectos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "filmora",
+      "video",
+      "edicion",
+      "efectos"
+    ],
+    "image": "https://images.unsplash.com/photo-1536240478700-b869070f9279?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 34: Plantillas Canva MEGA Pro",
+    "description": "Plantillas premium para Canva. +3000 diseños editables. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "canva",
+      "plantillas",
+      "diseño",
+      "social media"
+    ],
+    "image": "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 35: Álbumes Digitales Colección",
+    "description": "Álbumes para bodas, quinceañeras, eventos. +500 plantillas PSD. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "albumes",
+      "digital",
+      "coleccion",
+      "fotografia"
+    ],
+    "image": "https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 36: Libros de Pedagogía",
+    "description": "Recursos pedagógicos para docentes. +300 recursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "pedagogia",
+      "educacion",
+      "libros",
+      "docentes"
+    ],
+    "image": "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 37: Marketing y Ventas",
+    "description": "Marketing, ventas, copywriting, neuroventas. +40 cursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "marketing",
+      "ventas",
+      "estrategias",
+      "negocios"
+    ],
+    "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 38: Redes Sociales Pro",
+    "description": "Instagram, TikTok, Facebook, YouTube. +35 cursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "redes",
+      "sociales",
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "image": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 39: Trading y Forex",
+    "description": "Trading Forex, criptomonedas, análisis técnico. +45 cursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "trading",
+      "forex",
+      "inversiones",
+      "criptomonedas"
+    ],
+    "image": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&q=80"
+  },
+  {
+    "name": "Mega Pack 40: Educación Completa",
+    "description": "Recursos educativos primaria, secundaria, bachillerato. +500 recursos. Acceso de por vida.",
+    "price": 20000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "educacion",
+      "recursos",
+      "primaria",
+      "secundaria"
+    ],
+    "image": "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80"
+  },
+  {
+    "name": "Curso Completo de Piano Online",
+    "description": "Aprende piano desde cero hasta avanzado. 76 lecciones en video HD, 19 horas. Estilos: Clásico, Balada, Pop, Blues, Jazz. 34 artículos y 157 recursos. Acceso de por vida vía Google Drive.",
+    "price": 60000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "piano",
+      "musica",
+      "aprender",
+      "clases",
+      "online",
+      "instrumento"
+    ],
+    "image": "https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=600&q=80",
+    "paymentLinks": {
+      "mercadoPago": "https://www.mercadopago.com.co/checkout/v1/redirect?pref_id=2021591453-2602701e-5279-4393-8781-c4e1a2d589e5",
+      "paypal": "https://www.paypal.com/checkoutnow?token=55C32233GW4071010"
+    }
+  },
+  {
+    "name": "PACK COMPLETO 40 Mega Packs",
+    "description": "Acceso a TODOS los 40 Mega Packs. Ahorro de $740.000 COP. Contenido valorado en $800.000 COP. Acceso de por vida y actualizaciones. ¡OFERTA ESPECIAL!",
+    "price": 60000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "tags": [
+      "megapack",
+      "cursos",
+      "digital",
+      "pack",
+      "completo",
+      "todo"
+    ],
+    "image": "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80"
+  }
+]

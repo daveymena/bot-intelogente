@@ -1,0 +1,24 @@
+========================================
+  EJECUTAR ESTO AHORA
+========================================
+
+El archivo grande esta en el historial de Git.
+
+SOLUCION:
+
+  SOLUCION_DEFINITIVA.bat
+
+Esto hara:
+1. Reset --hard (elimina commits con trading-bot)
+2. Agregar trading-bot al .gitignore
+3. Crear commit limpio
+4. Push con --force
+
+IMPORTANTE:
+- Esto eliminara los ultimos 2 commits
+- Pero creara uno nuevo limpio
+- Sin archivos grandes
+
+========================================
+
+EJECUTA: SOLUCION_DEFINITIVA.bat

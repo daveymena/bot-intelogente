@@ -1,0 +1,78 @@
+═══════════════════════════════════════════════════════════════════════════════
+🔍 EMAIL NO LLEGA - VERIFICACIÓN RÁPIDA
+═══════════════════════════════════════════════════════════════════════════════
+
+PASO 1: VER LOGS EN EASYPANEL (1 MIN)
+────────────────────────────────────────────────────────────────────────────────
+
+1. Ir a Easypanel → bot-whatsapp → Logs
+2. Buscar mensajes de email
+
+¿QUÉ VES EN LOS LOGS?
+
+A) ✅ "Email enviado exitosamente"
+   → Email se envió, revisar spam en Gmail
+
+B) ❌ "Invalid login" o "Authentication failed"
+   → App Password incorrecto, regenerar
+
+C) ⚠️  "EMAIL no configurado - Email simulado"
+   → Variables NO están en Easypanel, agregarlas
+
+D) 🤷 No veo nada relacionado con email
+   → App no se reinició, hacer Restart
+
+═══════════════════════════════════════════════════════════════════════════════
+PASO 2: VERIFICAR VARIABLES (1 MIN)
+═══════════════════════════════════════════════════════════════════════════════
+
+Easypanel → bot-whatsapp → Environment Variables
+
+¿ESTÁN ESTAS 5 VARIABLES?
+
+☐ EMAIL_USER=deinermena25@gmail.com
+☐ EMAIL_PASS=uccj yqpq vqlt vcie
+☐ EMAIL_FROM=deinermena25@gmail.com
+☐ EMAIL_HOST=smtp.gmail.com
+☐ EMAIL_PORT=587
+
+Si falta alguna → Agregarla → Restart
+
+═══════════════════════════════════════════════════════════════════════════════
+PASO 3: REINICIAR APP (1 MIN)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Easypanel → bot-whatsapp → Restart
+2. Esperar 2-3 minutos
+3. Verificar estado: Running ✅
+
+═══════════════════════════════════════════════════════════════════════════════
+PASO 4: PROBAR DE NUEVO (1 MIN)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Ir a: https://whatsapp.sqaoeo.easypanel.host/forgot-password
+2. Ingresar: daveymena16@gmail.com
+3. Click "Enviar"
+4. Revisar:
+   ☐ Bandeja de entrada
+   ☐ Spam
+   ☐ Promociones
+
+═══════════════════════════════════════════════════════════════════════════════
+ERRORES COMUNES
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ EMAIL_USER = daveymena16@gmail.com (INCORRECTO)
+✅ EMAIL_USER = deinermena25@gmail.com (CORRECTO - el que ENVÍA)
+
+❌ EMAIL_PASS con espacios extra: " uccj yqpq vqlt vcie "
+✅ EMAIL_PASS sin espacios: "uccj yqpq vqlt vcie"
+
+❌ No reiniciar después de agregar variables
+✅ Siempre hacer Restart después de cambios
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📖 Guía completa: DIAGNOSTICO_EMAIL_PRODUCCION.md
+
+═══════════════════════════════════════════════════════════════════════════════

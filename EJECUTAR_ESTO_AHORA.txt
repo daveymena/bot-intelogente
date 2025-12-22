@@ -1,0 +1,80 @@
+╔════════════════════════════════════════════════════════════════╗
+║                                                                 ║
+║  🔒 PUSH BLOQUEADO - SOLUCIÓN EN 30 SEGUNDOS                   ║
+║                                                                 ║
+╚════════════════════════════════════════════════════════════════╝
+
+
+🎯 PROBLEMA:
+   GitHub bloqueó tu push porque detectó una API key de Groq
+
+
+✅ SOLUCIÓN RÁPIDA (30 segundos):
+
+   1. Ejecuta este comando:
+
+      arreglar-push-ahora.bat
+
+   2. Sigue las instrucciones en pantalla
+
+   3. ¡Listo!
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+📋 O MANUALMENTE:
+
+   1. Abre este enlace:
+      https://github.com/daveymena/bot-intelogente/security/secret-scanning/unblock-secret/35cV8Xb4mg86bPgrTvzAoxAT54B
+
+   2. Haz clic en "Allow secret"
+
+   3. Ejecuta:
+      git push origin main --force
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+🔐 ¿ES SEGURO?
+
+   ✅ SÍ - Tu repositorio es PRIVADO
+   ✅ SÍ - Solo tú tienes acceso
+   ✅ SÍ - Puedes regenerar la key después si quieres
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+🚀 DESPUÉS DE RESOLVER:
+
+   1. Espera 2-3 minutos (Easypanel desplegará)
+
+   2. Prueba la imagen Open Graph:
+      probar-logo-compartir.bat
+
+   3. Comparte tu enlace en WhatsApp y verás el logo!
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+📚 MÁS INFORMACIÓN:
+
+   - Guía completa: RESOLVER_PUSH_GIT_AHORA.md
+   - Solución alternativa: limpiar-secretos-git.bat
+   - Referencia rápida: SOLUCION_RAPIDA_GIT.txt
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+⚡ ACCIÓN INMEDIATA:
+
+   Ejecuta AHORA:
+
+   arreglar-push-ahora.bat
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

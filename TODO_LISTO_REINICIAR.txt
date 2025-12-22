@@ -1,0 +1,74 @@
+========================================
+✅ TODO LISTO - REINICIAR BOT
+========================================
+
+El bot está configurado para:
+
+1. ✅ Consultar base de datos (productos reales)
+2. ✅ Usar Ollama de Easypanel (sin Groq)
+3. ✅ Formato bonito con emojis
+4. ✅ Respuestas bien estructuradas
+
+========================================
+REINICIAR AHORA
+========================================
+
+npm run dev
+
+========================================
+PROBAR CON WHATSAPP
+========================================
+
+Enviar: "busco un portátil para diseño"
+
+DEBE RESPONDER ASÍ:
+-------------------
+¡Perfecto! 💻 Tengo estas opciones para ti:
+
+📦 *Lenovo IdeaPad Slim 5*
+⚙️ Intel Core i7-13620H
+💾 16GB RAM, 512GB SSD
+🎨 Ideal para diseño gráfico
+💰 *$2.500.000 COP*
+
+📦 *HP Pavilion 15*
+⚙️ AMD Ryzen 7 5800H
+💾 16GB RAM, 1TB SSD
+🎨 Perfecto para edición
+💰 *$2.200.000 COP*
+
+¿Cuál te llama más la atención? 🤔
+
+========================================
+VERIFICAR EN LOGS
+========================================
+
+✅ [Baileys] 🎯 Usando SISTEMA HÍBRIDO INTELIGENTE
+✅ [Baileys] 🧠 Consultando base de datos...
+✅ [Baileys] 🤖 Llamando a Ollama (Easypanel)...
+✅ [Baileys] 📦 Productos encontrados: X
+✅ [Baileys] ✅ Respuesta generada con sistema híbrido
+
+NO DEBE APARECER:
+❌ [Baileys] 🤖 Llamando a Groq...
+❌ [Baileys] Usando plantillas locales
+
+========================================
+SI NO FUNCIONA
+========================================
+
+1. Verificar que hay productos en BD:
+   npx tsx scripts/ver-productos.ts
+
+2. Verificar Ollama:
+   npx tsx scripts/test-ollama-easypanel.ts
+
+3. Limpiar caché:
+   rmdir /s /q .next
+   rmdir /s /q dist
+   npm run dev
+
+========================================
+FECHA: 25 de noviembre de 2025
+ESTADO: ✅ LISTO PARA REINICIAR
+========================================

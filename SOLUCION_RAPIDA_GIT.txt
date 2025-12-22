@@ -1,0 +1,111 @@
+╔════════════════════════════════════════════════════════════════╗
+║  🔒 SOLUCIÓN RÁPIDA - SECRETO BLOQUEADO POR GITHUB            ║
+╚════════════════════════════════════════════════════════════════╝
+
+🎯 PROBLEMA:
+   GitHub bloqueó el push porque detectó una API key de Groq
+   en el archivo: RESUMEN_TRABAJO_COMPLETO_FINAL.md
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ SOLUCIÓN 1: PERMITIR EL SECRETO (MÁS RÁPIDO)
+
+1. Haz clic en este enlace:
+   https://github.com/daveymena/bot-intelogente/security/secret-scanning/unblock-secret/35cV8Xb4mg86bPgrTvzAoxAT54B
+
+2. Haz clic en "Allow secret"
+
+3. Vuelve a hacer push:
+   git push origin main --force
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ SOLUCIÓN 2: ELIMINAR DEL HISTORIAL (MÁS SEGURO)
+
+Ejecuta este script:
+   limpiar-secretos-git.bat
+
+O manualmente:
+
+1. Elimina el archivo del historial:
+   git filter-branch --force --index-filter "git rm --cached --ignore-unmatch RESUMEN_TRABAJO_COMPLETO_FINAL.md" --prune-empty --tag-name-filter cat -- --all
+
+2. Limpia referencias:
+   git for-each-ref --format="delete %%(refname)" refs/original | git update-ref --stdin
+   git reflog expire --expire=now --all
+   git gc --prune=now --aggressive
+
+3. Fuerza el push:
+   git push origin main --force
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ SOLUCIÓN 3: RESET Y REHACER (MÁS SIMPLE)
+
+1. Vuelve al commit anterior:
+   git reset --hard HEAD~1
+
+2. Vuelve a hacer los cambios (sin el archivo problemático)
+
+3. Haz commit y push:
+   git add .
+   git commit -m "feat: agregar imagen Open Graph"
+   git push origin main --force
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔒 RECOMENDACIÓN DE SEGURIDAD:
+
+Si la API key de Groq fue expuesta:
+
+1. Ve a: https://console.groq.com/keys
+
+2. Elimina la API key comprometida
+
+3. Genera una nueva API key
+
+4. Actualiza tu archivo .env con la nueva key
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 PREVENIR EN EL FUTURO:
+
+1. Verifica que .gitignore incluya:
+   .env
+   .env.local
+   .env.*.local
+   *.key
+   *_COMPLETO_FINAL.md
+
+2. Antes de hacer commit, revisa:
+   git diff
+
+3. Usa herramientas como:
+   - git-secrets
+   - pre-commit hooks
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 RECOMENDACIÓN:
+
+Usa SOLUCIÓN 1 (permitir secreto) si:
+- Ya regeneraste la API key
+- Es un repositorio privado
+- Quieres la solución más rápida
+
+Usa SOLUCIÓN 2 (eliminar historial) si:
+- Es un repositorio público
+- Quieres máxima seguridad
+- No te importa reescribir el historial
+
+Usa SOLUCIÓN 3 (reset) si:
+- Acabas de hacer el commit
+- No has compartido el commit con nadie
+- Quieres empezar limpio
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 DESPUÉS DE RESOLVER:
+
+Continúa con la configuración del logo:
+   probar-logo-compartir.bat

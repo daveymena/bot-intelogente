@@ -1,0 +1,50 @@
+✅ CORREGIDO: Envío de Fotos en Baileys
+========================================
+
+🎯 PROBLEMA:
+El código de envío de fotos estaba en whatsapp-web-service.ts
+pero el bot usa baileys-stable-service.ts
+
+Resultado:
+- ✅ IA detectaba solicitud de fotos
+- ✅ IA respondía
+- ❌ NO enviaba fotos
+- ❌ IA decía "no tengo fotos"
+
+✅ SOLUCIÓN:
+Agregado envío automático de fotos a baileys-stable-service.ts
+
+📊 AHORA FUNCIONA ASÍ:
+1. Cliente: "Estoy interesado en el bolso antirrobo"
+2. Bot: "¡Excelente elección!..."
+3. Cliente: "Envíame fotos"
+4. Bot: ✅ Responde Y envía 3 fotos automáticamente
+
+🔍 LOGS:
+[Baileys] 📸 Cliente pidió fotos
+[Baileys] ✅ Producto encontrado: Bolso antirrobo
+[Baileys] 📸 Enviando 3 foto(s)...
+[Baileys] ✅ Foto 1 enviada
+[Baileys] ✅ Foto 2 enviada
+[Baileys] ✅ Foto 3 enviada
+[Baileys] ✅ Todas las fotos enviadas
+
+🧪 PROBAR AHORA:
+1. Reinicia el servidor: npm run dev
+2. Envía: "Estoy interesado en el bolso antirrobo"
+3. Envía: "Envíame fotos"
+4. ✅ Debe enviar 3 fotos automáticamente
+
+📝 ARCHIVO MODIFICADO:
+- src/lib/baileys-stable-service.ts
+  * Agregado sendProductPhotosIfRequested()
+  * Agregado detectPhotoRequest()
+  * Integrado en flujo de respuesta
+
+📚 DOCUMENTACIÓN:
+- CORRECCION_ENVIO_FOTOS_BAILEYS.md (completa)
+
+---
+Estado: ✅ LISTO PARA PROBAR
+Fecha: 2025-11-04
+Servicio: Baileys

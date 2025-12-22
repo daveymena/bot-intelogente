@@ -1,0 +1,95 @@
+========================================
+✅ CONFIGURADO: Bot usa Ollama de Easypanel
+========================================
+
+El bot ahora usa SOLO Ollama de Easypanel
+(sin Groq, sin costos)
+
+URL: https://davey-ollama.mapf5v.easypanel.host
+
+========================================
+PASOS PARA VERIFICAR (2 minutos)
+========================================
+
+1. PROBAR OLLAMA
+   --------------
+   npx tsx scripts/test-ollama-easypanel.ts
+
+   Debe mostrar:
+   ✅ Ollama está accesible
+   ✅ Respuesta generada exitosamente
+   ✅ USE_OLLAMA_ONLY=true
+   ✅ DISABLE_GROQ=true
+
+
+2. REINICIAR BOT
+   -------------
+   npm run dev
+
+   Debe mostrar:
+   ✅ [Baileys] Sistema híbrido inicializado
+
+
+3. PROBAR CON WHATSAPP
+   -------------------
+   Enviar: "busco un portátil para diseño"
+
+   Verificar en logs:
+   ✅ "🤖 Llamando a Ollama (Easypanel)..."
+   ✅ "🔗 URL: https://davey-ollama.mapf5v.easypanel.host"
+   ✅ "✅ Respuesta de Ollama (Easypanel) recibida"
+
+   NO debe aparecer:
+   ❌ "🤖 Llamando a Groq..."
+   ❌ "[Groq Rotator]"
+
+
+========================================
+CAMBIOS APLICADOS
+========================================
+
+✅ src/lib/intelligent-product-search.ts
+   - Ahora usa Ollama de Easypanel
+   - Fallback a búsqueda local (sin Groq)
+
+✅ .env
+   - USE_OLLAMA_ONLY=true
+   - DISABLE_GROQ=true
+   - OLLAMA_BASE_URL=https://davey-ollama.mapf5v.easypanel.host
+
+
+========================================
+VENTAJAS
+========================================
+
+✅ Sin costo (no consume créditos de Groq)
+✅ Privacidad (datos en tu infraestructura)
+✅ Control total (puedes cambiar modelos)
+✅ Rápido (respuestas desde Easypanel)
+
+
+========================================
+SI ALGO FALLA
+========================================
+
+1. Verificar Ollama:
+   curl https://davey-ollama.mapf5v.easypanel.host/api/tags
+
+2. Verificar .env:
+   cat .env | grep OLLAMA
+
+3. Reiniciar bot:
+   npm run dev
+
+
+========================================
+MÁS INFORMACIÓN
+========================================
+
+Ver: CONFIGURADO_OLLAMA_EASYPANEL.md
+
+
+========================================
+FECHA: 25 de noviembre de 2025
+ESTADO: ✅ CONFIGURADO
+========================================

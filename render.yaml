@@ -1,0 +1,54 @@
+services:
+  # Servicio Web (Next.js + WhatsApp Bot)
+  - type: web
+    name: whatsapp-bot
+    env: node
+    region: oregon
+    plan: starter # Cambia a 'standard' si necesitas más recursos
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DATABASE_URL
+        sync: false # Configurar manualmente en Render
+      - key: NEXTAUTH_SECRET
+        generateValue: true
+      - key: NEXTAUTH_URL
+        sync: false # Configurar con tu URL de Render
+      - key: GROQ_API_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: AI_PROVIDER
+        value: openrouter
+      - key: DEFAULT_AI_PROVIDER
+        value: openrouter
+      - key: AI_FALLBACK_ENABLED
+        value: true
+      - key: AI_FALLBACK_ORDER
+        value: openrouter,groq
+      - key: WHATSAPP_PROVIDER
+        value: baileys
+      - key: SESSION_PATH
+        value: /opt/render/project/src/whatsapp-sessions
+      - key: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
+        value: true
+      - key: PUPPETEER_EXECUTABLE_PATH
+        value: /usr/bin/google-chrome-stable
+    
+    # Disco persistente para sesiones de WhatsApp
+    disk:
+      name: whatsapp-sessions
+      mountPath: /opt/render/project/src/whatsapp-sessions
+      sizeGB: 1
+
+  # Base de datos PostgreSQL
+  - type: psgql
+    name: whatsapp-bot-db
+    region: oregon
+    plan: starter
+    databaseName: whatsapp_bot
+    databaseUser: whatsapp_bot_user

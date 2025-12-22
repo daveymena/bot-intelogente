@@ -1,0 +1,48 @@
+✅ IMPORTACIÓN EXITOSA - 38 PRODUCTOS
+
+📊 Resultado:
+
+✅ Importados: 38 productos
+🚫 Omitidos (sin imágenes): 13 productos
+🔄 Omitidos (duplicados): 0 productos
+📦 Total en base de datos: 96 productos
+
+🎯 Criterios de Importación:
+
+✅ Solo productos con imágenes
+✅ Sin duplicados (por nombre)
+✅ Conversión automática de arrays a JSON
+
+📝 Productos Importados:
+
+- KILO BOLSA BASURA ROJA 16X24 ($10.600)
+- FUNDA EN SILICONA PARA CELULAR SAMSUNG A06 ($19.990)
+- CARGADOR TIPO C 45W ($39.990)
+- AUDIFONOS DE CABLE SAMSUNG AKG ($8.990)
+- ARNES REATA PERRO AJUSTABLE ($34.990)
+- BATIDOR Y PICADOR ELECTRICO ($26.990)
+- BASCULA BLUETOOTH ($27.990)
+- MINI PARLANTE G63 SMART LIGHT ($49.990)
+- BASE PARA PORTATIL ($45.990)
+- MOUSE OPTICO ALAMBRICO ($17.990)
+- Bolso antirrobo ($49.990)
+- Mini máquina de coser ($54.990)
+- Aspiradora de carro ($34.990)
+- Maleta antirrobo ($56.990)
+- Set de cocina ($91.500)
+- MASAJEADOR FACIAL REDUCTOR PAPADA ($52.990)
+- SILLA PLEGABLE REDONDA BUTACA ($34.990)
+- Cepillo deslanador ($19.990)
+- Silla plástica para niños ($56.990)
+... y 19 más
+
+💡 Próximos Pasos:
+
+1. Verificar productos:
+   npx tsx scripts/ver-productos.ts
+
+2. Probar bot con nuevos productos
+
+3. Actualizar catálogo público
+
+✅ LISTO!

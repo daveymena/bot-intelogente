@@ -1,0 +1,89 @@
+# Dockerfile optimizado para Railway (imagen ligera)
+# Multi-stage build para reducir tamaño final
+
+# Stage 1: Dependencies
+FROM node:20-alpine AS deps
+WORKDIR /app
+
+# Instalar dependencias del sistema necesarias
+RUN apk add --no-cache libc6-compat openssl
+
+# Copiar archivos de dependencias
+COPY package*.json ./
+COPY prisma ./prisma/
+
+# Instalar solo dependencias de producción
+RUN npm ci --only=production --prefer-offline --no-audit && \
+    npm cache clean --force
+
+# Stage 2: Builder
+FROM node:20-alpine AS builder
+WORKDIR /app
+
+# Instalar dependencias del sistema
+RUN apk add --no-cache libc6-compat openssl
+
+# Copiar dependencias desde stage anterior
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Instalar dependencias de desarrollo solo para build
+RUN npm install --only=development --prefer-offline --no-audit
+
+# Generar Prisma Client
+RUN npx prisma generate
+
+# Build de Next.js en modo standalone
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+RUN npm run build
+
+# Stage 3: Runner (imagen final ligera)
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+# Instalar solo lo necesario para runtime
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont \
+    openssl
+
+# Variables de entorno
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+ENV CHROME_BIN=/usr/bin/chromium-browser
+ENV CHROME_PATH=/usr/lib/chromium/
+
+# Crear usuario no-root
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+
+# Copiar archivos necesarios desde builder
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+
+# Crear directorios necesarios
+RUN mkdir -p /app/whatsapp-sessions /app/auth_sessions /app/data && \
+    chown -R nextjs:nodejs /app
+
+# Cambiar a usuario no-root
+USER nextjs
+
+# Exponer puerto
+EXPOSE 3000
+
+# Variables de entorno para Railway
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+# Script de inicio
+CMD ["node", "server.js"]

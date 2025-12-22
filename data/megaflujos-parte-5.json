@@ -1,0 +1,77 @@
+{
+  "megaflujos": [
+    {
+      "id": "megaflujo_6",
+      "nombre": "FIADOS / CRÉDITO SEMANAL (Validación + Confianza)",
+      "categoria": "fiados_credito",
+      "complejidad": "media",
+      "duracion_promedio": "8-12 minutos",
+      "conversacion": [
+        {"turno": 1, "rol": "usuario", "mensaje": "¿Me pueden fiar un perfume?", "intención": "credit_request", "entidades": ["perfume", "fiado"], "sentimiento": "neutral"},
+        {"turno": 2, "rol": "bot", "mensaje": "Sí ✨ Necesito validar tu cupo:\n\n1️⃣ Nombre\n2️⃣ Cédula\n3️⃣ Día de pago (máximo 7 días)", "intención": "credit_validation", "acciones": ["pedir_información"]},
+        {"turno": 3, "rol": "usuario", "mensaje": "Pago el viernes.", "intención": "credit_info", "entidades": ["viernes"], "sentimiento": "cooperativo"},
+        {"turno": 4, "rol": "bot", "mensaje": "Listo ✔️ Tienes cupo disponible para 1 producto. ¿Quieres el perfume de $34.900 o el de $39.900?", "intención": "credit_approval", "acciones": ["aprobar_crédito", "ofrecer_opciones"]},
+        {"turno": 5, "rol": "usuario", "mensaje": "El de 34.", "intención": "product_selection", "sentimiento": "decidido"},
+        {"turno": 6, "rol": "bot", "mensaje": "Perfecto. Entrega hoy. Pagas el viernes sin recargo.", "intención": "confirmation", "acciones": ["confirmar_entrega", "confirmar_pago"]},
+        {"turno": 7, "rol": "usuario", "mensaje": "Gracias.", "intención": "acknowledgment", "sentimiento": "satisfecho"},
+        {"turno": 8, "rol": "bot", "mensaje": "De nada 😊 Te envío recordatorio el viernes a las 9am.", "intención": "post_sale_followup", "acciones": ["prometer_recordatorio"]},
+        {"turno": 9, "rol": "usuario", "mensaje": "(Viernes a las 9am)\n\nRecibido, gracias.", "intención": "acknowledgment", "sentimiento": "neutral"},
+        {"turno": 10, "rol": "bot", "mensaje": "¿Ya pagaste? 😊", "intención": "payment_check", "acciones": ["verificar_pago"]}
+      ]
+    },
+    {
+      "id": "megaflujo_7",
+      "nombre": "CLIENTE AGRESIVO / DESCONFIADO (Objeciones + Pruebas)",
+      "categoria": "cliente_agresivo",
+      "complejidad": "muy_alta",
+      "duracion_promedio": "15-25 minutos",
+      "conversacion": [
+        {"turno": 1, "rol": "usuario", "mensaje": "Eso es puro robo, seguro estafas.", "intención": "objection_trust", "entidades": ["estafa"], "sentimiento": "agresivo"},
+        {"turno": 2, "rol": "bot", "mensaje": "Entiendo tu preocupación 😊 Por eso trabajamos así:\n\n✔ Contraentrega\n✔ Revisas antes de pagar\n✔ Garantía real\n✔ Factura electrónica\n✔ Fotos y videos reales\n\nNo estás obligado a recibir nada si no coincide.", "intención": "reassurance", "acciones": ["validar_preocupación", "explicar_seguridad"]},
+        {"turno": 3, "rol": "usuario", "mensaje": "Mmm, muéstrame pruebas.", "intención": "evidence_request", "sentimiento": "desconfiado"},
+        {"turno": 4, "rol": "bot", "mensaje": "Aquí tienes:\n\n📸 Fotos reales\n🎥 Video del producto\n📄 Factura ejemplo\n📦 Fotos del empaque\n\n(envía todo)", "intención": "evidence_delivery", "acciones": ["enviar_pruebas"]},
+        {"turno": 5, "rol": "usuario", "mensaje": "¿Y eso no es de internet?", "intención": "objection_authenticity", "entidades": ["autenticidad"], "sentimiento": "desconfiado"},
+        {"turno": 6, "rol": "bot", "mensaje": "No, son fotos nuestras. Mira la fecha en la foto 👉 (señala fecha actual). Puedo hacer un video en vivo si quieres.", "intención": "proof_of_authenticity", "acciones": ["demostrar_autenticidad"]},
+        {"turno": 7, "rol": "usuario", "mensaje": "Bueno, muéstrame opciones.", "intención": "product_inquiry", "sentimiento": "interesado"},
+        {"turno": 8, "rol": "bot", "mensaje": "Claro, ¿qué presupuesto manejas?", "intención": "budget_inquiry", "acciones": ["pedir_presupuesto"]},
+        {"turno": 9, "rol": "usuario", "mensaje": "Máximo 2 millones.", "intención": "budget_info", "sentimiento": "neutral"},
+        {"turno": 10, "rol": "bot", "mensaje": "Perfecto. Tengo estas opciones:\n\n💻 Laptop A - $1.8M\n💻 Laptop B - $1.9M\n💻 Laptop C - $2M\n\n¿Cuál te interesa?", "intención": "product_options", "acciones": ["mostrar_opciones"]},
+        {"turno": 11, "rol": "usuario", "mensaje": "La C, pero quiero verla en persona.", "intención": "product_selection", "entidades": ["verificación física"], "sentimiento": "decidido"},
+        {"turno": 12, "rol": "bot", "mensaje": "Claro, puedes venir a verla hoy. Estamos en [dirección]. ¿A qué hora te viene bien?", "intención": "in_person_meeting", "acciones": ["ofrecer_cita"]},
+        {"turno": 13, "rol": "usuario", "mensaje": "A las 4pm.", "intención": "appointment_selection", "sentimiento": "decidido"},
+        {"turno": 14, "rol": "bot", "mensaje": "Perfecto, te espero a las 4pm. Trae cédula para la factura.", "intención": "confirmation", "acciones": ["confirmar_cita"]},
+        {"turno": 15, "rol": "usuario", "mensaje": "(Después de la cita)\n\nLa laptop está bien. La compro.", "intención": "purchase_decision", "sentimiento": "satisfecho"},
+        {"turno": 16, "rol": "bot", "mensaje": "¡Excelente! 🙌 Aquí está tu factura. Gracias por confiar.", "intención": "confirmation", "acciones": ["entregar_factura"]}
+      ]
+    },
+    {
+      "id": "megaflujo_8",
+      "nombre": "CLIENTE INDECISO / VAGO (Solo Mirando - Conversión Lenta)",
+      "categoria": "cliente_indeciso",
+      "complejidad": "alta",
+      "duracion_promedio": "20-40 minutos",
+      "conversacion": [
+        {"turno": 1, "rol": "usuario", "mensaje": "Solo estoy mirando.", "intención": "browsing", "entidades": ["sin_compromiso"], "sentimiento": "neutral"},
+        {"turno": 2, "rol": "bot", "mensaje": "Súper 😄 ¿Buscas algo para:\n\n📚 estudio\n💼 trabajo\n🏠 hogar\n🎁 regalo\n\no solo por curiosidad?", "intención": "qualification", "acciones": ["entender_necesidad"]},
+        {"turno": 3, "rol": "usuario", "mensaje": "Algo para estudiar.", "intención": "need_identification", "sentimiento": "neutral"},
+        {"turno": 4, "rol": "bot", "mensaje": "Perfecto. ¿Laptop, tablet o PC de escritorio?", "intención": "product_category", "acciones": ["refinar_búsqueda"]},
+        {"turno": 5, "rol": "usuario", "mensaje": "Laptop, pero no sé cuál.", "intención": "product_uncertainty", "sentimiento": "indeciso"},
+        {"turno": 6, "rol": "bot", "mensaje": "Sin problema 😊 Cuéntame:\n\n1️⃣ ¿Qué carrera estudias?\n2️⃣ ¿Usarás programas pesados (AutoCAD, Photoshop)?\n3️⃣ ¿Cuánto presupuesto tienes?", "intención": "needs_assessment", "acciones": ["hacer_preguntas"]},
+        {"turno": 7, "rol": "usuario", "mensaje": "Ingeniería, sí usaré AutoCAD, y tengo máximo 1.5M.", "intención": "needs_info", "sentimiento": "cooperativo"},
+        {"turno": 8, "rol": "bot", "mensaje": "Listo. Para AutoCAD necesitas mínimo:\n\n✔ 16GB RAM\n✔ SSD 512GB\n✔ Procesador i7 o Ryzen 7\n\nTengo 2 opciones en tu presupuesto:\n\n💻 Opción A - $1.4M\n💻 Opción B - $1.5M\n\n¿Quieres ver fotos?", "intención": "recommendation", "acciones": ["recomendar", "ofrecer_multimedia"]},
+        {"turno": 9, "rol": "usuario", "mensaje": "Sí, mándame fotos.", "intención": "media_request", "sentimiento": "interesado"},
+        {"turno": 10, "rol": "bot", "mensaje": "Aquí van 📸👇\n(envía 4 fotos de ambas opciones)", "intención": "media_delivery", "acciones": ["enviar_fotos"]},
+        {"turno": 11, "rol": "usuario", "mensaje": "Se ven bien, pero déjame pensarlo.", "intención": "consideration", "sentimiento": "indeciso"},
+        {"turno": 12, "rol": "bot", "mensaje": "Claro, sin prisa 😊 Cualquier duda me escribes. Tengo stock limitado, así que si te decides, avísame.", "intención": "soft_close", "acciones": ["dejar_puerta_abierta", "crear_urgencia_suave"]},
+        {"turno": 13, "rol": "usuario", "mensaje": "(Después de 2 horas)\n\nHola, ¿siguen disponibles?", "intención": "follow_up", "sentimiento": "interesado"},
+        {"turno": 14, "rol": "bot", "mensaje": "Sí, ambas siguen disponibles 😊 ¿Ya decidiste?", "intención": "follow_up_response", "acciones": ["confirmar_disponibilidad"]},
+        {"turno": 15, "rol": "usuario", "mensaje": "Sí, la opción A.", "intención": "purchase_decision", "sentimiento": "decidido"},
+        {"turno": 16, "rol": "bot", "mensaje": "¡Excelente! 🙌 ¿Contraentrega o recoges en tienda?", "intención": "delivery_method", "acciones": ["pedir_método_entrega"]},
+        {"turno": 17, "rol": "usuario", "mensaje": "Contraentrega.", "intención": "delivery_selection", "sentimiento": "decidido"},
+        {"turno": 18, "rol": "bot", "mensaje": "Perfecto ✔️ Necesito:\n\n👤 Nombre\n📍 Dirección\n📱 Teléfono", "intención": "data_collection", "acciones": ["pedir_datos"]},
+        {"turno": 19, "rol": "usuario", "mensaje": "Listo, aquí van…", "intención": "data_provision", "sentimiento": "cooperativo"},
+        {"turno": 20, "rol": "bot", "mensaje": "Perfecto 🙌 Tu laptop llega mañana. Te envío tracking.", "intención": "confirmation", "acciones": ["confirmar_pedido"]}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "fecha": "2025-11-03T20:34:04.740Z",
+  "usuarios": {
+    "total": 3,
+    "activos": 3,
+    "inactivos": 0,
+    "verificados": 3,
+    "noVerificados": 0,
+    "lista": [
+      {
+        "id": "cmhjgzsjl0000t526gou8b8x2",
+        "email": "daveymena16@gmail.com",
+        "name": "Admin",
+        "role": "ADMIN",
+        "isEmailVerified": true,
+        "createdAt": "2025-11-03T18:25:10.977Z",
+        "_count": {
+          "products": 60,
+          "conversations": 0
+        }
+      },
+      {
+        "id": "cmhjgpbv30000km0ws942yvg8",
+        "email": "test-verification@example.com",
+        "name": "Usuario de Prueba",
+        "role": "USER",
+        "isEmailVerified": true,
+        "createdAt": "2025-11-03T18:17:02.794Z",
+        "_count": {
+          "products": 0,
+          "conversations": 0
+        }
+      },
+      {
+        "id": "cmhjbca720000o93tryzujodv",
+        "email": "daveymena162@gmail.com",
+        "name": "Daniel Mena Mosquera ",
+        "role": "USER",
+        "isEmailVerified": true,
+        "createdAt": "2025-11-03T15:46:56.031Z",
+        "_count": {
+          "products": 0,
+          "conversations": 0
+        }
+      }
+    ]
+  },
+  "productos": {
+    "total": 60,
+    "conFotos": 41,
+    "sinFotos": 19
+  },
+  "servicios": {
+    "ia": true,
+    "razonamiento": true,
+    "mediaService": true,
+    "baileys": true
+  },
+  "archivos": {
+    "aiService": true,
+    "mediaService": true,
+    "reasoningService": true,
+    "baileysService": true,
+    "aiMultiProvider": true,
+    "aiAdvancedReasoning": true
+  },
+  "recomendaciones": [
+    "Actualizar fotos de 19 productos"
+  ]
+}

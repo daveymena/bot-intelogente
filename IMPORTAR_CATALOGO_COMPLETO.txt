@@ -1,0 +1,203 @@
+🚀 IMPORTAR CATÁLOGO COMPLETO - 82 PRODUCTOS REALES
+
+═══════════════════════════════════════════════════════════
+✅ CATÁLOGO GENERADO
+═══════════════════════════════════════════════════════════
+
+Archivo: catalogo-completo-importar.json
+
+📦 82 Productos de MegaComputer:
+   - 70 Portátiles (ASUS, Acer, HP, Lenovo, MacBook)
+   - 12 Monitores (LG, Samsung, ASUS)
+
+Cada producto incluye:
+✅ Nombre completo
+✅ Descripción generada automáticamente
+✅ Precio real en COP
+✅ Imagen real del producto
+✅ TAGS INTELIGENTES (10-20 por producto)
+✅ Link directo a MegaComputer
+✅ Stock configurado
+
+═══════════════════════════════════════════════════════════
+EJEMPLOS DE TAGS GENERADOS AUTOMÁTICAMENTE
+═══════════════════════════════════════════════════════════
+
+MacBook Pro M4:
+- macbook, mac, apple, laptop, portatil, m4, apple silicon
+- profesional, diseño, 14 pulgadas, 512gb ssd, nuevo
+
+ASUS Vivobook Ryzen 7:
+- laptop, portatil, asus, vivobook, amd, ryzen, ryzen 7
+- 16gb ram, 1tb ssd, 15 pulgadas, estudiante, trabajo
+
+Monitor LG 27" Curvo:
+- monitor, pantalla, lg, curvo, curved, gaming
+- 27 pulgadas, full hd, fhd, nuevo
+
+═══════════════════════════════════════════════════════════
+PASO 1: SUBIR ARCHIVOS A EASYPANEL
+═══════════════════════════════════════════════════════════
+
+Hacer commit y push:
+
+```bash
+git add catalogo-completo-importar.json
+git add scripts/generar-catalogo-completo.ts
+git add scripts/importar-productos-completos-con-tags.ts
+git commit -m "Add: Catálogo completo 82 productos con tags"
+git push
+```
+
+Luego redesplegar en Easypanel.
+
+═══════════════════════════════════════════════════════════
+PASO 2: IMPORTAR EN EASYPANEL
+═══════════════════════════════════════════════════════════
+
+En la terminal de Easypanel:
+
+```bash
+npx tsx scripts/importar-productos-completos-con-tags.ts
+```
+
+Verás:
+```
+🚀 IMPORTANDO PRODUCTOS COMPLETOS
+📦 Productos a importar: 82
+👤 Usuario: daveymena16@gmail.com
+
+✅ Importado: Macbook Pro M4...
+✅ Importado: Portatil Acer A15...
+✅ Importado: ASUS Vivobook...
+... (82 productos)
+
+📊 RESUMEN DE IMPORTACIÓN
+✅ Productos nuevos: 82
+🔄 Productos actualizados: 0
+❌ Errores: 0
+```
+
+═══════════════════════════════════════════════════════════
+PASO 3: CONFIGURAR LINKS DE PAGO (OPCIONAL)
+═══════════════════════════════════════════════════════════
+
+Los productos YA TIENEN el link de MegaComputer en "Link Personalizado"
+
+Si quieres agregar tus propios links de pago:
+1. Ve al dashboard
+2. Edita cada producto
+3. Agrega Link MercadoPago o PayPal
+4. Guarda
+
+═══════════════════════════════════════════════════════════
+PASO 4: PROBAR EL BOT
+═══════════════════════════════════════════════════════════
+
+El bot ahora puede responder a CIENTOS de consultas:
+
+"Quiero un laptop" → Muestra opciones de laptops
+"Necesito un macbook" → Encuentra MacBooks
+"Laptop con ryzen 7" → Filtra por procesador
+"Portátil para estudiante" → Muestra opciones económicas
+"Monitor gaming" → Muestra monitores
+"Laptop asus 16gb" → Filtra por marca y RAM
+"Computador intel i7" → Filtra por procesador
+"Portátil 15 pulgadas" → Filtra por tamaño
+
+═══════════════════════════════════════════════════════════
+🎯 EJEMPLO DE RESPUESTA DEL BOT
+═══════════════════════════════════════════════════════════
+
+Cliente: "Quiero un laptop asus con ryzen 7"
+
+Bot: "¡Perfecto! Te recomiendo:
+
+ASUS Vivobook 15 Ryzen 7 16GB RAM 1TB SSD
+💰 Precio: $1.819.900 COP
+
+✨ Características:
+- AMD Ryzen 7 5825U
+- 16GB DDR4
+- 1TB SSD
+- Pantalla 15.6\" Full HD
+- Diseño elegante y rendimiento confiable
+
+🛒 Comprar ahora:
+👉 https://megacomputer.com.co/producto/...
+
+💳 Métodos de pago disponibles:
+- MercadoPago
+- PayPal
+- Nequi/Daviplata
+- Transferencia bancaria
+
+¿Te interesa este producto? También tengo otras opciones similares."
+
+═══════════════════════════════════════════════════════════
+📊 ESTADÍSTICAS DEL CATÁLOGO
+═══════════════════════════════════════════════════════════
+
+Marcas disponibles:
+- ASUS (mayoría)
+- Acer
+- HP
+- Lenovo
+- Apple (MacBook)
+- LG (monitores)
+- Samsung (monitores)
+
+Procesadores:
+- Intel Core i3, i5, i7, i9
+- AMD Ryzen 3, 5, 7, 9
+- Apple M1, M2, M3, M4
+
+RAM:
+- 8GB, 16GB, 24GB, 32GB, 64GB
+
+Almacenamiento:
+- 256GB, 512GB, 1TB, 2TB SSD
+
+Pantallas:
+- 13", 14", 15.6", 16", 17"
+- Full HD, 4K, OLED
+
+═══════════════════════════════════════════════════════════
+💡 VENTAJAS DE ESTE CATÁLOGO
+═══════════════════════════════════════════════════════════
+
+✅ Tags inteligentes generados automáticamente
+✅ El bot puede encontrar productos por:
+   - Marca (asus, acer, hp, etc.)
+   - Procesador (intel, ryzen, m4, etc.)
+   - RAM (8gb, 16gb, etc.)
+   - Uso (gaming, estudiante, profesional)
+   - Tamaño (13, 15, 17 pulgadas)
+   - Precio (económico, premium)
+
+✅ Imágenes reales de MegaComputer
+✅ Links directos a la tienda
+✅ Precios actualizados
+✅ Descripciones optimizadas
+
+═══════════════════════════════════════════════════════════
+🔄 ACTUALIZAR CATÁLOGO
+═══════════════════════════════════════════════════════════
+
+Si MegaComputer actualiza precios o productos:
+
+1. Ejecuta el scraper nuevamente
+2. Regenera el catálogo:
+   ```bash
+   npx tsx scripts/generar-catalogo-completo.ts
+   ```
+3. Reimporta:
+   ```bash
+   npx tsx scripts/importar-productos-completos-con-tags.ts
+   ```
+
+Los productos existentes se actualizarán automáticamente.
+
+═══════════════════════════════════════════════════════════
+
+¡Listo para importar 82 productos reales!

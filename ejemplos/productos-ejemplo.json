@@ -1,0 +1,122 @@
+[
+  {
+    "name": "iPhone 14 Pro 256GB",
+    "description": "Smartphone Apple de última generación con Dynamic Island, cámara de 48MP y chip A16 Bionic",
+    "price": 4500000,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "images": "[\"https://ejemplo.com/iphone14pro.jpg\"]",
+    "tags": "[\"smartphone\", \"apple\", \"premium\", \"5g\"]",
+    "autoResponse": "¡Excelente elección! El iPhone 14 Pro está disponible en varios colores. ¿Te gustaría conocer las opciones de pago?",
+    "stock": 15
+  },
+  {
+    "name": "Samsung Galaxy S23 Ultra",
+    "description": "Smartphone Samsung con S Pen, cámara de 200MP y pantalla AMOLED de 6.8 pulgadas",
+    "price": 4200000,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "images": "[\"https://ejemplo.com/s23ultra.jpg\"]",
+    "tags": "[\"smartphone\", \"samsung\", \"android\", \"premium\"]",
+    "autoResponse": "El Galaxy S23 Ultra es una bestia de teléfono. Tenemos stock disponible.",
+    "stock": 10
+  },
+  {
+    "name": "Curso Completo de Marketing Digital",
+    "description": "Aprende marketing digital desde cero: SEO, SEM, redes sociales, email marketing y más",
+    "price": 150000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "images": "[\"https://ejemplo.com/curso-marketing.jpg\"]",
+    "tags": "[\"curso\", \"digital\", \"marketing\", \"online\"]",
+    "autoResponse": "¡Curso disponible! Acceso inmediato después del pago. Incluye certificado.",
+    "stock": 999
+  },
+  {
+    "name": "MacBook Pro M3 14 pulgadas",
+    "description": "Laptop profesional con chip M3, 16GB RAM, 512GB SSD",
+    "price": 8500000,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "images": "[\"https://ejemplo.com/macbook-m3.jpg\"]",
+    "tags": "[\"laptop\", \"apple\", \"profesional\", \"m3\"]",
+    "autoResponse": "La MacBook Pro M3 es perfecta para profesionales. Disponible en gris espacial y plata.",
+    "stock": 5
+  },
+  {
+    "name": "Servicio de Diseño Web Profesional",
+    "description": "Diseño y desarrollo de sitio web profesional responsive con SEO incluido",
+    "price": 2500000,
+    "currency": "COP",
+    "category": "SERVICE",
+    "status": "AVAILABLE",
+    "images": "[\"https://ejemplo.com/diseno-web.jpg\"]",
+    "tags": "[\"servicio\", \"web\", \"diseño\", \"desarrollo\"]",
+    "autoResponse": "Servicio de diseño web profesional. Entrega en 15 días. ¿Quieres ver nuestro portafolio?",
+    "stock": 3
+  },
+  {
+    "name": "AirPods Pro 2da Generación",
+    "description": "Audífonos inalámbricos con cancelación de ruido activa y audio espacial",
+    "price": 950000,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "images": "[\"https://ejemplo.com/airpods-pro.jpg\"]",
+    "tags": "[\"audio\", \"apple\", \"inalambrico\", \"premium\"]",
+    "autoResponse": "Los AirPods Pro 2 tienen la mejor cancelación de ruido del mercado. Stock disponible.",
+    "stock": 20
+  },
+  {
+    "name": "PlayStation 5 Digital Edition",
+    "description": "Consola de videojuegos de última generación, versión digital",
+    "price": 2200000,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "OUT_OF_STOCK",
+    "images": "[\"https://ejemplo.com/ps5.jpg\"]",
+    "tags": "[\"gaming\", \"consola\", \"playstation\", \"sony\"]",
+    "autoResponse": "La PS5 está agotada temporalmente. ¿Quieres que te avisemos cuando llegue?",
+    "stock": 0
+  },
+  {
+    "name": "Pack de Plantillas para Instagram",
+    "description": "100 plantillas editables para Instagram Stories y Posts en formato PSD y Canva",
+    "price": 45000,
+    "currency": "COP",
+    "category": "DIGITAL",
+    "status": "AVAILABLE",
+    "images": "[\"https://ejemplo.com/plantillas-ig.jpg\"]",
+    "tags": "[\"digital\", \"plantillas\", \"instagram\", \"diseño\"]",
+    "autoResponse": "Pack de plantillas disponible. Descarga inmediata después del pago.",
+    "stock": 999
+  },
+  {
+    "name": "Asesoría Personalizada de Negocios",
+    "description": "Sesión de 2 horas de asesoría personalizada para tu negocio",
+    "price": 350000,
+    "currency": "COP",
+    "category": "SERVICE",
+    "status": "AVAILABLE",
+    "images": "[\"https://ejemplo.com/asesoria.jpg\"]",
+    "tags": "[\"servicio\", \"asesoria\", \"negocios\", \"consultoria\"]",
+    "autoResponse": "Asesoría disponible. Agendamos una sesión virtual o presencial según tu preferencia.",
+    "stock": 5
+  },
+  {
+    "name": "Monitor LG UltraWide 34 pulgadas",
+    "description": "Monitor curvo ultrawide 34 pulgadas, resolución 3440x1440, 144Hz",
+    "price": 1800000,
+    "currency": "COP",
+    "category": "PHYSICAL",
+    "status": "AVAILABLE",
+    "images": "[\"https://ejemplo.com/monitor-lg.jpg\"]",
+    "tags": "[\"monitor\", \"ultrawide\", \"gaming\", \"productividad\"]",
+    "autoResponse": "Monitor LG UltraWide perfecto para gaming y productividad. Stock limitado.",
+    "stock": 8
+  }
+]

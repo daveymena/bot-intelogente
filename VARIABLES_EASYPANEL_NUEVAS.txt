@@ -1,0 +1,142 @@
+# ═══════════════════════════════════════════════════════════
+# VARIABLES DE ENTORNO PARA EASYPANEL
+# Smart Sales Bot Pro - Actualización 13 Nov 2025
+# ═══════════════════════════════════════════════════════════
+
+# ───────────────────────────────────────────────────────────
+# NUEVAS VARIABLES A AGREGAR (Si no existen)
+# ───────────────────────────────────────────────────────────
+
+# Sistema de Tags Inteligentes
+ENABLE_SMART_TAGS=true
+
+# Sistema de Respuestas Progresivas
+ENABLE_PROGRESSIVE_RESPONSES=true
+
+# Fallback Local Mejorado
+ENABLE_LOCAL_FALLBACK=true
+
+# Razonamiento Profundo
+ENABLE_DEEP_REASONING=true
+
+# Normalización de Acentos (CRÍTICO para el fix de piano/idiomas)
+ENABLE_ACCENT_NORMALIZATION=true
+
+# ───────────────────────────────────────────────────────────
+# VARIABLES EXISTENTES A VERIFICAR
+# ───────────────────────────────────────────────────────────
+
+# Base de Datos (CRÍTICO)
+DATABASE_URL=postgresql://usuario:password@host:5432/database
+
+# AI Principal (CRÍTICO)
+GROQ_API_KEY=gsk_tu_key_aqui
+
+# AI Fallback (RECOMENDADO)
+AI_FALLBACK_ENABLED=true
+AI_PROVIDER=groq
+
+# Rotación de Keys Groq (OPCIONAL - para evitar rate limits)
+GROQ_API_KEY_2=gsk_segunda_key
+GROQ_API_KEY_3=gsk_tercera_key
+GROQ_API_KEY_4=gsk_cuarta_key
+GROQ_API_KEY_5=gsk_quinta_key
+GROQ_API_KEY_6=gsk_sexta_key
+GROQ_API_KEY_7=gsk_septima_key
+GROQ_API_KEY_8=gsk_octava_key
+
+# Providers Alternativos (OPCIONAL)
+OPENAI_API_KEY=sk-tu_key_aqui
+CLAUDE_API_KEY=sk-ant-tu_key_aqui
+GEMINI_API_KEY=tu_key_aqui
+MISTRAL_API_KEY=tu_key_aqui
+
+# WhatsApp
+WHATSAPP_SESSION_PATH=/app/auth_sessions
+
+# Pagos
+MERCADOPAGO_ACCESS_TOKEN=APP_USR_tu_token
+PAYPAL_CLIENT_ID=tu_client_id
+PAYPAL_CLIENT_SECRET=tu_secret
+
+# JWT
+JWT_SECRET=tu_secret_muy_seguro_aqui
+
+# URLs
+NEXT_PUBLIC_APP_URL=https://tu-dominio.com
+NEXT_PUBLIC_API_URL=https://tu-dominio.com/api
+
+# Email (OPCIONAL)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=tu_email@gmail.com
+SMTP_PASS=tu_password_app
+
+# Modo
+NODE_ENV=production
+
+# ───────────────────────────────────────────────────────────
+# CONFIGURACIÓN DE SISTEMA
+# ───────────────────────────────────────────────────────────
+
+# Timeouts
+REQUEST_TIMEOUT=30000
+AI_TIMEOUT=25000
+
+# Límites
+MAX_MESSAGE_LENGTH=4000
+MAX_CONTEXT_MESSAGES=10
+
+# Cache
+ENABLE_PRODUCT_CACHE=true
+CACHE_TTL=3600
+
+# Logs
+LOG_LEVEL=info
+ENABLE_DEBUG_LOGS=false
+
+# ───────────────────────────────────────────────────────────
+# INSTRUCCIONES DE USO
+# ───────────────────────────────────────────────────────────
+
+# 1. Ir a Easypanel → Tu App → Environment Variables
+# 2. Para cada variable:
+#    - Click "Add Variable"
+#    - Name: Nombre de la variable (ej: ENABLE_SMART_TAGS)
+#    - Value: Valor de la variable (ej: true)
+#    - Click "Save"
+# 3. Después de agregar todas, hacer "Redeploy"
+
+# ───────────────────────────────────────────────────────────
+# NOTAS IMPORTANTES
+# ───────────────────────────────────────────────────────────
+
+# ⚠️ NO incluir comillas en los valores
+# ⚠️ NO incluir espacios antes/después del =
+# ⚠️ Reemplazar "tu_key_aqui" con tus keys reales
+# ⚠️ DATABASE_URL debe ser la URL completa de PostgreSQL
+# ⚠️ JWT_SECRET debe ser un string aleatorio largo (min 32 caracteres)
+
+# ───────────────────────────────────────────────────────────
+# PRIORIDAD DE VARIABLES
+# ───────────────────────────────────────────────────────────
+
+# 🔴 CRÍTICAS (Sin estas no funciona):
+#    - DATABASE_URL
+#    - GROQ_API_KEY
+#    - JWT_SECRET
+#    - NEXT_PUBLIC_APP_URL
+
+# 🟡 IMPORTANTES (Funciona pero limitado):
+#    - AI_FALLBACK_ENABLED
+#    - ENABLE_ACCENT_NORMALIZATION
+#    - MERCADOPAGO_ACCESS_TOKEN
+
+# 🟢 OPCIONALES (Mejoras adicionales):
+#    - GROQ_API_KEY_2 a 8
+#    - OPENAI_API_KEY
+#    - SMTP_*
+
+# ═══════════════════════════════════════════════════════════
+# FIN DEL ARCHIVO
+# ═══════════════════════════════════════════════════════════

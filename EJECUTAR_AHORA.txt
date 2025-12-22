@@ -1,0 +1,135 @@
+========================================
+  RE-SCRAPEAR PRODUCTOS CON FOTOS
+========================================
+
+¿QUÉ NECESITAS?
+---------------
+✅ Productos en tu base de datos
+✅ Conexión a internet
+✅ 15-30 minutos de tiempo
+
+
+OPCIÓN 1: RÁPIDO (RECOMENDADO)
+-------------------------------
+Solo actualiza productos sin fotos
+
+EJECUTAR:
+  re-scrapear-fotos-ahora.bat
+
+TIEMPO: 15-30 minutos
+PRODUCTOS: Hasta 50
+
+
+OPCIÓN 2: MEGACOMPUTER COMPLETO
+--------------------------------
+Re-importa todo el catálogo de MegaComputer
+
+EJECUTAR:
+  re-importar-megacomputer-ahora.bat
+
+TIEMPO: 30-60 minutos
+PRODUCTOS: 50-100
+
+
+OPCIÓN 3: TODO
+--------------
+Actualiza todo (MegaComputer + SmartJoys + Disyvar)
+
+EJECUTAR:
+  actualizar-todo-con-fotos.bat
+
+TIEMPO: 1-2 horas
+PRODUCTOS: 100-200+
+
+
+VERIFICAR ANTES:
+----------------
+  ver-productos-sin-fotos.bat
+
+Esto te dice cuántos productos necesitan fotos.
+
+
+VERIFICAR DESPUÉS:
+------------------
+1. Abrir dashboard:
+   http://localhost:3000/dashboard
+
+2. Ir a Productos
+
+3. Verificar que tengan fotos
+
+
+¿QUÉ HACE?
+----------
+1. Busca productos sin fotos
+2. Detecta de qué tienda vienen
+3. Re-scrapea la tienda original
+4. Extrae todas las fotos
+5. Actualiza la base de datos
+
+
+TIENDAS SOPORTADAS:
+-------------------
+✅ MegaComputer
+✅ SmartJoys
+✅ Disyvar
+✅ Megapacks
+✅ Dropshipping general
+
+
+EJEMPLO DE SALIDA:
+------------------
+[1/45] Laptop HP 15-dy2021la
+   🏪 Origen: MEGACOMPUTER
+   🔍 Buscando...
+   ✅ Actualizado: 5 imágenes
+
+[2/45] Audífonos Bluetooth TWS
+   🏪 Origen: SMARTJOYS
+   🔍 Buscando...
+   ✅ Actualizado: 3 imágenes
+
+...
+
+📊 RESUMEN:
+✅ Actualizados: 42
+⚠️  Sin cambios: 3
+❌ Errores: 0
+
+
+PROBLEMAS COMUNES:
+------------------
+❌ "No se encontraron productos sin fotos"
+   ✅ ¡Perfecto! Todos tienen fotos
+
+❌ "Error: timeout"
+   ✅ Aumentar timeout en el script
+
+❌ "Puppeteer no funciona"
+   ✅ Ejecutar: npm install puppeteer
+
+
+DOCUMENTACIÓN:
+--------------
+📖 EMPEZAR_AQUI_RE_SCRAPEAR.md
+📖 GUIA_RE_SCRAPEAR_PRODUCTOS.md
+📖 ESTADO_SCRAPERS_Y_DROPSHIPPING.md
+
+
+COMANDO RECOMENDADO:
+--------------------
+  re-scrapear-fotos-ahora.bat
+
+
+¡LISTO PARA EMPEZAR!
+--------------------
+Doble clic en:
+  re-scrapear-fotos-ahora.bat
+
+O ejecutar en terminal:
+  re-scrapear-fotos-ahora.bat
+
+
+========================================
+  ¡ÉXITO CON TU CATÁLOGO ACTUALIZADO!
+========================================

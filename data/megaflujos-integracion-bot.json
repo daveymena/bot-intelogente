@@ -1,0 +1,1206 @@
+{
+  "nombre": "Megaflujos Entrenamiento",
+  "version": "1.0.0",
+  "fecha_creacion": "2025-11-16T04:47:32.773Z",
+  "total_ejemplos": 68,
+  "ejemplos": [
+    {
+      "entrada": "Hola, ¿tienes portátiles económicos?",
+      "salida": "¡Hola! 👋 Claro, ¿qué tipo de portátil buscas? ¿Para estudio, trabajo o algo más específico?",
+      "intención": "product_search",
+      "categoría": "tecnologia_contraentrega",
+      "complejidad": "alta",
+      "sentimiento": "neutral",
+      "acciones": [
+        "pedir_contexto"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_1",
+        "turno_número": 1,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Para estudiar ingeniería, pero no quiero que se trabe.",
+      "salida": "Perfecto 🙌 Para ingeniería básica necesitas mínimo:\n✔ 8GB RAM\n✔ SSD 256GB o más\n✔ Procesador i3/Ryzen 3 o mejor\n\n¿Cuánto es tu presupuesto máximo?",
+      "intención": "product_search",
+      "categoría": "tecnologia_contraentrega",
+      "complejidad": "alta",
+      "sentimiento": "preocupado",
+      "acciones": [
+        "mostrar_requisitos",
+        "pedir_presupuesto"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_1",
+        "turno_número": 3,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "No más de 1.5 millones.",
+      "salida": "Listo. Tengo estas 2 opciones top:\n\n💻 HP 14 – i3 – 8GB RAM – 256GB SSD\n💲 1.249.900\n✔ Zoom, VSCode, AutoCAD básico, Office\n\n💻 ASUS 14 – Ryzen 3 – 8GB RAM – 512GB SSD\n💲 1.449.900\n✔ Mejor multitarea\n✔ Arranque más rápido\n✔ Mejor rendimiento para ingeniería ligera\n\n¿Quieres que te envíe fotos o videos reales?",
+      "intención": "price_inquiry",
+      "categoría": "tecnologia_contraentrega",
+      "complejidad": "alta",
+      "sentimiento": "decidido",
+      "acciones": [
+        "comparar_opciones",
+        "ofrecer_multimedia"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_1",
+        "turno_número": 5,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Sí, mándame fotos.",
+      "salida": "Aquí van 📸👇\n(envía 3 imágenes reales de ambas laptops)\n\nSi quieres, te muestro video del encendido.",
+      "intención": "media_request",
+      "categoría": "tecnologia_contraentrega",
+      "complejidad": "alta",
+      "sentimiento": "interesado",
+      "acciones": [
+        "enviar_fotos",
+        "ofrecer_video"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_1",
+        "turno_número": 7,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "¿Es nueva o usada?",
+      "salida": "Totalmente nueva y sellada, garantía + factura. Incluye Windows 11 activado.",
+      "intención": "product_verification",
+      "categoría": "tecnologia_contraentrega",
+      "complejidad": "alta",
+      "sentimiento": "desconfiado",
+      "acciones": [
+        "confirmar_nuevo",
+        "mencionar_garantía"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_1",
+        "turno_número": 9,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "¿Y si la pido contraentrega no me estafas?",
+      "salida": "Tranquilo 😊 El proceso es así:\n\n1️⃣ El mensajero te entrega el portátil\n2️⃣ Lo revisas tú mismo antes de pagar\n3️⃣ Si está perfecto → pagas\n4️⃣ Si algo no coincide → NO pagas y devuelves sin costo\n\nEs 100% seguro.",
+      "intención": "objection_trust",
+      "categoría": "tecnologia_contraentrega",
+      "complejidad": "alta",
+      "sentimiento": "desconfiado",
+      "acciones": [
+        "explicar_contraentrega",
+        "garantizar_seguridad"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_1",
+        "turno_número": 11,
+        "es_objeción": true,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Ah bueno, así sí. ¿Cuánto demora en llegar a Cali?",
+      "salida": "Para Cali entregamos hoy en la tarde o mañana en la mañana.",
+      "intención": "logistics_inquiry",
+      "categoría": "tecnologia_contraentrega",
+      "complejidad": "alta",
+      "sentimiento": "interesado",
+      "acciones": [
+        "confirmar_tiempo_entrega"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_1",
+        "turno_número": 13,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Vi uno igual más barato en Marketplace.",
+      "salida": "Sí, pero ojo: muchos en Marketplace son usados, sin garantía o reacondicionados. El nuestro es:\n\n✔ Nuevo sellado\n✔ Garantía real\n✔ Factura\n✔ Contraentrega seguro\n\nAhí está la diferencia.",
+      "intención": "objection_price",
+      "categoría": "tecnologia_contraentrega",
+      "complejidad": "alta",
+      "sentimiento": "dudoso",
+      "acciones": [
+        "diferenciar_competencia",
+        "destacar_valor"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_1",
+        "turno_número": 15,
+        "es_objeción": true,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Bueno, la ASUS me gusta.",
+      "salida": "¡Excelente elección! 🙌 ¿Deseas envío contraentrega o recoger en tienda?",
+      "intención": "product_selection",
+      "categoría": "tecnologia_contraentrega",
+      "complejidad": "alta",
+      "sentimiento": "decidido",
+      "acciones": [
+        "confirmar_selección",
+        "pedir_método_entrega"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_1",
+        "turno_número": 17,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Contraentrega.",
+      "salida": "Perfecto ✔️ Para generar la guía necesito:\n\n📍 Dirección\n👤 Nombre\n📱 Teléfono",
+      "intención": "delivery_selection",
+      "categoría": "tecnologia_contraentrega",
+      "complejidad": "alta",
+      "sentimiento": "decidido",
+      "acciones": [
+        "pedir_datos_entrega"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_1",
+        "turno_número": 19,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Listo, te los paso…",
+      "salida": "Perfecto 🙌 Tu entrega queda programada para hoy. Cuando el mensajero recoja tu portátil te envío foto + factura.",
+      "intención": "data_provision",
+      "categoría": "tecnologia_contraentrega",
+      "complejidad": "alta",
+      "sentimiento": "cooperativo",
+      "acciones": [
+        "confirmar_pedido",
+        "prometer_seguimiento"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_1",
+        "turno_número": 21,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Quiero pedir el smartwatch, ¿cuánto demora?",
+      "salida": "Ese smartwatch llega por proveedor oficial:\n\n🚚 3–5 días hábiles → ciudades\n🚚 5–10 días → municipios\n\n¿Deseas pedirlo contraentrega?",
+      "intención": "product_inquiry",
+      "categoría": "dropshipping",
+      "complejidad": "alta",
+      "sentimiento": "neutral",
+      "acciones": [
+        "informar_tiempos",
+        "ofrecer_contraentrega"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_2",
+        "turno_número": 1,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "¿Y si no llega?",
+      "salida": "Tienes garantía total:\n\n✔ Si no llega → NO pagas\n✔ Si llega distinto → lo devuelves sin costo\n✔ Si llega dañado → reemplazo inmediato\n\nTu compra está protegida.",
+      "intención": "objection_risk",
+      "categoría": "dropshipping",
+      "complejidad": "alta",
+      "sentimiento": "preocupado",
+      "acciones": [
+        "garantizar_entrega",
+        "explicar_protección"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_2",
+        "turno_número": 3,
+        "es_objeción": true,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "¿Y si llega roto?",
+      "salida": "Aplica garantía 👉 cambio sin costo en 24h.",
+      "intención": "objection_damage",
+      "categoría": "dropshipping",
+      "complejidad": "alta",
+      "sentimiento": "preocupado",
+      "acciones": [
+        "garantizar_reemplazo"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_2",
+        "turno_número": 5,
+        "es_objeción": true,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "¿Y puedo ver cómo es?",
+      "salida": "Claro, aquí tienes fotos y video real 📸🎥👇\n(envía 4 fotos + 1 video del smartwatch)",
+      "intención": "media_request",
+      "categoría": "dropshipping",
+      "complejidad": "alta",
+      "sentimiento": "interesado",
+      "acciones": [
+        "enviar_multimedia"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_2",
+        "turno_número": 7,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "¿Tiene batería de verdad 7 días?",
+      "salida": "Sí, con uso normal. Si lo usas mucho (GPS + pantalla siempre) → 4-5 días. Pero la mayoría reporta 6-7 días.",
+      "intención": "product_verification",
+      "categoría": "dropshipping",
+      "complejidad": "alta",
+      "sentimiento": "escéptico",
+      "acciones": [
+        "ser_honesto",
+        "dar_contexto"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_2",
+        "turno_número": 9,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "¿Funciona con iPhone?",
+      "salida": "Sí, funciona con iOS y Android. Sincroniza perfecto con ambos.",
+      "intención": "compatibility_check",
+      "categoría": "dropshipping",
+      "complejidad": "alta",
+      "sentimiento": "neutral",
+      "acciones": [
+        "confirmar_compatibilidad"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_2",
+        "turno_número": 11,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Listo, lo quiero.",
+      "salida": "Perfecto 🙌 Envíame:\n\n👤 Nombre\n📍 Dirección\n📱 Teléfono\n\nY genero tu pedido hoy mismo.",
+      "intención": "purchase_decision",
+      "categoría": "dropshipping",
+      "complejidad": "alta",
+      "sentimiento": "decidido",
+      "acciones": [
+        "pedir_datos"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_2",
+        "turno_número": 13,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Listo, aquí van los datos…",
+      "salida": "Perfecto ✔️ Tu pedido está confirmado. Llega en 3-5 días. Te envío tracking mañana.",
+      "intención": "data_provision",
+      "categoría": "dropshipping",
+      "complejidad": "alta",
+      "sentimiento": "cooperativo",
+      "acciones": [
+        "confirmar_pedido",
+        "prometer_tracking"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_2",
+        "turno_número": 15,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "(Después de 5 días)\n\nHola, ¿dónde está mi pedido? Lleva 5 días.",
+      "salida": "Disculpa la demora 😟 Déjame revisar el tracking… Veo que está en tránsito. Debería llegar hoy o mañana. Si no llega mañana, te devuelvo el dinero sin preguntas.",
+      "intención": "complaint_delay",
+      "categoría": "dropshipping",
+      "complejidad": "alta",
+      "sentimiento": "molesto",
+      "acciones": [
+        "investigar",
+        "ofrecer_solución"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_2",
+        "turno_número": 17,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Listo, espero que llegue.",
+      "salida": "(Después de 1 día)\n\n¡Llegó! 🎉 ¿Todo bien? ¿Funciona perfecto?",
+      "intención": "acknowledgment",
+      "categoría": "dropshipping",
+      "complejidad": "alta",
+      "sentimiento": "esperanzado",
+      "acciones": [
+        "verificar_satisfacción"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_2",
+        "turno_número": 19,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Hola, quiero agendar una cita de barbería.",
+      "salida": "Claro 💈 Tenemos estos horarios:\n\n🕒 Hoy: 3:00 – 4:30 – 6:00\n🕒 Mañana: 10:00 – 1:00 – 5:00\n\n¿Cuál te sirve?",
+      "intención": "appointment_request",
+      "categoría": "servicios_citas",
+      "complejidad": "media",
+      "sentimiento": "neutral",
+      "acciones": [
+        "mostrar_horarios"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_3",
+        "turno_número": 1,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Mañana a las 10.",
+      "salida": "Perfecto ✂️ Cita agendada para:\n\n📅 Mañana\n🕙 10:00 am\n📍 Tecnovariedades Barber\n\n¿A nombre de quién la programo?",
+      "intención": "appointment_selection",
+      "categoría": "servicios_citas",
+      "complejidad": "media",
+      "sentimiento": "decidido",
+      "acciones": [
+        "confirmar_cita",
+        "pedir_nombre"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_3",
+        "turno_número": 3,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Soy Andrés.",
+      "salida": "Listo Andrés. ¿Deseas agregar cejas o barba? Tengo combo económico 😄",
+      "intención": "data_provision",
+      "categoría": "servicios_citas",
+      "complejidad": "media",
+      "sentimiento": "cooperativo",
+      "acciones": [
+        "ofrecer_servicios_adicionales"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_3",
+        "turno_número": 5,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Sí, agrégame cejas también.",
+      "salida": "Perfecto 🙌 Tu cita queda así:\n\n✂️ Corte de cabello\n✂️ Cejas\n💲 Total: $45.000\n\nTe envío recordatorio mañana a las 9:30.",
+      "intención": "service_addition",
+      "categoría": "servicios_citas",
+      "complejidad": "media",
+      "sentimiento": "interesado",
+      "acciones": [
+        "confirmar_servicios",
+        "prometer_recordatorio"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_3",
+        "turno_número": 7,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "(Mañana a las 9:30)\n\nRecibido, gracias.",
+      "salida": "(Después de la cita)\n\n¿Cómo te fue? ¿Te gustó el corte? 😊",
+      "intención": "acknowledgment",
+      "categoría": "servicios_citas",
+      "complejidad": "media",
+      "sentimiento": "neutral",
+      "acciones": [
+        "pedir_feedback"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_3",
+        "turno_número": 9,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Mi laptop está muy lenta, ¿qué puede ser?",
+      "salida": "Vamos a revisar:\n\n1️⃣ ¿Se demora al encender o solo al usarla?\n2️⃣ ¿Qué Windows tiene?\n3️⃣ ¿Hace ruidos o se calienta?\n\nCon eso te digo si es disco, RAM, virus o limpieza.",
+      "intención": "support_request",
+      "categoría": "soporte_tecnico",
+      "complejidad": "alta",
+      "sentimiento": "frustrado",
+      "acciones": [
+        "hacer_preguntas_diagnostico"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_4",
+        "turno_número": 1,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Solo se demora al encender.",
+      "salida": "Eso suele ser:\n\n✔ Disco viejo\n✔ Windows saturado\n✔ Programas al inicio\n\nLa solución ideal: cambiar a SSD → queda 10 veces más rápida. ¿Quieres diagnóstico sin costo?",
+      "intención": "diagnostic_info",
+      "categoría": "soporte_tecnico",
+      "complejidad": "alta",
+      "sentimiento": "neutral",
+      "acciones": [
+        "diagnosticar",
+        "ofrecer_solución"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_4",
+        "turno_número": 3,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Sí, ¿cuánto cuesta el SSD?",
+      "salida": "Desde $69.900 instalado. Tiempo de entrega: 40 minutos.",
+      "intención": "price_inquiry",
+      "categoría": "soporte_tecnico",
+      "complejidad": "alta",
+      "sentimiento": "interesado",
+      "acciones": [
+        "mostrar_precio",
+        "informar_tiempo"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_4",
+        "turno_número": 5,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "¿Pierdo mis archivos?",
+      "salida": "No, tranquilo. Hacemos backup de todo antes. Tus archivos quedan intactos.",
+      "intención": "objection_data_loss",
+      "categoría": "soporte_tecnico",
+      "complejidad": "alta",
+      "sentimiento": "preocupado",
+      "acciones": [
+        "garantizar_datos"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_4",
+        "turno_número": 7,
+        "es_objeción": true,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Dale, hazlo.",
+      "salida": "Perfecto 🙌 Trae tu laptop hoy. En 40 minutos queda lista.",
+      "intención": "service_approval",
+      "categoría": "soporte_tecnico",
+      "complejidad": "alta",
+      "sentimiento": "decidido",
+      "acciones": [
+        "confirmar_servicio"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_4",
+        "turno_número": 9,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "(Después de 40 minutos)\n\nWow, está increíble de rápida. Gracias.",
+      "salida": "¡Excelente! 🎉 Si necesitas algo más, aquí estoy. Cuéntale a tus amigos 😊",
+      "intención": "satisfaction",
+      "categoría": "soporte_tecnico",
+      "complejidad": "alta",
+      "sentimiento": "muy_satisfecho",
+      "acciones": [
+        "pedir_referencia"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_4",
+        "turno_número": 11,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "¿Cómo entregan el megapack?",
+      "salida": "100% digital 📥 Al pagar recibes:\n\n✔ Link de descarga inmediata\n✔ Acceso vitalicio\n✔ Actualizaciones gratis\n✔ Archivos organizados\n✔ Soporte si algo no abre\n\n¿Quieres ver qué incluye?",
+      "intención": "product_inquiry",
+      "categoría": "productos_digitales",
+      "complejidad": "muy_alta",
+      "sentimiento": "neutral",
+      "acciones": [
+        "explicar_entrega",
+        "ofrecer_detalles"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_5",
+        "turno_número": 1,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Sí, mándame la lista.",
+      "salida": "Aquí tienes un PDF con toda la lista 📄👇\n(envía PDF con contenido)\n\nTambién puedo enviarte:\n📸 capturas\n🎥 video mostrando las carpetas\n📁 archivo de muestra\n\n¿Qué prefieres?",
+      "intención": "content_request",
+      "categoría": "productos_digitales",
+      "complejidad": "muy_alta",
+      "sentimiento": "interesado",
+      "acciones": [
+        "enviar_lista",
+        "ofrecer_opciones"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_5",
+        "turno_número": 3,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "¿Pesa mucho?",
+      "salida": "El pack completo pesa entre 10GB–40GB, pero puedes descargar por carpetas pequeñas.",
+      "intención": "technical_inquiry",
+      "categoría": "productos_digitales",
+      "complejidad": "muy_alta",
+      "sentimiento": "neutral",
+      "acciones": [
+        "informar_tamaño"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_5",
+        "turno_número": 5,
+        "es_objeción": false,
+        "es_pregunta_técnica": true
+      }
+    },
+    {
+      "entrada": "¿Sirve en mi celular?",
+      "salida": "Sí 😊 Funciona en:\n\n📱 Android\n📱 iPhone\n💻 Windows / Mac\n\nSi algo no abre, te lo convierto.",
+      "intención": "compatibility_check",
+      "categoría": "productos_digitales",
+      "complejidad": "muy_alta",
+      "sentimiento": "neutral",
+      "acciones": [
+        "confirmar_compatibilidad"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_5",
+        "turno_número": 7,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "¿Y cómo sé que sí lo entregas?",
+      "salida": "Tranquilo, mira 👇\n\n📸 Te envío capturas reales\n🎥 Video navegando carpetas\n📁 Archivo de muestra\n\nY si algo falla → reemplazo inmediato sin costo.",
+      "intención": "objection_trust",
+      "categoría": "productos_digitales",
+      "complejidad": "muy_alta",
+      "sentimiento": "desconfiado",
+      "acciones": [
+        "mostrar_pruebas",
+        "garantizar_entrega"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_5",
+        "turno_número": 9,
+        "es_objeción": true,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "¿Me das descuento?",
+      "salida": "Claro 🎉\n\nPrecio normal: $69.900\nHoy queda en $39.900 por chat.\n\n¿Lo aprovechas?",
+      "intención": "price_negotiation",
+      "categoría": "productos_digitales",
+      "complejidad": "muy_alta",
+      "sentimiento": "interesado",
+      "acciones": [
+        "ofrecer_descuento"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_5",
+        "turno_número": 11,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Listo.",
+      "salida": "Perfecto 🙌 ¿Deseas pagar con MercadoPago o PayPal?",
+      "intención": "purchase_decision",
+      "categoría": "productos_digitales",
+      "complejidad": "muy_alta",
+      "sentimiento": "decidido",
+      "acciones": [
+        "pedir_método_pago"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_5",
+        "turno_número": 13,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "MercadoPago.",
+      "salida": "Aquí tienes tu link seguro 🔗👇\n(link dinámico)\n\nCuando pagues te envio el acceso.",
+      "intención": "payment_selection",
+      "categoría": "productos_digitales",
+      "complejidad": "muy_alta",
+      "sentimiento": "decidido",
+      "acciones": [
+        "enviar_link_pago"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_5",
+        "turno_número": 15,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Listo, pagué.",
+      "salida": "¡Pago recibido! 🎉 Aquí está tu link de descarga 🚀👇\n(link dinámico con acceso)\n\n¿Deseas factura o versión ligera para celular?",
+      "intención": "payment_confirmation",
+      "categoría": "productos_digitales",
+      "complejidad": "muy_alta",
+      "sentimiento": "cooperativo",
+      "acciones": [
+        "enviar_acceso",
+        "ofrecer_opciones"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_5",
+        "turno_número": 17,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Versión ligera.",
+      "salida": "Perfecto, aquí va 📱👇\n(link versión ligera)\n\nSi algo no abre o tienes dudas, me escribes.",
+      "intención": "option_selection",
+      "categoría": "productos_digitales",
+      "complejidad": "muy_alta",
+      "sentimiento": "cooperativo",
+      "acciones": [
+        "enviar_versión_ligera",
+        "ofrecer_soporte"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_5",
+        "turno_número": 19,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "(Después de 2 horas)\n\nHola, descargué pero no me abre un archivo.",
+      "salida": "Sin problema 😊 ¿Qué archivo es? ¿Qué error te da?",
+      "intención": "support_request",
+      "categoría": "productos_digitales",
+      "complejidad": "muy_alta",
+      "sentimiento": "frustrado",
+      "acciones": [
+        "diagnosticar_problema"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_5",
+        "turno_número": 21,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Es un PDF, dice que está corrupto.",
+      "salida": "Listo, te envío ese archivo en otro formato (Word + imagen). En 5 minutos lo tienes.",
+      "intención": "support_info",
+      "categoría": "productos_digitales",
+      "complejidad": "muy_alta",
+      "sentimiento": "frustrado",
+      "acciones": [
+        "resolver_problema"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_5",
+        "turno_número": 23,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Gracias, perfecto.",
+      "salida": "De nada 😊 Cualquier cosa, aquí estoy. Que disfrutes el pack 🚀",
+      "intención": "satisfaction",
+      "categoría": "productos_digitales",
+      "complejidad": "muy_alta",
+      "sentimiento": "satisfecho",
+      "acciones": [
+        "cerrar_soporte"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_5",
+        "turno_número": 25,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "¿Me pueden fiar un perfume?",
+      "salida": "Sí ✨ Necesito validar tu cupo:\n\n1️⃣ Nombre\n2️⃣ Cédula\n3️⃣ Día de pago (máximo 7 días)",
+      "intención": "credit_request",
+      "categoría": "fiados_credito",
+      "complejidad": "media",
+      "sentimiento": "neutral",
+      "acciones": [
+        "pedir_información"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_6",
+        "turno_número": 1,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Pago el viernes.",
+      "salida": "Listo ✔️ Tienes cupo disponible para 1 producto. ¿Quieres el perfume de $34.900 o el de $39.900?",
+      "intención": "credit_info",
+      "categoría": "fiados_credito",
+      "complejidad": "media",
+      "sentimiento": "cooperativo",
+      "acciones": [
+        "aprobar_crédito",
+        "ofrecer_opciones"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_6",
+        "turno_número": 3,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "El de 34.",
+      "salida": "Perfecto. Entrega hoy. Pagas el viernes sin recargo.",
+      "intención": "product_selection",
+      "categoría": "fiados_credito",
+      "complejidad": "media",
+      "sentimiento": "decidido",
+      "acciones": [
+        "confirmar_entrega",
+        "confirmar_pago"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_6",
+        "turno_número": 5,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Gracias.",
+      "salida": "De nada 😊 Te envío recordatorio el viernes a las 9am.",
+      "intención": "acknowledgment",
+      "categoría": "fiados_credito",
+      "complejidad": "media",
+      "sentimiento": "satisfecho",
+      "acciones": [
+        "prometer_recordatorio"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_6",
+        "turno_número": 7,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "(Viernes a las 9am)\n\nRecibido, gracias.",
+      "salida": "¿Ya pagaste? 😊",
+      "intención": "acknowledgment",
+      "categoría": "fiados_credito",
+      "complejidad": "media",
+      "sentimiento": "neutral",
+      "acciones": [
+        "verificar_pago"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_6",
+        "turno_número": 9,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Eso es puro robo, seguro estafas.",
+      "salida": "Entiendo tu preocupación 😊 Por eso trabajamos así:\n\n✔ Contraentrega\n✔ Revisas antes de pagar\n✔ Garantía real\n✔ Factura electrónica\n✔ Fotos y videos reales\n\nNo estás obligado a recibir nada si no coincide.",
+      "intención": "objection_trust",
+      "categoría": "cliente_agresivo",
+      "complejidad": "muy_alta",
+      "sentimiento": "agresivo",
+      "acciones": [
+        "validar_preocupación",
+        "explicar_seguridad"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_7",
+        "turno_número": 1,
+        "es_objeción": true,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Mmm, muéstrame pruebas.",
+      "salida": "Aquí tienes:\n\n📸 Fotos reales\n🎥 Video del producto\n📄 Factura ejemplo\n📦 Fotos del empaque\n\n(envía todo)",
+      "intención": "evidence_request",
+      "categoría": "cliente_agresivo",
+      "complejidad": "muy_alta",
+      "sentimiento": "desconfiado",
+      "acciones": [
+        "enviar_pruebas"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_7",
+        "turno_número": 3,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "¿Y eso no es de internet?",
+      "salida": "No, son fotos nuestras. Mira la fecha en la foto 👉 (señala fecha actual). Puedo hacer un video en vivo si quieres.",
+      "intención": "objection_authenticity",
+      "categoría": "cliente_agresivo",
+      "complejidad": "muy_alta",
+      "sentimiento": "desconfiado",
+      "acciones": [
+        "demostrar_autenticidad"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_7",
+        "turno_número": 5,
+        "es_objeción": true,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Bueno, muéstrame opciones.",
+      "salida": "Claro, ¿qué presupuesto manejas?",
+      "intención": "product_inquiry",
+      "categoría": "cliente_agresivo",
+      "complejidad": "muy_alta",
+      "sentimiento": "interesado",
+      "acciones": [
+        "pedir_presupuesto"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_7",
+        "turno_número": 7,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Máximo 2 millones.",
+      "salida": "Perfecto. Tengo estas opciones:\n\n💻 Laptop A - $1.8M\n💻 Laptop B - $1.9M\n💻 Laptop C - $2M\n\n¿Cuál te interesa?",
+      "intención": "budget_info",
+      "categoría": "cliente_agresivo",
+      "complejidad": "muy_alta",
+      "sentimiento": "neutral",
+      "acciones": [
+        "mostrar_opciones"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_7",
+        "turno_número": 9,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "La C, pero quiero verla en persona.",
+      "salida": "Claro, puedes venir a verla hoy. Estamos en [dirección]. ¿A qué hora te viene bien?",
+      "intención": "product_selection",
+      "categoría": "cliente_agresivo",
+      "complejidad": "muy_alta",
+      "sentimiento": "decidido",
+      "acciones": [
+        "ofrecer_cita"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_7",
+        "turno_número": 11,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "A las 4pm.",
+      "salida": "Perfecto, te espero a las 4pm. Trae cédula para la factura.",
+      "intención": "appointment_selection",
+      "categoría": "cliente_agresivo",
+      "complejidad": "muy_alta",
+      "sentimiento": "decidido",
+      "acciones": [
+        "confirmar_cita"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_7",
+        "turno_número": 13,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "(Después de la cita)\n\nLa laptop está bien. La compro.",
+      "salida": "¡Excelente! 🙌 Aquí está tu factura. Gracias por confiar.",
+      "intención": "purchase_decision",
+      "categoría": "cliente_agresivo",
+      "complejidad": "muy_alta",
+      "sentimiento": "satisfecho",
+      "acciones": [
+        "entregar_factura"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_7",
+        "turno_número": 15,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Solo estoy mirando.",
+      "salida": "Súper 😄 ¿Buscas algo para:\n\n📚 estudio\n💼 trabajo\n🏠 hogar\n🎁 regalo\n\no solo por curiosidad?",
+      "intención": "browsing",
+      "categoría": "cliente_indeciso",
+      "complejidad": "alta",
+      "sentimiento": "neutral",
+      "acciones": [
+        "entender_necesidad"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_8",
+        "turno_número": 1,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Algo para estudiar.",
+      "salida": "Perfecto. ¿Laptop, tablet o PC de escritorio?",
+      "intención": "need_identification",
+      "categoría": "cliente_indeciso",
+      "complejidad": "alta",
+      "sentimiento": "neutral",
+      "acciones": [
+        "refinar_búsqueda"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_8",
+        "turno_número": 3,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Laptop, pero no sé cuál.",
+      "salida": "Sin problema 😊 Cuéntame:\n\n1️⃣ ¿Qué carrera estudias?\n2️⃣ ¿Usarás programas pesados (AutoCAD, Photoshop)?\n3️⃣ ¿Cuánto presupuesto tienes?",
+      "intención": "product_uncertainty",
+      "categoría": "cliente_indeciso",
+      "complejidad": "alta",
+      "sentimiento": "indeciso",
+      "acciones": [
+        "hacer_preguntas"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_8",
+        "turno_número": 5,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Ingeniería, sí usaré AutoCAD, y tengo máximo 1.5M.",
+      "salida": "Listo. Para AutoCAD necesitas mínimo:\n\n✔ 16GB RAM\n✔ SSD 512GB\n✔ Procesador i7 o Ryzen 7\n\nTengo 2 opciones en tu presupuesto:\n\n💻 Opción A - $1.4M\n💻 Opción B - $1.5M\n\n¿Quieres ver fotos?",
+      "intención": "needs_info",
+      "categoría": "cliente_indeciso",
+      "complejidad": "alta",
+      "sentimiento": "cooperativo",
+      "acciones": [
+        "recomendar",
+        "ofrecer_multimedia"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_8",
+        "turno_número": 7,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Sí, mándame fotos.",
+      "salida": "Aquí van 📸👇\n(envía 4 fotos de ambas opciones)",
+      "intención": "media_request",
+      "categoría": "cliente_indeciso",
+      "complejidad": "alta",
+      "sentimiento": "interesado",
+      "acciones": [
+        "enviar_fotos"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_8",
+        "turno_número": 9,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Se ven bien, pero déjame pensarlo.",
+      "salida": "Claro, sin prisa 😊 Cualquier duda me escribes. Tengo stock limitado, así que si te decides, avísame.",
+      "intención": "consideration",
+      "categoría": "cliente_indeciso",
+      "complejidad": "alta",
+      "sentimiento": "indeciso",
+      "acciones": [
+        "dejar_puerta_abierta",
+        "crear_urgencia_suave"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_8",
+        "turno_número": 11,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "(Después de 2 horas)\n\nHola, ¿siguen disponibles?",
+      "salida": "Sí, ambas siguen disponibles 😊 ¿Ya decidiste?",
+      "intención": "follow_up",
+      "categoría": "cliente_indeciso",
+      "complejidad": "alta",
+      "sentimiento": "interesado",
+      "acciones": [
+        "confirmar_disponibilidad"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_8",
+        "turno_número": 13,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Sí, la opción A.",
+      "salida": "¡Excelente! 🙌 ¿Contraentrega o recoges en tienda?",
+      "intención": "purchase_decision",
+      "categoría": "cliente_indeciso",
+      "complejidad": "alta",
+      "sentimiento": "decidido",
+      "acciones": [
+        "pedir_método_entrega"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_8",
+        "turno_número": 15,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Contraentrega.",
+      "salida": "Perfecto ✔️ Necesito:\n\n👤 Nombre\n📍 Dirección\n📱 Teléfono",
+      "intención": "delivery_selection",
+      "categoría": "cliente_indeciso",
+      "complejidad": "alta",
+      "sentimiento": "decidido",
+      "acciones": [
+        "pedir_datos"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_8",
+        "turno_número": 17,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    },
+    {
+      "entrada": "Listo, aquí van…",
+      "salida": "Perfecto 🙌 Tu laptop llega mañana. Te envío tracking.",
+      "intención": "data_provision",
+      "categoría": "cliente_indeciso",
+      "complejidad": "alta",
+      "sentimiento": "cooperativo",
+      "acciones": [
+        "confirmar_pedido"
+      ],
+      "contexto": {
+        "megaflujo_id": "megaflujo_8",
+        "turno_número": 19,
+        "es_objeción": false,
+        "es_pregunta_técnica": false
+      }
+    }
+  ],
+  "estadisticas": {
+    "total_ejemplos": 68,
+    "megaflujos_procesados": 8,
+    "categorias": [
+      "tecnologia_contraentrega",
+      "dropshipping",
+      "servicios_citas",
+      "soporte_tecnico",
+      "productos_digitales",
+      "fiados_credito",
+      "cliente_agresivo",
+      "cliente_indeciso"
+    ],
+    "fecha_entrenamiento": "2025-11-16T04:46:18.487Z"
+  }
+}

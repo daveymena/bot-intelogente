@@ -1,0 +1,84 @@
+========================================
+  CÓMO OBTENER LOGS COMPLETOS DE EASYPANEL
+========================================
+
+El mensaje de error se está cortando. Necesito ver el error completo para ayudarte.
+
+📋 PASOS PARA OBTENER LOS LOGS:
+
+1. Ve a Easypanel
+   https://easypanel.io
+
+2. Inicia sesión
+
+3. Ve a tu proyecto
+   - Proyecto: bot-whatsapp
+   - Aplicación: what-auto2
+
+4. Haz clic en la pestaña "Logs" o "Build Logs"
+
+5. Busca el error (usualmente al final)
+
+6. Copia las últimas 100 líneas
+
+7. Pégalas aquí
+
+========================================
+
+🔍 QUÉ BUSCAR EN LOS LOGS:
+
+Busca líneas que contengan:
+- "ERROR"
+- "FAILED"
+- "npm ERR!"
+- "error TS"
+- "Module not found"
+- "Cannot find module"
+
+========================================
+
+💡 ERRORES COMUNES:
+
+1. "Module not found"
+   → Falta una dependencia
+
+2. "Type error"
+   → Error de TypeScript
+
+3. "Prisma generate failed"
+   → Problema con Prisma
+
+4. "npm ci failed"
+   → Problema con package-lock.json
+
+5. "Build failed"
+   → Error en npm run build
+
+========================================
+
+📝 FORMATO PARA COPIAR:
+
+Copia desde aquí:
+```
+[últimas 100 líneas de los logs]
+```
+
+========================================
+
+⚡ MIENTRAS TANTO:
+
+Puedes intentar:
+
+1. Forzar rebuild en Easypanel
+   - Haz clic en "Rebuild"
+   - Espera 5-10 minutos
+
+2. Verificar variables de entorno
+   - Ve a "Environment"
+   - Verifica que todas estén configuradas
+
+3. Ver el estado del build
+   - ¿En qué paso falla?
+   - ¿npm ci? ¿prisma generate? ¿npm run build?
+
+========================================

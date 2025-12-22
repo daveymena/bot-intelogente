@@ -1,0 +1,55 @@
+{
+  "timestamp": "2025-11-09T16:34:22.435Z",
+  "summary": {
+    "totalProducts": 145,
+    "totalExamples": 1166,
+    "examplesPerProduct": "8.0",
+    "categories": 2
+  },
+  "byCategory": [
+    {
+      "category": "PHYSICAL",
+      "examples": 827,
+      "intents": [
+        "search_by_name",
+        "ask_price",
+        "check_availability",
+        "search_by_category",
+        "ask_features",
+        "handle_price_objection",
+        "request_photos",
+        "buy_product",
+        "browse_category",
+        "recommend_from_category",
+        "ask_category_prices"
+      ]
+    },
+    {
+      "category": "DIGITAL",
+      "examples": 339,
+      "intents": [
+        "search_by_name",
+        "ask_price",
+        "check_availability",
+        "search_by_category",
+        "ask_features",
+        "handle_price_objection",
+        "request_photos",
+        "buy_product",
+        "browse_category",
+        "recommend_from_category",
+        "ask_category_prices"
+      ]
+    }
+  ],
+  "intents": {
+    "search_by_name": 145,
+    "ask_price": 145,
+    "check_availability": 145,
+    "search_by_category": 145,
+    "ask_features": 145,
+    "handle_price_objection": 145,
+    "request_photos": 145,
+    "buy_product": 145
+  }
+}

@@ -1,0 +1,214 @@
+{
+  "name": "WhatsApp Bot - Básico",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-incoming",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-1",
+      "name": "Webhook - Recibir Mensaje",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "whatsapp-incoming"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, name, description, price, images, category, subcategory\nFROM \"Product\"\nWHERE LOWER(name) LIKE LOWER('%' || $1 || '%')\n   OR LOWER(description) LIKE LOWER('%' || $1 || '%')\n   OR LOWER(tags) LIKE LOWER('%' || $1 || '%')\nLIMIT 5",
+        "additionalFields": {
+          "queryParameters": "={{ $json.message }}"
+        }
+      },
+      "id": "postgres-1",
+      "name": "PostgreSQL - Buscar Productos",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [450, 300],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "PostgreSQL - SmartSales"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:11434/api/generate",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "llama3.1:8b"
+            },
+            {
+              "name": "prompt",
+              "value": "=Eres un asistente de ventas profesional de Tecnovariedades D&S en Colombia.\n\nCliente pregunta: {{ $node['Webhook - Recibir Mensaje'].json.message }}\n\nProductos disponibles:\n{{ $node['PostgreSQL - Buscar Productos'].json }}\n\nInstrucciones:\n1. Responde en español de forma amigable y profesional\n2. Si encontraste productos, menciónalos con precio en COP\n3. Si no encontraste productos, ofrece alternativas\n4. Sé breve y directo\n5. Usa emojis apropiados\n\nRespuesta:"
+            },
+            {
+              "name": "stream",
+              "value": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "http-1",
+      "name": "Ollama - Generar Respuesta",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Extraer respuesta de Ollama\nconst ollamaResponse = $node['Ollama - Generar Respuesta'].json.response\n\n// Limpiar respuesta\nconst cleanResponse = ollamaResponse.trim()\n\n// Preparar mensaje para WhatsApp\nreturn {\n  to: $node['Webhook - Recibir Mensaje'].json.from,\n  message: cleanResponse,\n  timestamp: Date.now()\n}"
+      },
+      "id": "function-1",
+      "name": "Procesar Respuesta",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/whatsapp/send-from-n8n",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $env.N8N_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "to",
+              "value": "={{ $json.to }}"
+            },
+            {
+              "name": "message",
+              "value": "={{ $json.message }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "http-2",
+      "name": "Enviar a WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"timestamp\": Date.now() } }}"
+      },
+      "id": "respond-1",
+      "name": "Responder Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": "\"Conversation\"",
+        "columns": "phone,message,response,timestamp",
+        "additionalFields": {
+          "values": "={{ $node['Webhook - Recibir Mensaje'].json.from }},={{ $node['Webhook - Recibir Mensaje'].json.message }},={{ $node['Procesar Respuesta'].json.message }},={{ new Date().toISOString() }}"
+        }
+      },
+      "id": "postgres-2",
+      "name": "Guardar Conversación",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [850, 500],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "PostgreSQL - SmartSales"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook - Recibir Mensaje": {
+      "main": [
+        [
+          {
+            "node": "PostgreSQL - Buscar Productos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PostgreSQL - Buscar Productos": {
+      "main": [
+        [
+          {
+            "node": "Ollama - Generar Respuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama - Generar Respuesta": {
+      "main": [
+        [
+          {
+            "node": "Procesar Respuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Procesar Respuesta": {
+      "main": [
+        [
+          {
+            "node": "Enviar a WhatsApp",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Guardar Conversación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar a WhatsApp": {
+      "main": [
+        [
+          {
+            "node": "Responder Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-12-17T00:00:00.000Z",
+  "versionId": "1"
+}

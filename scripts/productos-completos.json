@@ -1,0 +1,1328 @@
+{
+  "empresa": {
+    "nombre": "Tecnovariedades D&S",
+    "contacto": {
+      "whatsapp": "+57 304 274 8687",
+      "email": "deinermen25@gmail.com"
+    },
+    "ubicacion": "Cali, Valle del Cauca, Colombia"
+  },
+  "categorias": {
+    "cursos_digitales": {
+      "nombre": "Cursos Digitales y Mega Packs",
+      "descripcion": "Productos digitales descargables con acceso inmediato",
+      "productos": {
+        "curso_piano_premium": {
+          "id": "PIANO_PREMIUM_001",
+          "nombre": "Curso Piano Profesional Completo",
+          "categoria": "Curso Individual Premium",
+          "precio": 60000,
+          "descripcion": "Curso 100% en línea con videos descargables para aprender piano desde cero hasta nivel profesional",
+          "caracteristicas": [
+            "+80 lecciones en video HD",
+            "Módulos progresivos",
+            "Acceso de por vida",
+            "Contenido descargable",
+            "Soporte directo del profesor"
+          ],
+          "plataforma": "Hotmart",
+          "enlaces": {
+            "informacion": "https://landein-page-pian2.vercel.app/",
+            "compra": "https://pay.hotmart.com/I95497720H?checkoutMode=2&bid=1760738599205"
+          },
+          "garantia": "7 días incluida",
+          "acceso": "Inmediato después del pago"
+        },
+        "mega_packs": {
+          "precios": {
+            "individual": 20000,
+            "pack_completo": 60000,
+            "ahorro_total": 740000,
+            "valor_individual_total": 800000
+          },
+          "packs_disponibles": {
+            "diseno_creatividad": {
+              "categoria": "Diseño y Creatividad",
+              "packs": [
+                {
+                  "id": "MP01",
+                  "nombre": "Mega Pack 01: Cursos Diseño Gráfico",
+                  "precio": 20000,
+                  "contenido": "Photoshop, Illustrator, InDesign, técnicas profesionales"
+                },
+                {
+                  "id": "MP06",
+                  "nombre": "Mega Pack 06: Mega Pack Infografías",
+                  "precio": 20000,
+                  "contenido": "Plantillas y técnicas para infografías profesionales"
+                },
+                {
+                  "id": "MP07",
+                  "nombre": "Mega Pack 07: Archivos editables de diseño gráfico",
+                  "precio": 20000,
+                  "contenido": "Archivos fuente editables para diseño"
+                },
+                {
+                  "id": "MP14",
+                  "nombre": "Mega Pack 14: Pack Plantillas 100% Editables",
+                  "precio": 20000,
+                  "contenido": "Plantillas completamente personalizables"
+                },
+                {
+                  "id": "MP15",
+                  "nombre": "Mega Pack 15: FX Presets After Effects y Premiere",
+                  "precio": 20000,
+                  "contenido": "Efectos y presets para video profesional"
+                },
+                {
+                  "id": "MP24",
+                  "nombre": "Mega Pack 24: Recursos para diseño Arquitectura",
+                  "precio": 20000,
+                  "contenido": "Recursos especializados en arquitectura"
+                },
+                {
+                  "id": "MP33",
+                  "nombre": "Mega Pack 33: Filmora 9",
+                  "precio": 20000,
+                  "contenido": "Recursos y tutoriales para Filmora"
+                },
+                {
+                  "id": "MP34",
+                  "nombre": "Mega Pack 34: Plantillas Canva MEGA Pro",
+                  "precio": 20000,
+                  "contenido": "Plantillas profesionales para Canva"
+                }
+              ]
+            },
+            "oficina_productividad": {
+              "categoria": "Oficina y Productividad",
+              "packs": [
+                {
+                  "id": "MP02",
+                  "nombre": "Mega Pack 02: Cursos Microsoft Office",
+                  "precio": 20000,
+                  "contenido": "Word, Excel, PowerPoint, Access completos"
+                },
+                {
+                  "id": "MP04",
+                  "nombre": "Mega Pack 04: Cursos Excel",
+                  "precio": 20000,
+                  "contenido": "Excel básico a avanzado, fórmulas, tablas dinámicas"
+                },
+                {
+                  "id": "MP26",
+                  "nombre": "Mega Pack 26: Macros",
+                  "precio": 20000,
+                  "contenido": "Automatización con macros en Excel y Office"
+                }
+              ]
+            },
+            "tecnologia_programacion": {
+              "categoria": "Tecnología y Programación",
+              "packs": [
+                {
+                  "id": "MP05",
+                  "nombre": "Mega Pack 05: Cursos Hacking Ético",
+                  "precio": 20000,
+                  "contenido": "Seguridad informática, pentesting, auditorías"
+                },
+                {
+                  "id": "MP08",
+                  "nombre": "Mega Pack 08: Instaladores",
+                  "precio": 20000,
+                  "contenido": "Software y herramientas de instalación"
+                },
+                {
+                  "id": "MP16",
+                  "nombre": "Mega Pack 16: Cursos Premium +900 GB",
+                  "precio": 20000,
+                  "contenido": "Python, JavaScript, Java, C++, desarrollo web y móvil"
+                },
+                {
+                  "id": "MP17",
+                  "nombre": "Mega Pack 17: Apps Android Premium",
+                  "precio": 20000,
+                  "contenido": "Desarrollo de aplicaciones Android"
+                },
+                {
+                  "id": "MP18",
+                  "nombre": "Mega Pack 18: Reparación de teléfonos y tablets",
+                  "precio": 20000,
+                  "contenido": "Técnicas de reparación de dispositivos móviles"
+                },
+                {
+                  "id": "MP19",
+                  "nombre": "Mega Pack 19: WordPress",
+                  "precio": 20000,
+                  "contenido": "Landing Pages, Plugins y Themes"
+                },
+                {
+                  "id": "MP23",
+                  "nombre": "Mega Pack 23: Ensamblaje y Mantenimiento",
+                  "precio": 20000,
+                  "contenido": "Ensamblaje y mantenimiento de computadores"
+                }
+              ]
+            },
+            "marketing_negocios": {
+              "categoria": "Marketing y Negocios",
+              "packs": [
+                {
+                  "id": "MP11",
+                  "nombre": "Mega Pack 11: Cursos Marketing Digital",
+                  "precio": 20000,
+                  "contenido": "SEO, SEM, Google Ads, redes sociales"
+                },
+                {
+                  "id": "MP37",
+                  "nombre": "Mega Pack 37: Marketing & Ventas",
+                  "precio": 20000,
+                  "contenido": "Estrategias de marketing y técnicas de ventas"
+                },
+                {
+                  "id": "MP38",
+                  "nombre": "Mega Pack 38: Redes Sociales",
+                  "precio": 20000,
+                  "contenido": "Gestión profesional de redes sociales"
+                },
+                {
+                  "id": "MP39",
+                  "nombre": "Mega Pack 39: Trading",
+                  "precio": 20000,
+                  "contenido": "Trading, Forex, análisis técnico"
+                }
+              ]
+            },
+            "educacion_desarrollo": {
+              "categoria": "Educación y Desarrollo Personal",
+              "packs": [
+                {
+                  "id": "MP03",
+                  "nombre": "Mega Pack 03: Cursos Inglés",
+                  "precio": 20000,
+                  "contenido": "Inglés básico a avanzado, conversación, negocios"
+                },
+                {
+                  "id": "MP09",
+                  "nombre": "Mega Pack 09: Curso Memoria Poderosa",
+                  "precio": 20000,
+                  "contenido": "Técnicas de memorización y aprendizaje"
+                },
+                {
+                  "id": "MP22",
+                  "nombre": "Mega Pack 22: Curso Crecimiento Personal",
+                  "precio": 20000,
+                  "contenido": "Desarrollo personal y profesional"
+                },
+                {
+                  "id": "MP28",
+                  "nombre": "Mega Pack 28: PreUniversitario-Psicología",
+                  "precio": 20000,
+                  "contenido": "Preparación universitaria en psicología"
+                },
+                {
+                  "id": "MP32",
+                  "nombre": "Mega Pack 32: Universitario",
+                  "precio": 20000,
+                  "contenido": "Recursos para estudios universitarios"
+                },
+                {
+                  "id": "MP36",
+                  "nombre": "Mega Pack 36: Libros de Pedagogía",
+                  "precio": 20000,
+                  "contenido": "Recursos pedagógicos y educativos"
+                },
+                {
+                  "id": "MP40",
+                  "nombre": "Mega Pack 40: Educación",
+                  "precio": 20000,
+                  "contenido": "Recursos educativos generales"
+                }
+              ]
+            },
+            "libros_contenido": {
+              "categoria": "Libros y Contenido",
+              "packs": [
+                {
+                  "id": "MP10",
+                  "nombre": "Mega Pack 10: 3700 Libros Digitales",
+                  "precio": 20000,
+                  "contenido": "Biblioteca digital con 3700 libros"
+                },
+                {
+                  "id": "MP20",
+                  "nombre": "Mega Pack 20: AudioLibros",
+                  "precio": 20000,
+                  "contenido": "Colección de audiolibros profesionales"
+                },
+                {
+                  "id": "MP35",
+                  "nombre": "Mega Pack 35: Álbumes digitales de colección",
+                  "precio": 20000,
+                  "contenido": "Álbumes digitales especializados"
+                }
+              ]
+            },
+            "gastronomia_oficios": {
+              "categoria": "Gastronomía y Oficios",
+              "packs": [
+                {
+                  "id": "MP12",
+                  "nombre": "Mega Pack 12: Gastronomía Internacional",
+                  "precio": 20000,
+                  "contenido": "Recetas y técnicas culinarias internacionales"
+                },
+                {
+                  "id": "MP25",
+                  "nombre": "Mega Pack 25: Construcción en Drywall",
+                  "precio": 20000,
+                  "contenido": "Técnicas de construcción en drywall"
+                },
+                {
+                  "id": "MP27",
+                  "nombre": "Mega Pack 27: Cursos MultiProfesiones",
+                  "precio": 20000,
+                  "contenido": "Diversos oficios y profesiones"
+                },
+                {
+                  "id": "MP29",
+                  "nombre": "Mega Pack 29: Curso Resina",
+                  "precio": 20000,
+                  "contenido": "Trabajo con resinas y manualidades"
+                },
+                {
+                  "id": "MP30",
+                  "nombre": "Mega Pack 30: BODA, Bartender y Producción Musical",
+                  "precio": 20000,
+                  "contenido": "Organización de eventos y producción"
+                }
+              ]
+            },
+            "arquitectura_construccion": {
+              "categoria": "Arquitectura y Construcción",
+              "packs": [
+                {
+                  "id": "MP13",
+                  "nombre": "Mega Pack 13: Ingeniería y Arquitectura",
+                  "precio": 20000,
+                  "contenido": "Cursos especializados en ingeniería y arquitectura"
+                },
+                {
+                  "id": "MP31",
+                  "nombre": "Mega Pack 31: 550 Planos de Muebles de Melamina",
+                  "precio": 20000,
+                  "contenido": "Planos detallados para muebles"
+                }
+              ]
+            },
+            "sublimado_manualidades": {
+              "categoria": "Sublimado y Manualidades",
+              "packs": [
+                {
+                  "id": "MP21",
+                  "nombre": "Mega Pack 21: Pack Sublimado",
+                  "precio": 20000,
+                  "contenido": "Técnicas y recursos para sublimación"
+                }
+              ]
+            }
+          },
+          "pack_completo": {
+            "id": "MPC_40",
+            "nombre": "Mega Pack Completo (40 productos)",
+            "precio": 60000,
+            "descripcion": "Acceso a TODOS los 40 Mega Packs",
+            "beneficios": [
+              "Acceso a todos los 40 packs",
+              "Ahorro de $740.000 COP",
+              "Contenido valorado en $800.000 COP",
+              "Acceso de por vida",
+              "Actualizaciones incluidas"
+            ]
+          }
+        }
+      }
+    },
+    "productos_tecnologicos": {
+      "nombre": "Productos Tecnológicos",
+      "descripcion": "Laptops, computadores, accesorios y equipos tecnológicos",
+      "productos": {
+        "laptops": {
+          "asus_vivobook": {
+            "marca": "ASUS",
+            "serie": "VivoBook GO 15",
+            "modelos": [
+              {
+                "codigo": "2671",
+                "procesador": "AMD Ryzen 3 7320U",
+                "ram": "8GB DDR5",
+                "almacenamiento": "512GB SSD",
+                "pantalla": "15.6\" FHD",
+                "so": "FreeDOS",
+                "color": "Silver",
+                "precio": 1189000,
+                "imagenes": [
+                  "/fotos/portatil_asus_vivobook_15_x150_1.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_2.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_3.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_4.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_5.webp"
+                ]
+              },
+              {
+                "codigo": "2486",
+                "procesador": "Intel Core i5-12500H",
+                "ram": "8GB DDR4",
+                "almacenamiento": "512GB SSD",
+                "pantalla": "15.6\" FHD",
+                "so": "FreeDOS",
+                "color": "Quiet Blue",
+                "precio": 1650000,
+                "imagenes": [
+                  "/fotos/portatil_asus_vivobook_15_x150_1.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_2.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_3.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_4.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_5.webp"
+                ]
+              },
+              {
+                "codigo": "2910",
+                "procesador": "AMD Ryzen 5 7520U",
+                "ram": "16GB DDR5",
+                "almacenamiento": "512GB SSD",
+                "pantalla": "15.6\" FHD",
+                "so": "FreeDOS",
+                "color": "Cool Silver",
+                "precio": 1498000,
+                "imagenes": [
+                  "/fotos/portatil_asus_vivobook_15_x150_1.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_2.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_3.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_4.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_5.webp"
+                ]
+              },
+              {
+                "codigo": "2306",
+                "procesador": "AMD Ryzen 5 7520U",
+                "ram": "16GB DDR5",
+                "almacenamiento": "512GB SSD",
+                "pantalla": "15.6\" FHD",
+                "so": "FreeDOS",
+                "color": "Black",
+                "extras": "Con morral",
+                "precio": 1668000,
+                "imagenes": [
+                  "/fotos/portatil_asus_vivobook_15_x150_1.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_2.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_3.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_4.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_5.webp"
+                ]
+              },
+              {
+                "codigo": "2351",
+                "procesador": "AMD Ryzen 5 7520U",
+                "ram": "16GB DDR5",
+                "almacenamiento": "512GB SSD",
+                "pantalla": "15.6\" OLED FHD",
+                "so": "FreeDOS",
+                "color": "Cool Silver",
+                "precio": 1755000,
+                "imagenes": [
+                  "/fotos/portatil_asus_vivobook_15_x150_1.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_2.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_3.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_4.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_5.webp"
+                ]
+              },
+              {
+                "codigo": "2760",
+                "procesador": "AMD Ryzen 7 5825U",
+                "ram": "16GB DDR4",
+                "almacenamiento": "1TB SSD",
+                "pantalla": "15.6\" FHD",
+                "so": "FreeDOS",
+                "color": "Cool Silver",
+                "precio": 1699000,
+                "imagenes": [
+                  "/fotos/portatil_asus_vivobook_15_x150_1.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_2.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_3.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_4.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_5.webp"
+                ]
+              },
+              {
+                "codigo": "2911",
+                "procesador": "Intel Core i7-13620H",
+                "ram": "16GB DDR5",
+                "almacenamiento": "512GB SSD",
+                "pantalla": "15.6\" FHD",
+                "so": "FreeDOS",
+                "color": "Quiet Blue",
+                "precio": 2029000,
+                "imagenes": [
+                  "/fotos/portatil_asus_vivobook_15_x150_1.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_2.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_3.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_4.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_5.webp"
+                ]
+              },
+              {
+                "codigo": "2485",
+                "procesador": "Intel Core i7-13620H",
+                "ram": "16GB DDR5",
+                "almacenamiento": "512GB SSD",
+                "pantalla": "16\" WUXGA",
+                "so": "Sin SO",
+                "color": "Indie Black",
+                "precio": 2299000,
+                "imagenes": [
+                  "/fotos/portatil_asus_vivobook_15_x150_1.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_2.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_3.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_4.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_5.webp"
+                ]
+              },
+              {
+                "codigo": "2571",
+                "procesador": "Intel Core i7-13620H",
+                "ram": "16GB DDR4",
+                "almacenamiento": "1TB SSD",
+                "pantalla": "15.6\" FHD",
+                "so": "FreeDOS",
+                "color": "Cool Silver",
+                "precio": 2389000,
+                "imagenes": [
+                  "/fotos/portatil_asus_vivobook_15_x150_1.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_2.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_3.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_4.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_5.webp"
+                ]
+              },
+              {
+                "codigo": "2416",
+                "procesador": "AMD Ryzen 7 8840HS",
+                "ram": "16GB DDR5",
+                "almacenamiento": "1TB SSD",
+                "pantalla": "14\" FHD OLED",
+                "so": "FreeDOS",
+                "color": "Jade Black",
+                "precio": 3999000,
+                "imagenes": [
+                  "/fotos/portatil_asus_vivobook_15_x150_1.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_2.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_3.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_4.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_5.webp"
+                ]
+              },
+              {
+                "codigo": "2442",
+                "procesador": "AMD Ryzen 7 8840HS",
+                "ram": "16GB DDR5",
+                "almacenamiento": "1TB SSD",
+                "pantalla": "14\" OLED WUXGA",
+                "so": "FreeDOS",
+                "color": "Black",
+                "precio": 3989000,
+                "imagenes": [
+                  "/fotos/portatil_asus_vivobook_15_x150_1.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_2.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_3.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_4.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_5.webp"
+                ]
+              },
+              {
+                "codigo": "2636",
+                "procesador": "Intel Core Ultra 7 258V",
+                "ram": "32GB DDR5",
+                "almacenamiento": "1TB SSD",
+                "pantalla": "14\" OLED 3K Táctil",
+                "so": "Windows 11",
+                "color": "Gray",
+                "precio": 6990000,
+                "imagenes": [
+                  "/fotos/portatil_asus_vivobook_15_x150_1.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_2.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_3.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_4.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_5.webp"
+                ]
+              },
+              {
+                "codigo": "2363",
+                "procesador": "Intel Core Ultra 7 155H",
+                "ram": "32GB DDR5",
+                "almacenamiento": "1TB SSD",
+                "pantalla": "14\" OLED 3K",
+                "so": "Windows 11",
+                "color": "Negro",
+                "precio": 7499000,
+                "imagenes": [
+                  "/fotos/portatil_asus_vivobook_15_x150_1.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_2.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_3.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_4.webp",
+                  "/fotos/portatil_asus_vivobook_15_x150_5.webp"
+                ]
+              }
+            ]
+          },
+          "asus_tuf_gaming": {
+            "marca": "ASUS",
+            "serie": "TUF Gaming",
+            "modelos": [
+              {
+                "codigo": "2679",
+                "procesador": "AMD Ryzen 5 7535HS",
+                "ram": "8GB DDR5",
+                "almacenamiento": "512GB SSD",
+                "pantalla": "15.6\" FHD",
+                "gpu": "RTX 2050 4GB DDR6",
+                "so": "FreeDOS",
+                "color": "Black",
+                "precio": 2390000
+              },
+              {
+                "codigo": "2733",
+                "procesador": "AMD Ryzen 7 260",
+                "ram": "16GB DDR5",
+                "almacenamiento": "512GB SSD",
+                "pantalla": "16\" FHD",
+                "gpu": "RTX 5050 8GB DDR7",
+                "so": "FreeDOS",
+                "color": "Jaeger Gray",
+                "extras": "Con mochila",
+                "precio": 5599000
+              },
+              {
+                "codigo": "2890",
+                "procesador": "AMD Ryzen 9 8940HX",
+                "ram": "32GB DDR5",
+                "almacenamiento": "1TB SSD",
+                "pantalla": "16\" FHD",
+                "gpu": "RTX 5060 8GB DDR7",
+                "so": "FreeDOS",
+                "color": "Eclipse Gray",
+                "precio": 6849000
+              }
+            ]
+          },
+          "asus_rog_strix": {
+            "marca": "ASUS",
+            "serie": "ROG Strix",
+            "modelos": [
+              {
+                "codigo": "2445",
+                "procesador": "Intel Core i9-14900HX",
+                "ram": "32GB DDR5",
+                "almacenamiento": "1TB SSD",
+                "pantalla": "16\" WQXGA",
+                "gpu": "RTX 4060 8GB DDR6",
+                "so": "Windows 11",
+                "color": "Volt",
+                "extras": "Con mochila y mouse",
+                "precio": 8799000
+              }
+            ]
+          },
+          "lenovo": {
+            "marca": "Lenovo",
+            "modelos": [
+              {
+                "codigo": "2912",
+                "procesador": "Intel Core i3 1315U",
+                "ram": "8GB RAM",
+                "almacenamiento": "256GB SSD",
+                "pantalla": "14\" FHD",
+                "so": "Linux",
+                "color": "Iron Grey",
+                "precio": 1260000
+              },
+              {
+                "codigo": "2673",
+                "procesador": "AMD Ryzen 5 7520U",
+                "ram": "16GB LPDDR5",
+                "almacenamiento": "512GB SSD",
+                "pantalla": "14\" FHD",
+                "so": "Linux",
+                "color": "Arctic Grey",
+                "precio": 1389000
+              },
+              {
+                "codigo": "2647",
+                "procesador": "Intel Core i5 13420H",
+                "ram": "8GB DDR5",
+                "almacenamiento": "512GB SSD",
+                "pantalla": "15.6\" FHD",
+                "so": "FreeDOS",
+                "color": "Luna Grey",
+                "precio": 1729000
+              },
+              {
+                "codigo": "2643",
+                "procesador": "AMD Ryzen 7 7730U",
+                "ram": "16GB DDR4",
+                "almacenamiento": "1TB SSD",
+                "pantalla": "15.6\" FHD",
+                "so": "FreeDOS",
+                "color": "Arctic Grey",
+                "precio": 2099000
+              },
+              {
+                "codigo": "2644",
+                "procesador": "Intel Core i7-13620H",
+                "ram": "16GB LPDDR5",
+                "almacenamiento": "512GB SSD",
+                "pantalla": "15.6\" FHD",
+                "so": "FreeDOS",
+                "color": "Arctic Grey",
+                "precio": 2379000
+              }
+            ]
+          },
+          "hp": {
+            "marca": "HP",
+            "modelos": [
+              {
+                "codigo": "2568",
+                "procesador": "AMD Ryzen 3 7330U",
+                "ram": "8GB DDR4",
+                "almacenamiento": "512GB SSD",
+                "pantalla": "14\" HD",
+                "so": "FreeDOS",
+                "color": "Negro",
+                "precio": 1150000
+              },
+              {
+                "codigo": "2734",
+                "procesador": "Intel Core i3 N305",
+                "ram": "8GB DDR4",
+                "almacenamiento": "512GB SSD",
+                "pantalla": "14\" FHD",
+                "so": "FreeDOS",
+                "color": "Silver",
+                "precio": 1230000
+              },
+              {
+                "codigo": "2895",
+                "procesador": "Intel Core 7 150U",
+                "ram": "16GB DDR5",
+                "almacenamiento": "512GB SSD",
+                "pantalla": "14\" 2K Touch",
+                "so": "Windows 11",
+                "color": "Silver",
+                "tipo": "2 en 1",
+                "precio": 2669000
+              },
+              {
+                "codigo": "2672",
+                "procesador": "AMD Ryzen 7 7730U",
+                "ram": "16GB DDR4",
+                "almacenamiento": "512GB SSD",
+                "pantalla": "15.6\" FHD",
+                "so": "FreeDOS",
+                "color": "Dorado cálido",
+                "precio": 1699000
+              },
+              {
+                "codigo": "2897",
+                "procesador": "Intel Core i5-1250H",
+                "ram": "8GB DDR4",
+                "almacenamiento": "512GB SSD",
+                "pantalla": "15.6\" FHD",
+                "gpu": "RTX 2050 4GB",
+                "so": "Windows 11",
+                "color": "Mica Silver",
+                "precio": 2199000
+              }
+            ]
+          },
+          "acer": {
+            "marca": "Acer",
+            "modelos": [
+              {
+                "codigo": "2585",
+                "procesador": "Intel Core 5 (Serie 1) 120U",
+                "ram": "16GB LPDDR5",
+                "almacenamiento": "512GB SSD",
+                "pantalla": "15.6\" FHD IPS",
+                "so": "Linux",
+                "color": "Steel Gray",
+                "precio": 1715000
+              },
+              {
+                "codigo": "2584",
+                "procesador": "AMD Ryzen 7 7500U",
+                "ram": "16GB DDR4",
+                "almacenamiento": "1TB SSD",
+                "pantalla": "15.6\" FHD IPS",
+                "so": "Windows 11 Home",
+                "color": "Silver",
+                "precio": 2072000
+              }
+            ]
+          },
+          "apple": {
+            "marca": "Apple",
+            "serie": "MacBook Pro",
+            "modelos": [
+              {
+                "codigo": "2896",
+                "procesador": "M4 Pro Max",
+                "ram": "24GB RAM",
+                "almacenamiento": "512GB SSD",
+                "pantalla": "14\" Retina XDR",
+                "so": "macOS",
+                "color": "Space Black",
+                "precio": 9799000,
+                "imagenes": [
+                  "/fotos/macbook_pro_m4_pro_max_24gb_ra_1.webp",
+                  "/fotos/macbook_pro_m4_pro_max_24gb_ra_2.webp",
+                  "/fotos/macbook_pro_m4_pro_max_24gb_ra_3.webp",
+                  "/fotos/macbook_pro_m4_pro_max_24gb_ra_4.webp",
+                  "/fotos/macbook_pro_m4_pro_max_24gb_ra_5.webp"
+                ]
+              }
+            ]
+          }
+        },
+        "todo_en_uno": {
+          "hp": [
+            {
+              "codigo": "2170",
+              "procesador": "Intel N100",
+              "ram": "8GB DDR4",
+              "almacenamiento": "256GB SSD",
+              "pantalla": "21.5\" Full HD",
+              "so": "FreeDOS",
+              "color": "Negro",
+              "precio": 1059000
+            },
+            {
+              "codigo": "2182",
+              "procesador": "Intel Core i3 N300",
+              "ram": "8GB DDR4",
+              "almacenamiento": "256GB SSD",
+              "pantalla": "21.5\" Full HD",
+              "so": "FreeDOS",
+              "color": "Negro",
+              "precio": 1459000
+            }
+          ],
+          "lenovo": [
+            {
+              "codigo": "2639",
+              "procesador": "Intel Core i5-13420H",
+              "ram": "8GB DDR4",
+              "almacenamiento": "256GB SSD",
+              "pantalla": "23.8\" FHD",
+              "so": "Linux",
+              "color": "Silver",
+              "precio": 1849000
+            }
+          ],
+          "asus": [
+            {
+              "codigo": "1815",
+              "procesador": "Intel Core i3-1115G4",
+              "ram": "4GB+4GB",
+              "almacenamiento": "256GB SSD",
+              "pantalla": "23.8\"",
+              "so": "FreeDOS",
+              "precio": 1450000
+            },
+            {
+              "codigo": "2642",
+              "procesador": "Intel Core i5-13420H",
+              "ram": "8GB DDR5",
+              "almacenamiento": "512GB SSD",
+              "pantalla": "23.8\" Full HD",
+              "so": "FreeDOS",
+              "color": "Negro",
+              "precio": 1999000
+            },
+            {
+              "codigo": "2675",
+              "procesador": "Intel Core i5-13420H",
+              "ram": "8GB DDR5",
+              "almacenamiento": "512GB SSD",
+              "pantalla": "23.8\" Full HD",
+              "so": "FreeDOS",
+              "color": "Blanco",
+              "precio": 1999000
+            },
+            {
+              "codigo": "2678",
+              "procesador": "Intel Core i5-13420H",
+              "ram": "8GB DDR5",
+              "almacenamiento": "512GB SSD",
+              "pantalla": "27\" Full HD",
+              "so": "FreeDOS",
+              "color": "Blanco",
+              "precio": 2249000
+            }
+          ]
+        },
+        "componentes": {
+          "memoria_ram": [
+            {
+              "codigo": "2700",
+              "marca": "Attech",
+              "tipo": "DDR4 Portátil",
+              "capacidad": "16GB",
+              "velocidad": "3200MHz",
+              "precio": 144500
+            },
+            {
+              "codigo": "2741",
+              "marca": "Attech",
+              "tipo": "DDR4 Portátil",
+              "capacidad": "32GB",
+              "velocidad": "3200MHz",
+              "precio": 319000
+            },
+            {
+              "codigo": "2418",
+              "marca": "ADATA",
+              "tipo": "DDR5 Portátil",
+              "capacidad": "8GB",
+              "velocidad": "4800MHz",
+              "precio": 95000
+            }
+          ],
+          "discos_ssd_sata": [
+            {
+              "codigo": "2690",
+              "marca": "ADATA",
+              "capacidad": "480GB",
+              "tipo": "SATA 2.5\"",
+              "precio": 120000
+            },
+            {
+              "codigo": "2112",
+              "marca": "ADATA",
+              "capacidad": "512GB",
+              "tipo": "SATA 2.5\"",
+              "precio": 122000
+            },
+            {
+              "codigo": "2691",
+              "marca": "ADATA",
+              "capacidad": "960GB",
+              "tipo": "SATA 2.5\"",
+              "precio": 225000
+            },
+            {
+              "codigo": "2113",
+              "marca": "ADATA",
+              "capacidad": "1TB",
+              "tipo": "SATA 2.5\"",
+              "precio": 229000
+            },
+            {
+              "codigo": "2383",
+              "marca": "ADATA",
+              "capacidad": "2TB",
+              "tipo": "SATA 2.5\"",
+              "precio": 443000
+            }
+          ],
+          "discos_ssd_pci": [
+            {
+              "codigo": "2692",
+              "marca": "ADATA",
+              "modelo": "Legend 700",
+              "capacidad": "256GB",
+              "tipo": "PCIe Gen 3 x4 M.2 2280",
+              "precio": 87000
+            },
+            {
+              "codigo": "2701",
+              "marca": "ADATA",
+              "modelo": "Legend 700",
+              "capacidad": "512GB",
+              "tipo": "PCIe Gen 3 x4 M.2 2280",
+              "precio": 134000
+            }
+          ],
+          "discos_externos": [
+            {
+              "codigo": "2178",
+              "marca": "ADATA",
+              "modelo": "HD330 Antigolpes",
+              "capacidad": "4TB",
+              "conexion": "USB 3.2",
+              "color": "Negro",
+              "precio": 540000
+            },
+            {
+              "codigo": "2498",
+              "marca": "ADATA",
+              "modelo": "HD330 Antigolpes",
+              "capacidad": "5TB",
+              "conexion": "USB 3.2",
+              "color": "Negro",
+              "precio": 685000
+            },
+            {
+              "codigo": "2641",
+              "marca": "ADATA",
+              "modelo": "SC750 SSD Externo",
+              "capacidad": "1TB",
+              "conexion": "USB 3.2",
+              "color": "Negro",
+              "precio": 299000
+            }
+          ]
+        },
+        "accesorios": {
+          "morrales": [
+            {
+              "codigo": "2684",
+              "marca": "HP",
+              "modelo": "Travel",
+              "tamaño": "15.6\"",
+              "color": "Gris Hierro",
+              "precio": 70000
+            },
+            {
+              "codigo": "2685",
+              "marca": "HP",
+              "modelo": "Travel",
+              "tamaño": "15.6\"",
+              "color": "Azul",
+              "precio": 70000
+            },
+            {
+              "codigo": "2686",
+              "marca": "HP",
+              "modelo": "Campus",
+              "tamaño": "15.6\"",
+              "color": "Verde",
+              "precio": 78000
+            },
+            {
+              "codigo": "2687",
+              "marca": "HP",
+              "modelo": "Campus",
+              "tamaño": "15.6\"",
+              "color": "Lavanda",
+              "precio": 78000
+            }
+          ],
+          "domotica": [
+            {
+              "codigo": "2722",
+              "marca": "TP-Link",
+              "modelo": "Tapo C200",
+              "tipo": "Cámara IP WiFi",
+              "resolucion": "1080P",
+              "caracteristicas": "360 grados, Detección IA",
+              "precio": 80000
+            },
+            {
+              "codigo": "2724",
+              "marca": "TP-Link",
+              "modelo": "Tapo C210",
+              "tipo": "Cámara IP WiFi",
+              "resolucion": "3MP 2K",
+              "caracteristicas": "360 grados, Detección IA",
+              "precio": 99000
+            },
+            {
+              "codigo": "2726",
+              "marca": "TP-Link",
+              "modelo": "Tapo C510W",
+              "tipo": "Cámara IP WiFi Exterior",
+              "resolucion": "3MP 2K",
+              "caracteristicas": "360 grados, Detección IA, Exterior",
+              "precio": 188500
+            }
+          ],
+          "memoria_usb": [
+            {
+              "codigo": "2693",
+              "marca": "ADATA",
+              "capacidad": "32GB",
+              "tipo": "Micro SD",
+              "precio": 13000
+            },
+            {
+              "codigo": "2694",
+              "marca": "ADATA",
+              "capacidad": "64GB",
+              "tipo": "Micro SD",
+              "precio": 16000
+            },
+            {
+              "codigo": "2996",
+              "marca": "ADATA",
+              "capacidad": "256GB",
+              "tipo": "Micro SD",
+              "precio": 69900
+            },
+            {
+              "codigo": "2698",
+              "marca": "ADATA",
+              "modelo": "UV240",
+              "capacidad": "64GB",
+              "tipo": "USB",
+              "color": "Negro",
+              "precio": 17000
+            }
+          ]
+        }
+      }
+    },
+    "vehiculos": {
+      "nombre": "Vehículos y Motos",
+      "descripcion": "Motocicletas en excelente estado",
+      "productos": {
+        "motos": [
+          {
+            "id": "MOTO_001",
+            "marca": "Bajaj",
+            "modelo": "Pulsar NS 160 FI",
+            "año": 2020,
+            "tipo": "Naked Sport",
+            "cilindraje": "160cc",
+            "caracteristicas": [
+              "Inyección electrónica",
+              "Frenos disco delantero y trasero",
+              "Excelente estado",
+              "Papeles al día",
+              "Mantenimiento completo"
+            ],
+            "precio": 6000000,
+            "moneda": "COP",
+            "ubicacion": "Cali, Valle del Cauca",
+            "estado": "Disponible",
+            "garantia": "Papeles al día hasta enero 2025",
+            "imagenes": [
+              "/fotos/moto 3.jpg"
+            ]
+          }
+        ]
+      }
+    },
+    "punto_de_venta": {
+      "nombre": "Equipos Punto de Venta (POS)",
+      "descripcion": "Equipos especializados para puntos de venta y comercio",
+      "productos": {
+        "todo_en_uno_pos": {
+          "digital_pos": [
+            {
+              "codigo": "2426",
+              "marca": "Digital POS",
+              "modelo": "DIG-104W-V1",
+              "procesador": "Intel Core i3",
+              "ram": "8GB DDR3",
+              "almacenamiento": "256GB SSD",
+              "pantalla": "10.4\" Touch",
+              "precio": 1569000
+            },
+            {
+              "codigo": "2102",
+              "marca": "Digital POS",
+              "modelo": "DIG-150W-V2",
+              "procesador": "Intel Core i3",
+              "ram": "8GB DDR3",
+              "almacenamiento": "256GB SSD",
+              "pantalla": "15\" Touch",
+              "precio": 1729000
+            }
+          ],
+          "sat": [
+            {
+              "codigo": "2284",
+              "marca": "SAT",
+              "modelo": "N140 J41 4S128+W",
+              "procesador": "Intel Celeron",
+              "ram": "4GB DDR4",
+              "almacenamiento": "128GB SSD",
+              "pantalla": "15\" Touch",
+              "precio": 1390000
+            },
+            {
+              "codigo": "2285",
+              "marca": "SAT",
+              "modelo": "N140 J41 8S256+W",
+              "procesador": "Intel Celeron",
+              "ram": "8GB DDR4",
+              "almacenamiento": "256GB SSD",
+              "pantalla": "15\" Touch",
+              "precio": 1420000
+            }
+          ],
+          "jaltech": [
+            {
+              "codigo": "2353",
+              "marca": "JALTECH",
+              "modelo": "JAL-CEL 15.6 4125",
+              "procesador": "Intel Celeron J4125",
+              "ram": "4GB DDR4",
+              "almacenamiento": "128GB SSD",
+              "pantalla": "15\" Touch",
+              "so": "Linux",
+              "precio": 1280000
+            },
+            {
+              "codigo": "2674",
+              "marca": "JALTECH",
+              "modelo": "JAL-CEL 15.6 4125",
+              "procesador": "Intel Celeron J4125",
+              "ram": "8GB DDR4",
+              "almacenamiento": "128GB SSD",
+              "pantalla": "15\" Touch",
+              "so": "Linux",
+              "precio": 1320000
+            }
+          ]
+        },
+        "impresoras": {
+          "termicas": [
+            {
+              "codigo": "2616",
+              "marca": "EPSON",
+              "modelo": "TM-T20IIIL-001",
+              "conexiones": "USB, Serial",
+              "caracteristicas": "Corte Automático, 80mm",
+              "precio": 529000
+            },
+            {
+              "codigo": "2570",
+              "marca": "EPSON",
+              "modelo": "TM-T20III",
+              "conexiones": "USB, Serial",
+              "caracteristicas": "Corte Automático, 80mm y 58mm",
+              "precio": 659000
+            },
+            {
+              "codigo": "2618",
+              "marca": "EPSON",
+              "modelo": "TM-M30II-SL",
+              "conexiones": "USB, Red, Bluetooth, WiFi",
+              "caracteristicas": "Corte Automático, 80mm y 58mm, Soporte Tablet",
+              "precio": 999000
+            }
+          ]
+        },
+        "lectores_codigo": [
+          {
+            "codigo": "2288",
+            "marca": "Digital POS",
+            "modelo": "DIG-X6266",
+            "tipo": "1D, 2D",
+            "modo": "Manual, Automático y Continuo",
+            "precio": 89000
+          },
+          {
+            "codigo": "2289",
+            "marca": "Digital POS",
+            "modelo": "DIG-D40",
+            "tipo": "1D, 2D",
+            "modo": "Manual, Automático y Continuo",
+            "precio": 89000
+          },
+          {
+            "codigo": "2290",
+            "marca": "Digital POS",
+            "modelo": "DIG-D40RB",
+            "tipo": "1D, 2D",
+            "conexion": "Inalámbrico Bluetooth",
+            "precio": 203000
+          }
+        ],
+        "cajones_monedero": [
+          {
+            "codigo": "2555",
+            "marca": "Digital POS",
+            "modelo": "DIG-KR330 ECO",
+            "compartimentos": "4 Billetes, 8 Monedas",
+            "precio": 114000
+          },
+          {
+            "codigo": "2554",
+            "marca": "Digital POS",
+            "modelo": "DIG-KR330",
+            "compartimentos": "4 Billetes, 8 Monedas",
+            "precio": 149000
+          },
+          {
+            "codigo": "2276",
+            "marca": "Digital POS",
+            "modelo": "DIG-KR410 ECO",
+            "compartimentos": "5 Billetes, 8 Monedas",
+            "precio": 124000
+          }
+        ]
+      }
+    }
+  },
+  "servicios": {
+    "garantias": {
+      "productos_fisicos": "6-12 meses según el producto",
+      "cursos_digitales": "Garantía de satisfacción 30 días",
+      "soporte_tecnico": "Incluido durante período de garantía"
+    },
+    "envios": {
+      "cobertura": "Cali y municipios cercanos",
+      "envio_gratis": "Compras mayores a $100.000 COP",
+      "tiempo_entrega": "1-2 días hábiles",
+      "seguimiento": "En tiempo real"
+    },
+    "formas_pago": [
+      "Transferencias bancarias",
+      "Efectivo contra entrega",
+      "Tarjetas de crédito/débito (próximamente)",
+      "Pago por PSE"
+    ],
+    "devoluciones": {
+      "plazo": "Hasta 30 días después de la compra",
+      "condicion": "Producto en perfecto estado",
+      "reembolso": "Completo del valor pagado",
+      "terminos": "Aplican términos y condiciones"
+    },
+    "soporte": {
+      "productos_fisicos": "Durante período de garantía",
+      "cursos_digitales": "Email y WhatsApp",
+      "asesoria": "Personalizada antes y después de compra"
+    },
+    "promociones": [
+      "Descuentos por volumen",
+      "Promociones especiales en fechas festivas",
+      "Precios especiales para estudiantes",
+      "Paquetes combinados con descuento"
+    ]
+  },
+  "metadata": {
+    "fecha_actualizacion": "2024-10-25",
+    "version": "1.0",
+    "total_productos": {
+      "mega_packs": 40,
+      "laptops": 50,
+      "todo_en_uno": 15,
+      "componentes": 25,
+      "pos_equipos": 30,
+      "vehiculos": 1
+    },
+    "rangos_precios": {
+      "mega_packs_individual": 20000,
+      "mega_pack_completo": 60000,
+      "laptops_desde": 1150000,
+      "laptops_hasta": 9799000,
+      "componentes_desde": 13000,
+      "pos_desde": 89000,
+      "vehiculos": 6500000
+    }
+  }
+}

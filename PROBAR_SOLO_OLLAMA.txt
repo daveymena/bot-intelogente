@@ -1,0 +1,79 @@
+========================================
+PROBAR SOLO OLLAMA (SIN GROQ)
+========================================
+
+Este script prueba el desempeño de Ollama
+sin usar Groq para evaluar su calidad.
+
+========================================
+EJECUTAR:
+========================================
+
+npx tsx scripts/entrenar-solo-ollama.ts
+
+
+========================================
+QUÉ HACE:
+========================================
+
+1. Verifica que Ollama esté disponible
+2. Prueba con 25 preguntas comunes
+3. Mide tiempo de respuesta
+4. Evalúa calidad de respuestas
+5. Guarda las mejores en base de conocimiento
+6. Genera reporte de desempeño
+
+
+========================================
+MÉTRICAS EVALUADAS:
+========================================
+
+✅ Tasa de éxito (% de respuestas exitosas)
+✅ Tiempo promedio de respuesta
+✅ Calidad de respuestas (confianza)
+✅ Comparación con Groq
+
+
+========================================
+RESULTADO ESPERADO:
+========================================
+
+📊 RESUMEN:
+   Total: 25 preguntas
+   Exitosas: 20-25
+   Tasa de éxito: 80-100%
+   Tiempo promedio: 2-5 segundos
+
+🎯 EVALUACIÓN:
+   ✅ EXCELENTE - Ollama funciona muy bien
+   ✅ RÁPIDO - Respuestas en menos de 3s
+
+💡 RECOMENDACIÓN:
+   ✅ Ollama es adecuado para entrenamiento
+   ✅ Puedes usarlo como IA principal
+
+
+========================================
+SI OLLAMA ES LENTO O FALLA:
+========================================
+
+Opciones:
+1. Usar Groq como principal
+2. Ollama solo para entrenamiento
+3. Base de conocimiento como respaldo
+
+
+========================================
+VENTAJAS DE OLLAMA:
+========================================
+
+✅ Ilimitado (sin límite de tokens)
+✅ Gratis (sin costos)
+✅ Rápido (1-3 segundos)
+✅ Local (no depende de internet)
+
+
+========================================
+FECHA: 2025-11-11
+ESTADO: LISTO PARA PROBAR
+========================================

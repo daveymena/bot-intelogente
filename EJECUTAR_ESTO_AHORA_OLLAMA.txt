@@ -1,0 +1,78 @@
+========================================
+  VERIFICAR OLLAMA - EJECUTAR AHORA
+========================================
+
+PROBLEMA DETECTADO:
+- Ollama devuelve 404 (modelo no instalado)
+- Error de Prisma con tags (YA CORREGIDO)
+
+SOLUCIONES APLICADAS:
+✅ Configuración .env corregida
+✅ Error de Prisma corregido (has → hasSome)
+✅ Timeout aumentado a 45 segundos
+✅ Scripts de verificación creados
+
+========================================
+  PASO 1: VERIFICAR OLLAMA
+========================================
+
+Ejecutar:
+  VERIFICAR_OLLAMA_AHORA.bat
+
+Esto verifica:
+1. Conexión a Ollama
+2. Modelos disponibles
+3. Generación de texto
+
+========================================
+  PASO 2: INSTALAR MODELO (SI FALTA)
+========================================
+
+Si el modelo llama3.2:3b no está instalado:
+
+1. Ir a Easypanel
+2. Abrir terminal del contenedor Ollama
+3. Ejecutar:
+   ollama pull llama3.2:3b
+
+========================================
+  PASO 3: PROBAR ORQUESTADOR
+========================================
+
+Una vez Ollama funcione:
+  npx tsx scripts/test-ollama-orchestrator.ts
+
+========================================
+  ARCHIVOS IMPORTANTES
+========================================
+
+Configuración:
+  .env (YA ACTUALIZADO)
+
+Scripts de verificación:
+  scripts/verificar-ollama-simple.ts
+  scripts/test-solo-ollama.ts
+  VERIFICAR_OLLAMA_AHORA.bat
+
+Documentación:
+  VERIFICAR_OLLAMA_CONFIGURACION.md
+
+Orquestador:
+  src/lib/ollama-orchestrator-professional.ts
+
+========================================
+  CONFIGURACIÓN ACTUAL
+========================================
+
+URL: https://davey-ollama2.mapf5v.easypanel.host
+Modelo: llama3.2:3b
+Timeout: 45 segundos
+Estado: Pendiente de verificación
+
+========================================
+  EJECUTAR AHORA
+========================================
+
+  VERIFICAR_OLLAMA_AHORA.bat
+
+========================================

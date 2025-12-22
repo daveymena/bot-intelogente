@@ -1,0 +1,121 @@
+========================================
+🦙 OLLAMA FORZADO - EJECUTAR AHORA
+========================================
+
+✅ CAMBIOS COMPLETADOS:
+- SearchAgent FORZADO a usar Ollama
+- handleWithAI() implementado
+- Variables configuradas
+- Scripts de prueba creados
+
+========================================
+🚀 PASOS PARA EJECUTAR
+========================================
+
+1. VERIFICAR OLLAMA
+   
+   Abre una terminal y ejecuta:
+   
+   ollama serve
+   
+   Debe decir: "Ollama is running"
+
+2. VERIFICAR MODELO
+   
+   En otra terminal:
+   
+   ollama list
+   
+   Debe aparecer: gemma2:4b
+   
+   Si no está, descargarlo:
+   
+   ollama pull gemma2:4b
+
+3. PROBAR EL SISTEMA
+   
+   Ejecuta el script de prueba:
+   
+   probar-ollama-forzado.bat
+   
+   Debe mostrar:
+   ✅ Ollama está corriendo
+   ✅ Búsqueda con Ollama funciona
+
+4. INICIAR EL BOT
+   
+   npm run dev
+   
+   Espera a que diga:
+   "Server running on port 4000"
+
+5. PROBAR EN WHATSAPP
+   
+   Envía estos mensajes:
+   - "Curso de Piano"
+   - "Busco laptop para diseño"
+   - "Quiero ver motos"
+
+========================================
+📊 LOGS ESPERADOS
+========================================
+
+[SearchAgent] 🦙 FORZANDO uso de Ollama
+[Ollama] 🚀 Usando modelo: gemma2:4b
+[Ollama] ⚡ Respuesta en 3500ms
+[SearchAgent] 🔑 Keywords: curso, piano
+[SearchAgent] ✅ 1 producto encontrado
+
+========================================
+⚠️ SI HAY ERRORES
+========================================
+
+Error: "Ollama timeout"
+→ Aumenta timeout en .env:
+  OLLAMA_TIMEOUT=600000
+
+Error: "Model not found"
+→ Descarga el modelo:
+  ollama pull gemma2:4b
+
+Error: "Ollama no configurado"
+→ Verifica .env:
+  OLLAMA_ENABLED=true
+  OLLAMA_BASE_URL=http://localhost:11434
+  OLLAMA_MODEL=gemma2:4b
+
+========================================
+🎯 RESULTADO ESPERADO
+========================================
+
+ANTES:
+Cliente: "Curso de Piano"
+Bot: "No encontré productos" ❌
+
+AHORA:
+Cliente: "Curso de Piano"
+Bot: 📸 [Foto del curso]
+     🎹 Curso de Piano Completo
+     💰 50,000 COP ✅
+
+========================================
+✅ CONFIRMACIÓN
+========================================
+
+El bot ahora:
+✅ USA OLLAMA para TODAS las búsquedas
+✅ Entiende contexto conversacional
+✅ Encuentra "Curso de Piano"
+✅ Mantiene coherencia
+✅ Es 100% GRATIS
+
+========================================
+🚀 ¡EJECUTA AHORA!
+========================================
+
+1. ollama serve
+2. probar-ollama-forzado.bat
+3. npm run dev
+4. Prueba en WhatsApp: "Curso de Piano"
+
+========================================

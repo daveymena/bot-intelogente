@@ -1,0 +1,21 @@
+{
+  "1": [
+    { "from": "client", "text": "Hola, buenos días", "time": "10:00" },
+    { "from": "bot", "text": "¡Hola! 👋 Soy David Martínez de Tecnovariedades D&S. ¿En qué puedo ayudarte hoy?", "time": "10:00" },
+    { "from": "client", "text": "Me interesa un portátil para estudiar", "time": "10:01" },
+    { "from": "bot", "text": "¡Claro! 😊 Tenemos varias opciones de portátiles:\n\n*1.* Asus Vivobook Go 15 Ryzen 3 - $1.329.900\n*2.* Asus Vivobook 15 Intel i5 - $1.749.900\n*3.* Asus Vivobook Go 15 Ryzen 5 - $1.769.900\n\n¿Cuál te interesa?", "time": "10:01" },
+    { "from": "client", "text": "Me interesa el portátil Asus", "time": "10:02" }
+  ],
+  "2": [
+    { "from": "client", "text": "Hola, tienen cursos de trading?", "time": "09:30" },
+    { "from": "bot", "text": "¡Hola! 👋 Sí, tenemos el Mega Pack 39: Trading y Forex con +45 cursos por solo $20.000 COP. ¿Te interesa?", "time": "09:30" },
+    { "from": "client", "text": "Quiero el curso de trading", "time": "09:31" }
+  ],
+  "3": [
+    { "from": "client", "text": "Hola, quiero comprar el pack de programación", "time": "08:00" },
+    { "from": "bot", "text": "¡Excelente elección! 🚀 El Mega Pack 16: Programación tiene +100 cursos por $20.000 COP. ¿Procedemos con el pago?", "time": "08:00" },
+    { "from": "client", "text": "Sí, cómo pago?", "time": "08:01" },
+    { "from": "bot", "text": "💳 Puedes pagar por:\n\n📱 Nequi/Daviplata: 313 617 4267\n\nUna vez pagues, envíame el comprobante 📸", "time": "08:01" },
+    { "from": "client", "text": "Gracias, ya hice el pago", "time": "08:15" }
+  ]
+}

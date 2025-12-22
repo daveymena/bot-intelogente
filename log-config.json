@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "level": "debug",
+  "modules": {
+    "SimpleHandler": true,
+    "BuscarProductos": true,
+    "PhotoService": true,
+    "RealDataEnforcer": true,
+    "Conversación": true
+  },
+  "timestamp": true,
+  "colors": true
+}

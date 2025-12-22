@@ -1,0 +1,133 @@
+========================================
+ACTIVAR SISTEMA DE APRENDIZAJE LOCAL
+========================================
+
+NUEVO SISTEMA IMPLEMENTADO:
+✅ Base de conocimiento local
+✅ Aprendizaje automático de conversaciones
+✅ Respaldo cuando APIs fallan
+✅ Se vuelve más inteligente con el tiempo
+
+========================================
+EJECUTAR EN ORDEN:
+========================================
+
+1. GENERAR CLIENTE DE PRISMA:
+   
+   npx prisma generate
+
+
+2. CREAR TABLA EN BASE DE DATOS:
+   
+   npx prisma db push
+
+
+3. PROBAR EL SISTEMA:
+   
+   npx tsx scripts/test-knowledge-base.ts
+
+
+4. REINICIAR EL BOT:
+   
+   npm run dev
+
+
+========================================
+QUÉ ESPERAR:
+========================================
+
+Al iniciar el bot verás:
+✅ "🔑 8 API keys de Groq disponibles"
+✅ "🧠 Inicializando base de conocimiento local..."
+✅ "✅ X entradas cargadas en memoria"
+
+Durante las conversaciones:
+✅ Respuestas exitosas se guardan automáticamente
+✅ Si las APIs fallan, busca en conocimiento local
+✅ El bot aprende con cada conversación
+
+========================================
+CÓMO FUNCIONA:
+========================================
+
+ESCENARIO 1 - APIs Disponibles:
+Cliente: "tienes el curso de piano?"
+   ↓
+Bot usa Groq API
+   ↓
+✅ Respuesta generada
+   ↓
+🧠 Respuesta guardada en conocimiento local
+   ↓
+Cliente recibe respuesta
+
+ESCENARIO 2 - APIs Agotadas:
+Cliente: "tienes el curso de piano?"
+   ↓
+Bot intenta con 8 API keys
+   ↓
+❌ Todas tienen rate limit
+   ↓
+🧠 Bot busca en conocimiento local
+   ↓
+✅ Encuentra respuesta similar (95% confianza)
+   ↓
+Cliente recibe: "¡Hola! 😄 Sí, el Curso..."
+                + "💡 Respuesta basada en conocimiento previo"
+
+========================================
+BENEFICIOS:
+========================================
+
+✅ Funciona incluso sin APIs externas
+✅ Aprende de conversaciones exitosas
+✅ Respuestas instantáneas desde caché
+✅ Se adapta al negocio específico
+✅ Ahorra tokens de API
+✅ Mejor experiencia de usuario
+
+========================================
+VERIFICAR QUE FUNCIONA:
+========================================
+
+1. Envía un mensaje por WhatsApp
+2. Revisa los logs:
+   🧠 "Guardando respuesta exitosa..."
+   ✅ "Nueva entrada creada"
+
+3. Simula rate limit (desconecta internet)
+4. Envía el mismo mensaje
+5. Verás:
+   🧠 "Buscando en base de conocimiento local..."
+   ✅ "Respuesta encontrada (score: 95)"
+
+========================================
+COMANDOS ÚTILES:
+========================================
+
+# Ver estadísticas
+npx tsx scripts/test-knowledge-base.ts
+
+# Limpiar entradas de baja calidad
+npx tsx -e "import { LocalKnowledgeBase } from './src/lib/local-knowledge-base'; LocalKnowledgeBase.cleanLowQualityEntries()"
+
+# Ver cuántas entradas hay
+npx tsx -e "import { LocalKnowledgeBase } from './src/lib/local-knowledge-base'; LocalKnowledgeBase.getStats().then(console.log)"
+
+========================================
+DOCUMENTACIÓN:
+========================================
+
+📄 SISTEMA_APRENDIZAJE_LOCAL.md
+   → Documentación técnica completa
+
+📄 SOLUCION_RATE_LIMIT_GROQ.md
+   → Sistema de rotación de APIs
+
+📄 SOLUCION_METODOS_PAGO_PRODUCTO_INCORRECTO.md
+   → Corrección de contexto
+
+========================================
+FECHA: 2025-11-11
+ESTADO: LISTO PARA ACTIVAR
+========================================

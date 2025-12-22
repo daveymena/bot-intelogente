@@ -1,0 +1,154 @@
+========================================
+  ACTUALIZAR CATALOGO - INICIO RAPIDO
+========================================
+
+SITUACION ACTUAL:
+-----------------
+✅ Todos tus productos tienen fotos
+✅ Scrapers funcionando correctamente
+✅ Sistema listo para actualizar
+
+
+OPCIONES DISPONIBLES:
+---------------------
+
+1. SMARTJOYS (RAPIDO)
+   actualizar-smartjoys.bat
+   
+   ⏱️ Tiempo: 10-15 minutos
+   📦 Productos: 20-30
+   ✅ Ideal para: Probar primero
+
+
+2. DISYVAR (AMPLIO)
+   actualizar-disyvar.bat
+   
+   ⏱️ Tiempo: 20-30 minutos
+   📦 Productos: 100-200
+   ✅ Ideal para: Ampliar catálogo
+
+
+3. MEGACOMPUTER (COMPLETO)
+   actualizar-megacomputer.bat
+   
+   ⏱️ Tiempo: 30-45 minutos
+   📦 Productos: 50-100
+   ✅ Ideal para: Laptops y PCs
+
+
+4. TODO (COMPLETO)
+   actualizar-catalogo-completo.bat
+   
+   ⏱️ Tiempo: 1-2 horas
+   📦 Productos: 170-330
+   ✅ Ideal para: Actualización mensual
+
+
+RECOMENDACION:
+--------------
+Empieza con SmartJoys para probar:
+
+  actualizar-smartjoys.bat
+
+
+QUE HACE:
+---------
+1. Abre navegador
+2. Visita smartjoys.co
+3. Extrae 20-30 productos
+4. Guarda en JSON
+5. Importa a base de datos
+6. Agrega margen 20%
+
+
+VERIFICAR DESPUES:
+------------------
+1. Dashboard:
+   http://localhost:3000/dashboard
+
+2. Ver productos:
+   npx tsx scripts/ver-productos.ts
+
+3. Catalogo publico:
+   http://localhost:3000/catalogo
+
+
+PROCESO COMPLETO:
+-----------------
+Paso 1: Ejecutar scraper
+  actualizar-smartjoys.bat
+
+Paso 2: Esperar 10-15 minutos
+
+Paso 3: Verificar en dashboard
+  http://localhost:3000/dashboard
+
+Paso 4: Probar bot
+  Enviar mensaje de prueba
+
+
+MARGENES DE GANANCIA:
+---------------------
+SmartJoys:    20% (configurable)
+Disyvar:      0% (agregar manualmente)
+MegaComputer: 0% (agregar manualmente)
+
+
+AJUSTAR MARGENES:
+-----------------
+Editar archivos:
+- scripts/importar-smartjoys.ts
+- scripts/import-disyvar.ts
+- scripts/re-importar-megacomputer.ts
+
+Buscar: MARGEN_GANANCIA
+
+
+PROBLEMAS COMUNES:
+------------------
+❌ Puppeteer no funciona
+   ✅ npm install puppeteer
+
+❌ Error timeout
+   ✅ Verificar internet
+
+❌ No se encontraron productos
+   ✅ Revisar logs
+
+
+DOCUMENTACION:
+--------------
+📖 GUIA_ACTUALIZAR_CATALOGO.md
+📖 ESTADO_SCRAPERS_Y_DROPSHIPPING.md
+📖 GUIA_RAPIDA_SMARTJOYS.md
+
+
+COMANDO RECOMENDADO:
+--------------------
+
+  actualizar-smartjoys.bat
+
+
+WORKFLOW SEMANAL:
+-----------------
+Lunes: actualizar-smartjoys.bat
+
+
+WORKFLOW MENSUAL:
+-----------------
+Primer dia del mes:
+  actualizar-catalogo-completo.bat
+
+
+========================================
+  ¡LISTO PARA ACTUALIZAR!
+========================================
+
+Doble clic en:
+  actualizar-smartjoys.bat
+
+O ejecutar en terminal:
+  actualizar-smartjoys.bat
+
+
+========================================

@@ -1,0 +1,41 @@
+========================================
+  ✅ CORRECCIÓN DE SALUDOS LISTA
+========================================
+
+PROBLEMA RESUELTO:
+❌ ANTES: "Hola" → Bot ofrecía productos
+✅ AHORA: "Hola" → Bot saluda y ESPERA
+
+CAMBIOS APLICADOS:
+✅ GreetingDetector integrado
+✅ Detecta saludos ANTES de buscar productos
+✅ Respuestas rápidas sin IA ni tokens
+
+PROBAR AHORA:
+
+1. Reiniciar bot:
+   npm run dev
+
+2. TEST 1 - Saludo simple:
+   Envía: "Hola"
+   Espera: Bienvenida SIN productos
+   
+3. TEST 2 - Necesidad específica:
+   Envía: "quiero aprender inglés"
+   Espera: Mega Pack 03 (Inglés) - 190 puntos
+   
+4. TEST 3 - Despedida:
+   Envía: "gracias"
+   Espera: Despedida amable
+
+FLUJO CORRECTO:
+Cliente: "Hola"
+Bot: "¡Hola! 😊 Bienvenido a Tecnovariedades D&S 🎉
+     ¿En qué puedo ayudarte hoy?"
+
+Cliente: "quiero aprender inglés"
+Bot: "¡Perfecto! Tengo el Mega Pack 03 (Inglés)..."
+
+========================================
+  🚀 REINICIAR BOT Y PROBAR
+========================================

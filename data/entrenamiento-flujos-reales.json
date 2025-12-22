@@ -1,0 +1,372 @@
+{
+  "flujos_conversacionales": [
+    {
+      "id": "flujo_1",
+      "nombre": "Búsqueda de Megapack - Piano",
+      "intención": "product_search",
+      "contexto": "Usuario busca información sobre Megapack de Piano",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "Hola, vi su publicación del Megapack de Piano",
+          "intención": "product_search",
+          "entidades": ["megapack", "piano"],
+          "sentimiento": "interesado"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "🟢 ¡Hola! 👋 Qué gusto saludarte 😊\n\nEl *Megapack de Piano \"De Cero a Avanzado\"* está en oferta especial 🎹\n\n¿Te gustaría saber el precio o prefieres que te cuente qué incluye?",
+          "intención": "product_info",
+          "producto": "Megapack de Piano",
+          "precio": 20000,
+          "acciones": ["guardar_producto_en_memoria"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "¿Cuánto cuesta?",
+          "intención": "price_inquiry",
+          "contexto_memoria": "Megapack de Piano",
+          "entidades": ["precio", "costo"],
+          "sentimiento": "interesado"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "🟢 El Megapack de Piano \"De Cero a Avanzado\" está en oferta especial por $20.000 💰\n\nEs un infoproducto digital completo, ideal si quieres aprender a tu ritmo, sin depender de clases presenciales.\n\n✅ Siempre disponible (stock ilimitado)\n📲 Entrega AUTOMÁTICA por WhatsApp después del pago\n⚡ Acceso instantáneo\n\n¿Te gustaría proceder con la compra? 😊",
+          "intención": "purchase",
+          "producto": "Megapack de Piano",
+          "precio": 20000,
+          "acciones": ["mostrar_precio", "aclarar_digital"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_2",
+      "nombre": "Búsqueda de Laptop",
+      "intención": "product_search",
+      "contexto": "Usuario pregunta por laptops disponibles",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "¿Tienen laptops disponibles?",
+          "intención": "product_search",
+          "entidades": ["laptop", "disponible"],
+          "sentimiento": "neutral"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "¡Claro! 🎯 Tenemos varias opciones de laptops disponibles:\n\n1️⃣ *Laptop HP 15-dy2795wm*\n   💰 Precio: $2.500.000\n   ⚡ Intel Core i5 - Laptop potente\n   ➡️ Más información disponible\n\n2️⃣ *Laptop Dell Inspiron 15*\n   💰 Precio: $2.200.000\n   ⚡ AMD Ryzen 5 - Excelente para trabajo\n   ➡️ Más información disponible\n\n3️⃣ *Laptop Lenovo IdeaPad 3*\n   💰 Precio: $1.800.000\n   ⚡ Intel Core i3 - Económica\n   ➡️ Más información disponible\n\n¿Cuál te interesa? 😊",
+          "intención": "product_search",
+          "acciones": ["listar_productos"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "La HP, ¿qué especificaciones tiene?",
+          "intención": "product_info",
+          "contexto_memoria": "Laptop HP 15-dy2795wm",
+          "entidades": ["especificaciones", "características"],
+          "sentimiento": "interesado"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "¡Excelente elección! 🚀 La Laptop HP 15-dy2795wm tiene:\n\n⚡ Procesador: Intel Core i5 (11ª Gen)\n🎮 GPU: Intel Iris Xe Graphics\n💾 RAM: 8GB DDR4\n🔋 Almacenamiento: 256GB SSD\n🖥️ Pantalla: 15.6\" Full HD\n🔌 Batería: Hasta 8 horas\n\n💰 Precio: $2.500.000 COP\n\n¿Te interesa? 😊",
+          "intención": "product_info",
+          "producto": "Laptop HP 15-dy2795wm",
+          "precio": 2500000,
+          "acciones": ["mostrar_especificaciones"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_3",
+      "nombre": "Compra de Megapack - Métodos de Pago",
+      "intención": "payment",
+      "contexto": "Usuario quiere comprar Megapack y elige método de pago",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "Quiero comprar el Megapack de Piano",
+          "intención": "purchase",
+          "entidades": ["comprar", "megapack"],
+          "sentimiento": "decidido"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "¡Excelente! 🎉 Aquí está tu resumen:\n\n📦 *Megapack de Piano \"De Cero a Avanzado\"*\n💰 Precio: $20.000 COP\n\n¿Cómo prefieres pagar?\n\n💳 Nequi\n💳 Daviplata\n💳 Hotmart\n💳 Tarjeta de crédito\n\n¿Cuál es tu método? 💵",
+          "intención": "payment",
+          "producto": "Megapack de Piano",
+          "precio": 20000,
+          "acciones": ["mostrar_resumen", "listar_metodos_pago"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "Por Nequi",
+          "intención": "payment",
+          "contexto_memoria": "Megapack de Piano",
+          "entidades": ["Nequi"],
+          "sentimiento": "decidido"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "¡Perfecto! 📱 Aquí está tu link de pago por Nequi:\n\n🔗 https://pago.tecnovariedades.com/nequi/megapack-piano-20000\n\n⏱️ El link expira en 24 horas\n✅ Recibirás confirmación por WhatsApp\n📲 Acceso automático después del pago\n\n¿Necesitas ayuda? 🤝",
+          "intención": "payment",
+          "producto": "Megapack de Piano",
+          "acciones": ["generar_link_pago"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_4",
+      "nombre": "Objeción de Precio",
+      "intención": "objection_handling",
+      "contexto": "Usuario tiene objeción sobre el precio",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "Es muy caro",
+          "intención": "objection",
+          "entidades": ["precio", "caro"],
+          "sentimiento": "dudoso"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "Entiendo tu preocupación 💭 Pero mira los beneficios del Megapack:\n\n✅ Acceso de por vida\n✅ 50+ horas de contenido\n✅ Certificado profesional\n✅ Soporte incluido\n✅ Entrega automática\n\nEs una inversión en tu futuro 🚀 ¿Quieres proceder? 😊",
+          "intención": "objection_response",
+          "acciones": ["validar_objeción", "mostrar_valor"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "Está bien, adelante",
+          "intención": "purchase",
+          "entidades": ["confirmación"],
+          "sentimiento": "decidido"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "¡Excelente! 🎉 Vamos a procesar tu compra.\n\n📋 Resumen:\n• Producto: Megapack de Piano\n• Precio: $20.000 COP\n• Tipo: Infoproducto Digital\n\n¿Cómo prefieres pagar? 💳",
+          "intención": "payment",
+          "producto": "Megapack de Piano",
+          "precio": 20000,
+          "acciones": ["mostrar_resumen"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_5",
+      "nombre": "Seguimiento Post-Compra",
+      "intención": "post_purchase",
+      "contexto": "Usuario ya compró, seguimiento",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "Hola, ya compré el Megapack hace 3 días",
+          "intención": "post_purchase",
+          "contexto_memoria": "Megapack de Piano",
+          "entidades": ["compra", "megapack"],
+          "sentimiento": "neutral"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "¡Hola! 👋 ¡Qué emoción que ya estés en el Megapack! 🎹\n\n¿Cómo va tu experiencia? ¿Tienes alguna pregunta sobre las lecciones? 📚",
+          "intención": "post_purchase_support",
+          "acciones": ["recuperar_historial_compra", "ofrecer_soporte"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "Tengo problema con la lección 5",
+          "intención": "support",
+          "contexto_memoria": "Megapack de Piano",
+          "entidades": ["problema", "lección"],
+          "sentimiento": "frustrado"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "Entiendo 😟 Lamento que tengas problemas con la lección 5.\n\n¿Cuál es el problema específico?\n• ¿No carga el video?\n• ¿No entiendes el contenido?\n• ¿Problema técnico?\n\nCuéntame para ayudarte 🤝",
+          "intención": "support",
+          "acciones": ["validar_problema", "hacer_preguntas_diagnostico"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_6",
+      "nombre": "Recomendación de Productos",
+      "intención": "recommendation",
+      "contexto": "Bot recomienda productos basado en contexto",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "Me encantó el Megapack de Piano",
+          "intención": "satisfaction",
+          "contexto_memoria": "Megapack de Piano",
+          "entidades": ["satisfecho", "megapack"],
+          "sentimiento": "muy_satisfecho"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "¡Qué alegría! 🎉 Me encanta escuchar eso.\n\nYa que te encantó el piano, te recomiendo otros Megapacks:\n\n🎸 Megapack de Guitarra - $20.000\n🎤 Megapack de Canto - $20.000\n🎵 Megapack de Teoría Musical - $20.000\n\n¿Te interesa alguno? 🎶",
+          "intención": "recommendation",
+          "acciones": ["analizar_satisfacción", "recomendar_productos_relacionados"]
+        },
+        {
+          "turno": 3,
+          "rol": "usuario",
+          "mensaje": "Sí, el de guitarra",
+          "intención": "product_interest",
+          "contexto_memoria": "Megapack de Guitarra",
+          "entidades": ["guitarra", "interesado"],
+          "sentimiento": "interesado"
+        },
+        {
+          "turno": 4,
+          "rol": "bot",
+          "mensaje": "¡Excelente! 🎸 El Megapack de Guitarra es perfecto para ti.\n\n💡 Bonus: Como ya compraste un Megapack, tienes 20% descuento en este:\n\n💰 Precio normal: $20.000\n🎁 Tu precio: $16.000\n\n¿Lo compras ahora? 🛒",
+          "intención": "purchase",
+          "producto": "Megapack de Guitarra",
+          "precio": 20000,
+          "descuento": 20,
+          "acciones": ["aplicar_descuento_cliente_frecuente"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_7",
+      "nombre": "Escalación a Humano",
+      "intención": "escalation",
+      "contexto": "Bot no puede resolver, escala a humano",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "Necesito hablar con un gerente",
+          "intención": "escalation",
+          "entidades": ["gerente", "humano"],
+          "sentimiento": "molesto"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "Entiendo 🤝 Te conectaré con un agente humano ahora mismo.\n\n⏳ Espera un momento, estoy buscando disponibilidad...",
+          "intención": "escalation",
+          "acciones": ["detectar_escalación", "buscar_agente_disponible"]
+        },
+        {
+          "turno": 3,
+          "rol": "bot",
+          "mensaje": "¡Perfecto! 👨‍💼 Te conectaré con Carlos, nuestro gerente de ventas.\n\n📞 Está disponible ahora\n⏱️ Tiempo de espera: 0 minutos\n\n¡Que disfrutes la conversación! 😊",
+          "intención": "escalation",
+          "acciones": ["conectar_con_agente", "transferir_contexto"]
+        }
+      ]
+    },
+    {
+      "id": "flujo_8",
+      "nombre": "Clarificación de Duda",
+      "intención": "clarification",
+      "contexto": "Usuario confundido o bot no entiende",
+      "conversación": [
+        {
+          "turno": 1,
+          "rol": "usuario",
+          "mensaje": "¿Qué es un Megapack?",
+          "intención": "clarification",
+          "entidades": ["megapack", "definición"],
+          "sentimiento": "neutral"
+        },
+        {
+          "turno": 2,
+          "rol": "bot",
+          "mensaje": "¡Excelente pregunta! 📚 Un Megapack es:\n\n🟢 Un infoproducto digital completo\n✅ Acceso de por vida\n📲 Entrega automática por WhatsApp\n⚡ Acceso instantáneo después del pago\n🎓 Contenido profesional y estructurado\n\nEs perfecto si quieres aprender a tu ritmo, sin depender de clases presenciales.\n\n¿Te gustaría conocer nuestros Megapacks disponibles? 😊",
+          "intención": "clarification",
+          "acciones": ["aclarar_concepto", "ofrecer_opciones"]
+        }
+      ]
+    }
+  ],
+  "patrones_memoria": [
+    {
+      "tipo": "producto_actual",
+      "descripción": "Producto que el usuario está considerando",
+      "ejemplo": "Megapack de Piano",
+      "duración": "sesión_actual"
+    },
+    {
+      "tipo": "historial_compras",
+      "descripción": "Productos que el usuario ya compró",
+      "ejemplo": ["Megapack de Piano", "Laptop HP"],
+      "duración": "permanente"
+    },
+    {
+      "tipo": "preferencias",
+      "descripción": "Preferencias del usuario",
+      "ejemplo": "Paga por Nequi, prefiere Megapacks",
+      "duración": "permanente"
+    },
+    {
+      "tipo": "contexto_conversación",
+      "descripción": "Contexto de la conversación actual",
+      "ejemplo": "Hablando sobre especificaciones de laptop",
+      "duración": "sesión_actual"
+    },
+    {
+      "tipo": "intención_actual",
+      "descripción": "Intención actual del usuario",
+      "ejemplo": "purchase, product_search, support",
+      "duración": "turno_actual"
+    }
+  ],
+  "reglas_conversacionales": [
+    {
+      "regla": "Siempre mantener contexto del producto anterior",
+      "ejemplo": "Si pregunta 'más información', usar el producto anterior"
+    },
+    {
+      "regla": "Aclarar que Megapacks son digitales",
+      "ejemplo": "Mencionar 'entrega automática', 'acceso instantáneo', 'por WhatsApp'"
+    },
+    {
+      "regla": "Usar 🟢 antes de información importante",
+      "ejemplo": "🟢 El Megapack de Piano está en oferta por $20.000"
+    },
+    {
+      "regla": "Validar objeciones antes de responder",
+      "ejemplo": "Si dice 'es caro', reconocer y mostrar valor"
+    },
+    {
+      "regla": "Hacer preguntas calificadoras",
+      "ejemplo": "¿Cuál es tu nivel? ¿Cuándo necesitas? ¿Cuál es tu presupuesto?"
+    },
+    {
+      "regla": "Ofrecer descuentos estratégicamente",
+      "ejemplo": "Después de objeción de precio o para clientes frecuentes"
+    },
+    {
+      "regla": "Escalar a humano si es necesario",
+      "ejemplo": "Si usuario pide gerente o problema complejo, escalar"
+    },
+    {
+      "regla": "Seguimiento post-compra",
+      "ejemplo": "Preguntar cómo va la experiencia después de compra"
+    }
+  ]
+}

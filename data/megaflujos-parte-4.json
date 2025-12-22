@@ -1,0 +1,39 @@
+{
+  "megaflujos": [
+    {
+      "id": "megaflujo_5",
+      "nombre": "PRODUCTOS DIGITALES (Megapack - Confianza + Entregas + Soporte)",
+      "categoria": "productos_digitales",
+      "complejidad": "muy_alta",
+      "duracion_promedio": "20-30 minutos",
+      "conversacion": [
+        {"turno": 1, "rol": "usuario", "mensaje": "¿Cómo entregan el megapack?", "intención": "product_inquiry", "entidades": ["megapack", "entrega"], "sentimiento": "neutral"},
+        {"turno": 2, "rol": "bot", "mensaje": "100% digital 📥 Al pagar recibes:\n\n✔ Link de descarga inmediata\n✔ Acceso vitalicio\n✔ Actualizaciones gratis\n✔ Archivos organizados\n✔ Soporte si algo no abre\n\n¿Quieres ver qué incluye?", "intención": "product_info", "acciones": ["explicar_entrega", "ofrecer_detalles"]},
+        {"turno": 3, "rol": "usuario", "mensaje": "Sí, mándame la lista.", "intención": "content_request", "sentimiento": "interesado"},
+        {"turno": 4, "rol": "bot", "mensaje": "Aquí tienes un PDF con toda la lista 📄👇\n(envía PDF con contenido)\n\nTambién puedo enviarte:\n📸 capturas\n🎥 video mostrando las carpetas\n📁 archivo de muestra\n\n¿Qué prefieres?", "intención": "content_delivery", "acciones": ["enviar_lista", "ofrecer_opciones"]},
+        {"turno": 5, "rol": "usuario", "mensaje": "¿Pesa mucho?", "intención": "technical_inquiry", "entidades": ["tamaño"], "sentimiento": "neutral"},
+        {"turno": 6, "rol": "bot", "mensaje": "El pack completo pesa entre 10GB–40GB, pero puedes descargar por carpetas pequeñas.", "intención": "technical_info", "acciones": ["informar_tamaño"]},
+        {"turno": 7, "rol": "usuario", "mensaje": "¿Sirve en mi celular?", "intención": "compatibility_check", "entidades": ["celular"], "sentimiento": "neutral"},
+        {"turno": 8, "rol": "bot", "mensaje": "Sí 😊 Funciona en:\n\n📱 Android\n📱 iPhone\n💻 Windows / Mac\n\nSi algo no abre, te lo convierto.", "intención": "compatibility_info", "acciones": ["confirmar_compatibilidad"]},
+        {"turno": 9, "rol": "usuario", "mensaje": "¿Y cómo sé que sí lo entregas?", "intención": "objection_trust", "entidades": ["confianza", "estafa"], "sentimiento": "desconfiado"},
+        {"turno": 10, "rol": "bot", "mensaje": "Tranquilo, mira 👇\n\n📸 Te envío capturas reales\n🎥 Video navegando carpetas\n📁 Archivo de muestra\n\nY si algo falla → reemplazo inmediato sin costo.", "intención": "reassurance", "acciones": ["mostrar_pruebas", "garantizar_entrega"]},
+        {"turno": 11, "rol": "usuario", "mensaje": "¿Me das descuento?", "intención": "price_negotiation", "sentimiento": "interesado"},
+        {"turno": 12, "rol": "bot", "mensaje": "Claro 🎉\n\nPrecio normal: $69.900\nHoy queda en $39.900 por chat.\n\n¿Lo aprovechas?", "intención": "discount_offer", "acciones": ["ofrecer_descuento"]},
+        {"turno": 13, "rol": "usuario", "mensaje": "Listo.", "intención": "purchase_decision", "sentimiento": "decidido"},
+        {"turno": 14, "rol": "bot", "mensaje": "Perfecto 🙌 ¿Deseas pagar con MercadoPago o PayPal?", "intención": "payment_method", "acciones": ["pedir_método_pago"]},
+        {"turno": 15, "rol": "usuario", "mensaje": "MercadoPago.", "intención": "payment_selection", "sentimiento": "decidido"},
+        {"turno": 16, "rol": "bot", "mensaje": "Aquí tienes tu link seguro 🔗👇\n(link dinámico)\n\nCuando pagues te envio el acceso.", "intención": "payment_link", "acciones": ["enviar_link_pago"]},
+        {"turno": 17, "rol": "usuario", "mensaje": "Listo, pagué.", "intención": "payment_confirmation", "sentimiento": "cooperativo"},
+        {"turno": 18, "rol": "bot", "mensaje": "¡Pago recibido! 🎉 Aquí está tu link de descarga 🚀👇\n(link dinámico con acceso)\n\n¿Deseas factura o versión ligera para celular?", "intención": "delivery_confirmation", "acciones": ["enviar_acceso", "ofrecer_opciones"]},
+        {"turno": 19, "rol": "usuario", "mensaje": "Versión ligera.", "intención": "option_selection", "sentimiento": "cooperativo"},
+        {"turno": 20, "rol": "bot", "mensaje": "Perfecto, aquí va 📱👇\n(link versión ligera)\n\nSi algo no abre o tienes dudas, me escribes.", "intención": "final_delivery", "acciones": ["enviar_versión_ligera", "ofrecer_soporte"]},
+        {"turno": 21, "rol": "usuario", "mensaje": "(Después de 2 horas)\n\nHola, descargué pero no me abre un archivo.", "intención": "support_request", "entidades": ["error"], "sentimiento": "frustrado"},
+        {"turno": 22, "rol": "bot", "mensaje": "Sin problema 😊 ¿Qué archivo es? ¿Qué error te da?", "intención": "support_diagnosis", "acciones": ["diagnosticar_problema"]},
+        {"turno": 23, "rol": "usuario", "mensaje": "Es un PDF, dice que está corrupto.", "intención": "support_info", "sentimiento": "frustrado"},
+        {"turno": 24, "rol": "bot", "mensaje": "Listo, te envío ese archivo en otro formato (Word + imagen). En 5 minutos lo tienes.", "intención": "support_solution", "acciones": ["resolver_problema"]},
+        {"turno": 25, "rol": "usuario", "mensaje": "Gracias, perfecto.", "intención": "satisfaction", "sentimiento": "satisfecho"},
+        {"turno": 26, "rol": "bot", "mensaje": "De nada 😊 Cualquier cosa, aquí estoy. Que disfrutes el pack 🚀", "intención": "post_sale_followup", "acciones": ["cerrar_soporte"]}
+      ]
+    }
+  ]
+}

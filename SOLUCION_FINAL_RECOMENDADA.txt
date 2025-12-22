@@ -1,0 +1,40 @@
+========================================
+  SOLUCION FINAL RECOMENDADA
+========================================
+
+El archivo grande esta en el historial profundo de Git.
+
+MEJOR SOLUCION (MAS RAPIDA):
+
+  REPO_NUEVO_LIMPIO.bat
+
+Esto hara:
+1. Backup del .git actual
+2. Crear nuevo repositorio limpio
+3. Agregar solo archivos importantes
+4. Push con --force (sin historial viejo)
+
+VENTAJAS:
+- Rapido (2 minutos)
+- Seguro (hace backup)
+- Sin archivos grandes
+- Historial limpio
+
+========================================
+
+ALTERNATIVA (MAS LENTA):
+
+  LIMPIAR_TODO_HISTORIAL.bat
+
+Limpia el historial existente
+(Puede tardar 10-15 minutos)
+
+========================================
+
+RECOMENDACION:
+
+Ejecuta: REPO_NUEVO_LIMPIO.bat
+
+Es la solucion mas rapida y segura.
+
+========================================

@@ -1,0 +1,83 @@
+# ========================================
+# ARCHIVOS SENSIBLES - NUNCA SUBIR
+# ========================================
+.env
+.env.*
+!.env.example
+!.env.production.example
+
+# Credenciales y secretos
+*_API_KEY.txt
+*_SECRET.txt
+*_TOKEN.txt
+CREDENCIALES_*.txt
+TUS_CREDENCIALES.txt
+*.pem
+*.key
+
+# ========================================
+# DEPENDENCIAS Y BUILD
+# ========================================
+node_modules/
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+
+# ========================================
+# WHATSAPP SESSIONS (CRÍTICO)
+# ========================================
+auth_sessions/
+whatsapp-sessions/
+*.session
+*.session.json
+
+# ========================================
+# BASE DE DATOS LOCAL
+# ========================================
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+prisma/*.db
+
+# ========================================
+# LOGS Y TEMPORALES
+# ========================================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+temp/
+tmp/
+*.tmp
+
+# ========================================
+# SISTEMA OPERATIVO
+# ========================================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ========================================
+# IDE Y EDITORES
+# ========================================
+.idea/
+*.swp
+*.swo
+*~
+
+# ========================================
+# TRADING BOT (PROYECTO SEPARADO)
+# ========================================
+trading-bot/
+
+# ========================================
+# ARCHIVOS DE PRUEBA LOCALES
+# ========================================
+test-output.log
+debug_*.txt
+*.local.js
+*.local.ts

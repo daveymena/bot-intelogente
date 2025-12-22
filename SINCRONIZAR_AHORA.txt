@@ -1,0 +1,97 @@
+========================================
+  SINCRONIZAR TIENDA Y BOT
+========================================
+
+PROBLEMAS DETECTADOS:
+1. Productos duplicados en la tienda
+2. Imagenes de megapacks no actualizadas
+3. Tienda y bot desincronizados
+
+========================================
+  SOLUCION RAPIDA
+========================================
+
+PASO 1: SINCRONIZAR TODO
+-------------------------
+Ejecuta:
+  sincronizar-tienda.bat
+
+Esto va a:
+✅ Eliminar productos duplicados
+✅ Actualizar imagenes de megapacks
+✅ Sincronizar catalogo completo
+
+PASO 2: AGREGAR IMAGENES PERSONALIZADAS
+----------------------------------------
+1. Sube las imagenes de cada megapack a:
+   https://postimages.org/
+
+2. Copia las URLs directas
+
+3. Edita el archivo:
+   scripts/actualizar-imagenes-megapacks.ts
+
+4. Agrega las URLs en MEGAPACK_IMAGES:
+   
+   const MEGAPACK_IMAGES = {
+     '1': 'https://tu-url.com/megapack-1.jpg',
+     '2': 'https://tu-url.com/megapack-2.jpg',
+     // ... etc
+   }
+
+5. Ejecuta:
+   actualizar-imagenes-megapacks.bat
+
+PASO 3: VERIFICAR
+-----------------
+1. Tienda: http://localhost:3000/tienda
+   ✅ No hay duplicados
+   ✅ Imagenes correctas
+
+2. Catalogo: http://localhost:3000/catalogo
+   ✅ Mismos productos
+   ✅ Todo sincronizado
+
+3. Bot de WhatsApp:
+   "Muestra los megapacks"
+   "Info del Megapack 1"
+   ✅ Encuentra productos
+   ✅ Envia imagenes correctas
+
+========================================
+  COMANDOS DISPONIBLES
+========================================
+
+sincronizar-tienda.bat
+  → Sincronizacion completa
+
+actualizar-imagenes-megapacks.bat
+  → Solo actualizar imagenes
+
+verificar-duplicados.bat
+  → Ver duplicados sin eliminar
+
+ver-productos.bat
+  → Ver todos los productos
+
+========================================
+  DOCUMENTACION COMPLETA
+========================================
+
+📄 GUIA_SINCRONIZACION_TIENDA.md
+   - Guia paso a paso
+   - Solucion de problemas
+   - Mejores practicas
+
+========================================
+  IMPORTANTE
+========================================
+
+⚠️  Haz backup antes de sincronizar:
+    npm run db:backup
+
+⚠️  Verifica siempre despues de sincronizar
+
+⚠️  Las imagenes deben ser URLs publicas
+
+========================================

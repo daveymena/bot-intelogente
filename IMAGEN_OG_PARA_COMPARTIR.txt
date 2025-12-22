@@ -1,0 +1,126 @@
+╔══════════════════════════════════════════════════════════════╗
+║     🖼️ IMAGEN OPEN GRAPH - PARA COMPARTIR EN REDES         ║
+╚══════════════════════════════════════════════════════════════╝
+
+🎯 PROBLEMA RESUELTO:
+   Ahora cuando compartas el link, aparecerá una imagen profesional
+   en WhatsApp, Facebook, Twitter, LinkedIn, etc.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ CAMBIOS REALIZADOS:
+
+1️⃣ URLS ABSOLUTAS:
+   • Antes: /og-image.png (no funcionaba)
+   • Ahora: https://tu-dominio.com/og-image.png (funciona)
+
+2️⃣ IMAGEN PROFESIONAL:
+   • Tamaño: 1200x630px (estándar)
+   • Diseño: Degradado morado con iconos
+   • Texto: Smart Sales Bot Pro
+   • Características: WhatsApp, IA, 24/7
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 GENERAR IMAGEN:
+
+   npx tsx scripts/generar-og-image-profesional.ts
+
+   Esto creará:
+   • public/og-image.png (1200x630px)
+   • public/og-image-twitter.png (1200x600px)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚙️ CONFIGURAR URL EN .ENV:
+
+   Agregar en .env:
+   
+   NEXT_PUBLIC_APP_URL=https://tu-dominio.com
+
+   Ejemplos:
+   • Desarrollo: http://localhost:3000
+   • Producción: https://smartsalesbot.com
+   • Easypanel: https://tu-app.easypanel.host
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🧪 PROBAR:
+
+1. Generar imagen:
+   npx tsx scripts/generar-og-image-profesional.ts
+
+2. Configurar URL en .env:
+   NEXT_PUBLIC_APP_URL=https://tu-dominio.com
+
+3. Reiniciar servidor:
+   npm run dev
+
+4. Probar en:
+   • https://www.opengraph.xyz/
+   • https://cards-dev.twitter.com/validator
+   • https://developers.facebook.com/tools/debug/
+
+5. Compartir link en WhatsApp y ver la imagen
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📱 DÓNDE APARECERÁ:
+
+✅ WhatsApp - Vista previa del link
+✅ Facebook - Al compartir
+✅ Twitter/X - Twitter Card
+✅ LinkedIn - Vista previa
+✅ Telegram - Vista previa
+✅ Discord - Embed
+✅ Slack - Unfurl
+✅ iMessage - Vista previa
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎨 PERSONALIZAR IMAGEN:
+
+Si quieres cambiar el diseño, edita:
+   scripts/generar-og-image-profesional.ts
+
+Puedes cambiar:
+   • Colores del degradado
+   • Texto principal
+   • Iconos
+   • Características mostradas
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ IMPORTANTE:
+
+1. La URL debe ser ABSOLUTA (con https://)
+2. La imagen debe estar en public/
+3. El tamaño debe ser 1200x630px
+4. Formato PNG o JPG
+5. Peso máximo recomendado: 1MB
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔍 VERIFICAR:
+
+Ver el código fuente de tu página (Ctrl+U) y buscar:
+
+<meta property="og:image" content="https://..." />
+<meta name="twitter:image" content="https://..." />
+
+Debe tener la URL completa, no solo /og-image.png
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📁 ARCHIVOS MODIFICADOS:
+
+   ✅ src/app/layout.tsx - URLs absolutas
+   ✅ scripts/generar-og-image-profesional.ts - Generador
+   ✅ public/og-image.png - Imagen generada
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Estado: LISTO PARA GENERAR
+📅 Fecha: 2 de Noviembre, 2025
+
+╚══════════════════════════════════════════════════════════════╝

@@ -1,0 +1,150 @@
+========================================
+  NUEVA FUNCIONALIDAD IMPLEMENTADA
+  CONOCIMIENTO EXTERNO
+========================================
+
+✅ QUÉ SE AGREGÓ:
+
+El bot ahora puede buscar información técnica REAL
+de productos cuando los clientes preguntan por
+especificaciones, características o detalles.
+
+========================================
+  EJEMPLO DE USO
+========================================
+
+Cliente: "Info de la laptop HP"
+Bot: [Muestra info básica]
+
+Cliente: "Qué procesador tiene?"
+Bot: "La Laptop HP tiene:
+     • Procesador: Intel Core i5-1135G7
+     • RAM: 8GB DDR4
+     • Almacenamiento: 256GB SSD
+     • Pantalla: 15.6" Full HD
+     
+     Precio: 1,500,000 COP
+     ¿Te interesa?"
+
+========================================
+  CARACTERÍSTICAS CLAVE
+========================================
+
+✅ NO INVENTA información
+✅ Solo usa datos con confianza >= 60%
+✅ Si no sabe, lo dice honestamente
+✅ Respuestas naturales y conversacionales
+✅ Funciona automáticamente
+
+========================================
+  PALABRAS QUE ACTIVAN LA BÚSQUEDA
+========================================
+
+- Especificaciones
+- Características
+- Detalles
+- Procesador
+- RAM / Memoria
+- Pantalla
+- Batería
+- Rendimiento
+- Velocidad
+- Capacidad
+
+========================================
+  CÓMO PROBAR
+========================================
+
+1. INICIAR BOT:
+   npm run dev
+
+2. CONECTAR WHATSAPP (escanear QR)
+
+3. PROBAR MENSAJES:
+   "Info de la laptop Asus"
+   "Qué procesador tiene?"
+   "Cuáles son las especificaciones?"
+
+4. TEST AUTOMÁTICO:
+   test-conocimiento-externo.bat
+
+========================================
+  ARCHIVOS CREADOS
+========================================
+
+✅ src/lib/external-knowledge-service.ts
+   - Servicio de búsqueda externa
+
+✅ test-conocimiento-externo.js
+   - Script de prueba
+
+✅ CONOCIMIENTO_EXTERNO.md
+   - Documentación completa
+
+========================================
+  ARCHIVOS MODIFICADOS
+========================================
+
+✅ src/lib/ai-service.ts
+   - Integración del conocimiento externo
+   - Detección automática de preguntas técnicas
+
+========================================
+  VENTAJAS
+========================================
+
+PARA EL CLIENTE:
+✅ Información técnica precisa
+✅ Respuestas más completas
+✅ Toma decisiones informadas
+
+PARA EL NEGOCIO:
+✅ Reduce atención manual
+✅ Aumenta confianza
+✅ Mejora conversiones
+✅ Disponible 24/7
+
+========================================
+  IMPORTANTE
+========================================
+
+⚠️ El sistema usa la base de conocimiento
+   de la IA (Llama 3.1 70B)
+
+⚠️ NO busca en internet en tiempo real
+
+⚠️ Solo proporciona información verificable
+
+⚠️ Si no está seguro, ofrece contacto directo
+
+========================================
+  CONFIGURACIÓN
+========================================
+
+Usa la misma API key de Groq:
+GROQ_API_KEY=tu_api_key
+
+Modelo: llama-3.1-70b-versatile
+Temperatura: 0.1 (muy baja)
+Confianza mínima: 60%
+
+========================================
+  DOCUMENTACIÓN COMPLETA
+========================================
+
+📄 CONOCIMIENTO_EXTERNO.md
+   - Guía completa
+   - Ejemplos detallados
+   - Solución de problemas
+   - Personalización
+
+========================================
+  PRÓXIMOS PASOS
+========================================
+
+1. Probar con productos reales
+2. Recopilar feedback de clientes
+3. Ajustar confianza mínima si es necesario
+4. Agregar más palabras clave si se requiere
+
+========================================

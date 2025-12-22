@@ -1,0 +1,63 @@
+==============================================
+  COPIAR ESTAS VARIABLES EN EASYPANEL
+==============================================
+
+Ir a: Tu App → Environment → Add Variable
+
+=== OBLIGATORIAS (MÍNIMO PARA QUE FUNCIONE) ===
+
+GROQ_API_KEY=gsk_PEGAR_TU_KEY_AQUI
+AI_ENABLED=true
+AI_FALLBACK_ORDER=groq,ollama
+
+=== RECOMENDADAS (PARA MEJOR RENDIMIENTO) ===
+
+GROQ_MODEL=llama-3.1-70b-versatile
+GROQ_TIMEOUT=10000
+GROQ_MAX_TOKENS=1000
+
+OLLAMA_URL=http://ollama:11434
+OLLAMA_MODEL=llama3.2
+OLLAMA_TIMEOUT=30000
+
+AI_PROVIDER=groq
+DEFAULT_AI_PROVIDER=groq
+AI_FALLBACK_ENABLED=true
+
+=== OTRAS IMPORTANTES ===
+
+NODE_ENV=production
+AI_REASONING_ENABLED=true
+HOT_RELOAD_ENABLED=true
+PHOTOS_ENABLED=true
+AUDIO_ENABLED=true
+
+==============================================
+  DESPUÉS DE AGREGAR:
+==============================================
+
+1. Click "Save" o "Update"
+2. Click "Deploy" o "Redeploy"
+3. Esperar 2-3 minutos
+4. Ver logs: buscar "✅ Éxito con: groq"
+
+==============================================
+  OBTENER GROQ API KEY:
+==============================================
+
+1. Ir a: https://console.groq.com/keys
+2. Crear cuenta (gratis, sin tarjeta)
+3. Click "Create API Key"
+4. Copiar la key (empieza con gsk_)
+5. Pegar arriba en GROQ_API_KEY
+
+==============================================
+  VERIFICAR QUE FUNCIONA:
+==============================================
+
+En logs de Easypanel debes ver:
+[AI Multi-Provider] ✅ Éxito con: groq
+
+Si ves esto, ¡FUNCIONA! 🎉
+
+==============================================

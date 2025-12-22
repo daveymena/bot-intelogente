@@ -1,0 +1,33 @@
+{
+  "megaflujos": [
+    {
+      "id": "megaflujo_2",
+      "nombre": "DROPSHIPPING (Smartwatch - Miedos + Tiempos + Reclamos)",
+      "categoria": "dropshipping",
+      "complejidad": "alta",
+      "duracion_promedio": "12-18 minutos",
+      "conversacion": [
+        {"turno": 1, "rol": "usuario", "mensaje": "Quiero pedir el smartwatch, ¿cuánto demora?", "intención": "product_inquiry", "entidades": ["smartwatch", "tiempo"], "sentimiento": "neutral"},
+        {"turno": 2, "rol": "bot", "mensaje": "Ese smartwatch llega por proveedor oficial:\n\n🚚 3–5 días hábiles → ciudades\n🚚 5–10 días → municipios\n\n¿Deseas pedirlo contraentrega?", "intención": "logistics_info", "acciones": ["informar_tiempos", "ofrecer_contraentrega"]},
+        {"turno": 3, "rol": "usuario", "mensaje": "¿Y si no llega?", "intención": "objection_risk", "entidades": ["riesgo", "garantía"], "sentimiento": "preocupado"},
+        {"turno": 4, "rol": "bot", "mensaje": "Tienes garantía total:\n\n✔ Si no llega → NO pagas\n✔ Si llega distinto → lo devuelves sin costo\n✔ Si llega dañado → reemplazo inmediato\n\nTu compra está protegida.", "intención": "reassurance", "acciones": ["garantizar_entrega", "explicar_protección"]},
+        {"turno": 5, "rol": "usuario", "mensaje": "¿Y si llega roto?", "intención": "objection_damage", "entidades": ["daño"], "sentimiento": "preocupado"},
+        {"turno": 6, "rol": "bot", "mensaje": "Aplica garantía 👉 cambio sin costo en 24h.", "intención": "reassurance", "acciones": ["garantizar_reemplazo"]},
+        {"turno": 7, "rol": "usuario", "mensaje": "¿Y puedo ver cómo es?", "intención": "media_request", "sentimiento": "interesado"},
+        {"turno": 8, "rol": "bot", "mensaje": "Claro, aquí tienes fotos y video real 📸🎥👇\n(envía 4 fotos + 1 video del smartwatch)", "intención": "media_delivery", "acciones": ["enviar_multimedia"]},
+        {"turno": 9, "rol": "usuario", "mensaje": "¿Tiene batería de verdad 7 días?", "intención": "product_verification", "entidades": ["batería", "especificaciones"], "sentimiento": "escéptico"},
+        {"turno": 10, "rol": "bot", "mensaje": "Sí, con uso normal. Si lo usas mucho (GPS + pantalla siempre) → 4-5 días. Pero la mayoría reporta 6-7 días.", "intención": "product_info", "acciones": ["ser_honesto", "dar_contexto"]},
+        {"turno": 11, "rol": "usuario", "mensaje": "¿Funciona con iPhone?", "intención": "compatibility_check", "entidades": ["iPhone"], "sentimiento": "neutral"},
+        {"turno": 12, "rol": "bot", "mensaje": "Sí, funciona con iOS y Android. Sincroniza perfecto con ambos.", "intención": "product_info", "acciones": ["confirmar_compatibilidad"]},
+        {"turno": 13, "rol": "usuario", "mensaje": "Listo, lo quiero.", "intención": "purchase_decision", "sentimiento": "decidido"},
+        {"turno": 14, "rol": "bot", "mensaje": "Perfecto 🙌 Envíame:\n\n👤 Nombre\n📍 Dirección\n📱 Teléfono\n\nY genero tu pedido hoy mismo.", "intención": "data_collection", "acciones": ["pedir_datos"]},
+        {"turno": 15, "rol": "usuario", "mensaje": "Listo, aquí van los datos…", "intención": "data_provision", "sentimiento": "cooperativo"},
+        {"turno": 16, "rol": "bot", "mensaje": "Perfecto ✔️ Tu pedido está confirmado. Llega en 3-5 días. Te envío tracking mañana.", "intención": "confirmation", "acciones": ["confirmar_pedido", "prometer_tracking"]},
+        {"turno": 17, "rol": "usuario", "mensaje": "(Después de 5 días)\n\nHola, ¿dónde está mi pedido? Lleva 5 días.", "intención": "complaint_delay", "entidades": ["retraso"], "sentimiento": "molesto"},
+        {"turno": 18, "rol": "bot", "mensaje": "Disculpa la demora 😟 Déjame revisar el tracking… Veo que está en tránsito. Debería llegar hoy o mañana. Si no llega mañana, te devuelvo el dinero sin preguntas.", "intención": "complaint_response", "acciones": ["investigar", "ofrecer_solución"]},
+        {"turno": 19, "rol": "usuario", "mensaje": "Listo, espero que llegue.", "intención": "acknowledgment", "sentimiento": "esperanzado"},
+        {"turno": 20, "rol": "bot", "mensaje": "(Después de 1 día)\n\n¡Llegó! 🎉 ¿Todo bien? ¿Funciona perfecto?", "intención": "post_sale_followup", "acciones": ["verificar_satisfacción"]}
+      ]
+    }
+  ]
+}

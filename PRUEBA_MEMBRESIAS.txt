@@ -1,0 +1,64 @@
+🎯 PRUEBA DE MEMBRESÍAS CON PAGO REAL
+=====================================
+
+✅ TODO LISTO PARA PROBAR
+
+📍 CÓMO PROBAR:
+--------------
+
+1. Asegúrate que el servidor esté corriendo:
+   npm run dev
+
+2. Abre en tu navegador:
+   http://localhost:3000/membresias
+
+3. Verás 3 planes:
+   - Plan Básico: $29.900/mes
+   - Plan Profesional: $59.900/mes (Popular)
+   - Plan Empresarial: $99.900/mes
+
+4. Haz clic en cualquier botón de pago:
+   💳 Pagar con Mercado Pago
+   🌐 Pagar con PayPal
+
+5. Serás redirigido al checkout REAL de:
+   - Mercado Pago (para pagos en Colombia)
+   - PayPal (para pagos internacionales)
+
+6. Después del pago, regresarás a:
+   ✅ /payment/success - Si el pago fue exitoso
+   ❌ /payment/failure - Si fue cancelado/rechazado
+   ⏳ /payment/pending - Si está pendiente
+
+🔥 ESTO ES UN PAGO REAL:
+------------------------
+⚠️ Las credenciales que configuraste son REALES
+⚠️ Si completas el pago, SE COBRARÁ DE VERDAD
+⚠️ Usa el modo sandbox/test si solo quieres probar
+
+💡 PARA MODO TEST:
+-----------------
+Si quieres probar sin cobros reales, usa credenciales de prueba:
+- Mercado Pago: https://www.mercadopago.com.co/developers/es/docs/checkout-pro/additional-content/test-cards
+- PayPal: https://developer.paypal.com/tools/sandbox/
+
+📋 LO QUE SE CREÓ:
+-----------------
+✅ Página de membresías: /membresias
+✅ API de pagos: /api/payments/create
+✅ Página de éxito: /payment/success
+✅ Página de error: /payment/failure
+✅ Página pendiente: /payment/pending
+✅ Integración con Mercado Pago
+✅ Integración con PayPal
+
+🎨 CARACTERÍSTICAS:
+------------------
+- Diseño moderno y responsive
+- 3 planes de membresía
+- Botones para ambos métodos de pago
+- Redirección automática al checkout
+- Páginas de respuesta personalizadas
+- Loading states mientras procesa
+
+¡PRUÉBALO AHORA!

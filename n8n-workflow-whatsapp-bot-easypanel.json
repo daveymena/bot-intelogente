@@ -1,0 +1,350 @@
+{
+  "name": "WhatsApp Bot - Easypanel",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-incoming",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-1",
+      "name": "Webhook - Recibir de Baileys",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "whatsapp-incoming",
+      "notes": "Recibe mensajes desde tu bot Smart Sales"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Buscar productos relevantes\nSELECT \n  id, \n  name, \n  description, \n  price, \n  images, \n  category, \n  subcategory,\n  tags\nFROM \"Product\"\nWHERE \n  LOWER(name) LIKE LOWER('%' || $1 || '%')\n  OR LOWER(description) LIKE LOWER('%' || $1 || '%')\n  OR LOWER(tags) LIKE LOWER('%' || $1 || '%')\n  OR LOWER(category) LIKE LOWER('%' || $1 || '%')\nORDER BY \n  CASE \n    WHEN LOWER(name) LIKE LOWER('%' || $1 || '%') THEN 1\n    WHEN LOWER(category) LIKE LOWER('%' || $1 || '%') THEN 2\n    ELSE 3\n  END\nLIMIT 5",
+        "additionalFields": {
+          "queryParameters": "={{ $json.message }}"
+        }
+      },
+      "id": "postgres-1",
+      "name": "PostgreSQL - Buscar Productos",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [450, 300],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "PostgreSQL - SmartSales Easypanel"
+        }
+      },
+      "notes": "Busca productos en tu base de datos"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Obtener historial de conversación\nSELECT \n  message,\n  response,\n  created_at\nFROM \"Conversation\"\nWHERE phone = $1\nORDER BY created_at DESC\nLIMIT 5",
+        "additionalFields": {
+          "queryParameters": "={{ $node['Webhook - Recibir de Baileys'].json.from }}"
+        }
+      },
+      "id": "postgres-2",
+      "name": "PostgreSQL - Historial",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [450, 450],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "PostgreSQL - SmartSales Easypanel"
+        }
+      },
+      "notes": "Obtiene contexto de conversaciones previas"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.OLLAMA_URL || 'http://ollama:11434' }}/api/generate",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "llama3.1:8b"
+            },
+            {
+              "name": "prompt",
+              "value": "=Eres un asistente de ventas profesional de Tecnovariedades D&S en Colombia.\n\n🎯 CONTEXTO:\nCliente: {{ $node['Webhook - Recibir de Baileys'].json.from.split('@')[0] }}\nMensaje actual: {{ $node['Webhook - Recibir de Baileys'].json.message }}\n\n📜 HISTORIAL RECIENTE:\n{{ $node['PostgreSQL - Historial'].json.map(h => `Cliente: ${h.message}\\nTú: ${h.response}`).join('\\n---\\n') }}\n\n🛍️ PRODUCTOS ENCONTRADOS:\n{{ $node['PostgreSQL - Buscar Productos'].json.map((p, i) => `${i+1}. ${p.name}\\n   💰 Precio: $${p.price.toLocaleString('es-CO')} COP\\n   📝 ${p.description.substring(0, 100)}...\\n   🏷️ Categoría: ${p.category}`).join('\\n\\n') }}\n\n📋 INSTRUCCIONES:\n1. Responde en español colombiano, amigable y profesional\n2. Si encontraste productos, menciona los 2 mejores con precio\n3. Si no hay productos, ofrece alternativas o pregunta más detalles\n4. Usa emojis apropiados pero no exageres\n5. Sé breve (máximo 4 líneas)\n6. Si el cliente pregunta por pago, menciona que aceptamos MercadoPago, Nequi, Daviplata\n7. Si el cliente está listo para comprar, pregunta qué método de pago prefiere\n\n💬 TU RESPUESTA:"
+            },
+            {
+              "name": "stream",
+              "value": false
+            },
+            {
+              "name": "options",
+              "value": {
+                "temperature": 0.7,
+                "top_p": 0.9
+              }
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "http-ollama",
+      "name": "Ollama - Generar Respuesta",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [650, 300],
+      "notes": "Genera respuesta inteligente con IA"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Extraer respuesta de Ollama\nconst ollamaResponse = $node['Ollama - Generar Respuesta'].json.response\n\n// Limpiar respuesta\nlet cleanResponse = ollamaResponse.trim()\n\n// Limitar longitud (WhatsApp tiene límite)\nif (cleanResponse.length > 1000) {\n  cleanResponse = cleanResponse.substring(0, 997) + '...'\n}\n\n// Obtener datos del webhook\nconst from = $node['Webhook - Recibir de Baileys'].json.from\nconst originalMessage = $node['Webhook - Recibir de Baileys'].json.message\n\n// Preparar mensaje para WhatsApp\nreturn {\n  to: from,\n  message: cleanResponse,\n  timestamp: Date.now(),\n  originalMessage: originalMessage\n}"
+      },
+      "id": "function-1",
+      "name": "Procesar Respuesta",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [850, 300],
+      "notes": "Limpia y prepara la respuesta"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SMART_SALES_BOT_URL || 'http://smart-sales-bot:3000' }}/api/whatsapp/send-from-n8n",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $env.N8N_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "to",
+              "value": "={{ $json.to }}"
+            },
+            {
+              "name": "message",
+              "value": "={{ $json.message }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "http-baileys",
+      "name": "Enviar a Baileys",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1050, 300],
+      "notes": "Envía respuesta de vuelta a WhatsApp"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": "\"Conversation\"",
+        "columns": "phone,message,response,created_at,updated_at",
+        "additionalFields": {
+          "values": "={{ $node['Webhook - Recibir de Baileys'].json.from }},={{ $node['Procesar Respuesta'].json.originalMessage }},={{ $node['Procesar Respuesta'].json.message }},={{ new Date().toISOString() }},={{ new Date().toISOString() }}"
+        }
+      },
+      "id": "postgres-save",
+      "name": "Guardar Conversación",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [1050, 450],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "PostgreSQL - SmartSales Easypanel"
+        }
+      },
+      "notes": "Guarda la conversación para historial"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \n  \"success\": true, \n  \"timestamp\": Date.now(),\n  \"from\": $node['Webhook - Recibir de Baileys'].json.from,\n  \"processed\": true\n} }}"
+      },
+      "id": "respond-1",
+      "name": "Responder Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1250, 300],
+      "notes": "Confirma recepción al bot"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $node['Webhook - Recibir de Baileys'].json.message.toLowerCase() }}",
+              "operation": "contains",
+              "value2": "pago"
+            },
+            {
+              "value1": "={{ $node['Webhook - Recibir de Baileys'].json.message.toLowerCase() }}",
+              "operation": "contains",
+              "value2": "comprar"
+            },
+            {
+              "value1": "={{ $node['Webhook - Recibir de Baileys'].json.message.toLowerCase() }}",
+              "operation": "contains",
+              "value2": "precio"
+            }
+          ]
+        },
+        "combineOperation": "any"
+      },
+      "id": "if-payment",
+      "name": "¿Pregunta por Pago?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [650, 500],
+      "notes": "Detecta intención de compra"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Si el cliente pregunta por pago, agregar información\nconst message = $node['Procesar Respuesta'].json.message\n\nconst paymentInfo = `\\n\\n💳 Métodos de pago disponibles:\\n• MercadoPago\\n• Nequi\\n• Daviplata\\n• Transferencia bancaria\\n\\n¿Cuál prefieres?`\n\nreturn {\n  ...$json,\n  message: message + paymentInfo\n}"
+      },
+      "id": "function-payment",
+      "name": "Agregar Info Pago",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [850, 500],
+      "notes": "Agrega métodos de pago si es necesario"
+    }
+  ],
+  "connections": {
+    "Webhook - Recibir de Baileys": {
+      "main": [
+        [
+          {
+            "node": "PostgreSQL - Buscar Productos",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "PostgreSQL - Historial",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "¿Pregunta por Pago?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PostgreSQL - Buscar Productos": {
+      "main": [
+        [
+          {
+            "node": "Ollama - Generar Respuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PostgreSQL - Historial": {
+      "main": [
+        [
+          {
+            "node": "Ollama - Generar Respuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama - Generar Respuesta": {
+      "main": [
+        [
+          {
+            "node": "Procesar Respuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Procesar Respuesta": {
+      "main": [
+        [
+          {
+            "node": "Enviar a Baileys",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Guardar Conversación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar a Baileys": {
+      "main": [
+        [
+          {
+            "node": "Responder Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Pregunta por Pago?": {
+      "main": [
+        [
+          {
+            "node": "Agregar Info Pago",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agregar Info Pago": {
+      "main": [
+        [
+          {
+            "node": "Enviar a Baileys",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "WhatsApp",
+      "id": "1"
+    },
+    {
+      "name": "Easypanel",
+      "id": "2"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-12-17T00:00:00.000Z",
+  "versionId": "1"
+}

@@ -1,0 +1,33 @@
+========================================
+EJECUTAR EN CONSOLA DE EASYPANEL
+========================================
+
+1. Aplicar cambios del schema:
+   npx prisma db push
+
+2. Regenerar cliente:
+   npx prisma generate
+
+3. Salir:
+   exit
+
+4. Rebuild desde el panel
+
+========================================
+ESO ES TODO!
+========================================
+
+Después de rebuild, probar:
+- "portátiles" → Bot pregunta uso y presupuesto
+- "curso de piano" → Bot muestra ese curso
+- "quiero pagar por Nequi" → Bot envía número
+
+========================================
+SISTEMAS ACTIVADOS:
+========================================
+✅ Subcategorías (113 productos)
+✅ Agente Intérprete (sin malentendidos)
+✅ Categorías Personalizadas
+✅ Razonamiento Profundo
+
+========================================

@@ -1,0 +1,9 @@
+{
+  "ignoredFiles": [
+    "src/lib/intelligent-conversation-engine.ts",
+    "src/lib/product-scorer.ts",
+    "src/lib/dynamic-product-intelligence.ts",
+    "src/lib/response-validator.ts"
+  ],
+  "reason": "Sistema híbrido crítico - Los imports son necesarios para funcionamiento sin IA"
+}

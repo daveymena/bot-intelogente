@@ -1,0 +1,99 @@
+========================================
+✅ CORRECCIÓN APLICADA: Bot usa BD y Ollama
+========================================
+
+El bot ahora consulta la base de datos y usa:
+1️⃣ Ollama PRIMERO (local, GRATIS, sin límites)
+2️⃣ Groq como fallback (solo si Ollama falla)
+3️⃣ Plantillas locales (último recurso)
+
+⚠️ IMPORTANTE: Debes tener Ollama corriendo para IA gratis
+
+========================================
+PASOS PARA VERIFICAR (3 minutos)
+========================================
+
+1. EJECUTAR TEST
+   ---------------
+   npx tsx scripts/test-bot-usa-bd-ollama.ts
+
+   Debe mostrar:
+   ✅ Productos en BD: [número]
+   ✅ Ollama está corriendo
+   ✅ Sistema híbrido: Funcionando
+
+
+2. REINICIAR BOT
+   -------------
+   npm run dev
+
+   Debe mostrar:
+   ✅ [Baileys] Sistema híbrido inicializado
+
+
+3. PROBAR CON WHATSAPP
+   -------------------
+   Enviar: "busco un portátil para diseño"
+
+   Debe responder con:
+   ✅ Productos reales (nombres específicos)
+   ✅ Precios reales de la BD
+   ❌ NO respuestas genéricas
+
+
+========================================
+LOGS A VERIFICAR
+========================================
+
+✅ CORRECTO (debe aparecer):
+   [Baileys] 🎯 Usando SISTEMA HÍBRIDO INTELIGENTE
+   [Baileys] 🧠 Consultando base de datos...
+   [Baileys] ✅ Respuesta generada con sistema híbrido
+
+❌ INCORRECTO (NO debe aparecer):
+   [Baileys] 🎯 Usando SmartResponseEngine (plantillas locales)
+   [Baileys] 🤖 Usó IA: NO (PLANTILLA LOCAL)
+
+
+========================================
+SI ALGO FALLA
+========================================
+
+1. Verificar Ollama:
+   ollama serve
+
+2. Verificar productos en BD:
+   npx tsx scripts/ver-productos.ts
+
+3. Verificar Groq:
+   echo %GROQ_API_KEY%
+
+4. Limpiar caché:
+   rmdir /s /q .next
+   rmdir /s /q dist
+   npm run dev
+
+
+========================================
+ARCHIVOS MODIFICADOS
+========================================
+
+✅ src/lib/baileys-stable-service.ts
+   - Ahora usa sistema híbrido
+   - Consulta BD con Prisma
+   - Usa Ollama/Groq para IA
+   - Plantillas solo como fallback
+
+
+========================================
+MÁS INFORMACIÓN
+========================================
+
+Ver: EJECUTAR_CORRECCION_BOT_AHORA.md
+Ver: RESUMEN_CORRECCION_BOT_FINAL.md
+
+
+========================================
+FECHA: 25 de noviembre de 2025
+ESTADO: ✅ CORRECCIÓN APLICADA
+========================================

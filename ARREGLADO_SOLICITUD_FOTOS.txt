@@ -1,0 +1,55 @@
+✅ ARREGLADO: Bot Entiende "Me Envía Fotos?"
+==============================================
+
+🎯 PROBLEMA:
+Cliente: "Tienes bolsos?"
+Bot: "Sí, tengo Bolso antirrobo..."
+Cliente: "Me envía fotos?"
+Bot: ❌ Buscaba productos con "fotos" en el nombre
+     ❌ Respondía con lista general de productos
+
+✅ SOLUCIÓN:
+Ahora el bot detecta cuando el cliente pide fotos y usa el contexto
+de la conversación para saber de qué producto hablan.
+
+Cliente: "Tienes bolsos?"
+Bot: "Sí, tengo Bolso antirrobo..."
+Cliente: "Me envía fotos?"
+Bot: ✅ "¡Claro! Te envío las fotos del Bolso antirrobo 📸"
+
+📊 CÓMO FUNCIONA:
+1. Detecta frases como "me envía fotos", "tiene fotos", "me manda fotos"
+2. Busca el producto en la memoria de contexto
+3. Responde sobre ese producto específico
+
+🧪 PROBAR:
+1. npm run dev
+2. Envía: "Tienes bolsos?"
+3. Bot responde sobre Bolso antirrobo
+4. Envía: "Me envía fotos?"
+5. ✅ Bot debe responder sobre el Bolso antirrobo
+
+📝 PATRONES DETECTADOS:
+✅ "Me envía fotos?"
+✅ "Tiene fotos?"
+✅ "Me manda fotos"
+✅ "Me pasa fotos"
+✅ "Me muestra fotos"
+✅ "Puedo ver fotos?"
+✅ "Hay fotos?"
+✅ "Me envía imágenes?"
+✅ "Como se ve?"
+✅ "Como luce?"
+
+🔍 LOGS:
+[AI] 📸 Solicitud de fotos detectada
+[AI] 💾 Producto recuperado de memoria: Bolso antirrobo
+[AI] 📸 Intención cambiada a: photo
+
+📚 DOCUMENTACIÓN:
+- MEJORA_SOLICITUD_FOTOS.md (explicación completa)
+- scripts/test-solicitud-fotos.ts (prueba de patrones)
+
+---
+Estado: ✅ LISTO PARA USAR
+Fecha: 2025-11-04
