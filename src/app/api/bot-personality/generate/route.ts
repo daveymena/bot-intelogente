@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import Groq from 'groq-sdk'
 
 export async function POST(request: NextRequest) {
-  const groq = new Groq({
-    apiKey: process.env.GROQ_API_KEY
-  })
   try {
     const { description } = await request.json()
 
@@ -14,6 +10,12 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
+
+    // Lazy loading de Groq
+    const Groq = (await import('groq-sdk')).default
+    const groq = new Groq({
+      apiKey: process.env.GROQ_API_KEY
+    })
 
     const systemPrompt = `Eres un experto en diseño de personalidades para chatbots de ventas. Tu trabajo es crear prompts detallados y efectivos que definan cómo debe comportarse un bot.
 
