@@ -1,9 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Groq from 'groq-sdk';
 
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY
-});
+// Inicialización lazy de Groq para evitar errores en build
+let groqClient: any = null;
+
+function getGroqClient() {
+  if (!groqClient && process.env.GROQ_API_KEY) {
+    const Groq = require('groq-sdk').default;
+    groqClient = new Groq({
+      apiKey: process.env.GROQ_API_KEY
+    });
+  }
+  return groqClient;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,6 +35,12 @@ Genera el siguiente contenido en formato JSON:
 }
 
 Usa lenguaje persuasivo, enfócate en beneficios (no características), y crea urgencia. Todo en español colombiano.`;
+
+    const groq = getGroqClient();
+    
+    if (!groq) {
+      throw new Error('Groq not configured');
+    }
 
     const completion = await groq.chat.completions.create({
       messages: [
