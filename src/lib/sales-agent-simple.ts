@@ -16,6 +16,7 @@
 import { db } from './db'
 import Groq from 'groq-sdk'
 import { interpretMessage, InterpretedMessage, IntentType } from './ai-interpreter'
+import { analyzeWithAI, AIDecision } from './ai-intent-analyzer'
 // Importar sistema multi-servicio (opcional)
 import { UnifiedResponseService, ResponseResult } from './unified-response-service'
 import { BusinessContextDetector } from './business-context-detector'
@@ -359,6 +360,7 @@ export class SalesAgentSimple {
   private conversations: Map<string, ConversationContext> = new Map()
   private products: any[] = []
   private userId: string | null = null
+  private groq = new Groq({ apiKey: process.env.GROQ_API_KEY || '' })
 
   constructor() {
     this.loadProducts()
@@ -485,14 +487,49 @@ export class SalesAgentSimple {
       const userCtx = this.conversations.get(userPhone)!
       userCtx.history.push({ role: 'user', content: message })
 
-      const intent = this.detectIntent(message)
-      console.log(`🎯 Intención detectada: ${intent}`)
+      // 🧠 IA RAZONAMIENTO: Analizar intención y producto con Ollama/Groq
+      const aiDecision = await analyzeWithAI(message, userCtx.history, this.products)
+      console.log(`🧠 IA Decide: ${aiDecision.action} | Razón: ${aiDecision.reasoning}`)
+      
+      // Asignar producto si la IA lo identificó
+      if (aiDecision.selectedProductIndex !== null && this.products[aiDecision.selectedProductIndex]) {
+        userCtx.lastProduct = this.products[aiDecision.selectedProductIndex]
+        console.log(`🎯 IA identificó producto: ${userCtx.lastProduct.name}`)
+      }
+
+      // Prioridad a la intención detectada por IA, fallback a regex
+      let intent = aiDecision.action as any
+      if (aiDecision.action === 'general_inquiry' || aiDecision.action === 'answer_question') {
+        const regexIntent = this.detectIntent(message)
+        if (regexIntent !== 'general_inquiry') {
+          intent = regexIntent
+        }
+      }
+
+      console.log(`🎯 Intención final: ${intent}`)
       console.log(`📦 Producto en contexto: ${userCtx.lastProduct?.name || 'ninguno'}`)
+
+      // Guardar contexto adicional para personalizar templates
+      const aiPrefix = aiDecision.additionalContext ? aiDecision.additionalContext + '\n\n' : ''
+
+      // 🆕 RESPUESTA A PREGUNTAS LIBRES/IA (Preguntas específicas que no son flujo directo)
+      if (aiDecision.action === 'answer_question') {
+        const response = await this.generateAIAnswer(message, userCtx.lastProduct, userCtx.history)
+        userCtx.history.push({ role: 'assistant', content: response })
+        return {
+          text: response,
+          intent: 'answer_question',
+          salesStage: userCtx.stage,
+          sendPhotos: false,
+          photos: null,
+          product: userCtx.lastProduct
+        }
+      }
 
       // Si pide más info y ya tiene producto
       if (intent === 'more_info' && userCtx.lastProduct) {
         userCtx.stage = 'value_proposition'
-        const response = this.generateValueResponse(userCtx.lastProduct)
+        const response = aiPrefix + this.generateValueResponse(userCtx.lastProduct)
         userCtx.history.push({ role: 'assistant', content: response })
         return {
           text: response,
@@ -507,7 +544,8 @@ export class SalesAgentSimple {
       // Si confirma y tiene producto
       if (intent === 'confirmation' && userCtx.lastProduct) {
         userCtx.stage = 'closing'
-        const response = await this.generatePaymentResponse(userCtx.lastProduct)
+        const baseResponse = await this.generatePaymentResponse(userCtx.lastProduct)
+        const response = aiPrefix + baseResponse
         userCtx.history.push({ role: 'assistant', content: response })
         return {
           text: response,
@@ -579,7 +617,8 @@ export class SalesAgentSimple {
         userCtx.lastProduct = selectedByNumber
         userCtx.lastOptions = []
         userCtx.stage = 'presentation'
-        const response = this.generateProductResponse(selectedByNumber)
+        const baseResponse = this.generateProductResponse(selectedByNumber)
+        const response = aiPrefix + baseResponse
         const imageUrl = this.getProductImage(selectedByNumber)
         userCtx.history.push({ role: 'assistant', content: response })
         return {
@@ -611,7 +650,8 @@ export class SalesAgentSimple {
         userCtx.lastProduct = product
         userCtx.lastOptions = []
         userCtx.stage = 'presentation'
-        const response = this.generateProductResponse(product)
+        const baseResponse = this.generateProductResponse(product)
+        const response = aiPrefix + baseResponse
         const imageUrl = this.getProductImage(product)
         userCtx.history.push({ role: 'assistant', content: response })
         return {
@@ -633,7 +673,8 @@ export class SalesAgentSimple {
           const productosOrdenados = productos.sort((a, b) => a.price - b.price)
           userCtx.lastOptions = productosOrdenados.slice(0, 4)
           userCtx.stage = 'discovery'
-          const response = this.generateCategoryResponse(productos, categoria || 'productos', message)
+          const baseResponse = this.generateCategoryResponse(productos, categoria || 'productos', message)
+          const response = aiPrefix + baseResponse
           userCtx.history.push({ role: 'assistant', content: response })
           return {
             text: response,
@@ -646,7 +687,8 @@ export class SalesAgentSimple {
           userCtx.lastProduct = productos[0]
           userCtx.lastOptions = []
           userCtx.stage = 'presentation'
-          const response = this.generateProductResponse(productos[0])
+          const baseResponse = this.generateProductResponse(productos[0])
+          const response = aiPrefix + baseResponse
           userCtx.history.push({ role: 'assistant', content: response })
           return {
             text: response,
@@ -2522,6 +2564,62 @@ ${categoriesText}
       console.error('Error detectando tipo de negocio:', error)
       return 'UNKNOWN'
     }
+  }
+
+  /**
+   * Genera una respuesta inteligente para preguntas que no tienen un template específico
+   */
+  private async generateAIAnswer(
+    question: string,
+    currentProduct: any | null,
+    history: any[]
+  ): Promise<string> {
+    const prompt = `Eres un asesor de ventas experto de "Tecnovariedades D&S". Tu objetivo es responder la pregunta del cliente de forma profesional, cálida y orientada a la venta.
+
+CONTEXTO DEL PRODUCTO:
+${currentProduct ? `${currentProduct.name} ($${currentProduct.price} COP): ${currentProduct.description}` : 'No hay un producto específico en este momento.'}
+
+HISTORIAL DE CONVERSACIÓN:
+${history.slice(-4).map(h => `${h.role === 'user' ? 'Cliente' : 'Asistente'}: ${h.content}`).join('\n')}
+
+PREGUNTA DEL CLIENTE:
+"${question}"
+
+INSTRUCCIONES:
+- Responde directamente, sin rodeos.
+- Usa un tono humano y profesional.
+- Si no sabes la respuesta exacta, invita a que pregunten algo más o que un humano los atienda.
+- Máximo 3-4 líneas.
+- Incluye 1-2 emojis naturales.
+
+RESPUESTA (en español):`;
+
+    try {
+      const url = process.env.OLLAMA_URL || 'http://localhost:11434/api/generate';
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: process.env.OLLAMA_MODEL || 'gemma2:2b',
+          prompt: prompt,
+          stream: false
+        })
+      });
+
+      if (response.ok) {
+        const data: any = await response.json();
+        return data.response.trim();
+      }
+    } catch (e) {
+      console.log('⚠️ Ollama falló en generateAIAnswer, usando Groq...');
+    }
+
+    const completion = await this.groq.chat.completions.create({
+      messages: [{ role: 'user', content: prompt }],
+      model: process.env.GROQ_MODEL || 'llama-3.1-8b-instant',
+    });
+
+    return completion.choices[0]?.message?.content?.trim() || 'Entiendo tu duda. Déjame consultar la información exacta para ayudarte mejor. 😊';
   }
 }
 
