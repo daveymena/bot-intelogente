@@ -542,7 +542,7 @@ export class AIMultiProvider {
     }
     
     // Probar Ollama (si está configurado)
-    if (process.env.OLLAMA_URL || process.env.OLLAMA_MODEL) {
+    if (process.env.OLLAMA_BASE_URL || process.env.OLLAMA_URL || process.env.OLLAMA_MODEL) {
       try {
         await this.tryOllama(testMessage, { max_tokens: 10 })
         results.ollama = true

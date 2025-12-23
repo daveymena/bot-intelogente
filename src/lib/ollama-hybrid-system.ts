@@ -197,9 +197,9 @@ export async function createOllamaHybridSystem(groqApiKey?: string): Promise<Hyb
  */
 export async function isOllamaAvailable(): Promise<boolean> {
   try {
-    const ollamaUrl = process.env.OLLAMA_URL || 'http://localhost:11434'
+    const ollamaUrl = process.env.OLLAMA_BASE_URL || process.env.OLLAMA_URL || 'http://localhost:11434'
     const response = await fetch(`${ollamaUrl}/api/tags`, {
-      signal: AbortSignal.timeout(2000) // 2 segundos timeout
+      signal: AbortSignal.timeout(5000) // 5 segundos timeout para Easypanel
     })
     return response.ok
   } catch {

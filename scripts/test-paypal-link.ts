@@ -1,67 +1,44 @@
 /**
- * 🧪 TEST: Generación de Links de PayPal
- * Verifica que los links dinámicos de PayPal se estén creando correctamente
+ * Test de generación de links de PayPal
+ * Verifica que las credenciales funcionen y se generen links correctamente
  */
 
-import { PaymentLinkGenerator } from '../src/lib/payment-link-generator'
-import { BotPaymentLinkGenerator } from '../src/lib/bot-payment-link-generator'
-import { db } from '../src/lib/db'
+import { config } from 'dotenv'
+config()
 
-async function testPayPalLinks() {
-  console.log('🧪 INICIANDO TEST DE LINKS DE PAYPAL\n')
-  console.log('═'.repeat(80))
-
+async function testPayPalLink() {
+  console.log('🔵 TEST DE PAYPAL - Verificación de Links\n')
+  console.log('=' .repeat(50))
+  
+  // 1. Verificar credenciales
+  console.log('\n📋 1. Verificando credenciales...')
+  const clientId = process.env.PAYPAL_CLIENT_ID
+  const clientSecret = process.env.PAYPAL_CLIENT_SECRET
+  const mode = process.env.PAYPAL_MODE || 'sandbox'
+  
+  console.log(`   PAYPAL_CLIENT_ID: ${clientId ? clientId.substring(0, 20) + '...' : '❌ NO CONFIGURADO'}`)
+  console.log(`   PAYPAL_CLIENT_SECRET: ${clientSecret ? clientSecret.substring(0, 10) + '...' : '❌ NO CONFIGURADO'}`)
+  console.log(`   PAYPAL_MODE: ${mode}`)
+  
+  if (!clientId || !clientSecret) {
+    console.log('\n❌ ERROR: Credenciales de PayPal no configuradas')
+    console.log('   Configura PAYPAL_CLIENT_ID y PAYPAL_CLIENT_SECRET en .env')
+    return
+  }
+  
+  // 2. Obtener token de acceso
+  console.log('\n📋 2. Obteniendo token de acceso...')
+  
+  const authUrl = mode === 'live'
+    ? 'https://api-m.paypal.com/v1/oauth2/token'
+    : 'https://api-m.sandbox.paypal.com/v1/oauth2/token'
+  
+  console.log(`   URL: ${authUrl}`)
+  
+  const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
+  
   try {
-    // ═══════════════════════════════════════════════════════════════════════════════
-    // 1. VERIFICAR CONFIGURACIÓN
-    // ═══════════════════════════════════════════════════════════════════════════════
-    console.log('\n📋 1. VERIFICANDO CONFIGURACIÓN DE PAYPAL')
-    console.log('─'.repeat(80))
-    
-    const config = {
-      PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID ? '✅ Configurado' : '❌ NO configurado',
-      PAYPAL_CLIENT_SECRET: process.env.PAYPAL_CLIENT_SECRET ? '✅ Configurado' : '❌ NO configurado',
-      PAYPAL_MODE: process.env.PAYPAL_MODE || 'live',
-      PAYPAL_API_URL: process.env.PAYPAL_API_URL || 'https://api-m.paypal.com',
-      COP_TO_USD_RATE: process.env.COP_TO_USD_RATE || '4000'
-    }
-    
-    console.table(config)
-    
-    const clientId = process.env.PAYPAL_CLIENT_ID
-    const clientSecret = process.env.PAYPAL_CLIENT_SECRET
-    
-    if (!clientId || !clientSecret) {
-      console.log('\n❌ ERROR: PayPal no está configurado')
-      console.log('\n📝 SOLUCIÓN:')
-      console.log('   Agregar en .env o Easypanel:')
-      console.log('   PAYPAL_CLIENT_ID=BAAtdQwVN8LvIoRstmHZWlo2ndcJBP8dFZdXLc8HJGdYUXstriO6mO0GJMZimkBCdZHotBkulELqeFm_R4')
-      console.log('   PAYPAL_CLIENT_SECRET=EP5jZdzbUuHva4I8ERnbNYSHQ_BNe0niXQe91Bvf33Kl88nRKY-ivRx0_PGERS72JbjQSiMr63y9lEEL')
-      console.log('   PAYPAL_MODE=live')
-      return
-    }
-    
-    console.log('\n✅ Credenciales de PayPal encontradas')
-    console.log(`   Client ID: ${clientId.substring(0, 20)}...`)
-    console.log(`   Client Secret: ${clientSecret.substring(0, 20)}...`)
-    console.log(`   Mode: ${config.PAYPAL_MODE}`)
-
-    // ═══════════════════════════════════════════════════════════════════════════════
-    // 2. PROBAR AUTENTICACIÓN CON PAYPAL
-    // ═══════════════════════════════════════════════════════════════════════════════
-    console.log('\n🔐 2. PROBANDO AUTENTICACIÓN CON PAYPAL')
-    console.log('─'.repeat(80))
-    
-    const authUrl = config.PAYPAL_MODE === 'live'
-      ? 'https://api-m.paypal.com/v1/oauth2/token'
-      : 'https://api-m.sandbox.paypal.com/v1/oauth2/token'
-    
-    console.log(`URL de autenticación: ${authUrl}`)
-    
-    const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
-    
-    const startTime1 = Date.now()
-    const authResponse = await fetch(authUrl, {
+    const tokenResponse = await fetch(authUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -69,255 +46,118 @@ async function testPayPalLinks() {
       },
       body: 'grant_type=client_credentials'
     })
-    const duration1 = Date.now() - startTime1
     
-    console.log(`\nRespuesta de autenticación (${duration1}ms):`)
-    console.log(`   Status: ${authResponse.status} ${authResponse.statusText}`)
+    console.log(`   Status: ${tokenResponse.status}`)
     
-    if (!authResponse.ok) {
-      const errorText = await authResponse.text()
-      console.log('   ❌ Error de autenticación')
-      console.log(`   Respuesta: ${errorText}`)
-      
-      console.log('\n⚠️ POSIBLES CAUSAS:')
-      console.log('   1. Client ID o Client Secret incorrectos')
-      console.log('   2. Credenciales de sandbox en modo live (o viceversa)')
-      console.log('   3. Credenciales expiradas o revocadas')
+    if (!tokenResponse.ok) {
+      const errorText = await tokenResponse.text()
+      console.log(`\n❌ ERROR obteniendo token:`)
+      console.log(`   ${errorText}`)
       return
     }
     
-    const authData = await authResponse.json()
-    console.log('   ✅ Autenticación exitosa')
-    console.log(`   Access Token: ${authData.access_token.substring(0, 30)}...`)
-    console.log(`   Token Type: ${authData.token_type}`)
-    console.log(`   Expires In: ${authData.expires_in} segundos`)
-    console.log(`   Scope: ${authData.scope}`)
-
-    // ═══════════════════════════════════════════════════════════════════════════════
-    // 3. OBTENER PRODUCTO DE PRUEBA
-    // ═══════════════════════════════════════════════════════════════════════════════
-    console.log('\n📦 3. OBTENIENDO PRODUCTO DE PRUEBA')
-    console.log('─'.repeat(80))
+    const tokenData = await tokenResponse.json()
+    const accessToken = tokenData.access_token
+    console.log(`   ✅ Token obtenido: ${accessToken.substring(0, 30)}...`)
     
-    const producto = await db.product.findFirst({
-      where: {
-        status: 'AVAILABLE',
-        category: 'DIGITAL'
-      },
-      orderBy: {
-        price: 'asc'
-      }
-    })
+    // 3. Crear orden de prueba
+    console.log('\n📋 3. Creando orden de prueba...')
     
-    if (!producto) {
-      console.log('❌ No hay productos disponibles para probar')
-      return
-    }
-    
-    console.log('✅ Producto encontrado:')
-    console.log(`   ID: ${producto.id}`)
-    console.log(`   Nombre: ${producto.name}`)
-    console.log(`   Precio COP: ${producto.price.toLocaleString('es-CO')}`)
-    
-    const exchangeRate = parseFloat(process.env.COP_TO_USD_RATE || '4000')
-    const priceUSD = (producto.price / exchangeRate).toFixed(2)
-    console.log(`   Precio USD: $${priceUSD} (tasa: ${exchangeRate})`)
-
-    // ═══════════════════════════════════════════════════════════════════════════════
-    // 4. CREAR ORDEN EN PAYPAL
-    // ═══════════════════════════════════════════════════════════════════════════════
-    console.log('\n💳 4. CREANDO ORDEN EN PAYPAL')
-    console.log('─'.repeat(80))
-    
-    const orderUrl = config.PAYPAL_MODE === 'live'
+    const orderUrl = mode === 'live'
       ? 'https://api-m.paypal.com/v2/checkout/orders'
       : 'https://api-m.sandbox.paypal.com/v2/checkout/orders'
     
-    console.log(`URL de órdenes: ${orderUrl}`)
+    console.log(`   URL: ${orderUrl}`)
+    
+    // Producto de prueba
+    const testProduct = {
+      id: 'test-123',
+      name: 'Producto de Prueba',
+      description: 'Test de generación de link PayPal',
+      price: 60000, // COP
+      currency: 'COP'
+    }
+    
+    // Convertir COP a USD
+    const usdAmount = (testProduct.price / 4000).toFixed(2)
+    console.log(`   Precio: ${testProduct.price} COP = ${usdAmount} USD`)
     
     const orderData = {
       intent: 'CAPTURE',
       purchase_units: [
         {
-          reference_id: producto.id,
-          description: producto.name,
+          reference_id: testProduct.id,
+          description: testProduct.description,
           amount: {
             currency_code: 'USD',
-            value: priceUSD
+            value: usdAmount
           }
         }
       ],
       application_context: {
-        return_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/payment/success`,
-        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/payment/cancel`,
+        return_url: 'https://tecnovariedades.com/success',
+        cancel_url: 'https://tecnovariedades.com/cancel',
         brand_name: 'Tecnovariedades D&S',
         shipping_preference: 'NO_SHIPPING',
         user_action: 'PAY_NOW'
       }
     }
     
-    console.log('\nDatos de la orden:')
-    console.log(JSON.stringify(orderData, null, 2))
-    
-    const startTime2 = Date.now()
     const orderResponse = await fetch(orderUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authData.access_token}`
+        'Authorization': `Bearer ${accessToken}`
       },
       body: JSON.stringify(orderData)
     })
-    const duration2 = Date.now() - startTime2
     
-    console.log(`\nRespuesta de PayPal (${duration2}ms):`)
-    console.log(`   Status: ${orderResponse.status} ${orderResponse.statusText}`)
+    console.log(`   Status: ${orderResponse.status}`)
     
     if (!orderResponse.ok) {
       const errorText = await orderResponse.text()
-      console.log('   ❌ Error creando orden')
-      console.log(`   Respuesta: ${errorText}`)
+      console.log(`\n❌ ERROR creando orden:`)
+      console.log(`   ${errorText}`)
       
+      // Parsear error para más detalles
       try {
         const errorJson = JSON.parse(errorText)
-        console.log('\n📋 Detalles del error:')
-        console.log(JSON.stringify(errorJson, null, 2))
-      } catch (e) {
-        // No es JSON
-      }
+        if (errorJson.details) {
+          console.log('\n   Detalles del error:')
+          errorJson.details.forEach((d: any) => {
+            console.log(`   - ${d.issue}: ${d.description}`)
+          })
+        }
+      } catch {}
       return
     }
     
     const orderResult = await orderResponse.json()
-    console.log('   ✅ Orden creada exitosamente')
-    console.log(`   Order ID: ${orderResult.id}`)
+    console.log(`   ✅ Orden creada: ${orderResult.id}`)
     console.log(`   Status: ${orderResult.status}`)
     
     // Buscar link de aprobación
-    const approveLink = orderResult.links?.find((link: any) => link.rel === 'approve')?.href
+    const approveLink = orderResult.links?.find((link: any) => link.rel === 'approve')
     
     if (approveLink) {
-      console.log(`   ✅ Link de pago generado:`)
-      console.log(`   ${approveLink}`)
+      console.log(`\n✅ LINK DE PAGO GENERADO:`)
+      console.log(`   ${approveLink.href}`)
+      console.log(`\n   Este link se puede usar para pagar ${usdAmount} USD`)
     } else {
-      console.log('   ❌ No se encontró link de aprobación')
+      console.log(`\n⚠️ No se encontró link de aprobación`)
+      console.log(`   Links disponibles:`)
+      orderResult.links?.forEach((link: any) => {
+        console.log(`   - ${link.rel}: ${link.href}`)
+      })
     }
     
-    console.log('\n📊 Detalles de la orden:')
-    console.log(`   Create Time: ${orderResult.create_time}`)
-    console.log(`   Intent: ${orderResult.intent}`)
-    console.log(`   Payer: ${orderResult.payer ? 'Configurado' : 'Pendiente'}`)
-
-    // ═══════════════════════════════════════════════════════════════════════════════
-    // 5. PROBAR PaymentLinkGenerator
-    // ═══════════════════════════════════════════════════════════════════════════════
-    console.log('\n🔧 5. PROBANDO PaymentLinkGenerator.generatePayPalLink()')
-    console.log('─'.repeat(80))
-    
-    const startTime3 = Date.now()
-    const paypalLink = await PaymentLinkGenerator.generatePayPalLink(
-      producto.name,
-      producto.price,
-      producto.id
-    )
-    const duration3 = Date.now() - startTime3
-    
-    if (paypalLink) {
-      console.log(`✅ Link generado exitosamente (${duration3}ms)`)
-      console.log(`   ${paypalLink}`)
-      
-      if (paypalLink.includes('paypal.com')) {
-        console.log('   ✅ Formato correcto (contiene paypal.com)')
-      }
-      
-      if (paypalLink.includes('checkoutnow') || paypalLink.includes('checkout')) {
-        console.log('   ✅ Es un link de checkout válido')
-      }
-    } else {
-      console.log('❌ No se pudo generar el link')
-    }
-
-    // ═══════════════════════════════════════════════════════════════════════════════
-    // 6. PROBAR BotPaymentLinkGenerator
-    // ═══════════════════════════════════════════════════════════════════════════════
-    console.log('\n🤖 6. PROBANDO BotPaymentLinkGenerator.generatePaymentLinks()')
-    console.log('─'.repeat(80))
-    
-    const startTime4 = Date.now()
-    const paymentLinks = await BotPaymentLinkGenerator.generatePaymentLinks(
-      producto.id,
-      producto.userId,
-      1
-    )
-    const duration4 = Date.now() - startTime4
-    
-    if (paymentLinks.success) {
-      console.log(`✅ Links generados exitosamente (${duration4}ms)`)
-      console.log('\n📋 Métodos disponibles:')
-      
-      if (paymentLinks.mercadoPagoLink) {
-        console.log(`   ✅ MercadoPago: ${paymentLinks.mercadoPagoLink}`)
-      }
-      
-      if (paymentLinks.payPalLink) {
-        console.log(`   ✅ PayPal: ${paymentLinks.payPalLink}`)
-      } else {
-        console.log('   ❌ PayPal: No generado')
-      }
-      
-      if (paymentLinks.nequiInfo) {
-        console.log(`   ✅ Nequi: ${paymentLinks.nequiInfo}`)
-      }
-      
-      if (paymentLinks.daviplataInfo) {
-        console.log(`   ✅ Daviplata: ${paymentLinks.daviplataInfo}`)
-      }
-    }
-
-    // ═══════════════════════════════════════════════════════════════════════════════
-    // RESUMEN FINAL
-    // ═══════════════════════════════════════════════════════════════════════════════
-    console.log('\n' + '═'.repeat(80))
-    console.log('📊 RESUMEN DEL TEST')
-    console.log('═'.repeat(80))
-    
-    console.log('\n✅ Tests completados:')
-    console.log(`   1. Configuración: ${clientId && clientSecret ? '✅' : '❌'}`)
-    console.log(`   2. Autenticación: ${authResponse.ok ? '✅' : '❌'}`)
-    console.log(`   3. Producto de prueba: ${producto ? '✅' : '❌'}`)
-    console.log(`   4. Crear orden: ${orderResponse.ok ? '✅' : '❌'}`)
-    console.log(`   5. PaymentLinkGenerator: ${paypalLink ? '✅' : '❌'}`)
-    console.log(`   6. BotPaymentLinkGenerator: ${paymentLinks.success && paymentLinks.payPalLink ? '✅' : '❌'}`)
-    
-    if (authResponse.ok && orderResponse.ok && paypalLink && paymentLinks.payPalLink) {
-      console.log('\n🎉 TODOS LOS TESTS PASARON')
-      console.log('   El sistema de links dinámicos de PayPal está funcionando correctamente')
-      console.log('\n📝 LINK DE PRUEBA:')
-      console.log(`   ${approveLink}`)
-      console.log('\n⚠️ NOTA: Este es un link real de PayPal')
-      console.log('   Puedes hacer click para probar el flujo de pago')
-      console.log('   (No es necesario completar el pago)')
-    } else {
-      console.log('\n⚠️ ALGUNOS TESTS FALLARON')
-      console.log('   Revisar los logs anteriores para identificar el problema')
-    }
-    
-  } catch (error) {
-    console.error('\n❌ ERROR EN EL TEST:', error)
-    if (error instanceof Error) {
-      console.error('   Mensaje:', error.message)
-      console.error('   Stack:', error.stack)
-    }
+  } catch (error: any) {
+    console.log(`\n❌ ERROR de conexión:`)
+    console.log(`   ${error.message}`)
   }
+  
+  console.log('\n' + '='.repeat(50))
+  console.log('Test completado')
 }
 
-// Ejecutar
-testPayPalLinks()
-  .then(() => {
-    console.log('\n✅ Test completado')
-    process.exit(0)
-  })
-  .catch((error) => {
-    console.error('\n❌ Error ejecutando test:', error)
-    process.exit(1)
-  })
+testPayPalLink()

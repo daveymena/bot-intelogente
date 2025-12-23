@@ -16,10 +16,13 @@ interface Product {
 
 /**
  * Obtener o crear link de PayPal para un producto
- * - Si el producto ya tiene un link guardado, lo retorna
+ * - Si el producto ya tiene un link guardado Y es válido, lo retorna
  * - Si no, genera uno nuevo y lo guarda en la BD
+ * 
+ * NOTA: Los links de PayPal expiran después de ~3 horas
+ * Por eso siempre generamos uno nuevo al momento de pago
  */
-export async function getOrCreatePayPalLink(productId: string): Promise<string | null> {
+export async function getOrCreatePayPalLink(productId: string, forceNew: boolean = true): Promise<string | null> {
   try {
     // 1. Buscar producto en la BD
     const product = await db.product.findUnique({
@@ -31,16 +34,18 @@ export async function getOrCreatePayPalLink(productId: string): Promise<string |
       return null
     }
 
-    // 2. Si ya tiene link guardado, retornarlo
-    if (product.paymentLinkPayPal) {
-      console.log('[PayPal] ✅ Link existente encontrado para:', product.name)
-      return product.paymentLinkPayPal
-    }
-
-    // 3. Verificar credenciales antes de intentar generar
+    // 2. Verificar credenciales antes de intentar generar
     if (!process.env.PAYPAL_CLIENT_ID || !process.env.PAYPAL_CLIENT_SECRET) {
       console.log('[PayPal] ⚠️ Credenciales no configuradas, saltando generación')
-      return null
+      // Retornar link existente si hay (aunque esté expirado, mejor que nada)
+      return product.paymentLinkPayPal || null
+    }
+
+    // 3. SIEMPRE generar nuevo link (los links de PayPal expiran rápido)
+    // Solo reutilizar si forceNew es false y el link existe
+    if (!forceNew && product.paymentLinkPayPal) {
+      console.log('[PayPal] ✅ Usando link existente para:', product.name)
+      return product.paymentLinkPayPal
     }
 
     // 4. Generar nuevo link
@@ -59,11 +64,20 @@ export async function getOrCreatePayPalLink(productId: string): Promise<string |
       data: { paymentLinkPayPal: newLink }
     })
 
-    console.log('[PayPal] ✅ Link guardado en BD para:', product.name)
+    console.log('[PayPal] ✅ Link nuevo guardado en BD para:', product.name)
     return newLink
   } catch (error) {
     console.error('[PayPal] Error en getOrCreatePayPalLink:', error)
-    return null
+    // Intentar retornar link existente como fallback
+    try {
+      const product = await db.product.findUnique({
+        where: { id: productId },
+        select: { paymentLinkPayPal: true }
+      })
+      return product?.paymentLinkPayPal || null
+    } catch {
+      return null
+    }
   }
 }
 

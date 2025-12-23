@@ -1,63 +1,50 @@
-import { db } from '../src/lib/db'
+/**
+ * Verificar links de pago en productos
+ */
 
-async function verificarLinksPago() {
-  try {
-    console.log('🔍 Verificando links de pago en productos...\n')
+import { PrismaClient } from '@prisma/client'
 
-    const products = await db.product.findMany({
-      select: {
-        id: true,
-        name: true,
-        price: true,
-        tags: true
-      }
-    })
+const prisma = new PrismaClient()
 
-    console.log(`📦 Total de productos: ${products.length}\n`)
-
-    for (const product of products) {
-      console.log(`\n📦 ${product.name}`)
-      console.log(`💰 Precio: $${product.price.toLocaleString()} COP`)
-      
-      if (product.tags) {
-        try {
-          const tags = JSON.parse(product.tags)
-          const paymentLinks = tags.filter((tag: string) => 
-            tag.includes('http') || 
-            tag.startsWith('hotmart:') || 
-            tag.startsWith('mercadopago:') || 
-            tag.startsWith('paypal:') ||
-            tag.startsWith('nequi:') ||
-            tag.startsWith('payco:')
-          )
-
-          if (paymentLinks.length > 0) {
-            console.log('💳 Links de pago encontrados:')
-            paymentLinks.forEach((link: string) => {
-              // Verificar si es un link genérico
-              if (link.includes('example') || link.includes('mpago.la/example') || link.includes('paypal.com/invoice/example')) {
-                console.log(`   ❌ GENÉRICO: ${link}`)
-              } else {
-                console.log(`   ✅ ${link}`)
-              }
-            })
-          } else {
-            console.log('⚠️  Sin links de pago configurados')
-          }
-        } catch (error) {
-          console.log('❌ Error parseando tags:', error)
-        }
-      } else {
-        console.log('⚠️  Sin tags configurados')
-      }
-    }
-
-    console.log('\n✅ Verificación completada')
-  } catch (error) {
-    console.error('❌ Error:', error)
-  } finally {
-    await db.$disconnect()
-  }
+async function verificar() {
+  console.log('📦 Verificando links de pago en productos...\n')
+  
+  const products = await prisma.product.findMany({
+    where: { status: 'AVAILABLE' },
+    select: { 
+      id: true, 
+      name: true, 
+      paymentLinkPayPal: true,
+      paymentLinkMercadoPago: true
+    },
+    take: 10
+  })
+  
+  console.log('Primeros 10 productos:\n')
+  products.forEach((p, i) => {
+    console.log(`${i+1}. ${p.name}`)
+    console.log(`   PayPal: ${p.paymentLinkPayPal || '❌ NO TIENE'}`)
+    console.log(`   MercadoPago: ${p.paymentLinkMercadoPago ? p.paymentLinkMercadoPago.substring(0, 60) + '...' : '❌ NO TIENE'}`)
+    console.log('')
+  })
+  
+  // Contar productos sin links
+  const sinPayPal = await prisma.product.count({
+    where: { status: 'AVAILABLE', paymentLinkPayPal: null }
+  })
+  const sinMercadoPago = await prisma.product.count({
+    where: { status: 'AVAILABLE', paymentLinkMercadoPago: null }
+  })
+  const total = await prisma.product.count({
+    where: { status: 'AVAILABLE' }
+  })
+  
+  console.log('📊 Resumen:')
+  console.log(`   Total productos: ${total}`)
+  console.log(`   Sin PayPal: ${sinPayPal}`)
+  console.log(`   Sin MercadoPago: ${sinMercadoPago}`)
+  
+  await prisma.$disconnect()
 }
 
-verificarLinksPago()
+verificar()

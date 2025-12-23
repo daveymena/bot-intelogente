@@ -63,8 +63,9 @@ export async function simulateTyping(delayMs: number): Promise<void> {
  */
 async function askOllama(prompt: string, context: string = ''): Promise<string | null> {
   try {
-    const ollamaUrl = process.env.OLLAMA_URL || 'http://localhost:11434'
-    const model = process.env.OLLAMA_MODEL || 'llama3.1:8b'
+    // Usar OLLAMA_BASE_URL (Easypanel) o OLLAMA_URL (local) como fallback
+    const ollamaUrl = process.env.OLLAMA_BASE_URL || process.env.OLLAMA_URL || 'http://localhost:11434'
+    const model = process.env.OLLAMA_MODEL || 'gemma2:2b'
     
     console.log(`🦙 Consultando Ollama (${model})...`)
     
@@ -652,6 +653,20 @@ export class SalesAgentSimple {
         }
       }
 
+      // 🆕 OBJECIÓN DE PRECIO - Cliente dice que está caro, no tiene plata, pide descuento
+      if (intent === 'price_objection' && userCtx.lastProduct) {
+        response = this.handlePriceObjection(message, userCtx.lastProduct)
+        userCtx.history.push({ role: 'assistant', content: response })
+        return {
+          text: response,
+          intent: 'price_objection',
+          salesStage: userCtx.stage,
+          sendPhotos: false,
+          photos: null,
+          product: userCtx.lastProduct
+        }
+      }
+
       if (intent === 'rejection' && userCtx.lastProduct) {
         response = this.generateFollowUpResponse(userCtx.lastProduct)
       } else if (intent === 'payment_inquiry' && userCtx.lastProduct) {
@@ -765,8 +780,14 @@ export class SalesAgentSimple {
       }
     }
 
-    // RECHAZO/DUDA
-    if (/(no gracias|no por ahora|después|despues|lo pienso|muy caro|no tengo|no puedo|tal vez|quizás|quizas|no estoy seguro|no me interesa|no necesito|está caro|esta caro|es mucho|no alcanza)/i.test(msg)) {
+    // 🆕 OBJECIÓN DE PRECIO - Cliente dice que está caro, no tiene plata, pide descuento
+    // IMPORTANTE: Detectar ANTES de rejection para dar respuesta empática específica
+    if (/(muy caro|está caro|esta caro|es caro|es mucho|no tengo|no cuento|no dispongo|sin plata|sin dinero|no hay plata|no me alcanza|no alcanza|fuera de mi presupuesto|presupuesto|costoso|elevado|descuento|rebaja|menos|promo|oferta|más barato|mas barato|algo más económico|algo mas economico|no puedo pagarlo|no puedo pagar|mucho dinero|mucha plata)/i.test(msg)) {
+      return 'price_objection'
+    }
+
+    // RECHAZO/DUDA (sin objeciones de precio - esas se manejan arriba)
+    if (/(no gracias|no por ahora|después|despues|lo pienso|tal vez|quizás|quizas|no estoy seguro|no me interesa|no necesito)/i.test(msg)) {
       return 'rejection'
     }
 
@@ -869,7 +890,7 @@ export class SalesAgentSimple {
       
       // Buscar palabras distintivas (no genéricas) del nombre del producto
       const distinctiveWords = productWords.filter((w: string) => 
-        w.length > 4 && !['mega', 'pack', 'curso', 'cursos', 'de', 'para', 'desde', 'con', 'sin', 'usb', 'wifi', 'ram', 'ssd', 'ddr4', 'ddr5', 'fhd', 'intel', 'core', 'amd', 'ryzen', 'pantalla'].includes(w)
+        w.length > 4 && !['mega', 'pack', 'curso', 'cursos', 'de', 'para', 'desde', 'con', 'sin', 'usb', 'wifi', 'ram', 'ssd', 'ddr4', 'ddr5', 'fhd', 'intel', 'core', 'amd', 'ryzen', 'pantalla', 'completo', 'completa', 'premium', 'profesional', 'avanzado', 'basico', 'básico', 'master', 'full', 'total', 'pack'].includes(w)
       )
       for (const word of distinctiveWords) {
         if (queryLower.includes(word)) {
@@ -1889,14 +1910,63 @@ export class SalesAgentSimple {
       `¿Tienes alguna otra duda? Estoy aquí para ayudarte 😊`
   }
 
+  /**
+   * 🆕 Maneja objeciones de precio
+   * Cuando el cliente dice que está caro, no tiene plata, etc.
+   */
+  private handlePriceObjection(message: string, product: any): string {
+    const productName = product.name
+    const price = this.formatPrice(product.price)
+    const msg = message.toLowerCase()
+    
+    // Detectar tipo de objeción de precio
+    const noTienePlata = /(no tengo|no cuento|no dispongo|sin plata|sin dinero|no hay plata)/i.test(msg)
+    const pideDscto = /(descuento|rebaja|menos|promo|oferta)/i.test(msg)
+    const estaCaro = /(caro|costoso|mucho|elevado)/i.test(msg)
+    
+    if (noTienePlata) {
+      // Cliente no tiene dinero ahora
+      return `Entiendo perfectamente, a veces el presupuesto está ajustado 💪\n\n` +
+        `El *${productName}* estará disponible cuando puedas:\n\n` +
+        `💰 Precio: ${price} COP\n` +
+        `📦 Entrega inmediata por Google Drive\n\n` +
+        `Si quieres, te puedo guardar la info y me escribes cuando estés listo 😊\n\n` +
+        `¿O prefieres que te muestre opciones más económicas?`
+    }
+    
+    if (pideDscto) {
+      // Cliente pide descuento
+      return `¡Claro que te entiendo! Todos buscamos el mejor precio 😊\n\n` +
+        `Te cuento: el *${productName}* ya tiene un precio especial de *${price} COP*\n\n` +
+        `✅ Incluye TODO el material completo\n` +
+        `✅ Acceso de por vida\n` +
+        `✅ Entrega inmediata\n\n` +
+        `Es una inversión que vale cada peso 💪\n\n` +
+        `¿Te lo aparto? 🎯`
+    }
+    
+    // Objeción general de precio (está caro)
+    return `Entiendo que el precio es importante 🤝\n\n` +
+      `Mira lo que incluye el *${productName}* por ${price} COP:\n\n` +
+      `✅ Material completo y actualizado\n` +
+      `✅ Acceso permanente (de por vida)\n` +
+      `✅ Sin pagos adicionales\n` +
+      `✅ Entrega inmediata por Google Drive\n\n` +
+      `Comparado con cursos presenciales o plataformas de suscripción, es una inversión única que te queda para siempre 💪\n\n` +
+      `¿Qué te parece? ¿Te lo aparto?`
+  }
+
   private generateFollowUpResponse(product: any): string {
     const price = this.formatPrice(product.price)
+    const productName = product.name
     
-    let response = `Dale, tranqui 😊\n\n`
-    response += `El *${product.name}* queda ahí por si cambias de opinión.\n\n`
-    response += `💰 Precio: ${price} COP\n\n`
+    // Respuesta empática y no presionante
+    let response = `Entiendo perfectamente, sin presiones 😊\n\n`
+    response += `El *${productName}* queda disponible cuando quieras.\n\n`
+    response += `💰 Precio: ${price} COP\n`
+    response += `📦 Entrega inmediata\n\n`
     response += `━━━━━━━━━━━━━━━━━━━━\n\n`
-    response += `¿Te muestro algo más? 🤝`
+    response += `¿Hay algo más en lo que pueda ayudarte? 🤝`
     
     return response
   }
