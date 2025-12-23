@@ -625,6 +625,20 @@ export class SalesAgentSimple {
       // Respuestas según intención
       let response: string
 
+      // 🆕 INTERÉS FUTURO (te aviso, luego te digo)
+      if (intent === 'future_interest') {
+        response = `¡Dale, perfecto! 😉 Quedo pendiente.\n\nCualquier duda que tengas cuando lo pienses, por aquí estaré. ¡Feliz día! 👋`
+        userCtx.history.push({ role: 'assistant', content: response })
+        return {
+          text: response,
+          intent: 'future_interest',
+          salesStage: 'nurturing',
+          sendPhotos: false,
+          photos: null,
+          product: userCtx.lastProduct
+        }
+      }
+
       // 🆕 OBJECIÓN DE DESCONFIANZA - Cliente duda de la legitimidad
       if (intent === 'distrust_objection' && userCtx.lastProduct) {
         response = this.handleDistrustObjection(message, userCtx.lastProduct)
@@ -791,8 +805,14 @@ export class SalesAgentSimple {
       return 'rejection'
     }
 
+    // INTERÉS FUTURO (te aviso, luego te digo)
+    // IMPORTANT: Check BEFORE rejection
+    if (/(te aviso|te confirmo|te digo|te escribo|te cuento|lo pienso y|lo consulto y|estamos hablando|pendientes|qdo atento|quedo atento|cualquier cosa|si algo|mas tarde|más tarde|luego te|despues te|después te)/i.test(msg)) {
+      return 'future_interest'
+    }
+
     // CLIENTE VA A ENVIAR COMPROBANTE (futuro) - "cuando tenga el recibo lo envío"
-    if (/(cuando (tenga|tengo)|ya (te|le) (envío|envio|mando)|te (envío|envio|mando) (el|cuando)|lo (envío|envio|mando)|vale.*(envío|envio|mando)|ok.*(envío|envio|mando)|listo.*(envío|envio|mando)|bueno.*(envío|envio|mando)|perfecto.*(envío|envio|mando))/i.test(msg)) {
+    if (/(cuando (tenga|tengo)|ya (te|le) (envío|envio|mando)|te (envío|envio|mando) (el|cuando)|lo (envío|envio|mando)|vale.*(envío|envio|mando)|ok.*(envío|envio|mando)|listo.*(envío|envio|mando)|bueno.*(envío|envio|mando)|perfecto.*(envío|envio|mando)|apenas (tenga|pague)|en un momento (te|le)|ya casi (te|le))/i.test(msg)) {
       return 'will_send_receipt'
     }
 
@@ -1663,7 +1683,7 @@ export class SalesAgentSimple {
       includes = `▸ Domina Photoshop, Illustrator, InDesign\n`
       includes += `▸ +50 cursos completos\n`
       includes += `▸ Proyectos prácticos\n`
-      includes += `▸ Certificado de finalización\n`
+      // includes += `▸ Certificado de finalización\n`
     } else if (name.includes('excel') || name.includes('office')) {
       includes = `▸ Excel básico a avanzado\n`
       includes += `▸ Fórmulas y funciones\n`

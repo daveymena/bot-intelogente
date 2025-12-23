@@ -385,7 +385,7 @@ export class IntelligentReasoningEngine {
     if (lowerMessage.includes('crecer') || lowerMessage.includes('avanzar') ||
         lowerMessage.includes('carrera') || lowerMessage.includes('profesional') ||
         lowerMessage.includes('habilidades')) {
-      return `¡Invertir en tu desarrollo es la mejor decisión! 💪\n\n📚 Cursos profesionales certificados\n🎁 Megapacks con múltiples habilidades\n💻 Herramientas para tu crecimiento profesional\n\n¿En qué área quieres destacar? 🚀`;
+      return `¡Invertir en tu desarrollo es la mejor decisión! 💪\n\n📚 Cursos profesionales completos\n🎁 Megapacks con múltiples habilidades\n💻 Herramientas para tu crecimiento profesional\n\n¿En qué área quieres destacar? 🚀`;
     }
     
     // CREATIVIDAD / DISEÑO

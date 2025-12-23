@@ -252,7 +252,7 @@ export class AidaResponseGenerator {
       'DIGITAL': [
         'Aprende a tu ritmo',
         'Acceso inmediato',
-        'Certificado incluido'
+        'Acceso vitalicio'
       ],
       'SERVICE': [
         'Resultados garantizados',

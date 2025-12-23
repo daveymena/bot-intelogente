@@ -185,7 +185,7 @@ Te cuento sobre nuestro **Curso de Piano Profesional**:
 ✨ Incluye:
 • 📚 50+ lecciones en video HD
 • 🎵 Desde cero hasta avanzado
-• 🏆 Certificado al finalizar
+• 🏆 Material profesional
 • ⏰ Acceso de por vida
 • 📱 Disponible en celular y PC
 

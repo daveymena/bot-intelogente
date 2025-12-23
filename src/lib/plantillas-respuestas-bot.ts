@@ -160,7 +160,7 @@ Este curso tiene un valor real de *{original_price}* COP, pero te lo ofrecemos e
 
 Además incluye:
 ✅ Acceso vitalicio
-✅ Certificado digital
+✅ Acceso inmediato
 ✅ Soporte técnico
 ✅ Actualizaciones gratuitas
 

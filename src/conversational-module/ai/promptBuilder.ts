@@ -98,7 +98,7 @@ EJEMPLO DE PRODUCTO:
 💰 Precio: $20.000 COP
 
 📋 Aprende desde cero hasta nivel profesional
-Incluye ejercicios prácticos y certificado
+Incluye ejercicios prácticos
 
 ✨ Incluye:
 • 50 lecciones en video
@@ -139,7 +139,7 @@ EJEMPLO DE PRODUCTO:
 💰 Precio: $20.000 COP
 
 📋 Aprende desde cero hasta nivel profesional
-Incluye ejercicios prácticos y certificado
+Incluye ejercicios prácticos
 
 ✨ Incluye:
 • 50 lecciones en video

@@ -134,7 +134,7 @@ export class ObjectionHandler {
     // Agregar valor según tipo de producto
     if (product.category?.toLowerCase().includes('curso')) {
       response += `✅ Acceso de por vida\n`;
-      response += `✅ Certificado incluido\n`;
+      response += `✅ Acceso vitalicio\n`;
       response += `✅ Actualizaciones gratis\n`;
       response += `✅ Soporte incluido\n\n`;
       response += `Es una inversión en tu futuro profesional 🎓`;
@@ -196,7 +196,7 @@ export class ObjectionHandler {
       response += `Además, nuestros cursos son:\n`;
       response += `🎓 Creados por expertos\n`;
       response += `🎓 Contenido actualizado\n`;
-      response += `🎓 Certificado al finalizar\n\n`;
+      response += `🎓 Material profesional\n\n`;
     }
     
     response += `Tenemos cientos de clientes satisfechos 😊\n\n`;
@@ -297,7 +297,7 @@ export class ObjectionHandler {
     if (product.category?.toLowerCase().includes('curso')) {
       response += `✅ Mejor relación calidad-precio\n`;
       response += `✅ Acceso de por vida (no mensualidades)\n`;
-      response += `✅ Certificado incluido\n`;
+      response += `✅ Acceso vitalicio\n`;
       response += `✅ Actualizaciones gratis\n\n`;
     } else {
       response += `✅ Precio competitivo\n`;

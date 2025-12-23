@@ -115,7 +115,7 @@ export function generateDynamicGreeting(context?: {
     parts.push(categoriesList);
   } else if (!context?.tenantConfig && Math.random() > 0.3) {
     // Fallback catálogo
-    parts.push('📚 Megacursos certificados\n💻 Laptops y accesorios\n📥 Entrega digital inmediata');
+    parts.push('📚 Megacursos completos\n💻 Laptops y accesorios\n📥 Entrega digital inmediata');
   }
   
   parts.push(offer);

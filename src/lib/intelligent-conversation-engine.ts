@@ -288,7 +288,7 @@ Los cursos son pregrabados y se entregan de dos formas:
    - También usamos la plataforma Hotmart para entrega
    - El cliente recibe acceso a través de Hotmart
    - Incluye área de miembros organizada
-   - Certificados disponibles al completar
+   - Acceso de por vida
 
 **Proceso de entrega:**
 - Después del pago, el cliente recibe un correo (verificar spam)
@@ -611,7 +611,7 @@ PRECIO Y ACCESO:
 
 Precio: $65.000 COP
 Acceso: De por vida
-Certificado incluido
+Acceso vitalicio
 
 Te gustaria proceder con la compra?
 
@@ -641,7 +641,7 @@ Google Drive:
 Hotmart:
 - Tambien recibiras acceso a traves de Hotmart
 - Area de miembros organizada
-- Certificado al completar
+- Acceso de por vida
 
 Acceso de por vida
 Desde cualquier dispositivo

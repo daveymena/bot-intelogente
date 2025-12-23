@@ -469,7 +469,7 @@ export class SpecializedClosings {
     const closes = [
       `Agenda tu ${serviceName} hoy y recibe 20% descuento. ¿Te reservo un horario?`,
       `Servicio ${serviceName} con garantía de satisfacción. ¿Empezamos ahora?`,
-      `Profesionales certificados listos para ayudarte. ¿Agendamos tu cita?`
+      `Expertos listos para ayudarte. ¿Agendamos tu cita?`
     ]
 
     return Personality.generateNaturalResponse({

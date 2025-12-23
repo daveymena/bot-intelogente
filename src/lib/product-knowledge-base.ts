@@ -127,7 +127,7 @@ export class ProductKnowledgeBaseService {
         'Ahorra cientos de miles comprando todo junto',
         'Contenido organizado y fácil de seguir',
         'Aprende a tu propio ritmo',
-        'Certificados de finalización incluidos',
+        'Material de alta calidad',
         'Recursos adicionales y plantillas'
       ],
       
@@ -205,7 +205,7 @@ export class ProductKnowledgeBaseService {
         'Videos HD con explicaciones paso a paso',
         'Material descargable (PDFs, plantillas)',
         'Acceso de por vida sin límite de tiempo',
-        'Certificado de finalización',
+        'Material profesional',
         'Soporte por WhatsApp',
         'Actualizaciones gratuitas'
       ],
@@ -243,7 +243,7 @@ export class ProductKnowledgeBaseService {
         },
         {
           question: '¿Incluye certificado?',
-          answer: 'Sí, al completar el curso recibes un certificado digital que puedes compartir en LinkedIn y tu CV.'
+          answer: 'Son cursos de autoaprendizaje profesional diseñados para desarrollar habilidades prácticas. No incluyen certificación oficial.'
         },
         {
           question: '¿Cómo accedo al curso?',

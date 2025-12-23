@@ -400,9 +400,10 @@ export class SelfValidatingAI {
     
     // Frases que indican contenido inventado
     const suspiciousPatterns = [
-      /incluye\s+\d+\s+(?:módulos|lecciones|capítulos)/i,
-      /certificado\s+(?:oficial|internacional)/i,
-      /acceso\s+(?:ilimitado|de por vida)/i,
+      /incluye\s+certificado/i,
+      /certificado\s+(?:al|de)\s+(?:finalizar|finalización)/i,
+      /certificado\s+(?:oficial|internacional|digital)/i,
+      // /acceso\s+(?:ilimitado|de por vida)/i, // Comentado porque SI ofrecemos acceso de por vida
     ];
     
     for (const pattern of suspiciousPatterns) {

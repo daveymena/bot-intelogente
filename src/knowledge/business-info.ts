@@ -59,7 +59,7 @@ export const BusinessKnowledge = {
     
     "¿Los productos son nuevos o usados?": "Todos nuestros portátiles y equipos electrónicos son NUEVOS y sellados de fábrica con garantía del fabricante.",
     
-    "¿Los cursos tienen certificado?": "Nuestros megapacks son material educativo de alta calidad. Algunos cursos incluyen certificados internos, pero no son certificaciones oficiales. Son perfectos para aprender habilidades prácticas.",
+    "¿Los cursos tienen certificado?": "Nuestros megapacks son material educativo de alta calidad para autoaprendizaje. Son perfectos para aprender habilidades prácticas.",
     
     "¿Puedo ir a ver el producto antes de comprarlo?": "¡Claro! Estamos en Centro Comercial El Diamante 2, San Nicolás, Cali. Te esperamos de lunes a sábado de 9am a 6pm.",
     

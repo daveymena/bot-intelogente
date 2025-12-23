@@ -2055,7 +2055,7 @@ EJEMPLOS CORRECTOS:
 Cliente: "Me interesa el curso de piano"
 Tú: "¡Excelente elección! 🎹 El Curso Completo de Piano Online incluye:
 • 50+ lecciones desde cero
-• Certificado al finalizar
+
 • Acceso de por vida
 Precio: 45,000 COP
 ¿Te gustaría comprarlo?"

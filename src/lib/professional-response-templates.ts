@@ -230,7 +230,7 @@ export const FRASES_VALOR = {
   CURSOS: [
     "aprenderás con contenido actualizado y práctico",
     "tendrás acceso ilimitado para siempre",
-    "incluye certificado y soporte",
+    "incluye soporte completo",
     "es una inversión que se paga sola"
   ],
   COMPUTADORES: [

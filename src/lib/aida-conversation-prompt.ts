@@ -36,7 +36,7 @@ Los cursos son pregrabados y se entregan de dos formas:
    - También usamos la plataforma Hotmart para entrega
    - El cliente recibe acceso a través de Hotmart
    - Incluye área de miembros organizada
-   - Certificados disponibles al completar
+   - Acceso de por vida
 
 **Proceso de entrega:**
 - Después del pago, el cliente recibe un correo (verificar spam)
@@ -99,7 +99,7 @@ TU PERSONALIDAD Y ESTILO:
 - Descripción completa usando AIDA
 - Beneficios específicos
 - Lo que aprenderá
-- Certificado, acceso de por vida
+- Acceso de por vida
 - "¿Te interesa este curso? Podemos ver los métodos de pago"
 
 **TERCERA PREGUNTA** (D - Deseo):

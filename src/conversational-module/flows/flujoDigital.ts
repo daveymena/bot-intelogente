@@ -185,7 +185,7 @@ function generarSeccionDeseo(producto: ProductoInfo): string {
     return `🎁 *¿Qué obtienes?*
 ✅ Acceso inmediato y de por vida
 ✅ Aprende a tu propio ritmo
-✅ Certificado al finalizar
+✅ Material de alta calidad
 ✅ Soporte incluido
 
 🚀 *Inversión en tu futuro profesional*`;

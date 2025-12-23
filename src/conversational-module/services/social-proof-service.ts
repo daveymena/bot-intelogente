@@ -70,7 +70,7 @@ export class SocialProofService {
       },
       {
         type: 'quality',
-        description: 'Profesionales certificados',
+        description: 'Profesionales experimentados',
         icon: '👨‍🔧',
       },
     ],

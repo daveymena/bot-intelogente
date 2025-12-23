@@ -61,7 +61,7 @@ export class ObjectionHandlerService {
     ],
 
     quality_doubt: [
-      '✅ Excelente pregunta. Todos nuestros productos son [originales/certificados/probados]. Además, ofrecemos garantía de [X meses/años] para tu tranquilidad.',
+      '✅ Excelente pregunta. Todos nuestros productos son [originales/probados]. Además, ofrecemos garantía de [X meses/años] para tu tranquilidad.',
       '✅ La calidad es nuestra prioridad. Este producto tiene [certificaciones/reviews positivos/garantía]. ¿Te gustaría ver testimonios de otros clientes?',
       '✅ Entiendo tu preocupación. Trabajamos solo con [proveedores confiables/marcas reconocidas] y todos nuestros productos pasan por control de calidad.'
     ],

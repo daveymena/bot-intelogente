@@ -220,7 +220,7 @@ export class ProductPhotoSender {
           if (specs.modules) caption += `📚 Módulos: ${specs.modules}\n`
           if (specs.lessons) caption += `🎬 Lecciones: ${specs.lessons}\n`
           if (specs.language) caption += `🌐 Idioma: ${specs.language}\n`
-          if (specs.certificate) caption += `🏆 Certificado: ${specs.certificate}\n`
+          // if (specs.certificate) caption += `🏆 Certificado: ${specs.certificate}\n`
           if (specs.access) caption += `♾️ Acceso: ${specs.access}\n`
           if (specs.support) caption += `💬 Soporte: ${specs.support}\n`
           caption += '\n'
