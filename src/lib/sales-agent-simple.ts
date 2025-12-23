@@ -16,14 +16,9 @@
 import { db } from './db'
 import Groq from 'groq-sdk'
 import { interpretMessage, InterpretedMessage, IntentType } from './ai-interpreter'
-import { de } from 'date-fns/locale'
-import { el } from 'date-fns/locale'
-import { en } from 'zod/v4/locales'
-import { el } from 'date-fns/locale'
-import { de } from 'date-fns/locale'
-import { el } from 'date-fns/locale'
-import { en } from 'zod/v4/locales'
-import { el } from 'date-fns/locale'
+// Importar sistema multi-servicio (opcional)
+import { UnifiedResponseService, ResponseResult } from './unified-response-service'
+import { BusinessContextDetector } from './business-context-detector'
 
 // Cliente Groq para análisis profundo
 let groqClient: Groq | null = null
@@ -221,7 +216,7 @@ ${context ? `\n💬 CONVERSACIÓN PREVIA:\n${context}` : ''}`
   }
 }
 
-// ========
+/**
  * 🧠 BÚSQUEDA INTELIGENTE CON IA
  * Cuando la búsqueda local falla, usa IA para:
  * 1. Entender la intención del usuario (aunque escriba mal)
@@ -2237,6 +2232,90 @@ ${categoriesText}
 
   getContext(userPhone: string): ConversationContext | null {
     return this.conversations.get(userPhone) || null
+  }
+
+  /**
+   * 🆕 Procesa mensaje usando el nuevo sistema multi-servicio
+   * Este método es OPCIONAL - usa UnifiedResponseService para negocios
+   * que no son solo tiendas (servicios, restaurantes, híbridos)
+   */
+  async processMessageMultiService(
+    message: string, 
+    userPhone: string, 
+    context?: any
+  ): Promise<ProcessedResponse> {
+    try {
+      // Verificar si hay userId
+      const userId = context?.userId || this.userId
+      if (!userId) {
+        console.log('⚠️ No userId, usando sistema tradicional')
+        return this.processMessage(message, userPhone, context)
+      }
+
+      // Obtener contexto del negocio
+      const businessContext = await UnifiedResponseService.getBusinessContext(userId)
+      
+      // Si es tienda tradicional (STORE) o no detectado, usar sistema actual
+      if (businessContext.type === 'STORE' || businessContext.type === 'UNKNOWN') {
+        console.log(`🏪 Negocio tipo ${businessContext.type}, usando sistema tradicional`)
+        return this.processMessage(message, userPhone, context)
+      }
+
+      // Para SERVICE, RESTAURANT o HYBRID, usar nuevo sistema
+      console.log(`🎯 Negocio tipo ${businessContext.type}, usando sistema multi-servicio`)
+      
+      // Convertir productos al formato Item
+      const items = this.products.map(p => ({
+        id: p.id,
+        name: p.name,
+        description: p.description,
+        price: p.price,
+        category: p.category,
+        images: p.images,
+        stock: p.stock,
+        duration: (p as any).duration,
+        requiresBooking: (p as any).requiresBooking,
+        ingredients: (p as any).ingredients
+      }))
+
+      // Procesar con UnifiedResponseService
+      const result = await UnifiedResponseService.processMessage(
+        message,
+        userId,
+        userPhone,
+        items
+      )
+
+      // Convertir ResponseResult a ProcessedResponse
+      return {
+        text: result.text,
+        intent: result.flow,
+        salesStage: result.stage,
+        sendPhotos: result.sendMedia,
+        photos: result.mediaUrls || null,
+        product: result.currentProduct
+      }
+
+    } catch (error) {
+      console.error('❌ Error en multi-service, fallback a tradicional:', error)
+      return this.processMessage(message, userPhone, context)
+    }
+  }
+
+  /**
+   * 🆕 Detecta y actualiza el tipo de negocio basado en los productos
+   */
+  async detectBusinessType(): Promise<string> {
+    if (!this.userId) return 'UNKNOWN'
+    
+    try {
+      const context = await BusinessContextDetector.detectAndSave(this.userId)
+      console.log(`🏢 Tipo de negocio detectado: ${context.type} (${(context.confidence * 100).toFixed(0)}%)`)
+      return context.type
+    } catch (error) {
+      console.error('Error detectando tipo de negocio:', error)
+      return 'UNKNOWN'
+    }
   }
 }
 
