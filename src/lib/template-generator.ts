@@ -1,421 +1,483 @@
 /**
- * 🎨 GENERADOR DE PLANTILLAS PERSONALIZADAS
- * Crea plantillas de respuesta adaptadas al tipo de producto y estrategia de venta
+ * 📝 TemplateGenerator
+ * 
+ * Genera plantillas de respuesta dinámicas según el tipo de negocio,
+ * item y contexto de la conversación.
  */
 
-import { ProductClassifier, ProductType, SalesStrategy, ProductClassification } from './product-classifier';
-import { Utils } from './plantillas-respuestas-bot';
-
-export class TemplateGenerator {
-  /**
-   * 🎯 GENERAR PLANTILLA DE PRODUCTO ENCONTRADO
-   */
-  static generateProductFoundTemplate(
-    product: any,
-    classification: ProductClassification
-  ): string {
-    const { type, strategy, deliveryOptions, salesApproach } = classification;
-
-    switch (type) {
-      case ProductType.DIGITAL:
-        return this.generateDigitalProductTemplate(product);
-
-      case ProductType.PHYSICAL_HIGH_VALUE:
-        return this.generateHighValueProductTemplate(product, deliveryOptions);
-
-      case ProductType.PHYSICAL_LOW_VALUE:
-        return this.generateLowValueProductTemplate(product, deliveryOptions);
-
-      case ProductType.PHYSICAL_MEDIUM_VALUE:
-        return this.generateMediumValueProductTemplate(product, deliveryOptions);
-
-      case ProductType.SERVICE:
-        return this.generateServiceTemplate(product);
-
-      default:
-        return this.generateGenericProductTemplate(product);
-    }
-  }
-
-  /**
-   * 📚 PLANTILLA PARA PRODUCTOS DIGITALES
-   */
-  private static generateDigitalProductTemplate(product: any): string {
-    return `¡Perfecto! 🎯 Encontré exactamente lo que buscas:
-
-🎓 *${product.name}*
-💰 *Precio:* ${Utils.formatPrice(product.price)} COP
-
-✨ *Incluye:*
-${product.description ? `• ${product.description}` : '• Contenido completo y actualizado'}
-
-🚀 *Entrega AUTOMÁTICA e INMEDIATA*
-✅ Pagas y recibes tu acceso al instante
-📧 Link de descarga directo a tu email/WhatsApp
-🔓 Disponible 24/7 desde cualquier dispositivo
-
-━━━━━━━━━━━━━━━━━━━━━━
-💳 *ELIGE TU MÉTODO DE PAGO:*
-━━━━━━━━━━━━━━━━━━━━━━
-
-1️⃣ *MercadoPago* 💳
-   ✅ Tarjetas, PSE, efectivo
-   ✅ Pago 100% seguro
-   👉 Responde: "MercadoPago"
-
-2️⃣ *PayPal* 🌍
-   ✅ Tarjetas internacionales
-   ✅ Protección al comprador
-   👉 Responde: "PayPal"
-
-3️⃣ *Nequi* 📱
-   ✅ Transferencia al 3136174267
-   ✅ Envía captura del pago
-   👉 Responde: "Nequi"
-
-4️⃣ *Daviplata* 💰
-   ✅ Transferencia al 3136174267
-   ✅ Envía captura del pago
-   👉 Responde: "Daviplata"
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-🎁 *¡OFERTA ESPECIAL!*
-Compra ahora y recibe acceso inmediato + soporte personalizado
-
-💬 *¿Listo para comprar?*
-Solo responde con el método de pago que prefieres y te genero tu link al instante 🚀`;
-  }
-
-  /**
-   * 💻 PLANTILLA PARA PRODUCTOS DE ALTO VALOR
-   */
-  private static generateHighValueProductTemplate(product: any, deliveryOptions: string[]): string {
-    const deliveryText = deliveryOptions.includes('ENTREGA_LOCAL')
-      ? '🚚 *Entrega local* disponible en nuestra tienda'
-      : '🚚 *Envío seguro* con seguimiento completo';
-
-    return `¡Excelente elección! 💎 Encontramos este producto premium:
-
-🖥️ *${product.name}*
-💰 *Precio:* ${Utils.formatPrice(product.price)} COP
-
-⚡ *Características destacadas:*
-${product.description ? `• ${product.description}` : '• Producto de alta calidad'}
-
-${deliveryText}
-🛡️ *Garantía extendida* incluida
-📞 *Asesoría técnica* especializada
-
-━━━━━━━━━━━━━━━━━━━━━━
-💳 *OPCIONES DE PAGO:*
-━━━━━━━━━━━━━━━━━━━━━━
-
-1️⃣ *Pago en Línea* 💳
-   ✅ MercadoPago o PayPal
-   ✅ Envío inmediato después del pago
-   👉 Responde: "Pago en línea"
-
-2️⃣ *Contraentrega* 🚚
-   ✅ Pagas cuando recibes el producto
-   ✅ Sin riesgos, verificas antes de pagar
-   👉 Responde: "Contraentrega"
-
-3️⃣ *Transferencia* 📱
-   ✅ Nequi/Daviplata al 3136174267
-   ✅ Envía captura y enviamos tu pedido
-   👉 Responde: "Transferencia"
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-🎁 *INCLUYE:*
-✅ Envío asegurado
-✅ Garantía extendida
-✅ Soporte técnico
-
-💬 *¿Cómo prefieres pagar?*
-Responde con tu opción y procesamos tu pedido al instante 🚀`;
-  }
-
-  /**
-   * 🎒 PLANTILLA PARA PRODUCTOS DE BAJO VALOR
-   */
-  private static generateLowValueProductTemplate(product: any, deliveryOptions: string[]): string {
-    const deliveryText = deliveryOptions.includes('CONTRAENTREGA')
-      ? '🚚 *Contraentrega disponible* - Pagas al recibir'
-      : '🚚 *Envío económico* a toda Colombia';
-
-    return `¡Genial! 🎉 Encontré este producto perfecto:
-
-🎒 *${product.name}*
-💰 *Precio:* ${Utils.formatPrice(product.price)} COP
-
-✨ *Ideal para:*
-${product.description ? `• ${product.description}` : '• Producto de calidad a excelente precio'}
-
-${deliveryText}
-⚡ *Entrega rápida* (2-3 días hábiles)
-
-━━━━━━━━━━━━━━━━━━━━━━
-💳 *ELIGE TU MÉTODO DE PAGO:*
-━━━━━━━━━━━━━━━━━━━━━━
-
-1️⃣ *Contraentrega* 🚚
-   ✅ Pagas cuando recibes
-   ✅ Sin riesgos
-   👉 Responde: "Contraentrega"
-
-2️⃣ *MercadoPago* 💳
-   ✅ Tarjetas, PSE, efectivo
-   ✅ Envío inmediato
-   👉 Responde: "MercadoPago"
-
-3️⃣ *Transferencia* 📱
-   ✅ Nequi/Daviplata al 3136174267
-   ✅ Envía captura del pago
-   👉 Responde: "Nequi" o "Daviplata"
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-🎁 *¡Aprovecha!*
-Compra ahora y recibe en 2-3 días
-
-💬 *¿Listo para ordenar?*
-Solo responde con tu método de pago preferido 🚀`;
-  }
-
-  /**
-   * ⌨️ PLANTILLA PARA PRODUCTOS DE VALOR MEDIO
-   */
-  private static generateMediumValueProductTemplate(product: any, deliveryOptions: string[]): string {
-    const deliveryOptionsText = deliveryOptions.map(option => {
-      switch (option) {
-        case 'ENTREGA_LOCAL': return '🏪 Recojo en tienda';
-        case 'ENVIO_NORMAL': return '🚚 Envío normal';
-        case 'CONTRAENTREGA': return '💰 Pago contra entrega';
-        default: return option;
-      }
-    }).join(' • ');
-
-    return `¡Perfecto! 🎯 Este producto combina calidad y precio:
-
-⌨️ *${product.name}*
-💰 *Precio:* ${Utils.formatPrice(product.price)} COP
-
-🔧 *Especificaciones:*
-${product.description ? `• ${product.description}` : '• Producto confiable y duradero'}
-
-🚚 *Opciones de entrega:*
-• ${deliveryOptionsText}
-
-💳 *Métodos de pago disponibles:*
-• PayPal 🌍
-• MercadoPago 💳
-• Nequi al 3136174267 📱
-• Daviplata al 3136174267 💰
-
-¿Te envío más fotos o genero el link de pago dinámico? 📸`;
-  }
-
-  /**
-   * 🔧 PLANTILLA PARA SERVICIOS
-   */
-  private static generateServiceTemplate(product: any): string {
-    return `¡Claro! 👨‍💼 Ofrecemos este servicio profesional:
-
-🔧 *${product.name}*
-
-💼 *Servicio incluye:*
-${product.description ? `• ${product.description}` : '• Atención especializada'}
-
-⏰ *Precio:* ${Utils.formatPrice(product.price)} COP
-📅 *Disponibilidad:* Consultar agenda
-⭐ *Garantía:* Trabajo garantizado
-
-💳 *Métodos de pago disponibles:*
-• PayPal 🌍
-• MercadoPago 💳
-• Nequi al 3136174267 📱
-• Daviplata al 3136174267 💰
-• Transferencia bancaria 💼
-
-¿Te gustaría agendar una consulta gratuita para evaluar tus necesidades o generar el link de pago? 🤝
-
-Responde "Sí" para coordinar una cita, "Más info" para detalles completos, o "Pagar" para generar el link.`;
-  }
-
-  /**
-   * 📦 PLANTILLA GENÉRICA DE FALLBACK
-   */
-  private static generateGenericProductTemplate(product: any): string {
-    return `¡Encontré este producto! 📦
-
-📦 *${product.name}*
-💰 *Precio:* ${Utils.formatPrice(product.price)} COP
-
-${product.description ? `📝 ${product.description}` : ''}
-
-¿Te interesa este producto? Puedo darte más información o generar el link de compra. 🤔`;
-  }
-
-  /**
-   * 🎨 GENERAR PLANTILLAS COMPLETAS PARA UN CLIENTE
-   */
-  static async generateClientTemplates(userId: string): Promise<{
-    templates: Record<string, string>;
-    productClassifications: Record<string, ProductClassification>;
-    summary: any;
-  }> {
-    try {
-      const { db } = await import('./db');
-
-      // Obtener todos los productos del cliente
-      const products = await db.product.findMany({
-        where: { userId, status: 'AVAILABLE' },
-        take: 50 // Limitar para rendimiento
-      });
-
-      const templates: Record<string, string> = {};
-      const productClassifications: Record<string, ProductClassification> = {};
-
-      // Generar plantilla para cada producto
-      for (const product of products) {
-        const classification = ProductClassifier.classifyProduct(product);
-        const template = this.generateProductFoundTemplate(product, classification);
-
-        templates[product.id] = template;
-        productClassifications[product.id] = classification;
-      }
-
-      // Análisis del portafolio
-      const portfolioAnalysis = await ProductClassifier.analyzeClientPortfolio(userId);
-
-      // Generar plantillas adicionales basadas en el análisis
-      templates['welcome'] = this.generateWelcomeTemplate(portfolioAnalysis.summary);
-      templates['payment_methods'] = this.generatePaymentMethodsTemplate(portfolioAnalysis.summary);
-      templates['shipping_info'] = this.generateShippingTemplate(portfolioAnalysis.summary);
-
-      return {
-        templates,
-        productClassifications,
-        summary: portfolioAnalysis
-      };
-    } catch (error) {
-      console.error('[TemplateGenerator] Error generando plantillas:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * 👋 PLANTILLA DE BIENVENIDA PERSONALIZADA
-   */
-  private static generateWelcomeTemplate(summary: any): string {
-    let focus = '';
-
-    if (summary.digitalPercentage > 50) {
-      focus = '📚 cursos, megapacks y productos digitales';
-    } else if (summary.servicePercentage > 50) {
-      focus = '🔧 servicios profesionales especializados';
-    } else if (summary.avgPrice > 300000) {
-      focus = '💎 productos premium de alta calidad';
-    } else {
-      focus = '🎯 productos de calidad al mejor precio';
-    }
-
-    return `¡Hola! 👋 Bienvenido a nuestra tienda especializada en ${focus}.
-
-¿En qué puedo ayudarte hoy? 🤖
-
-Tenemos ${summary.totalProducts} productos disponibles con precios desde ${Utils.formatPrice(Math.round(summary.avgPrice * 0.5))} COP.
-
-Pregúntame por cualquier producto o servicio que necesites. 💫`;
-  }
-
-  /**
-   * 💳 PLANTILLA DE MÉTODOS DE PAGO
-   */
-  private static generatePaymentMethodsTemplate(summary: any): string {
-    const methods = [
-      '💳 MercadoPago',
-      '🌍 PayPal',
-      '📱 Nequi al 3136174267',
-      '💰 Daviplata al 3136174267'
-    ];
-
-    if (summary.avgPrice < 100000) {
-      methods.push('💵 Efectivo contra entrega');
-    }
-
-    if (summary.servicePercentage > 30) {
-      methods.push('💼 Transferencia bancaria');
-    }
-
-    return `💰 *Formas de pago disponibles:*
-
-${methods.map(method => `• ${method}`).join('\n')}
-
-⚡ *Pago seguro y confiable*
-🚀 *Procesamiento inmediato*
-🔗 *Links dinámicos generados automáticamente*
-
-¿Con cuál prefieres pagar? 🤔`;
-  }
-
-  /**
-   * 🚚 PLANTILLA DE ENVÍOS
-   */
-  private static generateShippingTemplate(summary: any): string {
-    if (summary.digitalPercentage > 70) {
-      return `📧 *Entrega inmediata para productos digitales*
-
-🎯 *Acceso instantáneo* después del pago
-📱 *Disponible* en todos tus dispositivos
-🔓 *Sin restricciones* de horario
-
-¡Recibirás tu acceso en minutos! ⚡`;
-    }
-
-    if (summary.avgPrice > 300000) {
-      return `🚚 *Entrega especializada*
-
-🏪 *Recojo en tienda* disponible
-🚛 *Envío seguro* con seguimiento GPS
-📞 *Coordinación previa* de entrega
-🛡️ *Seguro incluido* en productos de alto valor
-
-¿Prefieres recogerlo o te lo enviamos? 🤝`;
-    }
-
-    return `🚚 *Envíos a toda Colombia*
-
-📦 *Empaquetado seguro*
-⚡ *Entrega 2-3 días hábiles*
-💰 *Pago contra entrega* disponible
-📊 *Seguimiento* en tiempo real
-
-¿A qué ciudad necesitas el envío? 📍`;
-  }
-
-  /**
-   * 🎯 OBTENER PLANTILLA PARA UN PRODUCTO ESPECÍFICO
-   */
-  static async getProductTemplate(productId: string, userId: string): Promise<string> {
-    try {
-      const { db } = await import('./db');
-
-      const product = await db.product.findFirst({
-        where: { id: productId, userId }
-      });
-
-      if (!product) {
-        throw new Error('Producto no encontrado');
-      }
-
-      const classification = ProductClassifier.classifyProduct(product);
-      return this.generateProductFoundTemplate(product, classification);
-    } catch (error) {
-      console.error('[TemplateGenerator] Error obteniendo plantilla:', error);
-      return 'Producto encontrado. ¿Te gustaría más información o generar el link de compra? 🤔';
-    }
+import { BusinessContext, BusinessType, BusinessSubType } from './business-context-detector'
+
+// Configuración de plantilla
+export interface TemplateConfig {
+  tone: 'formal' | 'casual' | 'friendly' | 'professional'
+  useEmojis: boolean
+  maxLength: number
+  includeImages: boolean
+  currency: string
+  language: string
+  businessName?: string
+}
+
+// Item genérico (producto, servicio, comida)
+export interface Item {
+  id: string
+  name: string
+  description?: string | null
+  price: number
+  images?: string | null  // JSON array
+  category?: string
+  // Campos de servicio
+  duration?: number
+  requiresBooking?: boolean
+  // Campos de comida
+  ingredients?: string[]
+  customizations?: string[]
+  // Campos de producto
+  stock?: number
+  variants?: string[]
+}
+
+// Configuración por defecto
+const DEFAULT_CONFIG: TemplateConfig = {
+  tone: 'friendly',
+  useEmojis: true,
+  maxLength: 500,
+  includeImages: true,
+  currency: 'COP',
+  language: 'es'
+}
+
+// Emojis por tipo de negocio
+const EMOJIS = {
+  STORE: {
+    header: '🛒',
+    price: '💰',
+    stock: '📦',
+    shipping: '🚚',
+    warranty: '🛡️',
+    support: '🔧'
+  },
+  SERVICE: {
+    header: '💼',
+    price: '💰',
+    duration: '⏱️',
+    booking: '📅',
+    location: '📍',
+    contact: '📞'
+  },
+  RESTAURANT: {
+    header: '🍽️',
+    price: '💰',
+    time: '⏱️',
+    delivery: '🛵',
+    ingredients: '🥬',
+    hot: '🔥'
+  },
+  DIGITAL: {
+    header: '💻',
+    price: '💰',
+    instant: '⚡',
+    download: '📥',
+    access: '🔑',
+    bonus: '🎁'
   }
 }
+
+// Saludos por tono
+const GREETINGS = {
+  formal: {
+    hello: 'Buen día, bienvenido a {businessName}.',
+    thanks: 'Gracias por su interés.',
+    goodbye: 'Fue un placer atenderle. ¡Hasta pronto!'
+  },
+  casual: {
+    hello: '¡Hola! 👋 Bienvenido a {businessName}',
+    thanks: '¡Gracias por escribirnos!',
+    goodbye: '¡Nos vemos! 😊'
+  },
+  friendly: {
+    hello: '¡Hola! 😊 ¿Cómo estás? Soy el asistente de {businessName}',
+    thanks: '¡Genial! Gracias por tu interés 🙌',
+    goodbye: '¡Fue un gusto ayudarte! Escríbenos cuando quieras 💬'
+  },
+  professional: {
+    hello: 'Bienvenido a {businessName}. ¿En qué podemos asistirle hoy?',
+    thanks: 'Agradecemos su preferencia.',
+    goodbye: 'Quedamos atentos a cualquier consulta adicional.'
+  }
+}
+
+export class TemplateGenerator {
+  private config: TemplateConfig
+  private businessContext: BusinessContext
+  
+  constructor(businessContext: BusinessContext, config?: Partial<TemplateConfig>) {
+    this.businessContext = businessContext
+    this.config = { ...DEFAULT_CONFIG, ...config }
+  }
+  
+  /**
+   * Genera tarjeta de item (producto/servicio/comida)
+   */
+  generateItemCard(item: Item): string {
+    const type = this.businessContext.type
+    const emojis = this.getEmojis()
+    
+    switch (type) {
+      case 'STORE':
+        return this.generateProductCard(item, emojis)
+      case 'SERVICE':
+        return this.generateServiceCard(item, emojis)
+      case 'RESTAURANT':
+        return this.generateFoodCard(item, emojis)
+      default:
+        return this.generateGenericCard(item, emojis)
+    }
+  }
+  
+  /**
+   * Tarjeta de producto físico/digital
+   */
+  private generateProductCard(item: Item, emojis: typeof EMOJIS.STORE): string {
+    const e = this.config.useEmojis ? emojis : { header: '', price: '', stock: '', shipping: '', warranty: '', support: '' }
+    
+    let card = `╔══════════════════════════╗\n`
+    card += `${e.header} *${item.name}*\n`
+    card += `╚══════════════════════════╝\n\n`
+    
+    card += `${e.price} *PRECIO: ${this.formatPrice(item.price)}*\n\n`
+    
+    if (item.description) {
+      card += `📝 *DESCRIPCIÓN:*\n${item.description}\n\n`
+    }
+    
+    card += `━━━━━━━━━━━━━━━━━━━━\n`
+    card += `✨ *INCLUYE:*\n`
+    card += `✅ Producto original\n`
+    card += `${e.warranty} Garantía\n`
+    card += `${e.shipping} Envío a toda Colombia\n`
+    card += `${e.support} Soporte técnico\n`
+    card += `━━━━━━━━━━━━━━━━━━━━\n\n`
+    
+    if (item.stock !== undefined && item.stock !== null) {
+      card += `${e.stock} *Stock:* ${item.stock > 0 ? `${item.stock} disponibles` : '⚠️ Agotado'}\n\n`
+    }
+    
+    card += `💬 *¿Te interesa? Dime "sí" y te paso los datos de pago* 😊`
+    
+    return card
+  }
+  
+  /**
+   * Tarjeta de servicio
+   */
+  private generateServiceCard(item: Item, emojis: typeof EMOJIS.SERVICE): string {
+    const e = this.config.useEmojis ? emojis : { header: '', price: '', duration: '', booking: '', location: '', contact: '' }
+    
+    let card = `╔══════════════════════════╗\n`
+    card += `${e.header} *${item.name}*\n`
+    card += `╚══════════════════════════╝\n\n`
+    
+    card += `${e.price} *PRECIO: ${this.formatPrice(item.price)}*\n`
+    
+    if (item.duration) {
+      card += `${e.duration} *Duración:* ${item.duration} minutos\n`
+    }
+    
+    card += `\n`
+    
+    if (item.description) {
+      card += `📋 *DESCRIPCIÓN:*\n${item.description}\n\n`
+    }
+    
+    card += `━━━━━━━━━━━━━━━━━━━━\n`
+    
+    if (item.requiresBooking) {
+      card += `${e.booking} *Requiere cita previa*\n`
+      card += `\n💬 *¿Quieres agendar? Dime qué día y hora te queda bien* 📅`
+    } else {
+      card += `💬 *¿Te interesa? Escríbeme para más información* 😊`
+    }
+    
+    return card
+  }
+  
+  /**
+   * Tarjeta de comida
+   */
+  private generateFoodCard(item: Item, emojis: typeof EMOJIS.RESTAURANT): string {
+    const e = this.config.useEmojis ? emojis : { header: '', price: '', time: '', delivery: '', ingredients: '', hot: '' }
+    
+    let card = `${e.header} *${item.name}*\n`
+    card += `━━━━━━━━━━━━━━━━━━━━\n`
+    
+    card += `${e.price} *${this.formatPrice(item.price)}*\n`
+    
+    if (item.ingredients && item.ingredients.length > 0) {
+      card += `${e.ingredients} ${item.ingredients.join(', ')}\n`
+    }
+    
+    if (item.duration) {
+      card += `${e.time} Tiempo: ${item.duration} min\n`
+    }
+    
+    if (item.customizations && item.customizations.length > 0) {
+      card += `\n✏️ *Personaliza:* ${item.customizations.join(', ')}\n`
+    }
+    
+    card += `\n${e.delivery} *Domicilio disponible*`
+    
+    return card
+  }
+  
+  /**
+   * Tarjeta genérica
+   */
+  private generateGenericCard(item: Item, emojis: typeof EMOJIS.STORE): string {
+    let card = `*${item.name}*\n`
+    card += `━━━━━━━━━━━━━━━━━━━━\n`
+    card += `💰 *Precio: ${this.formatPrice(item.price)}*\n`
+    
+    if (item.description) {
+      card += `\n${item.description}\n`
+    }
+    
+    card += `\n💬 *¿Te interesa? Escríbeme para más información*`
+    
+    return card
+  }
+  
+  /**
+   * Genera lista de categoría
+   */
+  generateCategoryList(items: Item[], categoryName: string): string {
+    const type = this.businessContext.type
+    const emojis = this.getEmojis()
+    
+    let list = `📂 *${categoryName.toUpperCase()}*\n`
+    list += `━━━━━━━━━━━━━━━━━━━━\n\n`
+    
+    items.forEach((item, index) => {
+      const num = index + 1
+      list += `${num}️⃣ *${item.name}*\n`
+      list += `   💰 ${this.formatPrice(item.price)}\n`
+      if (item.description) {
+        const shortDesc = item.description.substring(0, 50) + (item.description.length > 50 ? '...' : '')
+        list += `   📝 ${shortDesc}\n`
+      }
+      list += `\n`
+    })
+    
+    list += `━━━━━━━━━━━━━━━━━━━━\n`
+    list += `💬 *Escribe el número o nombre del que te interesa*`
+    
+    return list
+  }
+  
+  /**
+   * Genera saludo
+   */
+  generateGreeting(customGreeting?: string): string {
+    if (customGreeting) {
+      return customGreeting.replace('{businessName}', this.config.businessName || 'nuestra tienda')
+    }
+    
+    const greetings = GREETINGS[this.config.tone]
+    return greetings.hello.replace('{businessName}', this.config.businessName || 'nuestra tienda')
+  }
+  
+  /**
+   * Genera despedida
+   */
+  generateFarewell(customFarewell?: string): string {
+    if (customFarewell) {
+      return customFarewell.replace('{businessName}', this.config.businessName || 'nuestra tienda')
+    }
+    
+    const greetings = GREETINGS[this.config.tone]
+    return greetings.goodbye.replace('{businessName}', this.config.businessName || 'nuestra tienda')
+  }
+  
+  /**
+   * Genera información de pago
+   */
+  generatePaymentInfo(item: Item, paymentMethods: {
+    mercadopago?: string
+    paypal?: string
+    nequi?: string
+    daviplata?: string
+    bank?: { name: string; account: string; holder: string }
+  }): string {
+    let info = `╔══════════════════════════╗\n`
+    info += `📦 *${item.name}*\n`
+    info += `💰 *Total: ${this.formatPrice(item.price)}*\n`
+    info += `╚══════════════════════════╝\n\n`
+    
+    info += `💳 *MÉTODOS DE PAGO:*\n`
+    info += `━━━━━━━━━━━━━━━━━━━━\n`
+    
+    if (paymentMethods.mercadopago) {
+      info += `🔵 *MercadoPago (Tarjeta/PSE):*\n${paymentMethods.mercadopago}\n\n`
+    }
+    
+    if (paymentMethods.paypal) {
+      info += `🟡 *PayPal:*\n${paymentMethods.paypal}\n\n`
+    }
+    
+    if (paymentMethods.nequi || paymentMethods.daviplata) {
+      info += `📱 *Transferencia directa:*\n`
+      if (paymentMethods.nequi) {
+        info += `▸ *Nequi:* ${paymentMethods.nequi}\n`
+      }
+      if (paymentMethods.daviplata) {
+        info += `▸ *Daviplata:* ${paymentMethods.daviplata}\n`
+      }
+      info += `\n`
+    }
+    
+    if (paymentMethods.bank) {
+      info += `🏦 *Transferencia bancaria:*\n`
+      info += `▸ Banco: ${paymentMethods.bank.name}\n`
+      info += `▸ Cuenta: ${paymentMethods.bank.account}\n`
+      info += `▸ Titular: ${paymentMethods.bank.holder}\n\n`
+    }
+    
+    info += `━━━━━━━━━━━━━━━━━━━━\n`
+    info += `📝 *SIGUIENTE PASO:*\n`
+    info += `Envía el comprobante de pago 📸`
+    
+    return info
+  }
+  
+  /**
+   * Genera confirmación de reserva/cita
+   */
+  generateBookingConfirmation(booking: {
+    serviceName: string
+    date: string
+    time: string
+    customerName: string
+    customerPhone?: string
+    location?: string
+    notes?: string
+  }): string {
+    let confirmation = `✅ *CITA CONFIRMADA*\n`
+    confirmation += `━━━━━━━━━━━━━━━━━━━━\n\n`
+    
+    confirmation += `📋 *Servicio:* ${booking.serviceName}\n`
+    confirmation += `📅 *Fecha:* ${booking.date}\n`
+    confirmation += `⏰ *Hora:* ${booking.time}\n`
+    confirmation += `👤 *Cliente:* ${booking.customerName}\n`
+    
+    if (booking.customerPhone) {
+      confirmation += `📞 *Teléfono:* ${booking.customerPhone}\n`
+    }
+    
+    if (booking.location) {
+      confirmation += `📍 *Dirección:* ${booking.location}\n`
+    }
+    
+    if (booking.notes) {
+      confirmation += `📝 *Notas:* ${booking.notes}\n`
+    }
+    
+    confirmation += `\n━━━━━━━━━━━━━━━━━━━━\n`
+    confirmation += `💬 *Te enviaremos un recordatorio antes de la cita*`
+    
+    return confirmation
+  }
+  
+  /**
+   * Genera resumen de pedido
+   */
+  generateOrderSummary(order: {
+    items: Array<{ name: string; quantity: number; price: number }>
+    subtotal: number
+    shipping?: number
+    total: number
+    customerName: string
+    customerPhone: string
+    deliveryAddress?: string
+    deliveryType: 'delivery' | 'pickup' | 'dine-in'
+    notes?: string
+  }): string {
+    let summary = `📋 *RESUMEN DE PEDIDO*\n`
+    summary += `━━━━━━━━━━━━━━━━━━━━\n\n`
+    
+    // Items
+    order.items.forEach(item => {
+      summary += `▸ ${item.quantity}x ${item.name} - ${this.formatPrice(item.price * item.quantity)}\n`
+    })
+    
+    summary += `\n`
+    summary += `━━━━━━━━━━━━━━━━━━━━\n`
+    summary += `Subtotal: ${this.formatPrice(order.subtotal)}\n`
+    
+    if (order.shipping) {
+      summary += `Envío: ${this.formatPrice(order.shipping)}\n`
+    }
+    
+    summary += `*TOTAL: ${this.formatPrice(order.total)}*\n`
+    summary += `━━━━━━━━━━━━━━━━━━━━\n\n`
+    
+    // Datos del cliente
+    summary += `👤 *Cliente:* ${order.customerName}\n`
+    summary += `📞 *Teléfono:* ${order.customerPhone}\n`
+    
+    if (order.deliveryType === 'delivery' && order.deliveryAddress) {
+      summary += `📍 *Dirección:* ${order.deliveryAddress}\n`
+    } else if (order.deliveryType === 'pickup') {
+      summary += `🏪 *Recoger en tienda*\n`
+    }
+    
+    if (order.notes) {
+      summary += `📝 *Notas:* ${order.notes}\n`
+    }
+    
+    return summary
+  }
+  
+  /**
+   * Obtiene emojis según tipo de negocio
+   */
+  private getEmojis(): typeof EMOJIS.STORE {
+    if (!this.config.useEmojis) {
+      return { header: '', price: '', stock: '', shipping: '', warranty: '', support: '' }
+    }
+    
+    switch (this.businessContext.type) {
+      case 'SERVICE':
+        return EMOJIS.SERVICE as any
+      case 'RESTAURANT':
+        return EMOJIS.RESTAURANT as any
+      default:
+        return EMOJIS.STORE
+    }
+  }
+  
+  /**
+   * Formatea precio
+   */
+  private formatPrice(price: number): string {
+    return new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: this.config.currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(price)
+  }
+  
+  /**
+   * Método estático para uso rápido
+   */
+  static generate(
+    item: Item, 
+    businessContext: BusinessContext, 
+    config?: Partial<TemplateConfig>
+  ): string {
+    const generator = new TemplateGenerator(businessContext, config)
+    return generator.generateItemCard(item)
+  }
+}
+
+export default TemplateGenerator

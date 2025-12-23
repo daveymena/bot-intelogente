@@ -1,12 +1,29 @@
 /**
  * SalesAgentSimple - Agente de ventas inteligente híbrido
- * Usa Ollama (local) primero, Groq para análisis profundo
+ * 
+ * 🧠 NUEVO: Usa AI Interpreter para entender el contexto COMPLETO
+ * del mensaje antes de actuar. Ya no depende de regex rígidos.
+ * 
+ * FLUJO:
+ * 1. Cliente envía mensaje
+ * 2. AI Interpreter analiza: intención, producto, acción
+ * 3. Bot ejecuta la acción con datos precisos
+ * 
  * NO rebota al menú - siempre intenta resolver
  * NO INVENTA - usa solo información real de la BD
  */
 
 import { db } from './db'
 import Groq from 'groq-sdk'
+import { interpretMessage, InterpretedMessage, IntentType } from './ai-interpreter'
+import { de } from 'date-fns/locale'
+import { el } from 'date-fns/locale'
+import { en } from 'zod/v4/locales'
+import { el } from 'date-fns/locale'
+import { de } from 'date-fns/locale'
+import { el } from 'date-fns/locale'
+import { en } from 'zod/v4/locales'
+import { el } from 'date-fns/locale'
 
 // Cliente Groq para análisis profundo
 let groqClient: Groq | null = null
@@ -204,7 +221,7 @@ ${context ? `\n💬 CONVERSACIÓN PREVIA:\n${context}` : ''}`
   }
 }
 
-/**
+// ========
  * 🧠 BÚSQUEDA INTELIGENTE CON IA
  * Cuando la búsqueda local falla, usa IA para:
  * 1. Entender la intención del usuario (aunque escriba mal)
@@ -612,6 +629,20 @@ export class SalesAgentSimple {
       // Respuestas según intención
       let response: string
 
+      // 🆕 FAQ de productos digitales (cursos, megapacks)
+      if (intent === 'digital_product_faq' && userCtx.lastProduct) {
+        response = this.handleDigitalProductFAQ(message, userCtx.lastProduct)
+        userCtx.history.push({ role: 'assistant', content: response })
+        return {
+          text: response,
+          intent: 'digital_product_faq',
+          salesStage: userCtx.stage,
+          sendPhotos: false,
+          photos: null,
+          product: userCtx.lastProduct
+        }
+      }
+
       if (intent === 'rejection' && userCtx.lastProduct) {
         response = this.generateFollowUpResponse(userCtx.lastProduct)
       } else if (intent === 'payment_inquiry' && userCtx.lastProduct) {
@@ -667,6 +698,12 @@ export class SalesAgentSimple {
 
   private detectIntent(message: string): string {
     const msg = message.toLowerCase().trim()
+
+    // 🆕 PREGUNTAS FAQ SOBRE PRODUCTOS DIGITALES (cursos, megapacks)
+    // Detecta preguntas comunes sobre acceso, descarga, pagos adicionales, etc.
+    if (/(es\s*(un\s*)?(curso|pack|megapack)\s*(completo|full)|curso\s*completo|todo\s*incluido|hay\s*(que\s*)?pagar\s*(algo\s*)?(más|mas|extra|adicional)|pago\s*(único|unico|una\s*vez)|sin\s*(pagos?\s*)?(adicionales?|extras?)|puedo\s*(descargarlo|bajarlo|guardarlo)|se\s*(puede\s*)?(descargar|bajar|guardar)|verlo\s*(en\s*)?(línea|linea|online)|acceso\s*(de\s*por\s*vida|permanente|ilimitado)|cuánto\s*tiempo\s*(tengo|dura)\s*(acceso)?|expira|caduca|vence|es\s*para\s*siempre|acceso\s*inmediato|entrega\s*inmediata|cómo\s*(lo\s*)?(recibo|obtengo|accedo)|por\s*dónde\s*(lo\s*)?(envían|mandan|recibo)|google\s*drive|link\s*de\s*(descarga|acceso))/i.test(msg)) {
+      return 'digital_product_faq'
+    }
 
     // PREGUNTA DE SEGUIMIENTO SOBRE PRODUCTO ACTUAL
     // Detecta: "y cómo viene", "cómo es", "qué trae", "y qué incluye", etc.
@@ -1719,6 +1756,101 @@ export class SalesAgentSimple {
     }
 
     return apps
+  }
+
+  /**
+   * 🆕 Maneja preguntas frecuentes sobre productos digitales
+   * Responde preguntas como:
+   * - ¿Es un curso completo?
+   * - ¿Tengo que pagar algo más?
+   * - ¿Puedo descargarlo?
+   * - ¿Cómo lo recibo?
+   * - ¿Acceso de por vida?
+   */
+  private handleDigitalProductFAQ(message: string, product: any): string {
+    const msg = message.toLowerCase()
+    const productName = product.name
+    const price = this.formatPrice(product.price)
+    
+    // Detectar tipo de pregunta y responder apropiadamente
+    
+    // ¿Es curso completo? / ¿Todo incluido?
+    if (/(curso|pack|megapack)\s*(completo|full)|todo\s*incluido|completo/i.test(msg)) {
+      return `¡Sí! 😊 El *${productName}* es un curso/pack COMPLETO.\n\n` +
+        `✅ *Incluye TODO el contenido*\n` +
+        `✅ Sin módulos ocultos\n` +
+        `✅ Sin pagos adicionales\n` +
+        `✅ Acceso de por vida\n\n` +
+        `Es un pago único de *${price} COP* y ya tienes acceso a todo el material 🎯\n\n` +
+        `¿Te lo aparto? 💳`
+    }
+    
+    // ¿Hay que pagar algo más? / ¿Pagos adicionales?
+    if (/(pagar\s*(algo\s*)?(más|mas|extra|adicional)|pago\s*(único|unico|una\s*vez)|sin\s*(pagos?\s*)?(adicionales?|extras?))/i.test(msg)) {
+      return `¡No! 🙌 Es un *pago único* de *${price} COP*\n\n` +
+        `✅ Sin suscripciones mensuales\n` +
+        `✅ Sin pagos ocultos\n` +
+        `✅ Sin renovaciones\n` +
+        `✅ Acceso permanente\n\n` +
+        `Pagas una vez y el contenido es tuyo para siempre 💪\n\n` +
+        `¿Quieres los datos de pago? 💳`
+    }
+    
+    // ¿Puedo descargarlo? / ¿Se puede descargar?
+    if (/(puedo\s*(descargarlo|bajarlo|guardarlo)|se\s*(puede\s*)?(descargar|bajar|guardar))/i.test(msg)) {
+      return `¡Claro que sí! 📥\n\n` +
+        `El *${productName}* lo puedes:\n\n` +
+        `✅ *Descargar* a tu computador o celular\n` +
+        `✅ *Ver online* cuando quieras\n` +
+        `✅ *Guardar* en tu Google Drive personal\n\n` +
+        `Te envío el acceso por Google Drive apenas confirmes el pago 🚀\n\n` +
+        `¿Te paso los datos? 💳`
+    }
+    
+    // ¿Puedo verlo online?
+    if (/(verlo\s*(en\s*)?(línea|linea|online)|ver\s*online)/i.test(msg)) {
+      return `¡Sí! 💻 Puedes verlo online o descargarlo.\n\n` +
+        `El *${productName}* te lo comparto por Google Drive:\n\n` +
+        `✅ Ver online desde cualquier dispositivo\n` +
+        `✅ Descargar para ver sin internet\n` +
+        `✅ Acceso 24/7 sin límites\n\n` +
+        `¿Listo para obtenerlo? 🎯`
+    }
+    
+    // ¿Acceso de por vida? / ¿Expira?
+    if (/(acceso\s*(de\s*por\s*vida|permanente|ilimitado)|cuánto\s*tiempo\s*(tengo|dura)|expira|caduca|vence|es\s*para\s*siempre)/i.test(msg)) {
+      return `¡Acceso DE POR VIDA! ♾️\n\n` +
+        `El *${productName}*:\n\n` +
+        `✅ *No expira nunca*\n` +
+        `✅ Acceso permanente\n` +
+        `✅ Puedes verlo las veces que quieras\n` +
+        `✅ Incluye actualizaciones futuras\n\n` +
+        `Una vez que pagas, es tuyo para siempre 🎁\n\n` +
+        `¿Te interesa? 💳`
+    }
+    
+    // ¿Cómo lo recibo? / ¿Por dónde lo envían?
+    if (/(cómo\s*(lo\s*)?(recibo|obtengo|accedo)|por\s*dónde\s*(lo\s*)?(envían|mandan|recibo)|google\s*drive|link\s*de\s*(descarga|acceso)|entrega\s*inmediata|acceso\s*inmediato)/i.test(msg)) {
+      return `¡Entrega INMEDIATA! ⚡\n\n` +
+        `Así funciona:\n\n` +
+        `1️⃣ Realizas el pago (Nequi, Daviplata, etc.)\n` +
+        `2️⃣ Me envías el comprobante 📸\n` +
+        `3️⃣ Te envío el link de Google Drive al instante\n\n` +
+        `✅ Acceso en menos de 5 minutos\n` +
+        `✅ Disponible 24/7\n\n` +
+        `¿Procedemos? 🚀`
+    }
+    
+    // Respuesta genérica para otras preguntas FAQ
+    return `¡Buena pregunta! 😊\n\n` +
+      `Sobre el *${productName}*:\n\n` +
+      `✅ Es un curso/pack COMPLETO\n` +
+      `✅ Pago único de *${price} COP*\n` +
+      `✅ Sin pagos adicionales\n` +
+      `✅ Acceso de por vida\n` +
+      `✅ Puedes descargarlo o verlo online\n` +
+      `✅ Entrega inmediata por Google Drive\n\n` +
+      `¿Alguna otra duda o te paso los datos de pago? 💳`
   }
 
   private generateFollowUpResponse(product: any): string {
