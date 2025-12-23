@@ -48,6 +48,7 @@ DECISIONES POSIBLES:
 INSTRUCCIONES:
 - Analiza si el cliente se refiere a un producto específico del catálogo anterior.
 - Si el cliente dice "sí", "dale", "me interesa" después de que le mostraste un producto, decide 'show_payment'.
+- Si el cliente elige o menciona un método de pago (Tarjeta de crédito, PayPal, Nequi, etc.), decide 'show_payment'.
 - Si el cliente responde con un método de entrega (digital, recoger, etc.), decide 'show_payment'.
 - Selecciona el índice del producto si el cliente lo menciona o si estás recomendando uno.
 

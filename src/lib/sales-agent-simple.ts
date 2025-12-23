@@ -139,7 +139,13 @@ async function askGroq(prompt: string, context: string = '', products: any[] = [
     const digitales = products.filter(p => p.category === 'DIGITAL' || p.name.toLowerCase().includes('mega') || p.name.toLowerCase().includes('curso'))
     const fisicos = products.filter(p => p.category !== 'DIGITAL' && !p.name.toLowerCase().includes('mega') && !p.name.toLowerCase().includes('curso'))
     
-    const formatProduct = (p: any) => `• ${p.name} - ${p.price?.toLocaleString('es-CO') || '?'} COP`
+    const formatProduct = (p: any) => {
+      let info = `• ${p.name} - ${p.price?.toLocaleString('es-CO') || '?'} COP`
+      if (p.paymentLinkMercadoPago) info += `\n  - MercadoPago: ${p.paymentLinkMercadoPago}`
+      if (p.paymentLinkPayPal) info += `\n  - PayPal: ${p.paymentLinkPayPal}`
+      if (p.paymentLinkCustom) info += `\n  - Link: ${p.paymentLinkCustom}`
+      return info
+    }
     
     const catalogoDigital = digitales.map(formatProduct).join('\n')
     const catalogoFisico = fisicos.map(formatProduct).join('\n')
@@ -2577,7 +2583,10 @@ ${categoriesText}
     const prompt = `Eres un asesor de ventas experto de "Tecnovariedades D&S". Tu objetivo es responder la pregunta del cliente de forma profesional, cálida y orientada a la venta.
 
 CONTEXTO DEL PRODUCTO:
-${currentProduct ? `${currentProduct.name} ($${currentProduct.price} COP): ${currentProduct.description}` : 'No hay un producto específico en este momento.'}
+${currentProduct ? `${currentProduct.name} ($${currentProduct.price} COP): ${currentProduct.description}
+${currentProduct.paymentLinkMercadoPago ? `- Link MercadoPago (Tarjeta/PSE): ${currentProduct.paymentLinkMercadoPago}` : ''}
+${currentProduct.paymentLinkPayPal ? `- Link PayPal: ${currentProduct.paymentLinkPayPal}` : ''}
+${currentProduct.paymentLinkCustom ? `- Otro Link de Pago: ${currentProduct.paymentLinkCustom}` : ''}` : 'No hay un producto específico en este momento.'}
 
 HISTORIAL DE CONVERSACIÓN:
 ${history.slice(-4).map(h => `${h.role === 'user' ? 'Cliente' : 'Asistente'}: ${h.content}`).join('\n')}
