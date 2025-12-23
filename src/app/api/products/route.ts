@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { z } from 'zod'
+import { CategoryAutoGenerator } from '@/lib/category-auto-generator'
+import { BusinessContextDetector } from '@/lib/business-context-detector'
 
 const createProductSchema = z.object({
   name: z.string().min(1),
@@ -134,6 +136,40 @@ export async function POST(request: NextRequest) {
             businessName: true
           }
         }
+      }
+    })
+
+    // 🆕 Auto-categorización en background (no bloquea la respuesta)
+    setImmediate(async () => {
+      try {
+        // 1. Auto-detectar categoría del producto (sin categorías existentes por ahora)
+        const categoryResult = await CategoryAutoGenerator.detectCategory(
+          { name: validatedData.name, description: validatedData.description, price: validatedData.price },
+          [] // Categorías existentes - se puede expandir después
+        )
+        
+        // 2. Actualizar producto con categoría detectada
+        if (categoryResult.category) {
+          await db.product.update({
+            where: { id: product.id },
+            data: {
+              mainCategory: categoryResult.category,
+              categorizedAt: new Date(),
+              categorizedBy: 'AI',
+              categorizationConfidence: categoryResult.confidence
+            }
+          })
+          console.log(`✅ Producto "${product.name}" categorizado como: ${categoryResult.category}`)
+        }
+        
+        // 3. Actualizar contexto del negocio (cada 5 productos)
+        const productCount = await db.product.count({ where: { userId: validatedData.userId } })
+        if (productCount % 5 === 0) {
+          await BusinessContextDetector.detectAndSave(validatedData.userId)
+          console.log(`🏢 Contexto de negocio actualizado para usuario ${validatedData.userId}`)
+        }
+      } catch (error) {
+        console.error('Error en auto-categorización:', error)
       }
     })
 
