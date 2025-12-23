@@ -405,6 +405,59 @@ export class SalesAgentSimple {
     }
   }
 
+  /**
+   * 🎭 HUMANIZACI\u00d3N: Tono emocional basado en etapa de conversaci\u00f3n
+   */
+  private getEmotionalTone(stage: string): {
+    greeting: string
+    enthusiasm: string
+    closing: string
+  } {
+    const tones = {
+      greeting: {
+        awareness: ['¡Hey!', '\u00a1Qu\u00e9 tal!', '\u00a1Hola!', '\u00a1Buenas!'],
+        interest: ['Me encanta que preguntes', 'Qu\u00e9 bueno que te interesa', 'Excelente pregunta', 'Me alegra que preguntes'],
+        consideration: ['Perfecto', 'Genial', 'S\u00faper', 'Buenísimo'],
+        action: ['\u00a1Vamos a ello!', '\u00a1Hag\u00e1moslo!', '\u00a1Dale!', '\u00a1Listo!']
+      },
+      enthusiasm: {
+        high: ['\u00a1Me encanta! \ud83e\udd29', '\u00a1Buen\u00edsimo! \u2728', '\u00a1Qu\u00e9 emoci\u00f3n! \ud83c\udf89'],
+        medium: ['Me parece genial \ud83d\ude0a', 'Excelente elecci\u00f3n \ud83d\udc4c', 'Muy bien \ud83d\udc4d'],
+        low: ['Entiendo perfectamente', 'Claro', 'Por supuesto']
+      },
+      empathy: {
+        objection: ['Te entiendo completamente', 'S\u00e9 exactamente c\u00f3mo te sientes', 'Es totalmente v\u00e1lido'],
+        doubt: ['Es normal tener dudas', 'Muchos clientes se preguntan lo mismo', 'Te comprendo'],
+        price: ['Entiendo tu preocupaci\u00f3n', 'Lo s\u00e9, es una inversi\u00f3n', 'Te entiendo perfectamente']
+      }
+    }
+    
+    // Selecci\u00f3n aleatoria para evitar repetici\u00f3n
+    const greetingOptions = tones.greeting[stage as keyof typeof tones.greeting] || tones.greeting.awareness
+    const randomGreeting = greetingOptions[Math.floor(Math.random() * greetingOptions.length)]
+    const randomEnthusiasm = tones.enthusiasm.medium[Math.floor(Math.random() * tones.enthusiasm.medium.length)]
+    
+    return {
+      greeting: randomGreeting,
+      enthusiasm: randomEnthusiasm,
+      closing: '\ud83d\ude0a'
+    }
+  }
+
+  /**
+   * \ud83d\udcac HUMANIZACI\u00d3N: Frases conversacionales para flujo natural
+   */
+  private getConversationalFiller(type: 'transition' | 'thinking' | 'confirmation'): string {
+    const fillers = {
+      transition: ['Mira', 'F\u00edjate', 'D\u00e9jame contarte', 'Ok, te cuento', 'Ojo con esto'],
+      thinking: ['Hmm', 'Veamos', 'A ver', 'D\u00e9jame ver', 'Espera'],
+      confirmation: ['\u00a1Listo!', '\u00a1Perfecto!', '\u00a1Dale!', 'Ok', '\u00a1Genial!']
+    }
+    
+    const options = fillers[type]
+    return options[Math.floor(Math.random() * options.length)]
+  }
+
   async processMessage(message: string, userPhone: string, context?: any): Promise<ProcessedResponse> {
     try {
       console.log(`📨 Procesando: "${message}"`)
@@ -700,6 +753,10 @@ export class SalesAgentSimple {
         response = await this.getContactResponse()
       } else if (intent === 'future_interest') {
         response = this.generateFutureInterestResponse(userCtx.lastProduct)
+      } else if (intent === 'delivery_method_response' && userCtx.lastProduct) {
+        // Cliente respondió método de entrega - proceder con pago
+        userCtx.stage = 'action'
+        response = await this.generatePaymentResponse(userCtx.lastProduct)
       } else if (intent === 'farewell') {
         response = this.getFarewellResponse(userCtx.lastProduct)
         this.conversations.set(userPhone, {
@@ -806,6 +863,12 @@ export class SalesAgentSimple {
     // IMPORTANT: Check BEFORE future_interest to avoid "mañana te envio" matching future_interest
     if (/(cuando (tenga|tengo)|ya (te|le) (envío|envio|mando)|te (envío|envio|mando) (el|cuando)|lo (envío|envio|mando)|vale.*(envío|envio|mando)|ok.*(envío|envio|mando)|listo.*(envío|envio|mando)|bueno.*(envío|envio|mando)|perfecto.*(envío|envio|mando)|apenas (tenga|pague)|en un momento (te|le)|ya casi (te|le))/i.test(msg)) {
       return 'will_send_receipt'
+    }
+
+    // MÉTODO DE ENTREGA - Cliente responde con preferencia de entrega
+    // CRITICAL: Detectar ANTES de general_inquiry para mantener contexto del producto
+    if (/(^digital$|^google\s*drive$|^drive$|^recoger|^tienda$|^en\s*tienda|^contraentrega$|^domicilio$|^env[ií]o|^a\s*domicilio|^entrega\s*a\s*domicilio)/i.test(msg)) {
+      return 'delivery_method_response'
     }
 
     // INTERÉS FUTURO (te aviso, luego te digo)
@@ -1443,7 +1506,7 @@ export class SalesAgentSimple {
     const price = this.formatPrice(product.price)
     const isPhysical = this.isPhysicalProduct(product)
 
-    let response = `¡Excelente elección! 🎉\n\n`
+    let response = `¡Me encanta! 🤩 Sabía que te iba a gustar.\n\nMira, te voy a pasar toda la info para que puedas completar tu compra:\n\n`
     response += `╔══════════════════════════╗\n`
     response += `   📦 *${product.name}*\n`
     response += `   💰 *Total: ${price} COP*\n`
@@ -1984,8 +2047,8 @@ export class SalesAgentSimple {
     const productName = product.name
     
     // Respuesta empática y no presionante
-    let response = `Entiendo perfectamente, sin presiones 😊\n\n`
-    response += `El *${productName}* queda disponible cuando quieras.\n\n`
+    let response = `¡Hey, sin problema! 😊 Entiendo que quieras pensarlo.\n\n`
+    response += `El *${productName}* aquí sigue disponible. Cuando estés listo, solo me escribes y lo retomamos. Sin presión, ¿va? 🤝\n\n`
     response += `💰 Precio: ${price} COP\n`
     response += `📦 Entrega inmediata\n\n`
     response += `━━━━━━━━━━━━━━━━━━━━\n\n`
