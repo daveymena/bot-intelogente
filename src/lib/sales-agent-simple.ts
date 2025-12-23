@@ -698,6 +698,8 @@ export class SalesAgentSimple {
         response = await this.getGreetingResponse()
       } else if (intent === 'contact_request') {
         response = await this.getContactResponse()
+      } else if (intent === 'future_interest') {
+        response = this.generateFutureInterestResponse(userCtx.lastProduct)
       } else if (intent === 'farewell') {
         response = this.getFarewellResponse(userCtx.lastProduct)
         this.conversations.set(userPhone, {
@@ -800,20 +802,21 @@ export class SalesAgentSimple {
       return 'price_objection'
     }
 
-    // RECHAZO/DUDA (sin objeciones de precio - esas se manejan arriba)
-    if (/(no gracias|no por ahora|después|despues|lo pienso|tal vez|quizás|quizas|no estoy seguro|no me interesa|no necesito)/i.test(msg)) {
-      return 'rejection'
+    // CLIENTE VA A ENVIAR COMPROBANTE (futuro) - "cuando tenga el recibo lo envío"
+    // IMPORTANT: Check BEFORE future_interest to avoid "mañana te envio" matching future_interest
+    if (/(cuando (tenga|tengo)|ya (te|le) (envío|envio|mando)|te (envío|envio|mando) (el|cuando)|lo (envío|envio|mando)|vale.*(envío|envio|mando)|ok.*(envío|envio|mando)|listo.*(envío|envio|mando)|bueno.*(envío|envio|mando)|perfecto.*(envío|envio|mando)|apenas (tenga|pague)|en un momento (te|le)|ya casi (te|le))/i.test(msg)) {
+      return 'will_send_receipt'
     }
 
     // INTERÉS FUTURO (te aviso, luego te digo)
     // IMPORTANT: Check BEFORE rejection
-    if (/(te aviso|te confirmo|te digo|te escribo|te cuento|lo pienso y|lo consulto y|estamos hablando|pendientes|qdo atento|quedo atento|cualquier cosa|si algo|mas tarde|más tarde|luego te|despues te|después te)/i.test(msg)) {
+    if (/(te aviso|te confirmo|te digo|te escribo|te cuento|lo pienso y|lo consulto y|estamos hablando|hablamos|pendientes|qdo atento|quedo atento|cualquier cosa|si algo|mas tarde|más tarde|luego te|despues te|después te|mañana|semana que viene|fin de mes|cuando cobre|cuando me paguen|pago (despues|después|luego)|proxima semana|próxima semana|el (lunes|martes|miércoles|miercoles|jueves|viernes|sábado|sabado|domingo))/i.test(msg)) {
       return 'future_interest'
     }
 
-    // CLIENTE VA A ENVIAR COMPROBANTE (futuro) - "cuando tenga el recibo lo envío"
-    if (/(cuando (tenga|tengo)|ya (te|le) (envío|envio|mando)|te (envío|envio|mando) (el|cuando)|lo (envío|envio|mando)|vale.*(envío|envio|mando)|ok.*(envío|envio|mando)|listo.*(envío|envio|mando)|bueno.*(envío|envio|mando)|perfecto.*(envío|envio|mando)|apenas (tenga|pague)|en un momento (te|le)|ya casi (te|le))/i.test(msg)) {
-      return 'will_send_receipt'
+    // RECHAZO/DUDA (sin objeciones de precio - esas se manejan arriba)
+    if (/(no gracias|no por ahora|después|despues|lo pienso|tal vez|quizás|quizas|no estoy seguro|no me interesa|no necesito)/i.test(msg)) {
+      return 'rejection'
     }
 
     // COMPROBANTE DE PAGO YA ENVIADO (pasado) - "ya pagué", "aquí está el comprobante"
@@ -1988,6 +1991,15 @@ export class SalesAgentSimple {
     response += `━━━━━━━━━━━━━━━━━━━━\n\n`
     response += `¿Hay algo más en lo que pueda ayudarte? 🤝`
     
+    return response
+  }
+
+  private generateFutureInterestResponse(product: any | null = null): string {
+    let response = `¡Claro que sí! Quedo muy pendiente. 😊\n\n`
+    if (product) {
+       response += `Aquí guardaré la info del *${product.name}* para cuando estés listo.\n\n`
+    }
+    response += `Escríbeme cuando quieras retomar. ¡Un saludo! 👋`
     return response
   }
 
