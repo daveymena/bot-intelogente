@@ -1445,7 +1445,10 @@ export class BaileysStableService {
       }
 
       // 🤖 Procesar con el nuevo sistema
-      const respuesta = await procesarMensaje(from, messageText, opciones)
+      const respuesta = await procesarMensaje(from, messageText, {
+        ...opciones,
+        botUserId: userId // 🔑 CLAVE: Pasar el ID del dueño del bot para SaaS
+      })
 
       // 📤 Enviar respuesta de texto
       if (respuesta.texto) {
