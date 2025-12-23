@@ -624,6 +624,20 @@ export class SalesAgentSimple {
       // Respuestas según intención
       let response: string
 
+      // 🆕 OBJECIÓN DE DESCONFIANZA - Cliente duda de la legitimidad
+      if (intent === 'distrust_objection' && userCtx.lastProduct) {
+        response = this.handleDistrustObjection(message, userCtx.lastProduct)
+        userCtx.history.push({ role: 'assistant', content: response })
+        return {
+          text: response,
+          intent: 'distrust_objection',
+          salesStage: userCtx.stage,
+          sendPhotos: false,
+          photos: null,
+          product: userCtx.lastProduct
+        }
+      }
+
       // 🆕 FAQ de productos digitales (cursos, megapacks)
       if (intent === 'digital_product_faq' && userCtx.lastProduct) {
         response = this.handleDigitalProductFAQ(message, userCtx.lastProduct)
@@ -693,6 +707,12 @@ export class SalesAgentSimple {
 
   private detectIntent(message: string): string {
     const msg = message.toLowerCase().trim()
+
+    // 🆕 OBJECIÓN DE DESCONFIANZA - Cliente expresa dudas sobre legitimidad
+    // Detecta: "es estafa", "piden más plata", "no mandan nada", "tomada de pelo", etc.
+    if (/(estafa|enga[ñn]o|fraude|mentira|falso|fake|robo|timo|tomad[ao]\s*de\s*pelo|piden\s*(más|mas)\s*plata|cobran\s*(más|mas)|no\s*(mandan|envían|envian|entregan)|no\s*(llega|llegó)|nunca\s*(llega|mandan|envían)|despu[eé]s\s*piden|luego\s*piden|y\s*despu[eé]s|no\s*confío|no\s*confio|no\s*creo|ser[aá]\s*(verdad|cierto|real)|es\s*verdad|es\s*cierto|es\s*real|seguro\s*que|de\s*verdad|en\s*serio|no\s*ser[aá]\s*que|c[oó]mo\s*s[eé]\s*que)/i.test(msg)) {
+      return 'distrust_objection'
+    }
 
     // 🆕 PREGUNTAS FAQ SOBRE PRODUCTOS DIGITALES (cursos, megapacks)
     // Detecta preguntas comunes sobre acceso, descarga, pagos adicionales, etc.
@@ -1846,6 +1866,27 @@ export class SalesAgentSimple {
       `✅ Puedes descargarlo o verlo online\n` +
       `✅ Entrega inmediata por Google Drive\n\n` +
       `¿Alguna otra duda o te paso los datos de pago? 💳`
+  }
+
+  /**
+   * 🆕 Maneja objeciones de desconfianza
+   * Cuando el cliente expresa dudas sobre legitimidad:
+   * - "Es estafa", "piden más plata", "no mandan nada", etc.
+   */
+  private handleDistrustObjection(message: string, product: any): string {
+    const productName = product.name
+    const price = this.formatPrice(product.price)
+    
+    // Respuesta empática que aborda la desconfianza
+    return `Entiendo tu preocupación, es normal tener dudas 🤝\n\n` +
+      `Te cuento cómo trabajamos con el *${productName}*:\n\n` +
+      `✅ *Pago único de ${price} COP* - No pedimos más después\n` +
+      `✅ *Entrega inmediata* - Apenas pagas, te envío el link\n` +
+      `✅ *Todo el material completo* - Sin módulos ocultos\n` +
+      `✅ *Por Google Drive* - Puedes verificar que está todo\n\n` +
+      `🔒 *Garantía:* Si no recibes el material, te devuelvo el dinero.\n\n` +
+      `Llevamos años vendiendo cursos digitales y tenemos clientes satisfechos que pueden dar referencias.\n\n` +
+      `¿Tienes alguna otra duda? Estoy aquí para ayudarte 😊`
   }
 
   private generateFollowUpResponse(product: any): string {
