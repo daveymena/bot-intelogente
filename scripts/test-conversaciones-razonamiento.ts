@@ -93,15 +93,19 @@ const testScenarios = [
 async function askOllamaWithReasoning(
   message: string, 
   product: any,
-  timeoutMs: number = 30000
+  timeoutMs: number = 60000
 ): Promise<{ response: string | null; timeMs: number }> {
   const startTime = Date.now()
   
   try {
-    const ollamaUrl = process.env.OLLAMA_URL || 'http://localhost:11434'
-    const model = process.env.OLLAMA_MODEL || 'llama3.1:8b'
+    // Usar OLLAMA_BASE_URL de Easypanel o fallback a localhost
+    const ollamaUrl = process.env.OLLAMA_BASE_URL || process.env.OLLAMA_URL || 'http://localhost:11434'
+    const model = process.env.OLLAMA_MODEL || 'gemma2:2b'
     
-    log(`\n🦙 Consultando Ollama (${model}) - Timeout: ${timeoutMs/1000}s...`, 'cyan')
+    log(`\n🦙 Consultando Ollama en Easypanel...`, 'cyan')
+    log(`   URL: ${ollamaUrl}`, 'cyan')
+    log(`   Modelo: ${model}`, 'cyan')
+    log(`   Timeout: ${timeoutMs/1000}s`, 'cyan')
     
     const systemPrompt = `Eres un agente de ventas profesional y empático de Tecnovariedades D&S en Colombia.
 
@@ -268,8 +272,8 @@ async function runTest(scenario: typeof testScenarios[0], index: number) {
   let totalTime = 0
   
   if (scenario.requiresReasoning) {
-    // Usar Ollama primero con timeout largo (30s)
-    const ollamaResult = await askOllamaWithReasoning(scenario.message, testProduct, 30000)
+    // Usar Ollama primero con timeout largo (60s para Easypanel)
+    const ollamaResult = await askOllamaWithReasoning(scenario.message, testProduct, 60000)
     totalTime += ollamaResult.timeMs
     
     if (ollamaResult.response) {
@@ -393,7 +397,8 @@ function evaluateResponse(response: string, scenario: typeof testScenarios[0]) {
 async function runAllTests() {
   log('\n🚀 INICIANDO TESTS DE CONVERSACIONES CON RAZONAMIENTO', 'bold')
   log('═'.repeat(60), 'blue')
-  log('Usando: Ollama (primario, 30s timeout) → Groq (fallback)', 'cyan')
+  log('Usando: Ollama Easypanel (primario, 60s timeout) → Groq (fallback)', 'cyan')
+  log(`URL Ollama: ${process.env.OLLAMA_BASE_URL || 'No configurada'}`, 'cyan')
   log('═'.repeat(60), 'blue')
   
   const results: { scenario: string; intentMatch: boolean; hasResponse: boolean; provider: string; timeMs: number }[] = []
