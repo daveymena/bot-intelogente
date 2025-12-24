@@ -527,7 +527,8 @@ export class SalesAgentSimple {
       const aiPrefix = aiDecision.additionalContext ? aiDecision.additionalContext + '\n\n' : ''
 
       // 🆕 RESPUESTA A PREGUNTAS LIBRES/IA (Preguntas específicas que no son flujo directo)
-      if (intent === 'answer_question') {
+      // Si hay producto, ya fue manejado por el bloque contextual arriba
+      if (intent === 'answer_question' && !userCtx.lastProduct) {
         const response = await this.generateAIAnswer(message, userCtx.lastProduct, userCtx.history)
         userCtx.history.push({ role: 'assistant', content: response })
         return {
@@ -540,18 +541,18 @@ export class SalesAgentSimple {
         }
       }
 
-      // Si pide más info y ya tiene producto
-      if (intent === 'more_info' && userCtx.lastProduct) {
-        userCtx.stage = 'value_proposition'
-        const response = aiPrefix + this.generateValueResponse(userCtx.lastProduct)
+      // Si pide más info y NO tiene producto (fallo de contexto o consulta general)
+      if (intent === 'more_info' && !userCtx.lastProduct) {
+        console.log('ℹ️ Cliente pide info pero no hay producto en contexto')
+        const response = await this.getGenericResponseWithAI(message, userCtx.history)
         userCtx.history.push({ role: 'assistant', content: response })
         return {
           text: response,
           intent: 'more_info',
-          salesStage: 'value_proposition',
+          salesStage: 'awareness',
           sendPhotos: false,
           photos: null,
-          product: userCtx.lastProduct
+          product: null
         }
       }
 
@@ -731,14 +732,14 @@ export class SalesAgentSimple {
         }
       }
 
-      // 🧠 Si hay producto en contexto y es pregunta general, usar IA con contexto del producto
-      if (intent === 'general_inquiry' && userCtx.lastProduct) {
-        console.log(`🧠 Pregunta sobre producto en contexto: ${userCtx.lastProduct.name}`)
-        const productContext = `El cliente está preguntando sobre: ${userCtx.lastProduct.name} (${this.formatPrice(userCtx.lastProduct.price)} COP). ${userCtx.lastProduct.description || ''}`
-        const response = await this.getProductContextResponse(message, userCtx.lastProduct, userCtx.history)
-        userCtx.history.push({ role: 'assistant', content: response })
+      // 🧠 Si hay producto en contexto y es pregunta general o técnica, usar IA con contexto del producto
+      // Esto evita que la IA divague con respuestas genéricas cuando ya estamos hablando de un producto
+      if ((intent === 'general_inquiry' || intent === 'answer_question' || intent === 'more_info') && userCtx.lastProduct) {
+        console.log(`🧠 Respuesta contextual sobre producto: ${userCtx.lastProduct.name}`)
+        const contextualResponse = await this.getProductContextResponse(message, userCtx.lastProduct, userCtx.history)
+        userCtx.history.push({ role: 'assistant', content: contextualResponse })
         return {
-          text: response,
+          text: contextualResponse,
           intent: 'product_followup',
           salesStage: userCtx.stage,
           sendPhotos: false,
@@ -881,8 +882,8 @@ export class SalesAgentSimple {
     }
 
     // PREGUNTA DE SEGUIMIENTO SOBRE PRODUCTO ACTUAL
-    // Detecta: "y cómo viene", "cómo es", "qué trae", "y qué incluye", etc.
-    if (/(^y\s|^entonces\s|^pero\s)?(c[oó]mo\s*(viene|es|funciona|se entrega)|qu[eé]\s*(trae|incluye|tiene|contiene)|cu[aá]nto\s*(dura|pesa|mide)|de qu[eé]\s*(trata|va))/i.test(msg)) {
+    // Detecta: "y cómo viene", "cómo es", "qué trae", "en qué viene", "cómo lo entregan", etc.
+    if (/(^y\s|^entonces\s|^pero\s|^en\s|^con\s|^que\s)?(c[oó]mo\s*(viene|es|funciona|se\s*entrega|lo\s*entregan)|qu[eé]\s*(trae|incluye|tiene|contiene|viene)|cu[aá]nto\s*(dura|pesa|mide)|de qu[eé]\s*(trata|va))/i.test(msg)) {
       return 'more_info'
     }
 
