@@ -2631,7 +2631,8 @@ INSTRUCCIONES CRÍTICAS:
 - ✅ Responde directamente, sin rodeos, máximo 3-4 líneas
 - ✅ Usa un tono humano, profesional y cálido
 - ✅ Incluye 1-2 emojis naturales
-- ✅ Si preguntan por contacto: WhatsApp 3136174267
+- ✅ Si preguntan por contacto: WhatsApp +57 3136174267, Ubicación: Cali, Valle del Cauca
+- ✅ Si piden datos de pago: Nequi/Daviplata 3136174267 (Tecnovariedades D&S)
 
 RESPUESTA (en español):`;
 
