@@ -93,6 +93,10 @@ JSON:
 async function queryOllama(prompt: string): Promise<AIDecision | null> {
   const url = process.env.OLLAMA_URL || 'http://localhost:11434/api/generate';
   try {
+    // Timeout de 8 segundos para análisis de intención
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 8000)
+
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -101,8 +105,11 @@ async function queryOllama(prompt: string): Promise<AIDecision | null> {
         prompt: prompt,
         stream: false,
         format: 'json'
-      })
+      }),
+      signal: controller.signal
     });
+
+    clearTimeout(timeoutId)
 
     if (!response.ok) return null;
     const data: any = await response.json();

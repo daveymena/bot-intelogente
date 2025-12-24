@@ -84,6 +84,10 @@ ENTREGA:
 - FÍSICOS: Recoger en tienda (Cali) o Contraentrega
 ${context ? `\nINFORMACIÓN DISPONIBLE:\n${context}` : ''}`
 
+    // Timeout de 10 segundos para Ollama
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 10000)
+
     const response = await fetch(`${ollamaUrl}/api/generate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -95,8 +99,11 @@ ${context ? `\nINFORMACIÓN DISPONIBLE:\n${context}` : ''}`
           temperature: 0.7,
           num_predict: 300
         }
-      })
+      }),
+      signal: controller.signal
     })
+
+    clearTimeout(timeoutId)
 
     if (!response.ok) {
       console.log(`⚠️ Ollama no disponible: ${response.status}`)
