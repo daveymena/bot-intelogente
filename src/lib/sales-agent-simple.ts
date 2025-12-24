@@ -547,6 +547,22 @@ export class SalesAgentSimple {
         }
       }
 
+      // Si selecciona método de pago y tiene producto
+      if (intent === 'payment_method_selected' && userCtx.lastProduct) {
+        userCtx.stage = 'closing'
+        const baseResponse = await this.generatePaymentResponse(userCtx.lastProduct)
+        const response = aiPrefix + baseResponse
+        userCtx.history.push({ role: 'assistant', content: response })
+        return {
+          text: response,
+          intent: 'payment_method_selected',
+          salesStage: 'closing',
+          sendPhotos: false,
+          photos: null,
+          product: userCtx.lastProduct
+        }
+      }
+
       // Si confirma y tiene producto
       if (intent === 'confirmation' && userCtx.lastProduct) {
         userCtx.stage = 'closing'
@@ -870,6 +886,12 @@ export class SalesAgentSimple {
     // 🆕 MÁS OPCIONES / OTRAS REFERENCIAS (cuando ya mostró un producto)
     if (/(más referencias|mas referencias|otras referencias|otros modelos|otras opciones|más opciones|mas opciones|qué más tienes|que mas tienes|tienes más|tienes mas|hay más|hay mas|otros productos|otras marcas|ver más|ver mas|mostrar más|mostrar mas|dame más|dame mas|información sobre los demás|informacion sobre los demas|los demás|los demas|cuáles más|cuales mas|qué otros|que otros)/i.test(msg)) {
       return 'more_options'
+    }
+
+    // SELECCIÓN DE MÉTODO DE PAGO
+    // Detecta cuando el cliente elige un método específico: Nequi, Daviplata, Transferencia, Tarjeta, PayPal, etc.
+    if (/(nequi|daviplata|transferencia|bancaria|banco|tarjeta|credito|crédito|debito|débito|mercadopago|mercado\s*pago|paypal|pay\s*pal|efectivo|pse)/i.test(msg)) {
+      return 'payment_method_selected'
     }
 
     // CONFIRMACIÓN DE COMPRA

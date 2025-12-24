@@ -5,7 +5,7 @@ import fetch from 'node-fetch';
 dotenv.config();
 
 export interface AIDecision {
-  action: 'show_product' | 'show_payment' | 'handle_objection' | 'answer_question' | 'greet' | 'farewell' | 'general_inquiry';
+  action: 'show_product' | 'show_payment' | 'payment_method_selected' | 'handle_objection' | 'answer_question' | 'greet' | 'farewell' | 'general_inquiry';
   selectedProductIndex: number | null; // Usaremos índice para ser más robustos
   reasoning: string;
   emotionalTone: 'enthusiastic' | 'cautious' | 'skeptical' | 'neutral';
@@ -39,16 +39,17 @@ ${productsList}
 DECISIONES POSIBLES:
 1. show_product: El cliente busca un producto, pregunta por opciones o quiere ver qué hay.
 2. show_payment: El cliente explícitamente quiere pagar, pide datos de pago o dice "sí" al ofrecimiento de compra.
-3. handle_objection: El cliente tiene una duda, queja o dice que es caro/necesita pensarlo.
-4. answer_question: Pregunta técnica o específica que no es una compra directa.
-5. greet: Es solo un saludo inicial (Hola, buenos días).
-6. farewell: El cliente se despide.
-7. general_inquiry: No encaja en lo anterior.
+3. payment_method_selected: El cliente menciona o elige un método de pago específico (Nequi, Transferencia, Tarjeta, PayPal, etc.).
+4. handle_objection: El cliente tiene una duda, queja o dice que es caro/necesita pensarlo.
+5. answer_question: Pregunta técnica o específica que no es una compra directa.
+6. greet: Es solo un saludo inicial (Hola, buenos días).
+7. farewell: El cliente se despide.
+8. general_inquiry: No encaja en lo anterior.
 
 INSTRUCCIONES:
 - Analiza si el cliente se refiere a un producto específico del catálogo anterior.
 - Si el cliente dice "sí", "dale", "me interesa" después de que le mostraste un producto, decide 'show_payment'.
-- Si el cliente elige o menciona un método de pago (Tarjeta de crédito, PayPal, Nequi, etc.), decide 'show_payment'.
+- Si el cliente elige o menciona un método de pago específico (Tarjeta de crédito, PayPal, Nequi, Transferencia, etc.), decide 'payment_method_selected'.
 - Si el cliente responde con un método de entrega (digital, recoger, etc.), decide 'show_payment'.
 - Selecciona el índice del producto si el cliente lo menciona o si estás recomendando uno.
 
@@ -56,7 +57,7 @@ RESPONDE ÚNICAMENTE CON UN OBJETO JSON VÁLIDO. NO incluyas explicaciones ni ma
 
 JSON:
 {
-  "action": "show_product | show_payment | handle_objection | answer_question | greet | farewell | general_inquiry",
+  "action": "show_product | show_payment | payment_method_selected | handle_objection | answer_question | greet | farewell | general_inquiry",
   "selectedProductIndex": index_of_product_or_null,
   "reasoning": "short explanation",
   "emotionalTone": "enthusiastic | cautious | skeptical | neutral",
