@@ -526,7 +526,7 @@ export class SalesAgentSimple {
       const aiPrefix = aiDecision.additionalContext ? aiDecision.additionalContext + '\n\n' : ''
 
       // 🆕 RESPUESTA A PREGUNTAS LIBRES/IA (Preguntas específicas que no son flujo directo)
-      if (aiDecision.action === 'answer_question') {
+      if (intent === 'answer_question') {
         const response = await this.generateAIAnswer(message, userCtx.lastProduct, userCtx.history)
         userCtx.history.push({ role: 'assistant', content: response })
         return {
@@ -897,7 +897,7 @@ export class SalesAgentSimple {
 
     // SELECCIÓN DE MÉTODO DE PAGO
     // Detecta cuando el cliente elige un método específico: Nequi, Daviplata, Transferencia, Tarjeta, PayPal, etc.
-    if (/(nequi|daviplata|transferencia|bancaria|banco|tarjeta|credito|crédito|debito|débito|mercadopago|mercado\s*pago|paypal|pay\s*pal|efectivo|pse)/i.test(msg)) {
+    if (/(nequi|daviplata|transferencia|bancaria|banco|tarjeta|credito|crédito|debito|débito|mercadopago|mercado\s*pago|paypal|pay\s*pal|efectivo|pse|pago|pagar|forma\s*de\s*pago|datos\s*de\s*pago|c[oó]mo\s*pago)/i.test(msg)) {
       return 'payment_method_selected'
     }
 
@@ -2463,6 +2463,10 @@ PRECIO: ${price} COP
 TIPO: ${isPhysical ? 'Producto físico' : 'Producto digital'}
 DESCRIPCIÓN: ${product.description || 'Sin descripción'}
 ENTREGA: ${isPhysical ? 'Envío a toda Colombia' : 'Entrega inmediata por Google Drive'}
+LINKS DE PAGO:
+${product.paymentLinkMercadoPago ? `- MercadoPago: ${product.paymentLinkMercadoPago}` : ''}
+${product.paymentLinkPayPal ? `- PayPal: ${product.paymentLinkPayPal}` : ''}
+${product.paymentLinkCustom ? `- Otro: ${product.paymentLinkCustom}` : ''}
 `
     
     // Historial reciente
@@ -2638,15 +2642,27 @@ RESPUESTA (en español):`;
 
     try {
       const url = process.env.OLLAMA_URL || 'http://localhost:11434/api/generate';
+      
+      // Timeout para Ollama
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 10000)
+
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: process.env.OLLAMA_MODEL || 'gemma2:2b',
           prompt: prompt,
-          stream: false
-        })
+          stream: false,
+          options: {
+            temperature: 0.3,
+            num_predict: 300
+          }
+        }),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId)
 
       if (response.ok) {
         const data: any = await response.json();
