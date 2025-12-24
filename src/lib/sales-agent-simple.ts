@@ -2623,12 +2623,15 @@ ${history.slice(-4).map(h => `${h.role === 'user' ? 'Cliente' : 'Asistente'}: ${
 PREGUNTA DEL CLIENTE:
 "${question}"
 
-INSTRUCCIONES:
-- Responde directamente, sin rodeos.
-- Usa un tono humano y profesional.
-- Si no sabes la respuesta exacta, invita a que pregunten algo más o que un humano los atienda.
-- Máximo 3-4 líneas.
-- Incluye 1-2 emojis naturales.
+INSTRUCCIONES CRÍTICAS:
+- ❌ NUNCA inventes información que no esté en el contexto de arriba
+- ❌ NO menciones productos, precios o características que no aparezcan arriba
+- ✅ USA SOLO la información del producto y links de pago proporcionados
+- ✅ Si no tienes la información exacta, di "déjame verificar eso" o "un momento, te confirmo"
+- ✅ Responde directamente, sin rodeos, máximo 3-4 líneas
+- ✅ Usa un tono humano, profesional y cálido
+- ✅ Incluye 1-2 emojis naturales
+- ✅ Si preguntan por contacto: WhatsApp 3136174267
 
 RESPUESTA (en español):`;
 
