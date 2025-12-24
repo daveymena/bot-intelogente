@@ -510,13 +510,14 @@ export class SalesAgentSimple {
         console.log(`🎯 IA identificó producto: ${userCtx.lastProduct.name}`)
       }
 
-      // Prioridad a la intención detectada por IA, fallback a regex
+      // Prioridad absoluta a la intención detectada por regex/reglas locales
+      // Esto evita que la IA divague cuando hay un comando o palabra clave clara
+      const regexIntent = this.detectIntent(message)
       let intent = aiDecision.action as any
-      if (aiDecision.action === 'general_inquiry' || aiDecision.action === 'answer_question') {
-        const regexIntent = this.detectIntent(message)
-        if (regexIntent !== 'general_inquiry') {
-          intent = regexIntent
-        }
+      
+      if (regexIntent !== 'general_inquiry') {
+        console.log(`🎯 Override de intención: ${aiDecision.action} -> ${regexIntent}`)
+        intent = regexIntent
       }
 
       console.log(`🎯 Intención final: ${intent}`)
