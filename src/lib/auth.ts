@@ -109,12 +109,12 @@ export class AuthService {
     })
 
     if (existingUser) {
-      throw new Error('User already exists')
+      throw new Error('El usuario ya existe')
     }
 
     // Validar que tenga teléfono
     if (!data.phone) {
-      throw new Error('Phone number is required')
+      throw new Error('El número de teléfono es requerido')
     }
 
     // Hash password
@@ -300,7 +300,7 @@ export class AuthService {
     })
 
     if (!user) {
-      throw new Error('Invalid credentials')
+      throw new Error('Credenciales inválidas')
     }
 
     // Temporalmente desactivado: verificar si el email está verificado
@@ -309,12 +309,12 @@ export class AuthService {
     // }
 
     if (!user.isActive) {
-      throw new Error('Account is deactivated')
+      throw new Error('La cuenta está desactivada')
     }
 
     const isPasswordValid = await this.verifyPassword(credentials.password, user.password)
     if (!isPasswordValid) {
-      throw new Error('Invalid credentials')
+      throw new Error('Credenciales inválidas')
     }
 
     // Update last login
@@ -355,15 +355,16 @@ export class AuthService {
     const user = await db.user.findUnique({
       where: { id: userId },
       include: {
-        subscriptions: {
-          where: {
-            status: 'ACTIVE'
-          }
-        }
+        subscriptions: true
       }
     })
 
     if (!user) return false
+
+    // 👑 ACCESO PERMANENTE PARA EL DUEÑO
+    if (user.email === 'daveymena16@gmail.com') {
+      return true
+    }
 
     // Check trial
     if (user.trialEnds && user.trialEnds > new Date()) {
@@ -375,7 +376,7 @@ export class AuthService {
       return true
     }
 
-    return user.subscriptions.length > 0
+    return (user.subscriptions as any)?.status === 'ACTIVE'
   }
 
   // Get subscription status
@@ -389,15 +390,23 @@ export class AuthService {
     const user = await db.user.findUnique({
       where: { id: userId },
       include: {
-        subscriptions: {
-          orderBy: { createdAt: 'desc' },
-          take: 1
-        }
+        subscriptions: true
       }
     })
 
     if (!user) {
-      throw new Error('User not found')
+      throw new Error('Usuario no encontrado')
+    }
+
+    // 👑 ACCESO PERMANENTE PARA EL DUEÑO
+    if (user.email === 'daveymena16@gmail.com') {
+      return {
+        type: 'ENTERPRISE',
+        status: 'ACTIVE',
+        endsAt: new Date('2099-12-31'), // Fecha muy lejana
+        isTrial: false,
+        daysLeft: 99999
+      }
     }
 
     const now = new Date()
