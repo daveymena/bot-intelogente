@@ -437,8 +437,7 @@ export class BaileysStableService {
           
           try {
             const { getSalesAgent, calculateTypingDelay, simulateTyping } = await import('./sales-agent-simple')
-            const salesAgent = getSalesAgent()
-            salesAgent.setUserId(userId)
+            const salesAgent = getSalesAgent(userId)
             
             console.log('[Baileys] 📝 Procesando:', messageText.substring(0, 50))
             

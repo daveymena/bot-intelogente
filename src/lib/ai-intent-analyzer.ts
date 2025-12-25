@@ -46,12 +46,12 @@ DECISIONES POSIBLES:
 7. farewell: El cliente se despide.
 8. general_inquiry: No encaja en lo anterior.
 
-INSTRUCCIONES:
-- Analiza si el cliente se refiere a un producto específico del catálogo anterior.
-- Si el cliente dice "sí", "dale", "me interesa" después de que le mostraste un producto, decide 'show_payment'.
-- Si el cliente elige o menciona un método de pago específico (Tarjeta de crédito, PayPal, Nequi, Transferencia, etc.), decide 'payment_method_selected'.
-- Si el cliente responde con un método de entrega (digital, recoger, etc.), decide 'show_payment'.
-- Selecciona el índice del producto si el cliente lo menciona o si estás recomendando uno.
+INSTRUCCIONES CRÍTICAS:
+- ❌ NO inventes productos. Si el cliente pregunta por algo que NO está en el catálogo (ej. "computadora" y solo hay "teléfonos"), DEBES devolver "selectedProductIndex": null.
+- ✅ Analiza si el cliente se refiere a un producto específico del catálogo anterior.
+- ✅ Si el cliente dice "sí", "dale", "me interesa" después de que le mostraste un producto, decide 'show_payment'.
+- ✅ Si el cliente elige o menciona un método de pago específico (Tarjeta de crédito, PayPal, Nequi, Transferencia, etc.), decide 'payment_method_selected'.
+- ✅ Selecciona el índice del producto SOLAMENTE si hay una coincidencia clara y lógica. En caso de duda sobre qué producto es, devuelve null.
 
 RESPONDE ÚNICAMENTE CON UN OBJETO JSON VÁLIDO. NO incluyas explicaciones ni markdown.
 
@@ -120,7 +120,12 @@ async function queryOllama(prompt: string): Promise<AIDecision | null> {
 }
 
 async function queryGroq(prompt: string): Promise<AIDecision> {
-  const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) {
+    throw new Error('GROQ_API_KEY no configurada');
+  }
+  
+  const groq = new Groq({ apiKey });
   const completion = await groq.chat.completions.create({
     messages: [{ role: 'user', content: prompt }],
     model: process.env.GROQ_MODEL || 'llama-3.1-8b-instant',

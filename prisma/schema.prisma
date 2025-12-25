@@ -1,5 +1,3 @@
-// Smart Sales Bot Pro - Enhanced Database Schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,498 +7,718 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Users and Authentication
 model User {
-  id                    String            @id @default(cuid())
-  email                 String            @unique
-  name                  String?
-  phone                 String?
-  password              String            // Hashed password
-  role                  UserRole          @default(USER)
-  membershipType        MembershipType    @default(FREE)
-  membershipEnds        DateTime?
-  trialEnds             DateTime?         // 7-day trial period
-  isActive              Boolean           @default(true)
-  isEmailVerified       Boolean           @default(false)
-  emailVerificationToken String?
-  isPhoneVerified       Boolean           @default(false)
-  phoneVerificationCode String?
+  id                       String              @id @default(cuid())
+  email                    String              @unique
+  name                     String?
+  phone                    String?
+  password                 String
+  role                     UserRole            @default(USER)
+  membershipType           MembershipType      @default(FREE)
+  membershipEnds           DateTime?
+  trialEnds                DateTime?
+  isActive                 Boolean             @default(true)
+  isEmailVerified          Boolean             @default(false)
+  emailVerificationToken   String?
+  isPhoneVerified          Boolean             @default(false)
+  phoneVerificationCode    String?
   phoneVerificationExpires DateTime?
-  passwordResetToken    String?
-  passwordResetExpires  DateTime?
-  apiKey                String?           @unique
-  whatsappNumber        String?
-  businessName          String?
-  businessAddress       String?           // Dirección física del negocio
-  businessPhone         String?           // Teléfono de contacto del negocio
-  businessHours         String?           // Horario de atención (JSON)
-  businessDescription   String?           // Descripción del negocio
-  adminNotificationPhone String?          @default("3005560186") // Teléfono para notificaciones
-  lastLoginAt           DateTime?
-  stripeCustomerId      String?           @unique
-  
-  // Subscription fields (for SaaS multi-tenant)
-  subscriptionPlan      String?           @default("free") // free, basic, pro, enterprise
-  subscriptionStatus    String?           @default("trial") // trial, active, expired, cancelled
-  subscriptionExpiresAt DateTime?
-  
-  // Configuraciones del Dashboard (JSON)
-  paymentMethods        String?           // JSON: MercadoPago, PayPal, Nequi, Daviplata, Bank
-  businessInfo          String?           // JSON: Información del negocio
-  notificationSettings  String?           // JSON: Configuración de notificaciones
-  
-  createdAt             DateTime          @default(now())
-  updatedAt             DateTime          @updatedAt
+  passwordResetToken       String?
+  passwordResetExpires     DateTime?
+  apiKey                   String?             @unique
+  whatsappNumber           String?
+  businessName             String?
+  businessAddress          String?
+  businessPhone            String?
+  businessHours            String?
+  businessDescription      String?
+  adminNotificationPhone   String?             @default("3005560186")
+  lastLoginAt              DateTime?
+  stripeCustomerId         String?             @unique
+  subscriptionPlan         String?             @default("free")
+  subscriptionStatus       String?             @default("trial")
+  subscriptionExpiresAt    DateTime?
+  paymentMethods           String?
+  businessInfo             String?
+  notificationSettings     String?
+  createdAt                DateTime            @default(now())
+  updatedAt                DateTime            @updatedAt
+  paymentIntegration       PaymentIntegration?
+  storeSettings            StoreSettings?
+  aiPrompts                AIPrompt[]
+  appointments             Appointment[]
+  settings                 BotSettings?
+  businessSettings         BusinessSettings?
+  categories               Category[]
+  conversations            Conversation[]
+  notificationTokens       NotificationToken[]
+  paymentConfig            PaymentConfig?
+  payments                 Payment[]
+  products                 Product[]
+  salesFlowConfig          SalesFlowConfig?
+  sessions                 Session[]
+  subscriptions            Subscription?
+  trainingData             TrainingData[]
+  usageMetrics             UsageMetric[]
+  whatsappConnection       WhatsAppConnection?
 
-  // Relations
-  conversations         Conversation[]
-  products              Product[]
-  settings              BotSettings?
-  aiPrompts             AIPrompt[]
-  subscriptions         Subscription[]
-  sessions              Session[]
-  whatsappConnection    WhatsAppConnection?
-  payments              Payment[]
-  usageMetrics          UsageMetric[]
-  paymentConfig         PaymentConfig?
-  trainingData          TrainingData[]
-  paymentIntegration    PaymentIntegration?
-  storeSettings         StoreSettings?
-  appointments          Appointment[]
-  salesFlowConfig       SalesFlowConfig?
-  
-  notificationTokens    NotificationToken[]
-  businessSettings      BusinessSettings?
-  categories            Category[]
-  
   @@map("users")
 }
 
-// Products Management
 model Product {
-  id            String      @id @default(cuid())
-  name          String
-  description   String?
-  price         Float
-  currency      String      @default("COP")
-  category      ProductType
-  customCategory String?    // Categoría personalizada creada por el usuario
-  store         String?     // Tienda/Proveedor (ej: "MegaComputer", "Hotmart", "Propio")
-  status        ProductStatus @default(AVAILABLE)
-  images        String?     // JSON string array of image URLs
-  tags          String?     // JSON string array of keywords for auto-response
-  autoResponse  String?     // Predefined AI response
-  stock         Int?        // null for digital products
+  id                       String         @id @default(cuid())
+  name                     String
+  description              String?
+  price                    Float
+  currency                 String         @default("COP")
+  category                 ProductType
+  customCategory           String?
+  store                    String?
+  status                   ProductStatus  @default(AVAILABLE)
+  images                   String?
+  tags                     String?
+  autoResponse             String?
+  stock                    Int?
+  smartTags                String?
+  tagCategory              String?
+  searchPriority           Int            @default(5)
+  autoTagged               Boolean        @default(false)
+  mainCategory             String?
+  productTags              String?
+  isAccessory              Boolean        @default(false)
+  parentCategory           String?
+  categorizedAt            DateTime?
+  categorizedBy            String?
+  categorizationConfidence Float?
+  paymentLinkMercadoPago   String?
+  paymentLinkPayPal        String?
+  paymentLinkCustom        String?
+  landingPageContent       String?
+  userId                   String
+  createdAt                DateTime       @default(now())
+  updatedAt                DateTime       @updatedAt
+  deliveryLink             String?
+  conversations            Conversation[]
+  landingPages             LandingPage[]
+  user                     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // 🏷️ Sistema de Tags Inteligentes (SaaS)
-  smartTags     String?     // JSON array of smart tags with metadata
-  tagCategory   String?     // Categoría principal detectada automáticamente
-  searchPriority Int        @default(5) // Prioridad de búsqueda (1-10)
-  autoTagged    Boolean     @default(false) // Si fue etiquetado automáticamente
-  
-  // 🤖 NUEVO: Sistema de Categorización Inteligente
-  mainCategory     String?        // "Tecnología", "Cursos", "Ropa", etc.
-  productTags      String? // ["portátil", "gaming", "estudio"]
-  isAccessory      Boolean        @default(false) // Si es accesorio o producto principal
-  parentCategory   String?        // Para accesorios: "Laptops", "Smartphones", etc.
-  
-  // Metadatos de categorización
-  categorizedAt    DateTime?      // Cuándo fue categorizado
-  categorizedBy    String?        // "AI" o "Manual"
-  categorizationConfidence Float? // Confianza de la IA (0-100)
-  
-  // Links de Pago Manuales (Configurables por producto)
-  paymentLinkMercadoPago String?
-  paymentLinkPayPal      String?
-  paymentLinkCustom      String?  // Cualquier otro link (Hotmart, etc.)
-  
-  // Link de Entrega (Google Drive, etc.) para productos digitales
-  deliveryLink           String?  // Link de acceso al contenido después del pago
-  
-  // Landing Page Content (JSON generado con IA)
-  landingPageContent     String?  // JSON con headline, subheadline, benefits, cta, etc.
-  
-  userId        String
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-
-  // Relations
-  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  conversations Conversation[]
-  landingPages  LandingPage[]
-  
   @@index([category, mainCategory])
   @@index([store])
   @@map("products")
 }
 
-
-// Conversations and Messages
 model Conversation {
-  id            String           @id @default(cuid())
-  customerPhone String
-  customerName  String?
-  status        ConversationStatus @default(ACTIVE)
-  lastMessageAt DateTime         @default(now())
-  userId        String
-  productId     String?
-  productName   String?          // Nombre del producto en contexto
-  
-  // 🚨 Escalamiento Inteligente
-  needsHumanAttention Boolean      @default(false)
-  escalationReason    String?      // Razón del escalamiento
-  escalationCategory  String?      // Categoría: complaint, complex_query, payment_issue, etc.
-  escalatedAt         DateTime?    // Cuándo se escaló
-  resolvedAt          DateTime?    // Cuándo se resolvió
-  
-  // Relations
-  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product       Product?         @relation(fields: [productId], references: [id])
-  messages      Message[]
-  appointments  Appointment[]
-  trainingData  TrainingData[]
-  
+  id                  String             @id @default(cuid())
+  customerPhone       String
+  customerName        String?
+  status              ConversationStatus @default(ACTIVE)
+  lastMessageAt       DateTime           @default(now())
+  userId              String
+  productId           String?
+  productName         String?
+  needsHumanAttention Boolean            @default(false)
+  escalationReason    String?
+  escalationCategory  String?
+  escalatedAt         DateTime?
+  resolvedAt          DateTime?
+  appointments        Appointment[]
+  product             Product?           @relation(fields: [productId], references: [id])
+  user                User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages            Message[]
+  trainingData        TrainingData[]
+
   @@index([needsHumanAttention])
   @@map("conversations")
 }
 
 model Message {
-  id             String       @id @default(cuid())
+  id             String           @id @default(cuid())
   content        String
-  type           MessageType  @default(TEXT)
-  direction      MessageDirection // INCOMING or OUTGOING
-  aiGenerated    Boolean      @default(false)
-  confidence     Float?       // AI confidence score
+  type           MessageType      @default(TEXT)
+  direction      MessageDirection
+  aiGenerated    Boolean          @default(false)
+  confidence     Float?
   conversationId String
-  createdAt      DateTime     @default(now())
+  createdAt      DateTime         @default(now())
+  conversation   Conversation     @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
-  // Relations
-  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  
   @@map("messages")
 }
 
-// AI Prompts Management
 model AIPrompt {
-  id          String     @id @default(cuid())
-  name        String
-  prompt      String
-  type        PromptType
-  isActive    Boolean    @default(true)
-  userId      String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id        String     @id @default(cuid())
+  name      String
+  prompt    String
+  type      PromptType
+  isActive  Boolean    @default(true)
+  userId    String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // Relations
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
   @@map("ai_prompts")
 }
 
-// Bot Configuration
 model BotSettings {
-  id                    String   @id @default(cuid())
-  userId                String   @unique
-  businessName          String   @default("Tecnovariedades D&S")
-  businessPhone         String
-  
-  // 📝 Información del Negocio (para respuestas directas)
-  businessHours         String?  // Horarios de atención
-  businessAddress       String?  // Dirección completa
-  whatsappNumber        String?  // Número de WhatsApp
-  shippingInfo          String?  // Información de envíos
-  warrantyInfo          String?  // Política de garantía
-  
-  botPersonality        String?  // Custom bot personality prompt
-  // API Keys de Proveedores de IA
-  groqApiKey           String?
-  openaiApiKey         String?
-  claudeApiKey         String?
-  geminiApiKey         String?
-  mistralApiKey        String?
-  anthropicApiKey      String?  // Claude alternativo
-  openrouterApiKey     String?  // OpenRouter (acceso a múltiples modelos)
-  ollamaBaseUrl        String?  // Para IA local con Ollama
-  ollamaModel          String?  @default("llama3.1")
-  
-  // Configuración de Prioridad de IA
-  preferredAiProvider  String   @default("groq")  // Proveedor preferido
-  aiProviderPriority   String   @default("[\"groq\",\"openai\",\"gemini\",\"claude\",\"mistral\"]") // JSON array
-  enableAutoFallback   Boolean  @default(true)    // Fallback automático si falla
-  
-  // Configuración de Respuestas
-  responseDelay        Int      @default(2) // seconds
-  autoResponseEnabled  Boolean  @default(true)
-  smartWaitingEnabled  Boolean  @default(true)
-  maxTokens            Int      @default(200) // Reducido para respuestas cortas
-  temperature          Float    @default(0.7)
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  businessName        String   @default("Tecnovariedades D&S")
+  businessPhone       String
+  businessHours       String?
+  businessAddress     String?
+  whatsappNumber      String?
+  shippingInfo        String?
+  warrantyInfo        String?
+  botPersonality      String?
+  groqApiKey          String?
+  openaiApiKey        String?
+  claudeApiKey        String?
+  geminiApiKey        String?
+  mistralApiKey       String?
+  anthropicApiKey     String?
+  openrouterApiKey    String?
+  ollamaBaseUrl       String?
+  ollamaModel         String?  @default("llama3.1")
+  preferredAiProvider String   @default("groq")
+  aiProviderPriority  String   @default("[\"groq\",\"openai\",\"gemini\",\"claude\",\"mistral\"]")
+  enableAutoFallback  Boolean  @default(true)
+  responseDelay       Int      @default(2)
+  autoResponseEnabled Boolean  @default(true)
+  smartWaitingEnabled Boolean  @default(true)
+  maxTokens           Int      @default(200)
+  temperature         Float    @default(0.7)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // Relations
-  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
   @@map("bot_settings")
 }
 
-// Training Data for ML
 model TrainingData {
-  id                String        @id @default(cuid())
-  userId            String
-  conversationId    String
-  
-  // Datos de entrada
-  userMessage       String
-  botResponse       String
-  context           Json?         // Historial, producto mencionado, etc.
-  
-  // Metadatos
-  productId         String?
-  productName       String?
-  category          String?       // "producto", "pago", "soporte", etc.
-  
-  // Evaluación
-  qualityScore      Int?          // 1-5
-  wasSuccessful     Boolean?      // ¿Hubo venta o respuesta positiva?
-  userFeedback      String?       // Respuesta del cliente después
-  
-  // Timestamps
-  createdAt         DateTime      @default(now())
-  evaluatedAt       DateTime?
-  
-  // Relaciones
-  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  conversation      Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  
-  @@map("training_data")
+  id             String       @id @default(cuid())
+  userId         String
+  conversationId String
+  userMessage    String
+  botResponse    String
+  context        Json?
+  productId      String?
+  productName    String?
+  category       String?
+  qualityScore   Int?
+  wasSuccessful  Boolean?
+  userFeedback   String?
+  createdAt      DateTime     @default(now())
+  evaluatedAt    DateTime?
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId, qualityScore])
   @@index([category, qualityScore])
   @@index([createdAt])
+  @@map("training_data")
 }
 
-// User Sessions
 model Session {
   id        String   @id @default(cuid())
   userId    String
   token     String   @unique
   expiresAt DateTime
   createdAt DateTime @default(now())
-
-  // Relations
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
 }
 
-// Subscriptions
 model Subscription {
-  id                String            @id @default(cuid())
-  userId            String            @unique
-  stripeSubscriptionId String?        @unique
-  stripePriceId     String?
-  status            SubscriptionStatus @default(TRIAL)
-  currentPeriodStart DateTime?
-  currentPeriodEnd   DateTime?
-  cancelAtPeriodEnd Boolean           @default(false)
-  trialStart        DateTime?
-  trialEnd          DateTime?
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-
-  // Relations
-  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                   String             @id @default(cuid())
+  userId               String             @unique
+  stripeSubscriptionId String?            @unique
+  stripePriceId        String?
+  status               SubscriptionStatus @default(TRIAL)
+  currentPeriodStart   DateTime?
+  currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean            @default(false)
+  trialStart           DateTime?
+  trialEnd             DateTime?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("subscriptions")
 }
 
-// WhatsApp Connection
 model WhatsAppConnection {
-  id                String              @id @default(cuid())
-  userId            String              @unique
-  phoneNumber       String              @unique
-  status            ConnectionStatus    @default(DISCONNECTED)
-  qrCode            String?             // Base64 encoded QR
-  qrExpiresAt       DateTime?
-  sessionId         String?             // WhatsApp session ID
-  lastConnectedAt   DateTime?
-  lastMessageAt     DateTime?
-  isConnected       Boolean             @default(false)
-  webhookUrl        String?
-  webhookSecret     String?
-  accessToken       String?             // OAuth token
-  refreshToken      String?             // For token refresh
-  tokenExpiresAt    DateTime?
-  connectionAttempts Int                @default(0)
-  lastError         String?
-  lastErrorAt       DateTime?
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-
-  // Relations
-  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                 String           @id @default(cuid())
+  userId             String           @unique
+  phoneNumber        String           @unique
+  status             ConnectionStatus @default(DISCONNECTED)
+  qrCode             String?
+  qrExpiresAt        DateTime?
+  sessionId          String?
+  lastConnectedAt    DateTime?
+  lastMessageAt      DateTime?
+  isConnected        Boolean          @default(false)
+  webhookUrl         String?
+  webhookSecret      String?
+  accessToken        String?
+  refreshToken       String?
+  tokenExpiresAt     DateTime?
+  connectionAttempts Int              @default(0)
+  lastError          String?
+  lastErrorAt        DateTime?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  user               User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("whatsapp_connections")
 }
 
-// Subscription Plans
 model SubscriptionPlan {
-  id                String              @id @default(cuid())
-  name              String
-  description       String
-  price             Float
-  currency          String              @default("USD")
-  interval          PlanInterval
-  intervalCount     Int                 @default(1)
-  stripePriceId     String?             @unique
-  features          String              // JSON array of features
-  isActive          Boolean             @default(true)
-  sortOrder         Int                 @default(0)
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
+  id            String       @id @default(cuid())
+  name          String
+  description   String
+  price         Float
+  currency      String       @default("USD")
+  interval      PlanInterval
+  intervalCount Int          @default(1)
+  stripePriceId String?      @unique
+  features      String
+  isActive      Boolean      @default(true)
+  sortOrder     Int          @default(0)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 
   @@map("subscription_plans")
 }
 
-// Payment History
 model Payment {
-  id                String              @id @default(cuid())
-  userId            String
-  subscriptionId    String?
-  stripePaymentId   String?             @unique
-  amount            Float
-  currency          String              @default("USD")
-  status            PaymentStatus        @default(PENDING)
-  paymentMethod     String?
-  description       String?
-  metadata          String?             // JSON metadata
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-
-  // Relations
-  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  id                 String              @id @default(cuid())
+  userId             String
+  subscriptionId     String?
+  stripePaymentId    String?             @unique
+  amount             Float
+  currency           String              @default("USD")
+  status             PaymentStatus       @default(PENDING)
+  paymentMethod      String?
+  description        String?
+  metadata           String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
   notificationTokens NotificationToken[]
-  
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@map("payments")
 }
 
-// Payment Configuration (Configurable desde Dashboard)
 model PaymentConfig {
-  id                    String   @id @default(cuid())
-  userId                String   @unique
-  
-  // MercadoPago
-  mercadoPagoEnabled    Boolean  @default(false)
-  mercadoPagoPublicKey  String?
+  id                     String   @id @default(cuid())
+  userId                 String   @unique
+  mercadoPagoEnabled     Boolean  @default(false)
+  mercadoPagoPublicKey   String?
   mercadoPagoAccessToken String?
-  
-  // PayPal
-  paypalEnabled         Boolean  @default(false)
-  paypalClientId        String?
-  paypalClientSecret    String?
-  
-  // Transferencias Bancarias
-  bankTransferEnabled   Boolean  @default(true)
-  bankName              String?  @default("Bancolombia")
-  bankAccountNumber     String?
-  bankAccountType       String?  @default("Ahorros")
-  bankAccountHolder     String?
-  
-  // Nequi
-  nequiEnabled          Boolean  @default(true)
-  nequiPhone            String?  @default("3136174267")
-  
-  // Daviplata
-  daviplataEnabled      Boolean  @default(true)
-  daviplataPhone        String?  @default("3136174267")
-  
-  // Información de Contacto
-  contactPhone          String?  @default("+57 304 274 8687")
-  contactEmail          String?  @default("deinermen25@gmail.com")
-  contactAddress        String?  @default("Centro Comercial El Diamante 2, San Nicolás, Cali")
-  
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  paypalEnabled          Boolean  @default(false)
+  paypalClientId         String?
+  paypalClientSecret     String?
+  bankTransferEnabled    Boolean  @default(true)
+  bankName               String?  @default("Bancolombia")
+  bankAccountNumber      String?
+  bankAccountType        String?  @default("Ahorros")
+  bankAccountHolder      String?
+  nequiEnabled           Boolean  @default(true)
+  nequiPhone             String?  @default("3136174267")
+  daviplataEnabled       Boolean  @default(true)
+  daviplataPhone         String?  @default("3136174267")
+  contactPhone           String?  @default("+57 304 274 8687")
+  contactEmail           String?  @default("deinermen25@gmail.com")
+  contactAddress         String?  @default("Centro Comercial El Diamante 2, San Nicolás, Cali")
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // Relations
-  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
   @@map("payment_configs")
 }
 
-// Usage Metrics
 model UsageMetric {
-  id                String              @id @default(cuid())
-  userId            String
-  metricType        MetricType
-  value             Int
-  period            String              // e.g., "2024-01", "2024-01-15"
-  createdAt         DateTime            @default(now())
-
-  // Relations
-  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id         String     @id @default(cuid())
+  userId     String
+  metricType MetricType
+  value      Int
+  period     String
+  createdAt  DateTime   @default(now())
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, metricType, period])
   @@map("usage_metrics")
 }
 
-// Message Queue (para reconexión automática)
 model MessageQueue {
-  id            String              @id @default(cuid())
-  phoneNumber   String
-  message       String
-  type          String              @default("text") // text, image, audio
-  metadata      String?             // JSON metadata
-  status        QueueStatus         @default(PENDING)
-  attempts      Int                 @default(0)
-  sentAt        DateTime?
-  createdAt     DateTime            @default(now())
-  updatedAt     DateTime            @updatedAt
+  id          String      @id @default(cuid())
+  phoneNumber String
+  message     String
+  type        String      @default("text")
+  metadata    String?
+  status      QueueStatus @default(PENDING)
+  attempts    Int         @default(0)
+  sentAt      DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 
   @@map("message_queue")
 }
 
-// Landing Pages - Configuración personalizada por producto
 model LandingPage {
-  id                Int       @id @default(autoincrement())
-  productId         String
-  product           Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
-  
-  // Configuración de plantilla
-  template          String    @default("default") // 'default', 'physical', 'digital', 'dropshipping'
-  variant           String?   // 'a', 'b', 'c' para A/B testing
-  
-  // Personalización de contenido
-  heroImage         String?
-  headline          String?
-  subheadline       String?
-  ctaText           String?
-  ctaColor          String?
-  benefits          String?   // JSON array
-  features          String?   // JSON array
-  urgencyMessage    String?
-  guarantee         String?
-  
-  // SEO y Meta Tags
-  metaTitle         String?
-  metaDescription   String?
-  ogImage           String?
-  
-  // Tracking y Analytics
-  views             Int       @default(0)
-  clicks            Int       @default(0)
-  conversions       Int       @default(0)
-  
-  // Timestamps
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  
+  id              Int      @id @default(autoincrement())
+  productId       String
+  template        String   @default("default")
+  variant         String?
+  heroImage       String?
+  headline        String?
+  subheadline     String?
+  ctaText         String?
+  ctaColor        String?
+  benefits        String?
+  features        String?
+  urgencyMessage  String?
+  guarantee       String?
+  metaTitle       String?
+  metaDescription String?
+  ogImage         String?
+  views           Int      @default(0)
+  clicks          Int      @default(0)
+  conversions     Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
   @@unique([productId, variant])
-  @@map("landing_pages")
   @@index([productId])
+  @@map("landing_pages")
 }
 
-// Enums
+model PaymentIntegration {
+  id                     String   @id @default(cuid())
+  userId                 String   @unique
+  hotmartEnabled         Boolean  @default(false)
+  hotmartApiKey          String?
+  hotmartProductId       String?
+  hotmartCheckoutUrl     String?
+  hotmartEmail           String?
+  mercadopagoEnabled     Boolean  @default(false)
+  mercadopagoAccessToken String?
+  mercadopagoPublicKey   String?
+  mercadopagoEmail       String?
+  paypalEnabled          Boolean  @default(false)
+  paypalClientId         String?
+  paypalClientSecret     String?
+  paypalEmail            String?
+  paypalMode             String?  @default("sandbox")
+  stripeEnabled          Boolean  @default(false)
+  stripeSecretKey        String?
+  stripePublishableKey   String?
+  stripeWebhookSecret    String?
+  nequiEnabled           Boolean  @default(false)
+  nequiPhone             String?
+  nequiName              String?
+  daviplataEnabled       Boolean  @default(false)
+  daviplataPhone         String?
+  daviplataName          String?
+  bankTransferEnabled    Boolean  @default(false)
+  bankName               String?
+  bankAccountNumber      String?
+  bankAccountType        String?
+  bankAccountHolder      String?
+  bankIdNumber           String?
+  defaultCurrency        String?  @default("COP")
+  autoGenerateLinks      Boolean  @default(true)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Order {
+  id              String   @id @default(cuid())
+  userId          String?
+  productId       String?
+  quantity        Int      @default(1)
+  customerName    String
+  customerEmail   String?
+  customerPhone   String
+  customerAddress String?
+  customerCity    String?
+  shippingAddress String?
+  notes           String?
+  items           String?
+  total           Float
+  paymentMethod   String
+  status          String   @default("pending")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+  @@index([productId])
+  @@index([status])
+  @@map("orders")
+}
+
+model StoreSettings {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  storeSlug       String    @unique
+  customDomain    String?   @unique
+  storeName       String    @default("Mi Tienda")
+  storeSlogan     String?
+  description     String?
+  logo            String?
+  logoSquare      String?
+  favicon         String?
+  bannerImage     String?
+  primaryColor    String    @default("#10b981")
+  secondaryColor  String    @default("#3b82f6")
+  accentColor     String    @default("#f59e0b")
+  backgroundColor String    @default("#ffffff")
+  textColor       String    @default("#1f2937")
+  email           String?
+  phone           String?
+  whatsapp        String?
+  address         String?
+  city            String?
+  country         String?   @default("Colombia")
+  facebook        String?
+  instagram       String?
+  twitter         String?
+  tiktok          String?
+  youtube         String?
+  linkedin        String?
+  metaTitle       String?
+  metaDescription String?
+  keywords        String?
+  ogImage         String?
+  currency        String    @default("COP")
+  language        String    @default("es")
+  timezone        String    @default("America/Bogota")
+  isPublic        Boolean   @default(true)
+  isActive        Boolean   @default(true)
+  termsUrl        String?
+  privacyUrl      String?
+  returnPolicy    String?
+  shippingPolicy  String?
+  viewCount       Int       @default(0)
+  lastViewAt      DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([storeSlug])
+  @@index([isPublic, isActive])
+}
+
+model Appointment {
+  id              String            @id @default(cuid())
+  userId          String
+  customerPhone   String
+  customerName    String?
+  conversationId  String?
+  status          AppointmentStatus @default(PENDING_ADMIN_APPROVAL)
+  requestedDate   DateTime?
+  requestedTime   String?
+  confirmedDate   DateTime?
+  confirmedTime   String?
+  adminResponse   String?
+  customerMessage String?
+  notes           String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  conversation    Conversation?     @relation(fields: [conversationId], references: [id])
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("appointments")
+}
+
+model SalesFlowConfig {
+  id                   String       @id @default(cuid())
+  userId               String       @unique
+  businessType         BusinessType @default(ECOMMERCE)
+  dropshippingEnabled  Boolean      @default(false)
+  deliveryDays         String?      @default("4-5 días hábiles")
+  paymentOnDelivery    Boolean      @default(true)
+  hasPhysicalStore     Boolean      @default(false)
+  storeAddress         String?
+  storeHours           String?
+  allowPickup          Boolean      @default(false)
+  requiresAppointment  Boolean      @default(false)
+  appointmentDuration  Int?         @default(60)
+  advanceBookingDays   Int?         @default(7)
+  consultationEnabled  Boolean      @default(false)
+  consultationPrice    Float?
+  consultationDuration Int?         @default(30)
+  welcomeMessage       String?
+  priceMessage         String?
+  deliveryMessage      String?
+  confirmationMessage  String?
+  requireName          Boolean      @default(true)
+  requirePhone         Boolean      @default(true)
+  requireEmail         Boolean      @default(false)
+  requireAddress       Boolean      @default(true)
+  requireCity          Boolean      @default(true)
+  requireNotes         Boolean      @default(false)
+  showColors           Boolean      @default(true)
+  showSizes            Boolean      @default(false)
+  showVariants         Boolean      @default(false)
+  facebookEnabled      Boolean      @default(false)
+  instagramEnabled     Boolean      @default(false)
+  detectSocialMedia    Boolean      @default(true)
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+  user                 User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sales_flow_configs")
+}
+
+model ConversationKnowledge {
+  id          String   @id @default(cuid())
+  userQuery   String
+  botResponse String
+  productId   String?
+  productName String?
+  context     String   @default("general")
+  confidence  Float    @default(0.8)
+  usageCount  Int      @default(1)
+  successRate Float    @default(1.0)
+  createdAt   DateTime @default(now())
+  lastUsedAt  DateTime @default(now())
+
+  @@index([userQuery])
+  @@index([productId])
+  @@index([successRate])
+  @@map("conversation_knowledge")
+}
+
+model ConversationPattern {
+  id               String   @id @default(cuid())
+  pattern          String   @unique
+  queryType        String
+  keywords         String
+  responseTemplate String
+  confidence       Float    @default(0.8)
+  usageCount       Int      @default(1)
+  successRate      Float    @default(1.0)
+  createdAt        DateTime @default(now())
+  lastUsedAt       DateTime @default(now())
+
+  @@index([queryType])
+  @@index([successRate])
+  @@map("conversation_patterns")
+}
+
+model NotificationToken {
+  id           String                @id @default(cuid())
+  token        String                @unique
+  type         NotificationTokenType
+  purpose      String
+  userId       String?
+  paymentId    String?
+  metadata     Json?
+  status       TokenStatus           @default(PENDING)
+  expiresAt    DateTime
+  usedAt       DateTime?
+  viewCount    Int                   @default(0)
+  lastViewedAt DateTime?
+  ipAddress    String?
+  userAgent    String?
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+  payment      Payment?              @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  user         User?                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId, type])
+  @@index([paymentId])
+  @@index([expiresAt])
+  @@index([status])
+  @@map("notification_tokens")
+}
+
+model BusinessSettings {
+  id                  String    @id @default(cuid())
+  userId              String    @unique
+  detectedType        String    @default("UNKNOWN")
+  detectedSubType     String?
+  confidence          Float     @default(0.0)
+  manualType          String?
+  businessName        String?
+  businessDescription String?
+  tone                String    @default("friendly")
+  customGreeting      String?
+  customFarewell      String?
+  enableBooking       Boolean   @default(false)
+  enableCart          Boolean   @default(true)
+  enableDelivery      Boolean   @default(true)
+  enableLocation      Boolean   @default(false)
+  serviceAreas        String?
+  workingHours        String?
+  lastDetectedAt      DateTime?
+  itemsAnalyzed       Int       @default(0)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("business_settings")
+}
+
+model Category {
+  id               String     @id @default(cuid())
+  userId           String
+  name             String
+  slug             String
+  description      String?
+  parentId         String?
+  icon             String?
+  order            Int        @default(0)
+  itemType         String     @default("MIXED")
+  flowType         String?
+  requiresBooking  Boolean    @default(false)
+  requiresLocation Boolean    @default(false)
+  keywords         String?
+  itemCount        Int        @default(0)
+  isAutoGenerated  Boolean    @default(true)
+  generatedBy      String?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  parent           Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children         Category[] @relation("CategoryHierarchy")
+  user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, slug])
+  @@index([userId])
+  @@index([itemType])
+  @@map("categories")
+}
+
+model PersistentMemory {
+  conversationKey        String   @id
+  userId                 String
+  chatId                 String
+  userName               String?
+  currentProduct         String?
+  productHistory         String   @default("[]")
+  conversationStage      String   @default("greeting")
+  messageCount           Int      @default(0)
+  lastInteraction        String
+  intentions             String   @default("[]")
+  preferences            String   @default("{}")
+  budget                 String?
+  objections             String   @default("[]")
+  photoSent              Boolean  @default(false)
+  paymentIntent          Boolean  @default(false)
+  preferredPaymentMethod String?
+  lastUpdated            DateTime @default(now())
+
+  @@index([userId])
+  @@index([lastUpdated])
+  @@map("persistent_memory")
+}
+
 enum UserRole {
   ADMIN
   USER
@@ -600,506 +818,42 @@ enum QueueStatus {
   FAILED
 }
 
-
-// Payment Integrations Configuration
-model PaymentIntegration {
-  id        String   @id @default(cuid())
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  // Hotmart
-  hotmartEnabled      Boolean  @default(false)
-  hotmartApiKey       String?
-  hotmartProductId    String?
-  hotmartCheckoutUrl  String?
-  hotmartEmail        String?
-  
-  // MercadoPago
-  mercadopagoEnabled      Boolean  @default(false)
-  mercadopagoAccessToken  String?
-  mercadopagoPublicKey    String?
-  mercadopagoEmail        String?
-  
-  // PayPal
-  paypalEnabled       Boolean  @default(false)
-  paypalClientId      String?
-  paypalClientSecret  String?
-  paypalEmail         String?
-  paypalMode          String?  @default("sandbox")
-  
-  // Stripe
-  stripeEnabled          Boolean  @default(false)
-  stripeSecretKey        String?
-  stripePublishableKey   String?
-  stripeWebhookSecret    String?
-  
-  // Nequi/Daviplata (Colombia)
-  nequiEnabled        Boolean  @default(false)
-  nequiPhone          String?
-  nequiName           String?
-  
-  daviplataEnabled    Boolean  @default(false)
-  daviplataPhone      String?
-  daviplataName       String?
-  
-  // Transferencia Bancaria
-  bankTransferEnabled Boolean  @default(false)
-  bankName            String?
-  bankAccountNumber   String?
-  bankAccountType     String?
-  bankAccountHolder   String?
-  bankIdNumber        String?
-  
-  // Configuración General
-  defaultCurrency     String?  @default("COP")
-  autoGenerateLinks   Boolean  @default(true)
-  
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-// Orders - Órdenes de compra
-model Order {
-  id              String       @id @default(cuid())
-  userId          String?      // ID del vendedor
-  productId       String?      // ID del producto
-  quantity        Int          @default(1)
-  customerName    String
-  customerEmail   String?
-  customerPhone   String
-  customerAddress String?
-  customerCity    String?
-  shippingAddress String?      // Dirección completa de envío
-  notes           String?
-  items           String?      // JSON string de los productos (para pedidos múltiples)
-  total           Float
-  paymentMethod   String
-  status          String       @default("pending") // pending, paid, completed, cancelled
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
-  
-  @@index([userId])
-  @@index([productId])
-  @@index([status])
-  @@map("orders")
-}
-
-// Store Settings - Configuración de la tienda
-model StoreSettings {
-  id          String   @id @default(cuid())
-  userId      String   @unique
-  
-  // URL única de la tienda
-  storeSlug   String   @unique // URL amigable: /tienda/mi-tienda-tech
-  customDomain String? @unique // Dominio personalizado opcional
-  
-  // Información básica
-  storeName   String   @default("Mi Tienda")
-  storeSlogan String?
-  description String?
-  
-  // Branding
-  logo        String?  // URL del logo principal
-  logoSquare  String?  // Logo cuadrado para favicon/redes
-  favicon     String?  // Favicon personalizado
-  bannerImage String?  // Banner/Hero de la tienda
-  
-  // Colores personalizados
-  primaryColor String  @default("#10b981") // Color principal
-  secondaryColor String @default("#3b82f6") // Color secundario
-  accentColor String   @default("#f59e0b") // Color de acento
-  backgroundColor String @default("#ffffff") // Fondo
-  textColor   String   @default("#1f2937") // Texto principal
-  
-  // Contacto
-  email       String?
-  phone       String?
-  whatsapp    String?
-  address     String?
-  city        String?
-  country     String?  @default("Colombia")
-  
-  // Redes sociales
-  facebook    String?
-  instagram   String?
-  twitter     String?
-  tiktok      String?
-  youtube     String?
-  linkedin    String?
-  
-  // SEO
-  metaTitle   String?
-  metaDescription String?
-  keywords    String?
-  ogImage     String?  // Imagen para compartir en redes
-  
-  // Configuración
-  currency    String   @default("COP")
-  language    String   @default("es")
-  timezone    String   @default("America/Bogota")
-  
-  // Visibilidad
-  isPublic    Boolean  @default(true) // Si la tienda es pública
-  isActive    Boolean  @default(true) // Si la tienda está activa
-  
-  // Políticas
-  termsUrl    String?
-  privacyUrl  String?
-  returnPolicy String?
-  shippingPolicy String?
-  
-  // Estadísticas
-  viewCount   Int      @default(0)
-  lastViewAt  DateTime?
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  @@index([userId])
-  @@index([storeSlug])
-  @@index([isPublic, isActive])
-}
-
-// Appointments / Citas
-model Appointment {
-  id                String              @id @default(cuid())
-  userId            String
-  customerPhone     String
-  customerName      String?
-  conversationId    String?
-  status            AppointmentStatus   @default(PENDING_ADMIN_APPROVAL)
-  requestedDate     DateTime?
-  requestedTime     String?
-  confirmedDate     DateTime?
-  confirmedTime     String?
-  adminResponse     String?
-  customerMessage   String?
-  notes             String?
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-
-  // Relations
-  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  conversation      Conversation?       @relation(fields: [conversationId], references: [id], onDelete: SetNull)
-
-  @@map("appointments")
-}
-
 enum AppointmentStatus {
-  PENDING_ADMIN_APPROVAL  // Cliente solicitó cita, esperando respuesta del admin
-  ADMIN_RESPONDED         // Admin respondió con disponibilidad
-  CONFIRMED               // Cita confirmada
-  CANCELLED               // Cita cancelada
-  COMPLETED               // Cita completada
+  PENDING_ADMIN_APPROVAL
+  ADMIN_RESPONDED
+  CONFIRMED
+  CANCELLED
+  COMPLETED
 }
 
-// Sales Flow Configuration - Configuración de flujos de venta
-model SalesFlowConfig {
-  id                String              @id @default(cuid())
-  userId            String              @unique
-  
-  // Tipo de negocio
-  businessType      BusinessType        @default(ECOMMERCE)
-  
-  // Configuración de dropshipping
-  dropshippingEnabled Boolean           @default(false)
-  deliveryDays      String?             @default("4-5 días hábiles")
-  paymentOnDelivery Boolean             @default(true)
-  
-  // Configuración de tienda física
-  hasPhysicalStore  Boolean             @default(false)
-  storeAddress      String?
-  storeHours        String?             // JSON: { "monday": "9am-7pm", ... }
-  allowPickup       Boolean             @default(false)
-  
-  // Configuración de servicios
-  requiresAppointment Boolean           @default(false)
-  appointmentDuration Int?              @default(60) // minutos
-  advanceBookingDays Int?               @default(7)
-  
-  // Configuración de vendedor/consultor
-  consultationEnabled Boolean           @default(false)
-  consultationPrice Float?
-  consultationDuration Int?             @default(30) // minutos
-  
-  // Mensajes personalizados
-  welcomeMessage    String?
-  priceMessage      String?
-  deliveryMessage   String?
-  confirmationMessage String?
-  
-  // Campos requeridos para captura de datos
-  requireName       Boolean             @default(true)
-  requirePhone      Boolean             @default(true)
-  requireEmail      Boolean             @default(false)
-  requireAddress    Boolean             @default(true)
-  requireCity       Boolean             @default(true)
-  requireNotes      Boolean             @default(false)
-  
-  // Opciones de productos
-  showColors        Boolean             @default(true)
-  showSizes         Boolean             @default(false)
-  showVariants      Boolean             @default(false)
-  
-  // Integración con redes sociales
-  facebookEnabled   Boolean             @default(false)
-  instagramEnabled  Boolean             @default(false)
-  detectSocialMedia Boolean             @default(true)
-  
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-
-  // Relations
-  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("sales_flow_configs")
-}
-
-// Enum para tipos de negocio
 enum BusinessType {
-  ECOMMERCE         // Tienda online con productos físicos
-  DROPSHIPPING      // Dropshipping con envío
-  PHYSICAL_STORE    // Tienda física
-  SERVICES          // Servicios profesionales (vendedor, consultor)
-  APPOINTMENTS      // Servicios con citas (clínica, peluquería, spa)
-  DIGITAL_PRODUCTS  // Productos digitales (cursos, megapacks)
-  HYBRID            // Combinación de varios tipos
+  ECOMMERCE
+  DROPSHIPPING
+  PHYSICAL_STORE
+  SERVICES
+  APPOINTMENTS
+  DIGITAL_PRODUCTS
+  HYBRID
 }
 
-
-// 🧠 Base de Conocimiento Local - Sistema de Aprendizaje
-model ConversationKnowledge {
-  id            String   @id @default(cuid())
-  userQuery     String   // Pregunta del usuario (normalizada)
-  botResponse   String   // Respuesta del bot
-  productId     String?  // ID del producto relacionado (opcional)
-  productName   String?  // Nombre del producto
-  context       String   @default("general") // Contexto de la conversación
-  confidence    Float    @default(0.8) // Confianza de la respuesta (0-1)
-  usageCount    Int      @default(1) // Cuántas veces se ha usado
-  successRate   Float    @default(1.0) // Tasa de éxito (0-1)
-  createdAt     DateTime @default(now())
-  lastUsedAt    DateTime @default(now())
-  
-  @@index([userQuery])
-  @@index([productId])
-  @@index([successRate])
-  @@map("conversation_knowledge")
-}
-
-// 🧠 Patrones de Conversación Aprendidos (para matching rápido)
-model ConversationPattern {
-  id              String   @id @default(cuid())
-  pattern         String   @unique // Patrón normalizado de la consulta
-  queryType       String   // Tipo: price_inquiry, photo_request, etc.
-  keywords        String   // Palabras clave separadas por comas
-  responseTemplate String  // Template de respuesta
-  confidence      Float    @default(0.8)
-  usageCount      Int      @default(1)
-  successRate     Float    @default(1.0)
-  createdAt       DateTime @default(now())
-  lastUsedAt      DateTime @default(now())
-  
-  @@index([queryType])
-  @@index([successRate])
-  @@map("conversation_patterns")
-}
-
-// 🔔 Sistema Universal de Notificaciones con Tokens
-model NotificationToken {
-  id            String              @id @default(cuid())
-  token         String              @unique // Token hasheado (SHA-256)
-  type          NotificationTokenType // Tipo de notificación
-  purpose       String              // Descripción del propósito
-  
-  // Relaciones
-  userId        String?
-  user          User?               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  paymentId     String?
-  payment       Payment?            @relation(fields: [paymentId], references: [id], onDelete: Cascade)
-  
-  // Datos adicionales (JSON flexible)
-  metadata      Json?               // Datos específicos del tipo de notificación
-  
-  // Estado y expiración
-  status        TokenStatus         @default(PENDING)
-  expiresAt     DateTime
-  usedAt        DateTime?
-  
-  // Tracking
-  viewCount     Int                 @default(0)
-  lastViewedAt  DateTime?
-  ipAddress     String?
-  userAgent     String?
-  
-  createdAt     DateTime            @default(now())
-  updatedAt     DateTime            @updatedAt
-  
-  @@index([token])
-  @@index([userId, type])
-  @@index([paymentId])
-  @@index([expiresAt])
-  @@index([status])
-  @@map("notification_tokens")
-}
-
-// Enum para tipos de tokens de notificación
 enum NotificationTokenType {
-  PAYMENT_CONFIRMATION    // Confirmación de pago recibido
-  PAYMENT_REMINDER        // Recordatorio de pago pendiente
-  PAYMENT_INVOICE         // Ver factura/recibo
-  PAYMENT_STATUS          // Ver estado de pago
-  ORDER_TRACKING          // Seguimiento de pedido
-  DELIVERY_NOTIFICATION   // Notificación de entrega
-  APPOINTMENT_CONFIRMATION // Confirmación de cita
-  APPOINTMENT_REMINDER    // Recordatorio de cita
-  ACCOUNT_VERIFICATION    // Verificación de cuenta
-  EMAIL_CHANGE            // Cambio de email
-  TEMPORARY_ACCESS        // Acceso temporal
-  CUSTOM                  // Personalizado
+  PAYMENT_CONFIRMATION
+  PAYMENT_REMINDER
+  PAYMENT_INVOICE
+  PAYMENT_STATUS
+  ORDER_TRACKING
+  DELIVERY_NOTIFICATION
+  APPOINTMENT_CONFIRMATION
+  APPOINTMENT_REMINDER
+  ACCOUNT_VERIFICATION
+  EMAIL_CHANGE
+  TEMPORARY_ACCESS
+  CUSTOM
 }
 
-// Enum para estado de tokens
 enum TokenStatus {
-  PENDING     // Pendiente de uso
-  USED        // Ya fue usado
-  EXPIRED     // Expirado
-  CANCELLED   // Cancelado
+  PENDING
+  USED
+  EXPIRED
+  CANCELLED
 }
-
-// 🏢 Business Settings - Configuración automática del tipo de negocio
-model BusinessSettings {
-  id                String   @id @default(cuid())
-  userId            String   @unique
-  
-  // Auto-detectado por IA
-  detectedType      String   @default("UNKNOWN") // STORE, SERVICE, RESTAURANT, HYBRID, UNKNOWN
-  detectedSubType   String?  // electronics, consulting, fast-food, etc.
-  confidence        Float    @default(0.0) // 0-1
-  
-  // Override manual
-  manualType        String?
-  businessName      String?
-  businessDescription String?
-  
-  // Personalidad del bot
-  tone              String   @default("friendly") // formal, casual, friendly, professional
-  customGreeting    String?
-  customFarewell    String?
-  
-  // Features habilitados
-  enableBooking     Boolean  @default(false)
-  enableCart        Boolean  @default(true)
-  enableDelivery    Boolean  @default(true)
-  enableLocation    Boolean  @default(false)
-  
-  // Área de servicio (para servicios a domicilio)
-  serviceAreas      String?  // JSON array de zonas
-  
-  // Horarios de trabajo (para citas)
-  workingHours      String?  // JSON con horarios por día
-  
-  // Última detección
-  lastDetectedAt    DateTime?
-  itemsAnalyzed     Int      @default(0)
-  
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  @@map("business_settings")
-}
-
-// 📁 Categorías Auto-generadas
-model Category {
-  id                String   @id @default(cuid())
-  userId            String
-  name              String
-  slug              String
-  description       String?
-  parentId          String?  // Para subcategorías
-  icon              String?
-  order             Int      @default(0)
-  
-  // Tipo de items en esta categoría
-  itemType          String   @default("MIXED") // PRODUCT, SERVICE, FOOD, MIXED
-  
-  // Configuración de flujo
-  flowType          String?  // product_purchase, service_booking, food_order, etc.
-  requiresBooking   Boolean  @default(false)
-  requiresLocation  Boolean  @default(false)
-  
-  // Auto-generado
-  keywords          String?  // JSON array de palabras clave
-  itemCount         Int      @default(0)
-  
-  // Metadata
-  isAutoGenerated   Boolean  @default(true)
-  generatedBy       String?  // "AI" o "Manual"
-  
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  
-  // Self-relation para subcategorías
-  parent            Category? @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
-  children          Category[] @relation("CategoryHierarchy")
-  
-  // Relación con usuario
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  @@unique([userId, slug])
-  @@index([userId])
-  @@index([itemType])
-  @@map("categories")
-}
-
-// 💾 Memoria Persistente entre Sesiones
-model PersistentMemory {
-  conversationKey String   @id // Formato: "userId:chatId"
-  userId          String
-  chatId          String
-  userName        String?
-
-  // Producto actual
-  currentProduct  String?  // JSON stringified UnifiedMemory['currentProduct']
-
-  // Historial de productos
-  productHistory  String   @default("[]") // JSON stringified array
-
-  // Estado de conversación
-  conversationStage String @default("greeting")
-  messageCount    Int      @default(0)
-  lastInteraction String   // ISO date string
-
-  // Intenciones y contexto
-  intentions      String   @default("[]") // JSON stringified array
-  preferences     String   @default("{}") // JSON stringified object
-
-  // Información financiera
-  budget          String?  // JSON stringified budget object
-
-  // Objeciones detectadas
-  objections      String   @default("[]") // JSON stringified array
-
-  // Flags operativos
-  photoSent      Boolean  @default(false)
-  paymentIntent  Boolean  @default(false)
-  preferredPaymentMethod String?
-
-  // Metadata
-  lastUpdated    DateTime @default(now())
-
-  @@map("persistent_memory")
-  @@index([userId])
-  @@index([lastUpdated])
-}
-
-
-
-
-
-

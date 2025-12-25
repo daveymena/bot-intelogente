@@ -491,8 +491,22 @@ export class SalesAgentSimple {
       userCtx.history.push({ role: 'user', content: message })
 
       // 🧠 IA RAZONAMIENTO: Analizar intención y producto con Ollama/Groq
-      const aiDecision = await analyzeWithAI(message, userCtx.history, this.products)
-      console.log(`🧠 IA Decide: ${aiDecision.action} | Razón: ${aiDecision.reasoning}`)
+      let aiDecision: AIDecision
+      try {
+        const productsSafe = this.products || []
+        aiDecision = await analyzeWithAI(message, userCtx.history, productsSafe)
+        console.log(`🧠 IA Decide: ${aiDecision.action} | Razón: ${aiDecision.reasoning}`)
+      } catch (aiError) {
+        console.error('❌ Error crítico en analyzeWithAI:', aiError)
+        // Fallback seguro
+        aiDecision = {
+          action: 'general_inquiry',
+          selectedProductIndex: null,
+          reasoning: 'Error interno de IA, fallback a general',
+          emotionalTone: 'neutral',
+          additionalContext: ''
+        }
+      }
       
       // Asignar producto si la IA lo identificó
       if (aiDecision.selectedProductIndex !== null && this.products[aiDecision.selectedProductIndex]) {
