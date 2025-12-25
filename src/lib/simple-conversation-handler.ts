@@ -17,9 +17,16 @@ interface SimpleResponse {
 }
 
 export class SimpleConversationHandler {
-  // STATIC para persistir entre requests
+  // STATIC para persistir entre requests - CLAVES COMPUESTAS (userId:chatId) para SaaS
   private static conversationHistory: Map<string, SimpleMessage[]> = new Map();
   private static currentProduct: Map<string, any> = new Map();
+
+  /**
+   * Genera una clave única por tienda y cliente para aislamiento SaaS
+   */
+  private getContextKey(userId: string, chatId: string): string {
+    return `${userId}:${chatId}`;
+  }
 
   /**
    * Método principal - maneja TODA la conversación
@@ -35,11 +42,11 @@ export class SimpleConversationHandler {
     // SAAS: UserId es dinámico y corresponde al dueño de la tienda por donde escriben
     console.log(`\n💬 [SIMPLE] Mensaje recibido en Tienda ${userId}: "${message}"`);
 
-    // 1. Agregar mensaje a historial
-    await this.addToHistory(chatId, { role: 'user', content: message });
+    // 1. Agregar mensaje a historial (USA CLAVE COMPUESTA)
+    await this.addToHistory(userId, chatId, { role: 'user', content: message });
 
     // 2. Detectar tipo de mensaje (4 tipos simples)
-    const type = this.detectMessageType(message, chatId);
+    const type = this.detectMessageType(message, userId, chatId);
     console.log(`🎯 [SIMPLE] Tipo detectado: ${type}`);
 
     let response: SimpleResponse;
@@ -58,8 +65,8 @@ export class SimpleConversationHandler {
         response = await this.handleGeneral(message, chatId, userId);
     }
 
-    // 3. Agregar respuesta a historial
-    await this.addToHistory(chatId, { role: 'assistant', content: response.text });
+    // 3. Agregar respuesta a historial (USA CLAVE COMPUESTA)
+    await this.addToHistory(userId, chatId, { role: 'assistant', content: response.text });
 
     console.log(`✅ [SIMPLE] Bot: "${response.text.substring(0, 50)}..."`);
     return response;
@@ -68,8 +75,9 @@ export class SimpleConversationHandler {
   /**
    * Detecta el tipo de mensaje (simple, 4 categorías)
    */
-  private detectMessageType(message: string, chatId: string): 'payment' | 'search' | 'followup' | 'general' {
+  private detectMessageType(message: string, userId: string, chatId: string): 'payment' | 'search' | 'followup' | 'general' {
     const lower = message.toLowerCase();
+    const contextKey = this.getContextKey(userId, chatId);
 
     // 1. PAGO (prioridad máxima)
     if (/(pagar|pago|comprar|link|mercadopago|paypal|nequi|métodos?.*pago)/i.test(lower)) {
@@ -77,7 +85,7 @@ export class SimpleConversationHandler {
     }
 
     // 2. SEGUIMIENTO (pregunta sobre producto actual) - PRIORIDAD ALTA si hay contexto
-    if (SimpleConversationHandler.currentProduct.has(chatId)) {
+    if (SimpleConversationHandler.currentProduct.has(contextKey)) {
       // Palabras típicas de seguimiento o preguntas detalle
       if (/(incluye|contiene|foto|imagen|precio|cómo|cuánto|qué|tienes|trae|detalles?|info|información)/i.test(lower)) {
         return 'followup';
@@ -98,7 +106,8 @@ export class SimpleConversationHandler {
    * Maneja PAGO - Sistema especializado sin IA
    */
   private async handlePayment(message: string, chatId: string, userId: string): Promise<SimpleResponse> {
-    const product = SimpleConversationHandler.currentProduct.get(chatId);
+    const contextKey = this.getContextKey(userId, chatId);
+    const product = SimpleConversationHandler.currentProduct.get(contextKey);
     const { PaymentLinkGenerator } = await import('./payment-link-generator');
 
     if (!product) {
@@ -182,8 +191,8 @@ export class SimpleConversationHandler {
       };
     }
 
-    // ✅ GUARDAR PRIMER PRODUCTO
-    SimpleConversationHandler.currentProduct.set(chatId, mentionedProducts[0]);
+    // ✅ GUARDAR PRIMER PRODUCTO (USA CLAVE COMPUESTA)
+    SimpleConversationHandler.currentProduct.set(this.getContextKey(userId, chatId), mentionedProducts[0]);
 
     // 🎯 DECISIÓN INTELIGENTE: ¿Búsqueda específica o genérica?
     const isSpecificSearch = this.isSpecificProductSearch(message);
@@ -430,7 +439,8 @@ export class SimpleConversationHandler {
    * Maneja SEGUIMIENTO - IA con contexto del producto actual
    */
   private async handleFollowUp(message: string, chatId: string, userId: string): Promise<SimpleResponse> {
-    const product = SimpleConversationHandler.currentProduct.get(chatId)!;
+    const contextKey = this.getContextKey(userId, chatId);
+    const product = SimpleConversationHandler.currentProduct.get(contextKey)!;
 
     return await this.generateResponse({
       message,
@@ -544,8 +554,9 @@ export class SimpleConversationHandler {
     if (paymentConfig?.paypalEnabled) paymentMethodsStr += 'PayPal, ';
     if (paymentConfig?.bankTransferEnabled) paymentMethodsStr += `Bancolombia, `;
 
-    // Historial (últimos 5 mensajes)
-    const history = SimpleConversationHandler.conversationHistory.get(chatId) || [];
+    // Historial (últimos 5 mensajes) - USA CLAVE COMPUESTA
+    const contextKey = this.getContextKey(userId, chatId);
+    const history = SimpleConversationHandler.conversationHistory.get(contextKey) || [];
     const recentHistory = history.slice(-5);
 
     // Prompt Maestro Dinámico - FORZAR ESPAÑOL SIEMPRE
@@ -824,11 +835,13 @@ Tu trabajo es ATRAER, CONVENCER y CERRAR VENTAS usando los productos del catálo
   /**
    * Gestión simple de historial
    */
-  private async addToHistory(chatId: string, message: SimpleMessage) {
-    if (!SimpleConversationHandler.conversationHistory.has(chatId)) {
-      SimpleConversationHandler.conversationHistory.set(chatId, []);
+  private async addToHistory(userId: string, chatId: string, message: SimpleMessage) {
+    const contextKey = this.getContextKey(userId, chatId);
+    
+    if (!SimpleConversationHandler.conversationHistory.has(contextKey)) {
+      SimpleConversationHandler.conversationHistory.set(contextKey, []);
     }
-    const history = SimpleConversationHandler.conversationHistory.get(chatId)!;
+    const history = SimpleConversationHandler.conversationHistory.get(contextKey)!;
     history.push(message);
     
     if (history.length > 20) {

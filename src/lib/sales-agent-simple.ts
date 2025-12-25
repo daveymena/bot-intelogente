@@ -375,32 +375,31 @@ export class SalesAgentSimple {
   private userId: string | null = null
   private groq = new Groq({ apiKey: process.env.GROQ_API_KEY || '' })
 
-  constructor() {
-    this.loadProducts()
+  constructor(userId?: string) {
+    if (userId) {
+      this.userId = userId
+      this.loadProducts()
+    }
   }
 
-  /**
-   * Carga productos del usuario actual (multi-tenant)
-   * Si no hay userId, carga todos los productos disponibles
-   */
-  private async loadProducts() {
+  // Carga productos del usuario actual (multi-tenant)
+  // Si no hay userId, carga todos los productos disponibles
+  async loadProducts() {
     try {
-      const whereClause: any = { status: 'AVAILABLE' }
-      
-      // Multi-tenant: filtrar por userId si está definido
       if (this.userId) {
-        whereClause.userId = this.userId
+        console.log(`📦 Cargando productos para usuario: ${this.userId}`)
+        this.products = await db.product.findMany({
+          where: { userId: this.userId, status: 'AVAILABLE' }
+        })
+      } else {
+        console.log('📦 Cargando todos los productos disponibles (sin filtro de usuario)')
+        this.products = await db.product.findMany({
+          where: { status: 'AVAILABLE' }
+        })
       }
-      
-      const products = await db.product.findMany({
-        where: whereClause,
-        orderBy: { price: 'asc' }
-      })
-      this.products = products
-      console.log(`✅ SalesAgent: ${products.length} productos cargados${this.userId ? ` para usuario ${this.userId}` : ''}`)
+      console.log(`✅ ${this.products.length} productos cargados`)
     } catch (error) {
       console.error('❌ Error cargando productos:', error)
-      this.products = []
     }
   }
 
@@ -409,16 +408,7 @@ export class SalesAgentSimple {
   }
 
   /**
-   * Establece el userId y recarga los productos de ese usuario
-   * Esto es CLAVE para el funcionamiento multi-tenant
-   */
-  setUserId(userId: string) {
-    if (this.userId !== userId) {
-      this.userId = userId
-      // Recargar productos del nuevo usuario
-      this.loadProducts()
-    }
-  }
+   // ELIMINADO: setUserId ya no es necesario con el constructor multi-tenant
 
   /**
    * 🎭 HUMANIZACI\u00d3N: Tono emocional basado en etapa de conversaci\u00f3n
@@ -524,7 +514,8 @@ export class SalesAgentSimple {
       console.log(`📦 Producto en contexto: ${userCtx.lastProduct?.name || 'ninguno'}`)
 
       // Guardar contexto adicional para personalizar templates
-      const aiPrefix = aiDecision.additionalContext ? aiDecision.additionalContext + '\n\n' : ''
+      // REMOVIDO: aiPrefix filtrado del output para evitar fugas de razonamiento
+      // const aiPrefix = aiDecision.additionalContext ? aiDecision.additionalContext + '\n\n' : ''
 
       // 🆕 RESPUESTA A PREGUNTAS LIBRES/IA (Preguntas específicas que no son flujo directo)
       // Si hay producto, ya fue manejado por el bloque contextual arriba
@@ -559,8 +550,7 @@ export class SalesAgentSimple {
       // Si selecciona método de pago y tiene producto
       if (intent === 'payment_method_selected' && userCtx.lastProduct) {
         userCtx.stage = 'closing'
-        const baseResponse = await this.generatePaymentResponse(userCtx.lastProduct)
-        const response = aiPrefix + baseResponse
+        const response = await this.generatePaymentResponse(userCtx.lastProduct)
         userCtx.history.push({ role: 'assistant', content: response })
         return {
           text: response,
@@ -575,8 +565,7 @@ export class SalesAgentSimple {
       // Si confirma y tiene producto
       if (intent === 'confirmation' && userCtx.lastProduct) {
         userCtx.stage = 'closing'
-        const baseResponse = await this.generatePaymentResponse(userCtx.lastProduct)
-        const response = aiPrefix + baseResponse
+        const response = await this.generatePaymentResponse(userCtx.lastProduct)
         userCtx.history.push({ role: 'assistant', content: response })
         return {
           text: response,
@@ -1621,17 +1610,20 @@ export class SalesAgentSimple {
       response += `🔵 *MercadoPago (Tarjeta/PSE):*\n${mercadoPagoLink}\n\n`
     }
     
-    // PayPal dinámico
-    let paypalLink = product.paymentLinkPayPal
-    if (!paypalLink && product.id) {
+    // PayPal dinámico - SIEMPRE forzar generación nueva para evitar links vencidos
+    let paypalLink = null
+    if (product.id) {
       try {
         const { getOrCreatePayPalLink } = await import('./paypal-service')
-        paypalLink = await getOrCreatePayPalLink(product.id)
+        // forceNew = true por defecto en getOrCreatePayPalLink
+        paypalLink = await getOrCreatePayPalLink(product.id, true)
         if (paypalLink) {
-          console.log(`✅ Link PayPal generado para ${product.name}`)
+          console.log(`✅ Link PayPal renovado para ${product.name}`)
         }
       } catch (error) {
         console.error('Error generando link PayPal:', error)
+        // Fallback al link estático de la BD si la generación falla
+        paypalLink = product.paymentLinkPayPal
       }
     }
     
@@ -2683,13 +2675,21 @@ RESPUESTA (en español):`;
   }
 }
 
-// Singleton
-let salesAgentInstance: SalesAgentSimple | null = null
+// 🆕 Multi-tenant Instance Cache
+const salesAgentInstances = new Map<string, SalesAgentSimple>()
 
-export function getSalesAgent(): SalesAgentSimple {
-  if (!salesAgentInstance) {
-    salesAgentInstance = new SalesAgentSimple()
+/**
+ * Obtiene o crea una instancia de SalesAgentSimple para un usuario específico
+ * @param userId ID del dueño de la tienda (tenant)
+ */
+export function getSalesAgent(userId?: string): SalesAgentSimple {
+  const key = userId || 'default'
+  
+  if (!salesAgentInstances.has(key)) {
+    console.log(`🆕 Creando nueva instancia de SalesAgent para: ${key}`)
+    salesAgentInstances.set(key, new SalesAgentSimple(userId))
   }
-  return salesAgentInstance
+  
+  return salesAgentInstances.get(key)!
 }
 
