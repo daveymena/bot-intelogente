@@ -1,32 +1,35 @@
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient();
-
-import * as fs from 'fs';
+const prisma = new PrismaClient()
 
 async function main() {
-  console.log('Checking products in database...');
   const products = await prisma.product.findMany({
+    where: {
+      OR: [
+        { name: { contains: 'Mega' } },
+        { name: { contains: 'Pack' } },
+        { name: { contains: 'Curso' } },
+        { name: { contains: 'Programación' } }
+      ]
+    },
     select: {
       id: true,
       name: true,
-      category: true,
-      subcategory: true,
-      userId: true,
-      status: true
+      category: true
     }
-  });
+  })
 
-  let output = `Found ${products.length} products:\n`;
-  products.forEach(p => {
-    output += `- [${p.status}] ${p.name} (Cat: ${p.category}, Sub: ${p.subcategory}) - User: ${p.userId}\n`;
-  });
-  
-  fs.writeFileSync('products_dump.txt', output);
-  console.log('Dump written to products_dump.txt');
+  console.log('--- PRODUCTOS ENCONTRADOS ---')
+  products.forEach(p => console.log(`- ${p.name} (${p.category})`))
+  console.log('---------------------------')
 }
 
 main()
-  .catch(e => console.error(e))
-  .finally(async () => await prisma.$disconnect());
+  .catch(e => {
+    console.error(e)
+    process.exit(1)
+  })
+  .finally(async () => {
+    await prisma.$disconnect()
+  })

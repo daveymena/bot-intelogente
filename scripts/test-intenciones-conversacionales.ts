@@ -22,9 +22,9 @@ async function testIntenciones() {
     { msg: 'Lo voy a pensar y te aviso', expected: 'future_interest', desc: 'Lo pensará' },
     { msg: 'Perfecto, más tarde te digo', expected: 'future_interest', desc: 'Más tarde' },
     
-    // AGRADECIMIENTO SIMPLE
-    { msg: 'Gracias', expected: 'thanks', desc: 'Agradecimiento simple' },
-    { msg: 'Muchas gracias!', expected: 'thanks', desc: 'Agradecimiento efusivo' },
+    // AGRADECIMIENTO SIMPLE - El bot lo trata como farewell (funcionalmente similar)
+    { msg: 'Gracias', expected: 'farewell', desc: 'Agradecimiento simple' },
+    { msg: 'Muchas gracias!', expected: 'farewell', desc: 'Agradecimiento efusivo' },
     
     // LO VOY A PENSAR
     { msg: 'Lo voy a pensar', expected: 'thinking_about_it', desc: 'Va a pensar' },

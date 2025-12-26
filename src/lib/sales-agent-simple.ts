@@ -1,16 +1,16 @@
 /**
- * SalesAgentSimple - Agente de ventas inteligente híbrido
+ * SalesAgentSimple - Agente de ventas inteligente h�brido
  * 
- * 🧠 NUEVO: Usa AI Interpreter para entender el contexto COMPLETO
- * del mensaje antes de actuar. Ya no depende de regex rígidos.
+ * ?? NUEVO: Usa AI Interpreter para entender el contexto COMPLETO
+ * del mensaje antes de actuar. Ya no depende de regex r�gidos.
  * 
  * FLUJO:
- * 1. Cliente envía mensaje
- * 2. AI Interpreter analiza: intención, producto, acción
- * 3. Bot ejecuta la acción con datos precisos
+ * 1. Cliente env�a mensaje
+ * 2. AI Interpreter analiza: intenci�n, producto, acci�n
+ * 3. Bot ejecuta la acci�n con datos precisos
  * 
- * NO rebota al menú - siempre intenta resolver
- * NO INVENTA - usa solo información real de la BD
+ * NO rebota al men� - siempre intenta resolver
+ * NO INVENTA - usa solo informaci�n real de la BD
  */
 
 import { db } from './db'
@@ -21,7 +21,7 @@ import { analyzeWithAI, AIDecision } from './ai-intent-analyzer'
 import { UnifiedResponseService, ResponseResult } from './unified-response-service'
 import { BusinessContextDetector } from './business-context-detector'
 
-// Cliente Groq para análisis profundo
+// Cliente Groq para an�lisis profundo
 let groqClient: Groq | null = null
 function getGroqClient(): Groq | null {
   if (!groqClient && process.env.GROQ_API_KEY) {
@@ -31,35 +31,35 @@ function getGroqClient(): Groq | null {
 }
 
 // ============================================
-// ⏳ SIMULACIÓN DE ESCRITURA (TYPING)
+// ? SIMULACI�N DE ESCRITURA (TYPING)
 // ============================================
 
 /**
  * Calcula el tiempo de "escribiendo" basado en la longitud del mensaje
- * Mínimo 1 segundo, máximo 3 segundos
+ * M�nimo 1 segundo, m�ximo 3 segundos
  */
 export function calculateTypingDelay(responseLength: number): number {
-  const baseDelay = 1000 // 1 segundo mínimo
+  const baseDelay = 1000 // 1 segundo m�nimo
   const charDelay = 10 // 10ms por caracter
-  const calculated = baseDelay + Math.min(responseLength * charDelay, 2000)
-  return Math.min(calculated, 3000) // Máximo 3 segundos
+  const calculated = baseDelay + Math.min(responseLength * charDelay, 1000)
+  return Math.min(calculated, 1500) // M�ximo 1.5 segundos
 }
 
 /**
- * Espera simulando que el bot está escribiendo
+ * Espera simulando que el bot est� escribiendo
  */
 export async function simulateTyping(delayMs: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, delayMs))
 }
 
 // ============================================
-// 🤖 SISTEMA HÍBRIDO: OLLAMA + GROQ
+// ?? SISTEMA H�BRIDO: OLLAMA + GROQ
 // ============================================
 
 /**
- * Consulta a Ollama (local, rápido) - Primera opción
+ * Consulta a Ollama (local, r�pido) - Primera opci�n
  * @param prompt - Mensaje del usuario
- * @param context - Contexto de la conversación
+ * @param context - Contexto de la conversaci�n
  * @returns Respuesta de Ollama o null si falla
  */
 async function askOllama(prompt: string, context: string = ''): Promise<string | null> {
@@ -68,21 +68,21 @@ async function askOllama(prompt: string, context: string = ''): Promise<string |
     const ollamaUrl = process.env.OLLAMA_BASE_URL || process.env.OLLAMA_URL || 'http://localhost:11434'
     const model = process.env.OLLAMA_MODEL || 'gemma2:2b'
     
-    console.log(`🦙 Consultando Ollama (${model})...`)
+    console.log(`?? Consultando Ollama (${model})...`)
     
     const systemPrompt = `Eres un agente de ventas profesional de Tecnovariedades D&S en Colombia.
 
-REGLAS CRÍTICAS - OBLIGATORIAS:
-1. ❌ NUNCA inventes información, precios o características
-2. ✅ USA SOLO la información proporcionada en el contexto
-3. ✅ Si no tienes la información, di "déjame verificar"
-4. ✅ Responde en español, natural y amigable
-5. ✅ Guía sutilmente hacia la venta sin ser agresivo
+REGLAS CR�TICAS - OBLIGATORIAS:
+1. ? NUNCA inventes informaci�n, precios o caracter�sticas
+2. ? USA SOLO la informaci�n proporcionada en el contexto
+3. ? Si no tienes la informaci�n, di "d�jame verificar"
+4. ? Responde en espa�ol, natural y amigable
+5. ? Gu�a sutilmente hacia la venta sin ser agresivo
 
 ENTREGA:
-- DIGITALES: Envío por Google Drive después del pago
-- FÍSICOS: Recoger en tienda (Cali) o Contraentrega
-${context ? `\nINFORMACIÓN DISPONIBLE:\n${context}` : ''}`
+- DIGITALES: Env�o por Google Drive despu�s del pago
+- F�SICOS: Recoger en tienda (Cali) o Contraentrega
+${context ? `\nINFORMACI�N DISPONIBLE:\n${context}` : ''}`
 
     // Timeout de 10 segundos para Ollama
     const controller = new AbortController()
@@ -106,7 +106,7 @@ ${context ? `\nINFORMACIÓN DISPONIBLE:\n${context}` : ''}`
     clearTimeout(timeoutId)
 
     if (!response.ok) {
-      console.log(`⚠️ Ollama no disponible: ${response.status}`)
+      console.log(`?? Ollama no disponible: ${response.status}`)
       return null
     }
 
@@ -114,21 +114,21 @@ ${context ? `\nINFORMACIÓN DISPONIBLE:\n${context}` : ''}`
     const answer = data.response?.trim()
     
     if (answer && answer.length > 10) {
-      console.log(`✅ Ollama respondió: ${answer.substring(0, 50)}...`)
+      console.log(`? Ollama respondi�: ${answer.substring(0, 50)}...`)
       return answer
     }
     
     return null
   } catch (error: any) {
-    console.log(`⚠️ Error Ollama: ${error.message}`)
+    console.log(`?? Error Ollama: ${error.message}`)
     return null
   }
 }
 
 /**
- * Consulta a Groq (análisis profundo) - Segunda opción
+ * Consulta a Groq (an�lisis profundo) - Segunda opci�n
  * @param prompt - Mensaje del usuario
- * @param context - Contexto de la conversación
+ * @param context - Contexto de la conversaci�n
  * @param products - Lista de productos disponibles
  * @returns Respuesta de Groq o null si falla
  */
@@ -136,18 +136,18 @@ async function askGroq(prompt: string, context: string = '', products: any[] = [
   try {
     const client = getGroqClient()
     if (!client) {
-      console.log('⚠️ Groq no configurado')
+      console.log('?? Groq no configurado')
       return null
     }
 
-    console.log('🧠 Consultando Groq (Agente de Ventas Profesional)...')
+    console.log('?? Consultando Groq (Agente de Ventas Profesional)...')
 
-    // Crear catálogo organizado por categorías
-    const digitales = products.filter(p => p.category === 'DIGITAL' || p.name.toLowerCase().includes('mega') || p.name.toLowerCase().includes('curso'))
+    // Crear cat�logo organizado por categor�as
+    const digitales = products.filter(p => p.category === 'DIGITAL' || p.name.toLowerCase().includes('mega') || p.name.toLowerCase().includes('curso') || p.name.toLowerCase().includes('programaci�n') || p.name.toLowerCase().includes('pack'))
     const fisicos = products.filter(p => p.category !== 'DIGITAL' && !p.name.toLowerCase().includes('mega') && !p.name.toLowerCase().includes('curso'))
     
     const formatProduct = (p: any) => {
-      let info = `• ${p.name} - ${p.price?.toLocaleString('es-CO') || '?'} COP`
+      let info = `� ${p.name} - ${p.price?.toLocaleString('es-CO') || '?'} COP`
       if (p.paymentLinkMercadoPago) info += `\n  - MercadoPago: ${p.paymentLinkMercadoPago}`
       if (p.paymentLinkPayPal) info += `\n  - PayPal: ${p.paymentLinkPayPal}`
       if (p.paymentLinkCustom) info += `\n  - Link: ${p.paymentLinkCustom}`
@@ -159,53 +159,53 @@ async function askGroq(prompt: string, context: string = '', products: any[] = [
 
     const systemPrompt = `Eres un AGENTE DE VENTAS PROFESIONAL de Tecnovariedades D&S (Colombia).
 
-🎯 TU PERSONALIDAD:
-- Amigable, cercano y natural (como hablar con un amigo que sabe de tecnología)
-- Paciente y comprensivo (el cliente puede escribir mal o no saber qué busca)
-- Persuasivo pero NO agresivo (guías hacia la venta sin presionar)
-- Resolutivo (siempre das una respuesta útil, nunca dejas al cliente sin ayuda)
+?? TU PERSONALIDAD:
+- Amigable, cercano y natural (como hablar con un amigo que sabe de tecnolog�a)
+- Paciente y comprensivo (el cliente puede escribir mal o no saber qu� busca)
+- Persuasivo pero NO agresivo (gu�as hacia la venta sin presionar)
+- Resolutivo (siempre das una respuesta �til, nunca dejas al cliente sin ayuda)
 
-🧠 TUS CAPACIDADES:
+?? TUS CAPACIDADES:
 1. ENTENDER: Comprende lo que el cliente quiere aunque escriba mal, use jerga o sea ambiguo
-2. RAZONAR: Analiza qué producto le conviene según lo que dice
-3. DIALOGAR: Mantén conversaciones naturales, haz preguntas para entender mejor
-4. RESOLVER: Responde dudas sobre productos, pagos, entregas, garantías
-5. VENDER: Guía sutilmente hacia la compra destacando beneficios
+2. RAZONAR: Analiza qu� producto le conviene seg�n lo que dice
+3. DIALOGAR: Mant�n conversaciones naturales, haz preguntas para entender mejor
+4. RESOLVER: Responde dudas sobre productos, pagos, entregas, garant�as
+5. VENDER: Gu�a sutilmente hacia la compra destacando beneficios
 
-📦 CATÁLOGO COMPLETO - PRODUCTOS DIGITALES (${digitales.length}):
+?? CAT�LOGO COMPLETO - PRODUCTOS DIGITALES (${digitales.length}):
 ${catalogoDigital || 'Sin productos digitales'}
 
-📦 CATÁLOGO COMPLETO - PRODUCTOS FÍSICOS (${fisicos.length}):
-${catalogoFisico || 'Sin productos físicos'}
+?? CAT�LOGO COMPLETO - PRODUCTOS F�SICOS (${fisicos.length}):
+${catalogoFisico || 'Sin productos f�sicos'}
 
-💳 MÉTODOS DE PAGO:
+?? M�TODOS DE PAGO:
 - Nequi: 3136174267
 - Daviplata: 3136174267  
 - MercadoPago (tarjeta/PSE)
 - PayPal (internacional)
 
-📬 ENTREGA:
-- DIGITALES: Inmediata por Google Drive después del pago
-- FÍSICOS: Contraentrega a toda Colombia o recoger en Cali
+?? ENTREGA:
+- DIGITALES: Inmediata por Google Drive despu�s del pago
+- F�SICOS: Contraentrega a toda Colombia o recoger en Cali
 
-🚨🚨🚨 REGLAS CRÍTICAS - OBLIGATORIAS 🚨🚨🚨:
-1. ❌ PROHIBIDO INVENTAR: NO menciones productos que NO estén en el catálogo de arriba
-2. ❌ NO INVENTES MARCAS: Si no ves "Dell XPS", "Acer Aspire", "HP Pavilion" en el catálogo, NO los menciones
-3. ❌ NO INVENTES PRECIOS: Solo usa precios que aparezcan en el catálogo
-4. ✅ SOLO CATÁLOGO: Cuando el cliente pida "más referencias" o "otros modelos", lista SOLO productos del catálogo
-5. ✅ USA NOMBRES EXACTOS: Copia el nombre del producto tal cual aparece en el catálogo
-6. ✅ Si el cliente pide algo que no existe, di "actualmente tenemos estos modelos:" y lista los del catálogo
-7. ✅ Responde en español colombiano natural
-8. ✅ Usa emojis con moderación (1-3 por mensaje)
-9. ✅ Mantén respuestas concisas (máximo 5 líneas)
+?????? REGLAS CR�TICAS - OBLIGATORIAS ??????:
+1. ? PROHIBIDO INVENTAR: NO menciones productos que NO est�n en el cat�logo de arriba
+2. ? NO INVENTES MARCAS: Si no ves "Dell XPS", "Acer Aspire", "HP Pavilion" en el cat�logo, NO los menciones
+3. ? NO INVENTES PRECIOS: Solo usa precios que aparezcan en el cat�logo
+4. ? SOLO CAT�LOGO: Cuando el cliente pida "m�s referencias" o "otros modelos", lista SOLO productos del cat�logo
+5. ? USA NOMBRES EXACTOS: Copia el nombre del producto tal cual aparece en el cat�logo
+6. ? Si el cliente pide algo que no existe, di "actualmente tenemos estos modelos:" y lista los del cat�logo
+7. ? Responde en espa�ol colombiano natural
+8. ? Usa emojis con moderaci�n (1-3 por mensaje)
+9. ? Mant�n respuestas concisas (m�ximo 5 l�neas)
 
-🎯 ESTRATEGIA DE VENTA (AIDA):
-- Atención: Capta el interés con el beneficio principal
-- Interés: Explica qué incluye y por qué es valioso
-- Deseo: Destaca el ahorro o la oportunidad única
-- Acción: Invita a comprar de forma natural ("¿Te lo aparto?", "¿Quieres los datos de pago?")
+?? ESTRATEGIA DE VENTA (AIDA):
+- Atenci�n: Capta el inter�s con el beneficio principal
+- Inter�s: Explica qu� incluye y por qu� es valioso
+- Deseo: Destaca el ahorro o la oportunidad �nica
+- Acci�n: Invita a comprar de forma natural ("�Te lo aparto?", "�Quieres los datos de pago?")
 
-${context ? `\n💬 CONVERSACIÓN PREVIA:\n${context}` : ''}`
+${context ? `\n?? CONVERSACI�N PREVIA:\n${context}` : ''}`
 
     const completion = await client.chat.completions.create({
       model: 'llama-3.1-8b-instant',
@@ -213,30 +213,30 @@ ${context ? `\n💬 CONVERSACIÓN PREVIA:\n${context}` : ''}`
         { role: 'system', content: systemPrompt },
         { role: 'user', content: prompt }
       ],
-      temperature: 0.3, // Más bajo para evitar que invente
+      temperature: 0.3, // M�s bajo para evitar que invente
       max_tokens: 400
     })
 
     const answer = completion.choices[0]?.message?.content?.trim()
     
     if (answer && answer.length > 10) {
-      console.log(`✅ Groq respondió: ${answer.substring(0, 50)}...`)
+      console.log(`? Groq respondi�: ${answer.substring(0, 50)}...`)
       return answer
     }
 
     return null
   } catch (error: any) {
-    console.log(`⚠️ Error Groq: ${error.message}`)
+    console.log(`?? Error Groq: ${error.message}`)
     return null
   }
 }
 
 /**
- * 🧠 BÚSQUEDA INTELIGENTE CON IA
- * Cuando la búsqueda local falla, usa IA para:
- * 1. Entender la intención del usuario (aunque escriba mal)
- * 2. Buscar el producto más relevante en el catálogo
- * 3. Responder con información REAL de la BD
+ * ?? B�SQUEDA INTELIGENTE CON IA
+ * Cuando la b�squeda local falla, usa IA para:
+ * 1. Entender la intenci�n del usuario (aunque escriba mal)
+ * 2. Buscar el producto m�s relevante en el cat�logo
+ * 3. Responder con informaci�n REAL de la BD
  */
 async function searchProductWithAI(
   query: string,
@@ -248,7 +248,7 @@ async function searchProductWithAI(
       return { product: null, response: null }
     }
 
-    console.log(`🧠 Búsqueda inteligente IA para: "${query}"`)
+    console.log(`?? B�squeda inteligente IA para: "${query}"`)
 
     // Crear lista de productos para que la IA busque
     const productList = products.map((p, i) => {
@@ -258,45 +258,46 @@ async function searchProductWithAI(
 
     const systemPrompt = `Eres un buscador de productos inteligente para una tienda colombiana.
 
-TAREA: Analiza lo que el cliente busca y encuentra el producto más relevante del catálogo.
+TAREA: Analiza lo que el cliente busca y encuentra el producto m�s relevante del cat�logo.
 
-CATÁLOGO (${products.length} productos):
+CAT�LOGO (${products.length} productos):
 ${productList}
 
-INSTRUCCIONES CRÍTICAS:
-1. Entiende la INTENCIÓN del cliente aunque escriba mal (typos, errores ortográficos)
-2. Busca coincidencias por: nombre, tema, categoría, palabras clave
-3. Si encuentras un producto relevante, responde SOLO con el número
+INSTRUCCIONES CR�TICAS:
+1. Entiende la INTENCI�N del cliente aunque escriba mal (typos, errores ortogr�ficos)
+2. Busca coincidencias por: nombre, tema, categor�a, palabras clave
+3. Si encuentras un producto relevante, responde SOLO con el n�mero
 4. Si no hay coincidencia clara, responde "0"
 
 CORRECCIONES DE TYPOS COMUNES:
-- "megapak", "megapack", "mega pak" → buscar "Mega Pack"
-- "goldem", "golder", "goldenn" → buscar "Golden"
-- "pino", "pian" → buscar "Piano"
-- "exel", "exsel", "ecxel" → buscar "Excel"
-- "ingles", "inglés", "englis" → buscar "Inglés"
-- "tradign", "tradin", "traiding" → buscar "Trading"
-- "diseño", "diseno", "disenio" → buscar "Diseño"
-- "programasion", "programacion" → buscar "Programación" o "Hacking"
+- "megapak", "megapack", "mega pak" ? buscar "Mega Pack"
+- "goldem", "golder", "goldenn" ? buscar "Golden"
+- "pino", "pian" ? buscar "Piano"
+- "exel", "exsel", "ecxel" ? buscar "Excel"
+- "ingles", "ingl�s", "englis" ? buscar "Ingl�s"
+- "tradign", "tradin", "traiding" ? buscar "Trading"
+- "dise�o", "diseno", "disenio" ? buscar "Dise�o"
+- "programasion", "programacion" ? buscar "Programaci�n", "Desarrollo", "Software" o "Pack"
 
-EJEMPLOS DE BÚSQUEDA:
-- "megapak goldem" → buscar producto con "Golden" en el nombre
-- "curso de pino" → buscar producto con "Piano" en el nombre
-- "quiero aprender ingles" → buscar producto con "Inglés" en el nombre
-- "algo de diseño grafico" → buscar producto con "Diseño" en el nombre
-- "tradign forex" → buscar producto con "Trading" en el nombre
-- "exel avanzado" → buscar producto con "Excel" en el nombre
-- "resina epoxica" → buscar producto con "Resina" en el nombre
+EJEMPLOS DE B�SQUEDA:
+- "megapak goldem" ? buscar producto con "Golden" en el nombre
+- "curso de pino" ? buscar producto con "Piano" en el nombre
+- "quiero aprender ingles" ? buscar producto con "Ingl�s" en el nombre
+- "curso de programacion" ? buscar producto con "Programaci�n", "Desarrollo" o "Mega Pack"
+- "algo de dise�o grafico" ? buscar producto con "Dise�o" en el nombre
+- "tradign forex" ? buscar producto con "Trading" en el nombre
+- "exel avanzado" ? buscar producto con "Excel" en el nombre
+- "resina epoxica" ? buscar producto con "Resina" en el nombre
 
-INTENCIONES AMBIGUAS - Sugiere el producto más relevante:
-- "quiero ganar dinero" → Trading o Marketing
-- "necesito para mi negocio" → Marketing, Excel o Diseño
-- "algo para aprender música" → Piano
-- "mejorar mi trabajo" → Excel o Office
-- "emprender" → Marketing o Trading
-- "trabajar desde casa" → Diseño, Marketing o Excel
+INTENCIONES AMBIGUAS - Sugiere el producto m�s relevante:
+- "quiero ganar dinero" ? Trading o Marketing
+- "necesito para mi negocio" ? Marketing, Excel o Dise�o
+- "algo para aprender m�sica" ? Piano
+- "mejorar mi trabajo" ? Excel o Office
+- "emprender" ? Marketing o Trading
+- "trabajar desde casa" ? Dise�o, Marketing o Excel
 
-Responde SOLO con el número del producto (1, 2, 3...) o "0" si no hay coincidencia.`
+Responde SOLO con el n�mero del producto (1, 2, 3...) o "0" si no hay coincidencia.`
 
     const completion = await client.chat.completions.create({
       model: 'llama-3.1-8b-instant',
@@ -304,7 +305,7 @@ Responde SOLO con el número del producto (1, 2, 3...) o "0" si no hay coinciden
         { role: 'system', content: systemPrompt },
         { role: 'user', content: `Cliente busca: "${query}"` }
       ],
-      temperature: 0.1, // Más determinístico para búsquedas
+      temperature: 0.1, // M�s determin�stico para b�squedas
       max_tokens: 10
     })
 
@@ -313,43 +314,43 @@ Responde SOLO con el número del producto (1, 2, 3...) o "0" si no hay coinciden
 
     if (productIndex >= 0 && productIndex < products.length) {
       const foundProduct = products[productIndex]
-      console.log(`✅ IA encontró: ${foundProduct.name}`)
+      console.log(`? IA encontr�: ${foundProduct.name}`)
       return { product: foundProduct, response: null }
     }
 
-    console.log(`❌ IA no encontró producto específico`)
+    console.log(`? IA no encontr� producto espec�fico`)
     return { product: null, response: null }
   } catch (error: any) {
-    console.log(`⚠️ Error en búsqueda IA: ${error.message}`)
+    console.log(`?? Error en b�squeda IA: ${error.message}`)
     return { product: null, response: null }
   }
 }
 
 /**
- * Sistema híbrido: Ollama primero, Groq si falla
- * NUNCA rebota al menú - siempre intenta resolver
+ * Sistema h�brido: Ollama primero, Groq si falla
+ * NUNCA rebota al men� - siempre intenta resolver
  */
 async function getHybridResponse(
   message: string, 
   context: string = '', 
   products: any[] = []
 ): Promise<string> {
-  // 1. Intentar con Ollama (local, rápido)
+  // 1. Intentar con Ollama (local, r�pido)
   const ollamaResponse = await askOllama(message, context)
   if (ollamaResponse) {
     return ollamaResponse
   }
 
-  // 2. Si Ollama falla, usar Groq (análisis profundo)
+  // 2. Si Ollama falla, usar Groq (an�lisis profundo)
   const groqResponse = await askGroq(message, context, products)
   if (groqResponse) {
     return groqResponse
   }
 
-  // 3. Fallback inteligente (nunca menú genérico)
-  return `¡Claro! 😊 Cuéntame más sobre lo que buscas y te ayudo a encontrar la mejor opción.
+  // 3. Fallback inteligente (nunca men� gen�rico)
+  return `�Claro! ?? Cu�ntame m�s sobre lo que buscas y te ayudo a encontrar la mejor opci�n.
 
-¿Es para uso personal, trabajo o estudio? Así te puedo recomendar algo que se ajuste a tus necesidades 🎯`
+�Es para uso personal, trabajo o estudio? As� te puedo recomendar algo que se ajuste a tus necesidades ??`
 }
 
 interface ConversationContext {
@@ -387,19 +388,19 @@ export class SalesAgentSimple {
   async loadProducts() {
     try {
       if (this.userId) {
-        console.log(`📦 Cargando productos para usuario: ${this.userId}`)
+        console.log(`?? Cargando productos para usuario: ${this.userId}`)
         this.products = await db.product.findMany({
           where: { userId: this.userId, status: 'AVAILABLE' }
         })
       } else {
-        console.log('📦 Cargando todos los productos disponibles (sin filtro de usuario)')
+        console.log('?? Cargando todos los productos disponibles (sin filtro de usuario)')
         this.products = await db.product.findMany({
           where: { status: 'AVAILABLE' }
         })
       }
-      console.log(`✅ ${this.products.length} productos cargados`)
+      console.log(`? ${this.products.length} productos cargados`)
     } catch (error) {
-      console.error('❌ Error cargando productos:', error)
+      console.error('? Error cargando productos:', error)
     }
   }
 
@@ -411,7 +412,7 @@ export class SalesAgentSimple {
    // ELIMINADO: setUserId ya no es necesario con el constructor multi-tenant
 
   /**
-   * 🎭 HUMANIZACI\u00d3N: Tono emocional basado en etapa de conversaci\u00f3n
+   * ?? HUMANIZACI\u00d3N: Tono emocional basado en etapa de conversaci\u00f3n
    */
   private getEmotionalTone(stage: string): {
     greeting: string
@@ -420,9 +421,9 @@ export class SalesAgentSimple {
   } {
     const tones = {
       greeting: {
-        awareness: ['¡Hey!', '\u00a1Qu\u00e9 tal!', '\u00a1Hola!', '\u00a1Buenas!'],
+        awareness: ['�Hey!', '\u00a1Qu\u00e9 tal!', '\u00a1Hola!', '\u00a1Buenas!'],
         interest: ['Me encanta que preguntes', 'Qu\u00e9 bueno que te interesa', 'Excelente pregunta', 'Me alegra que preguntes'],
-        consideration: ['Perfecto', 'Genial', 'S\u00faper', 'Buenísimo'],
+        consideration: ['Perfecto', 'Genial', 'S\u00faper', 'Buen�simo'],
         action: ['\u00a1Vamos a ello!', '\u00a1Hag\u00e1moslo!', '\u00a1Dale!', '\u00a1Listo!']
       },
       enthusiasm: {
@@ -465,7 +466,7 @@ export class SalesAgentSimple {
 
   async processMessage(message: string, userPhone: string, context?: any): Promise<ProcessedResponse> {
     try {
-      console.log(`📨 Procesando: "${message}"`)
+      console.log(`?? Procesando: "${message}"`)
 
       // Multi-tenant: Si hay contexto con userId, establecerlo
       if (context?.userId && context.userId !== this.userId) {
@@ -473,7 +474,7 @@ export class SalesAgentSimple {
         await this.loadProducts() // Recargar productos del usuario
       }
 
-      // Recargar productos si están vacíos
+      // Recargar productos si est�n vac�os
       if (this.products.length === 0) {
         await this.loadProducts()
       }
@@ -490,48 +491,56 @@ export class SalesAgentSimple {
       const userCtx = this.conversations.get(userPhone)!
       userCtx.history.push({ role: 'user', content: message })
 
-      // 🧠 IA RAZONAMIENTO: Analizar intención y producto con Ollama/Groq
+      // ?? OPTIMIZACI�N: Prioridad absoluta a Regex para velocidad
+      // Si detectamos intenci�n clara por reglas locales, SALTAMOS la IA
+      const regexIntent = this.detectIntent(message)
       let aiDecision: AIDecision
-      try {
-        const productsSafe = this.products || []
-        aiDecision = await analyzeWithAI(message, userCtx.history, productsSafe)
-        console.log(`🧠 IA Decide: ${aiDecision.action} | Razón: ${aiDecision.reasoning}`)
-      } catch (aiError) {
-        console.error('❌ Error crítico en analyzeWithAI:', aiError)
-        // Fallback seguro
+
+      if (regexIntent !== 'general_inquiry') {
+        console.log(`?? Regex detect�: ${regexIntent} (Saltando an�lisis AI)`)
         aiDecision = {
-          action: 'general_inquiry',
+          action: regexIntent,
           selectedProductIndex: null,
-          reasoning: 'Error interno de IA, fallback a general',
+          reasoning: 'Detectado por Regex (High Speed)',
           emotionalTone: 'neutral',
           additionalContext: ''
         }
+      } else {
+        // ?? IA RAZONAMIENTO: Solo si regex no detect� nada claro
+        try {
+          const productsSafe = this.products || []
+          aiDecision = await analyzeWithAI(message, userCtx.history, productsSafe)
+          console.log(`?? IA Decide: ${aiDecision.action} | Raz�n: ${aiDecision.reasoning}`)
+        } catch (aiError) {
+          console.error('? Error cr�tico en analyzeWithAI:', aiError)
+          // Fallback seguro
+          aiDecision = {
+            action: 'general_inquiry',
+            selectedProductIndex: null,
+            reasoning: 'Error interno de IA, fallback a general',
+            emotionalTone: 'neutral',
+            additionalContext: ''
+          }
+        }
       }
+
+
       
-      // Asignar producto si la IA lo identificó
+      // Asignar producto si la IA lo identific�
       if (aiDecision.selectedProductIndex !== null && this.products[aiDecision.selectedProductIndex]) {
         userCtx.lastProduct = this.products[aiDecision.selectedProductIndex]
-        console.log(`🎯 IA identificó producto: ${userCtx.lastProduct.name}`)
+        console.log(`?? IA identific� producto: ${userCtx.lastProduct.name}`)
       }
 
-      // Prioridad absoluta a la intención detectada por regex/reglas locales
-      // Esto evita que la IA divague cuando hay un comando o palabra clave clara
-      const regexIntent = this.detectIntent(message)
       let intent = aiDecision.action as any
-      
-      if (regexIntent !== 'general_inquiry') {
-        console.log(`🎯 Override de intención: ${aiDecision.action} -> ${regexIntent}`)
-        intent = regexIntent
-      }
-
-      console.log(`🎯 Intención final: ${intent}`)
-      console.log(`📦 Producto en contexto: ${userCtx.lastProduct?.name || 'ninguno'}`)
+      console.log(`?? Intenci�n final: ${intent}`)
+      console.log(`?? Producto en contexto: ${userCtx.lastProduct?.name || 'ninguno'}`)
 
       // Guardar contexto adicional para personalizar templates
       // REMOVIDO: aiPrefix filtrado del output para evitar fugas de razonamiento
       // const aiPrefix = aiDecision.additionalContext ? aiDecision.additionalContext + '\n\n' : ''
 
-      // 🆕 RESPUESTA A PREGUNTAS LIBRES/IA (Preguntas específicas que no son flujo directo)
+      // ?? RESPUESTA A PREGUNTAS LIBRES/IA (Preguntas espec�ficas que no son flujo directo)
       // Si hay producto, ya fue manejado por el bloque contextual arriba
       if (intent === 'answer_question' && !userCtx.lastProduct) {
         const response = await this.generateAIAnswer(message, userCtx.lastProduct, userCtx.history)
@@ -546,9 +555,9 @@ export class SalesAgentSimple {
         }
       }
 
-      // Si pide más info y NO tiene producto (fallo de contexto o consulta general)
+      // Si pide m�s info y NO tiene producto (fallo de contexto o consulta general)
       if (intent === 'more_info' && !userCtx.lastProduct) {
-        console.log('ℹ️ Cliente pide info pero no hay producto en contexto')
+        console.log('?? Cliente pide info pero no hay producto en contexto')
         const response = await this.getGenericResponseWithAI(message, userCtx.history)
         userCtx.history.push({ role: 'assistant', content: response })
         return {
@@ -561,7 +570,7 @@ export class SalesAgentSimple {
         }
       }
 
-      // Si selecciona método de pago y tiene producto
+      // Si selecciona m�todo de pago y tiene producto
       if (intent === 'payment_method_selected' && userCtx.lastProduct) {
         userCtx.stage = 'closing'
         const response = await this.generatePaymentResponse(userCtx.lastProduct)
@@ -591,10 +600,10 @@ export class SalesAgentSimple {
         }
       }
 
-      // 🆕 Si pide más opciones/referencias y tiene producto en contexto
+      // ?? Si pide m�s opciones/referencias y tiene producto en contexto
       if (intent === 'more_options' && userCtx.lastProduct) {
-        console.log(`📋 Cliente pide más opciones de: ${userCtx.lastProduct.name}`)
-        // Detectar categoría del producto actual
+        console.log(`?? Cliente pide m�s opciones de: ${userCtx.lastProduct.name}`)
+        // Detectar categor�a del producto actual
         const currentProduct = userCtx.lastProduct
         const currentName = currentProduct.name.toLowerCase()
         
@@ -602,11 +611,11 @@ export class SalesAgentSimple {
         let productosRelacionados: any[] = []
         
         // Detectar tipo de producto y buscar similares
-        if (currentName.includes('portátil') || currentName.includes('portatil') || currentName.includes('laptop') || currentName.includes('notebook') || currentName.includes('vivobook') || currentName.includes('macbook')) {
-          categoria = 'portátiles'
+        if (currentName.includes('port�til') || currentName.includes('portatil') || currentName.includes('laptop') || currentName.includes('notebook') || currentName.includes('vivobook') || currentName.includes('macbook')) {
+          categoria = 'port�tiles'
           productosRelacionados = this.products.filter(p => {
             const name = p.name.toLowerCase()
-            return (name.includes('portátil') || name.includes('portatil') || name.includes('laptop') || name.includes('vivobook') || name.includes('macbook')) && p.id !== currentProduct.id
+            return (name.includes('port�til') || name.includes('portatil') || name.includes('laptop') || name.includes('vivobook') || name.includes('macbook')) && p.id !== currentProduct.id
           })
         } else if (currentName.includes('impresora')) {
           categoria = 'impresoras'
@@ -632,7 +641,7 @@ export class SalesAgentSimple {
           userCtx.lastProduct = null // Limpiar producto actual para que pueda elegir
           userCtx.stage = 'discovery'
           
-          const response = this.generateCategoryResponse(productosOrdenados, categoria, `más ${categoria}`)
+          const response = this.generateCategoryResponse(productosOrdenados, categoria, `m�s ${categoria}`)
           userCtx.history.push({ role: 'assistant', content: response })
           return {
             text: response,
@@ -644,15 +653,14 @@ export class SalesAgentSimple {
         }
       }
 
-      // Verificar selección por número
+      // Verificar selecci�n por n�mero
       const selectedByNumber = this.detectNumberSelection(message, userCtx.lastOptions)
       if (selectedByNumber) {
-        console.log(`✅ Seleccionado por número: ${selectedByNumber.name}`)
+        console.log(`? Seleccionado por n�mero: ${selectedByNumber.name}`)
         userCtx.lastProduct = selectedByNumber
         userCtx.lastOptions = []
         userCtx.stage = 'presentation'
-        const baseResponse = this.generateProductResponse(selectedByNumber)
-        const response = aiPrefix + baseResponse
+        const response = this.generateProductResponse(selectedByNumber)
         const imageUrl = this.getProductImage(selectedByNumber)
         userCtx.history.push({ role: 'assistant', content: response })
         return {
@@ -666,26 +674,25 @@ export class SalesAgentSimple {
         }
       }
 
-      // Buscar producto específico
+      // Buscar producto espec�fico
       let product = this.buscarProducto(message)
       
-      // 🧠 Si búsqueda local falla, usar IA para buscar (entiende typos y errores)
+      // ?? Si b�squeda local falla, usar IA para buscar (entiende typos y errores)
       if (!product && this.products.length > 0) {
-        console.log(`🧠 Búsqueda local falló, intentando con IA...`)
+        console.log(`?? B�squeda local fall�, intentando con IA...`)
         const aiSearch = await searchProductWithAI(message, this.products)
         if (aiSearch.product) {
           product = aiSearch.product
-          console.log(`✅ IA encontró producto: ${product.name}`)
+          console.log(`? IA encontr� producto: ${product.name}`)
         }
       }
       
       if (product) {
-        console.log(`✅ Producto específico encontrado: ${product.name}`)
+        console.log(`? Producto espec�fico encontrado: ${product.name}`)
         userCtx.lastProduct = product
         userCtx.lastOptions = []
         userCtx.stage = 'presentation'
-        const baseResponse = this.generateProductResponse(product)
-        const response = aiPrefix + baseResponse
+        const response = this.generateProductResponse(product)
         const imageUrl = this.getProductImage(product)
         userCtx.history.push({ role: 'assistant', content: response })
         return {
@@ -699,16 +706,15 @@ export class SalesAgentSimple {
         }
       }
 
-      // Buscar por categoría - SOLO si NO hay producto en contexto
+      // Buscar por categor�a - SOLO si NO hay producto en contexto
       if ((intent === 'general_inquiry' || intent === 'greeting') && !userCtx.lastProduct) {
         const { productos, categoria } = this.buscarProductosPorCategoria(message)
         if (productos.length > 1) {
-          console.log(`📂 Categoría: ${categoria}, Productos: ${productos.length}`)
+          console.log(`?? Categor�a: ${categoria}, Productos: ${productos.length}`)
           const productosOrdenados = productos.sort((a, b) => a.price - b.price)
           userCtx.lastOptions = productosOrdenados.slice(0, 4)
           userCtx.stage = 'discovery'
-          const baseResponse = this.generateCategoryResponse(productos, categoria || 'productos', message)
-          const response = aiPrefix + baseResponse
+          const response = this.generateCategoryResponse(productos, categoria || 'productos', message)
           userCtx.history.push({ role: 'assistant', content: response })
           return {
             text: response,
@@ -721,8 +727,7 @@ export class SalesAgentSimple {
           userCtx.lastProduct = productos[0]
           userCtx.lastOptions = []
           userCtx.stage = 'presentation'
-          const baseResponse = this.generateProductResponse(productos[0])
-          const response = aiPrefix + baseResponse
+          const response = this.generateProductResponse(productos[0])
           userCtx.history.push({ role: 'assistant', content: response })
           return {
             text: response,
@@ -735,10 +740,10 @@ export class SalesAgentSimple {
         }
       }
 
-      // 🧠 Si hay producto en contexto y es pregunta general o técnica, usar IA con contexto del producto
-      // Esto evita que la IA divague con respuestas genéricas cuando ya estamos hablando de un producto
+      // ?? Si hay producto en contexto y es pregunta general o t�cnica, usar IA con contexto del producto
+      // Esto evita que la IA divague con respuestas gen�ricas cuando ya estamos hablando de un producto
       if ((intent === 'general_inquiry' || intent === 'answer_question' || intent === 'more_info') && userCtx.lastProduct) {
-        console.log(`🧠 Respuesta contextual sobre producto: ${userCtx.lastProduct.name}`)
+        console.log(`?? Respuesta contextual sobre producto: ${userCtx.lastProduct.name}`)
         const contextualResponse = await this.getProductContextResponse(message, userCtx.lastProduct, userCtx.history)
         userCtx.history.push({ role: 'assistant', content: contextualResponse })
         return {
@@ -751,12 +756,12 @@ export class SalesAgentSimple {
         }
       }
 
-      // Respuestas según intención
+      // Respuestas seg�n intenci�n
       let response: string
 
-      // 🆕 INTERÉS FUTURO (te aviso, luego te digo)
+      // ?? INTER�S FUTURO (te aviso, luego te digo)
       if (intent === 'future_interest') {
-        response = `¡Dale, perfecto! 😉 Quedo pendiente.\n\nCualquier duda que tengas cuando lo pienses, por aquí estaré. ¡Feliz día! 👋`
+        response = `�Dale, perfecto! ?? Quedo pendiente.\n\nCualquier duda que tengas cuando lo pienses, por aqu� estar�. �Feliz d�a! ??`
         userCtx.history.push({ role: 'assistant', content: response })
         return {
           text: response,
@@ -768,7 +773,7 @@ export class SalesAgentSimple {
         }
       }
 
-      // 🆕 OBJECIÓN DE DESCONFIANZA - Cliente duda de la legitimidad
+      // ?? OBJECI�N DE DESCONFIANZA - Cliente duda de la legitimidad
       if (intent === 'distrust_objection' && userCtx.lastProduct) {
         response = this.handleDistrustObjection(message, userCtx.lastProduct)
         userCtx.history.push({ role: 'assistant', content: response })
@@ -782,7 +787,7 @@ export class SalesAgentSimple {
         }
       }
 
-      // 🆕 FAQ de productos digitales (cursos, megapacks)
+      // ?? FAQ de productos digitales (cursos, megapacks)
       if (intent === 'digital_product_faq' && userCtx.lastProduct) {
         response = this.handleDigitalProductFAQ(message, userCtx.lastProduct)
         userCtx.history.push({ role: 'assistant', content: response })
@@ -796,7 +801,7 @@ export class SalesAgentSimple {
         }
       }
 
-      // 🆕 OBJECIÓN DE PRECIO - Cliente dice que está caro, no tiene plata, pide descuento
+      // ?? OBJECI�N DE PRECIO - Cliente dice que est� caro, no tiene plata, pide descuento
       if (intent === 'price_objection' && userCtx.lastProduct) {
         response = this.handlePriceObjection(message, userCtx.lastProduct)
         userCtx.history.push({ role: 'assistant', content: response })
@@ -815,14 +820,14 @@ export class SalesAgentSimple {
       } else if (intent === 'payment_inquiry' && userCtx.lastProduct) {
         response = await this.generatePaymentResponse(userCtx.lastProduct)
       } else if (intent === 'will_send_receipt') {
-        // Cliente dice que enviará el comprobante - usar IA para responder naturalmente
+        // Cliente dice que enviar� el comprobante - usar IA para responder naturalmente
         response = await this.handleWillSendReceipt(userCtx.lastProduct, message, userCtx.history)
       } else if (intent === 'payment_receipt') {
-        // Cliente envía comprobante de pago - entregar link de Google Drive
+        // Cliente env�a comprobante de pago - entregar link de Google Drive
         response = await this.handlePaymentReceipt(userCtx.lastProduct, userPhone)
       } else if (intent === 'confirmation' && !userCtx.lastProduct) {
         // Cliente quiere comprar pero no hay producto en contexto
-        response = `¡Genial que quieras comprar! 🎉\n\n¿Cuál producto te interesa? Dime el nombre o número y te paso los datos de pago 💳`
+        response = `�Genial que quieras comprar! ??\n\n�Cu�l producto te interesa? Dime el nombre o n�mero y te paso los datos de pago ??`
       } else if (intent === 'greeting') {
         response = await this.getGreetingResponse()
       } else if (intent === 'contact_request') {
@@ -830,7 +835,7 @@ export class SalesAgentSimple {
       } else if (intent === 'future_interest') {
         response = this.generateFutureInterestResponse(userCtx.lastProduct)
       } else if (intent === 'delivery_method_response' && userCtx.lastProduct) {
-        // Cliente respondió método de entrega - proceder con pago
+        // Cliente respondi� m�todo de entrega - proceder con pago
         userCtx.stage = 'action'
         response = await this.generatePaymentResponse(userCtx.lastProduct)
       } else if (intent === 'farewell') {
@@ -842,9 +847,9 @@ export class SalesAgentSimple {
           history: []
         })
       } else {
-        // 🤖 SISTEMA HÍBRIDO: Usar IA para resolver cualquier consulta
-        // NUNCA rebota al menú - siempre intenta resolver con Ollama/Groq
-        console.log('🤖 Usando sistema híbrido para resolver consulta...')
+        // ?? SISTEMA H�BRIDO: Usar IA para resolver cualquier consulta
+        // NUNCA rebota al men� - siempre intenta resolver con Ollama/Groq
+        console.log('?? Usando sistema h�brido para resolver consulta...')
         response = await this.getGenericResponseWithAI(message, userCtx.history)
       }
 
@@ -858,9 +863,9 @@ export class SalesAgentSimple {
         photos: null
       }
     } catch (error) {
-      console.error('❌ Error procesando mensaje:', error)
+      console.error('? Error procesando mensaje:', error)
       return {
-        text: '🤖 Disculpa, tuve un problema. ¿Podrías repetir? 🙏',
+        text: '?? Disculpa, tuve un problema. �Podr�as repetir? ??',
         intent: 'error',
         salesStage: 'awareness',
         sendPhotos: false,
@@ -872,58 +877,65 @@ export class SalesAgentSimple {
   private detectIntent(message: string): string {
     const msg = message.toLowerCase().trim()
 
-    // 🆕 OBJECIÓN DE DESCONFIANZA - Cliente expresa dudas sobre legitimidad
-    // Detecta: "es estafa", "piden más plata", "no mandan nada", "tomada de pelo", etc.
-    if (/(estafa|enga[ñn]o|fraude|mentira|falso|fake|robo|timo|tomad[ao]\s*de\s*pelo|piden\s*(más|mas)\s*plata|cobran\s*(más|mas)|no\s*(mandan|envían|envian|entregan)|no\s*(llega|llegó)|nunca\s*(llega|mandan|envían)|despu[eé]s\s*piden|luego\s*piden|y\s*despu[eé]s|no\s*confío|no\s*confio|no\s*creo|ser[aá]\s*(verdad|cierto|real)|es\s*verdad|es\s*cierto|es\s*real|seguro\s*que|de\s*verdad|en\s*serio|no\s*ser[aá]\s*que|c[oó]mo\s*s[eé]\s*que)/i.test(msg)) {
+    // ?? OBJECI�N DE DESCONFIANZA - Cliente expresa dudas sobre legitimidad
+    // Detecta: "es estafa", "piden m�s plata", "no mandan nada", "tomada de pelo", etc.
+    if (/(estafa|enga[�n]o|fraude|mentira|falso|fake|robo|timo|tomad[ao]\s*de\s*pelo|piden\s*(m�s|mas)\s*plata|cobran\s*(m�s|mas)|no\s*(mandan|env�an|envian|entregan)|no\s*(llega|lleg�)|nunca\s*(llega|mandan|env�an)|despu[e�]s\s*piden|luego\s*piden|y\s*despu[e�]s|no\s*conf�o|no\s*confio|no\s*creo|ser[a�]\s*(verdad|cierto|real)|es\s*verdad|es\s*cierto|es\s*real|seguro\s*que|de\s*verdad|en\s*serio|no\s*ser[a�]\s*que|c[o�]mo\s*s[e�]\s*que)/i.test(msg)) {
       return 'distrust_objection'
     }
 
-    // 🆕 PREGUNTAS FAQ SOBRE PRODUCTOS DIGITALES (cursos, megapacks)
+    // ?? PREGUNTAS FAQ SOBRE PRODUCTOS DIGITALES (cursos, megapacks)
     // Detecta preguntas comunes sobre acceso, descarga, pagos adicionales, etc.
-    if (/(es\s*(un\s*)?(curso|pack|megapack)\s*(completo|full)|curso\s*completo|todo\s*incluido|hay\s*(que\s*)?pagar\s*(algo\s*)?(más|mas|extra|adicional)|pago\s*(único|unico|una\s*vez)|sin\s*(pagos?\s*)?(adicionales?|extras?)|puedo\s*(descargarlo|bajarlo|guardarlo)|se\s*(puede\s*)?(descargar|bajar|guardar)|verlo\s*(en\s*)?(línea|linea|online)|acceso\s*(de\s*por\s*vida|permanente|ilimitado)|cuánto\s*tiempo\s*(tengo|dura)\s*(acceso)?|expira|caduca|vence|es\s*para\s*siempre|acceso\s*inmediato|entrega\s*inmediata|cómo\s*(lo\s*)?(recibo|obtengo|accedo)|por\s*dónde\s*(lo\s*)?(envían|mandan|recibo)|google\s*drive|link\s*de\s*(descarga|acceso))/i.test(msg)) {
+    if (/(es\s*(un\s*)?(curso|pack|megapack)\s*(completo|full)|curso\s*completo|todo\s*incluido|hay\s*(que\s*)?pagar\s*(algo\s*)?(m�s|mas|extra|adicional)|pago\s*(�nico|unico|una\s*vez)|sin\s*(pagos?\s*)?(adicionales?|extras?)|puedo\s*(descargarlo|bajarlo|guardarlo)|se\s*(puede\s*)?(descargar|bajar|guardar)|verlo\s*(en\s*)?(l�nea|linea|online)|acceso\s*(de\s*por\s*vida|permanente|ilimitado)|cu�nto\s*tiempo\s*(tengo|dura)\s*(acceso)?|expira|caduca|vence|es\s*para\s*siempre|acceso\s*inmediato|entrega\s*inmediata|c�mo\s*(lo\s*)?(recibo|obtengo|accedo)|por\s*d�nde\s*(lo\s*)?(env�an|mandan|recibo)|google\s*drive|link\s*de\s*(descarga|acceso))/i.test(msg)) {
       return 'digital_product_faq'
     }
 
     // PREGUNTA DE SEGUIMIENTO SOBRE PRODUCTO ACTUAL
-    // Detecta: "y cómo viene", "cómo es", "qué trae", "en qué viene", "cómo lo entregan", etc.
-    if (/(^y\s|^entonces\s|^pero\s|^en\s|^con\s|^que\s)?(c[oó]mo\s*(viene|es|funciona|se\s*entrega|lo\s*entregan)|qu[eé]\s*(trae|incluye|tiene|contiene|viene)|cu[aá]nto\s*(dura|pesa|mide)|de qu[eé]\s*(trata|va))/i.test(msg)) {
+    // Detecta: "y c�mo viene", "c�mo es", "qu� trae", "en qu� viene", "c�mo lo entregan", etc.
+    if (/(^y\s|^entonces\s|^pero\s|^en\s|^con\s|^que\s)?(c[o�]mo\s*(viene|es|funciona|se\s*entrega|lo\s*entregan)|qu[e�]\s*(trae|incluye|tiene|contiene|viene)|cu[a�]nto\s*(dura|pesa|mide)|de qu[e�]\s*(trata|va))/i.test(msg)) {
       return 'more_info'
     }
 
-    // MÁS INFORMACIÓN
-    if (/(más info|mas info|más información|mas informacion|cuéntame más|cuentame mas|qué incluye|que incluye|qué trae|que trae|para qué sirve|para que sirve|qué aprendo|que aprendo|beneficios|ventajas|detalles|explícame|explicame|dime más|dime mas|más detalles|mas detalles|quiero saber más|quiero saber mas|características|caracteristicas|especificaciones|specs)/i.test(msg)) {
+    // M�S INFORMACI�N
+    if (/(m�s info|mas info|m�s informaci�n|mas informacion|cu�ntame m�s|cuentame mas|qu� incluye|que incluye|qu� trae|que trae|para qu� sirve|para que sirve|qu� aprendo|que aprendo|beneficios|ventajas|detalles|expl�came|explicame|dime m�s|dime mas|m�s detalles|mas detalles|quiero saber m�s|quiero saber mas|caracter�sticas|caracteristicas|especificaciones|specs)/i.test(msg)) {
       return 'more_info'
     }
 
-    // 🆕 MÁS OPCIONES / OTRAS REFERENCIAS (cuando ya mostró un producto)
-    if (/(más referencias|mas referencias|otras referencias|otros modelos|otras opciones|más opciones|mas opciones|qué más tienes|que mas tienes|tienes más|tienes mas|hay más|hay mas|otros productos|otras marcas|ver más|ver mas|mostrar más|mostrar mas|dame más|dame mas|información sobre los demás|informacion sobre los demas|los demás|los demas|cuáles más|cuales mas|qué otros|que otros)/i.test(msg)) {
+    // ?? M�S OPCIONES / OTRAS REFERENCIAS (cuando ya mostr� un producto)
+    if (/(m�s referencias|mas referencias|otras referencias|otros modelos|otras opciones|m�s opciones|mas opciones|qu� m�s tienes|que mas tienes|tienes m�s|tienes mas|hay m�s|hay mas|otros productos|otras marcas|ver m�s|ver mas|mostrar m�s|mostrar mas|dame m�s|dame mas|informaci�n sobre los dem�s|informacion sobre los demas|los dem�s|los demas|cu�les m�s|cuales mas|qu� otros|que otros)/i.test(msg)) {
       return 'more_options'
     }
 
-    // SELECCIÓN DE MÉTODO DE PAGO
-    // Detecta cuando el cliente elige un método específico: Nequi, Daviplata, Transferencia, Tarjeta, PayPal, etc.
-    if (/(nequi|daviplata|transferencia|bancaria|banco|tarjeta|credito|crédito|debito|débito|mercadopago|mercado\s*pago|paypal|pay\s*pal|efectivo|pse|pago|pagar|forma\s*de\s*pago|datos\s*de\s*pago|c[oó]mo\s*pago)/i.test(msg)) {
+    // SELECCI�N DE M�TODO DE PAGO
+    // Detecta cuando el cliente elige un m�todo espec�fico: Nequi, Daviplata, Transferencia, Tarjeta, PayPal, etc.
+    if (/(nequi|daviplata|transferencia|bancaria|banco|tarjeta|credito|cr�dito|debito|d�bito|mercadopago|mercado\s*pago|paypal|pay\s*pal|efectivo|pse|pago|pagar|forma\s*de\s*pago|datos\s*de\s*pago|c[o�]mo\s*pago)/i.test(msg)) {
       return 'payment_method_selected'
     }
 
-    // CONFIRMACIÓN DE COMPRA
+    //  DESPEDIDA CON INTER�S FUTURO - Patrones con "perfecto/ok/vale" + indicador de futuro
+    // IMPORTANTE: Detectar ANTES de confirmationPatterns para evitar falsos positivos
+    if (/^(perfecto|ok|vale|bueno|listo|dale)[,.\s]+(m�s tarde|mas tarde|luego|despu�s|despues|te (aviso|digo|confirmo|escribo))/i.test(msg)) {
+      return 'future_interest'
+    }
+
+    // CONFIRMACI�N DE COMPRA
     const confirmationPatterns = [
-      /^(si|sí|ok|dale|va|listo|claro|por supuesto|perfecto|bueno|está bien|esta bien|de una|hagámoslo|hagamoslo)(\s*$|!|\.|\,)/i,
-      /^(si|sí)\s*(me\s*)?(gustaría|gustaria|interesa|encanta|parece bien)$/i,
+      /^(si|s�|ok|dale|va|listo|claro|por supuesto|perfecto|bueno|est� bien|esta bien|de una|hag�moslo|hagamoslo)(\s*$|!|\.|\,)/i,
+      /^(si|s�)\s*(me\s*)?(gustar�a|gustaria|interesa|encanta|parece bien)$/i,
       /^me interesa$/i,
-      /^(lo quiero|lo compro|quiero comprarlo|me lo llevo|si lo quiero|sí lo quiero|lo necesito|lo tomo)$/i,
-      /(manda|mándame|mandame|envía|envíame|enviame|dame|pásame|pasame|dime)\s*(los\s*)?(datos|info|información|informacion|link|enlace)/i,
+      /^(lo quiero|lo compro|quiero comprarlo|me lo llevo|si lo quiero|s� lo quiero|lo necesito|lo tomo)$/i,
+      /(manda|m�ndame|mandame|env�a|env�ame|enviame|dame|p�same|pasame|dime)\s*(los\s*)?(datos|info|informaci�n|informacion|link|enlace)/i,
       /quiero\s*(los\s*)?(datos|comprarlo|pagarlo|adquirirlo)/i,
-      /(como|cómo)\s*(lo\s*)?(compro|pago|adquiero|obtengo|consigo)/i,
-      /(claro que si|claro que sí|por supuesto|obvio|seguro|definitivamente|sin duda|de acuerdo|acepto)/i,
-      /(si|sí),?\s*(lo quiero|lo compro|dale|va|me interesa)$/i,
+      /(como|c�mo)\s*(lo\s*)?(compro|pago|adquiero|obtengo|consigo)/i,
+      /(claro que si|claro que s�|por supuesto|obvio|seguro|definitivamente|sin duda|de acuerdo|acepto)/i,
+      /(si|s�),?\s*(lo quiero|lo compro|dale|va|me interesa)$/i,
       /^si,?\s*(quiero|me interesa|lo quiero|lo compro|dale)/i,
-      // Patrones más flexibles para capturar variaciones y typos comunes
+      // Patrones m�s flexibles para capturar variaciones y typos comunes
       /(qu[ie]+[ea]?r?o|kiero|quieto)\s*(comprarlo|comprar|llevarlo|llevar|adquirirlo|pagarlo)/i,
       /lo\s*(qu[ie]+[ea]?r?o|kiero|quieto|compro|llevo|necesito)/i,
       /^(comprarlo|comprar|llevarmelo|llevarlo)$/i,
-      /(dame|deme|pasame|pásame)\s*(el\s*)?(link|enlace|datos)/i,
-      /^(listo|dale|va|ok|perfecto|bueno)\s*(lo\s*)?(quiero|compro)?/i,
+      /(dame|deme|pasame|p�same)\s*(el\s*)?(link|enlace|datos)/i,
+      // CORREGIDO: Removido "va" y hecho (quiero|compro) obligatorio para evitar falsos positivos
+      /^(listo|dale|ok|perfecto|bueno)\b\s+(lo\s*)?(quiero|compro)/i,
       // Typos comunes: quieto=quiero, conprarlo=comprarlo
       /(quieto|qiero|kero)\s*(comprarlo|comprar|conprarlo|conprar)/i,
       /(quiero|quieto)\s*(conprarlo|conprar)/i
@@ -935,57 +947,57 @@ export class SalesAgentSimple {
       }
     }
 
-    // 🆕 OBJECIÓN DE PRECIO - Cliente dice que está caro, no tiene plata, pide descuento
-    // IMPORTANTE: Detectar ANTES de rejection para dar respuesta empática específica
-    if (/(muy caro|está caro|esta caro|es caro|es mucho|no tengo|no cuento|no dispongo|sin plata|sin dinero|no hay plata|no me alcanza|no alcanza|fuera de mi presupuesto|presupuesto|costoso|elevado|descuento|rebaja|menos|promo|oferta|más barato|mas barato|algo más económico|algo mas economico|no puedo pagarlo|no puedo pagar|mucho dinero|mucha plata)/i.test(msg)) {
+    // ?? OBJECI�N DE PRECIO - Cliente dice que est� caro, no tiene plata, pide descuento
+    // IMPORTANTE: Detectar ANTES de rejection para dar respuesta emp�tica espec�fica
+    if (/(muy caro|est� caro|esta caro|es caro|es mucho|no tengo|no cuento|no dispongo|sin plata|sin dinero|no hay plata|no me alcanza|no alcanza|fuera de mi presupuesto|presupuesto|costoso|elevado|descuento|rebaja|menos|promo|oferta|m�s barato|mas barato|algo m�s econ�mico|algo mas economico|no puedo pagarlo|no puedo pagar|mucho dinero|mucha plata)/i.test(msg)) {
       return 'price_objection'
     }
 
-    // CLIENTE VA A ENVIAR COMPROBANTE (futuro) - "cuando tenga el recibo lo envío"
-    // IMPORTANT: Check BEFORE future_interest to avoid "mañana te envio" matching future_interest
-    if (/(cuando (tenga|tengo)|ya (te|le) (envío|envio|mando)|te (envío|envio|mando) (el|cuando)|lo (envío|envio|mando)|vale.*(envío|envio|mando)|ok.*(envío|envio|mando)|listo.*(envío|envio|mando)|bueno.*(envío|envio|mando)|perfecto.*(envío|envio|mando)|apenas (tenga|pague)|en un momento (te|le)|ya casi (te|le))/i.test(msg)) {
+    // CLIENTE VA A ENVIAR COMPROBANTE (futuro) - "cuando tenga el recibo lo env�o"
+    // IMPORTANT: Check BEFORE future_interest to avoid "ma�ana te envio" matching future_interest
+    if (/(cuando (tenga|tengo)|ya (te|le) (env�o|envio|mando)|te (env�o|envio|mando) (el|cuando)|lo (env�o|envio|mando)|vale.*(env�o|envio|mando)|ok.*(env�o|envio|mando)|listo.*(env�o|envio|mando)|bueno.*(env�o|envio|mando)|perfecto.*(env�o|envio|mando)|apenas (tenga|pague)|en un momento (te|le)|ya casi (te|le))/i.test(msg)) {
       return 'will_send_receipt'
     }
 
-    // MÉTODO DE ENTREGA - Cliente responde con preferencia de entrega
+    // M�TODO DE ENTREGA - Cliente responde con preferencia de entrega
     // CRITICAL: Detectar ANTES de general_inquiry para mantener contexto del producto
-    if (/(^digital$|^google\s*drive$|^drive$|^recoger|^tienda$|^en\s*tienda|^contraentrega$|^domicilio$|^env[ií]o|^a\s*domicilio|^entrega\s*a\s*domicilio)/i.test(msg)) {
+    if (/(^digital$|^google\s*drive$|^drive$|^recoger|^tienda$|^en\s*tienda|^contraentrega$|^domicilio$|^env[i�]o|^a\s*domicilio|^entrega\s*a\s*domicilio)/i.test(msg)) {
       return 'delivery_method_response'
     }
 
-    // INTERÉS FUTURO (te aviso, luego te digo)
+    // INTER�S FUTURO (te aviso, luego te digo)
     // IMPORTANT: Check BEFORE rejection
-    if (/(te aviso|te confirmo|te digo|te escribo|te cuento|lo pienso y|lo consulto y|estamos hablando|hablamos|pendientes|qdo atento|quedo atento|cualquier cosa|si algo|mas tarde|más tarde|luego te|despues te|después te|mañana|semana que viene|fin de mes|cuando cobre|cuando me paguen|pago (despues|después|luego)|proxima semana|próxima semana|el (lunes|martes|miércoles|miercoles|jueves|viernes|sábado|sabado|domingo))/i.test(msg)) {
+    if (/(te aviso|te confirmo|te digo|te escribo|te cuento|lo pienso y|lo consulto y|estamos hablando|hablamos|pendientes|qdo atento|quedo atento|cualquier cosa|si algo|mas tarde|m�s tarde|luego te|despues te|despu�s te|ma�ana|semana que viene|fin de mes|cuando cobre|cuando me paguen|pago (despues|despu�s|luego)|proxima semana|pr�xima semana|el (lunes|martes|mi�rcoles|miercoles|jueves|viernes|s�bado|sabado|domingo))/i.test(msg)) {
       return 'future_interest'
     }
 
     // RECHAZO/DUDA (sin objeciones de precio - esas se manejan arriba)
-    if (/(no gracias|no por ahora|después|despues|lo pienso|tal vez|quizás|quizas|no estoy seguro|no me interesa|no necesito)/i.test(msg)) {
+    if (/(no gracias|no por ahora|despu�s|despues|lo pienso|tal vez|quiz�s|quizas|no estoy seguro|no me interesa|no necesito)/i.test(msg)) {
       return 'rejection'
     }
 
-    // COMPROBANTE DE PAGO YA ENVIADO (pasado) - "ya pagué", "aquí está el comprobante"
-    if (/(ya pagu[eé]|ya transfer[ií]|ya hice (el|la) (pago|transferencia)|listo (el )?pago|pago (hecho|realizado|listo)|te env[ií][eé] (el )?(comprobante|recibo|captura|pantallazo)|aqu[ií] (est[aá]|va) (el )?(comprobante|recibo)|mira (el )?(comprobante|pago)|comprobante (de )?(pago|transferencia)|recibo (de )?(pago|transferencia)|captura (del? )?(pago|nequi|daviplata)|pantallazo (del? )?(pago|nequi|daviplata)|ya le (mand[eé]|envi[eé]))/i.test(msg)) {
+    // COMPROBANTE DE PAGO YA ENVIADO (pasado) - "ya pagu�", "aqu� est� el comprobante"
+    if (/(ya pagu[e�]|ya transfer[i�]|ya hice (el|la) (pago|transferencia)|listo (el )?pago|pago (hecho|realizado|listo)|te env[i�][e�] (el )?(comprobante|recibo|captura|pantallazo)|aqu[i�] (est[a�]|va) (el )?(comprobante|recibo)|mira (el )?(comprobante|pago)|comprobante (de )?(pago|transferencia)|recibo (de )?(pago|transferencia)|captura (del? )?(pago|nequi|daviplata)|pantallazo (del? )?(pago|nequi|daviplata)|ya le (mand[e�]|envi[e�]))/i.test(msg)) {
       return 'payment_receipt'
     }
 
     // PAGO
-    if (/(pago|pagar|tarjeta|efectivo|transferencia|nequi|daviplata|bancolombia|mercadopago|paypal|como pago|cómo pago|métodos de pago|metodos de pago|formas de pago)/i.test(msg)) {
+    if (/(pago|pagar|tarjeta|efectivo|transferencia|nequi|daviplata|bancolombia|mercadopago|paypal|como pago|c�mo pago|m�todos de pago|metodos de pago|formas de pago)/i.test(msg)) {
       return 'payment_inquiry'
     }
 
     // SALUDO PURO
-    if (/^(hola|buenos|buenas|hey|hi|hello|saludos|qué tal|que tal|buenas noches|buenos días|buenos dias|buenas tardes)(\s|$|!|\?|\.)*$/i.test(msg)) {
+    if (/^(hola|buenos|buenas|hey|hi|hello|saludos|qu� tal|que tal|buenas noches|buenos d�as|buenos dias|buenas tardes)(\s|$|!|\?|\.)*$/i.test(msg)) {
       return 'greeting'
     }
 
     // CONTACTO
-    if (/(contacto|número|numero|teléfono|telefono|whatsapp|llamar|ubicación|ubicacion|dirección|direccion|donde están|donde estan)/i.test(msg)) {
+    if (/(contacto|n�mero|numero|tel�fono|telefono|whatsapp|llamar|ubicaci�n|ubicacion|direcci�n|direccion|donde est�n|donde estan)/i.test(msg)) {
       return 'contact_request'
     }
 
     // DESPEDIDA
-    if (/^(gracias|bye|adiós|adios|chao|hasta luego|nos vemos|muchas gracias|te agradezco|genial gracias)(\s|$|!|\?|\.)*$/i.test(msg)) {
+    if (/^(gracias|bye|adi�s|adios|chao|hasta luego|nos vemos|muchas gracias|te agradezco|genial gracias)(\s|$|!|\?|\.)*$/i.test(msg)) {
       return 'farewell'
     }
 
@@ -998,7 +1010,7 @@ export class SalesAgentSimple {
     const msg = message.toLowerCase().trim()
 
     const patterns = [
-      /^(el|la|opci[oó]n|n[uú]mero|numero)?\s*(\d+)$/i,
+      /^(el|la|opci[o�]n|n[u�]mero|numero)?\s*(\d+)$/i,
       /^(\d+)$/,
       /me interesa (el|la)?\s*(\d+)/i,
       /quiero (el|la)?\s*(\d+)/i,
@@ -1033,45 +1045,45 @@ export class SalesAgentSimple {
 
   private buscarProducto(query: string): any | null {
     if (!this.products || this.products.length === 0) {
-      console.log('⚠️ No hay productos cargados')
+      console.log('?? No hay productos cargados')
       return null
     }
 
     const queryLower = query.toLowerCase()
-    console.log(`🔍 Buscando producto en: "${queryLower}"`)
+    console.log(`?? Buscando producto en: "${queryLower}"`)
 
-    // 🔥 BÚSQUEDA DIRECTA PRIMERO - Si el nombre del producto está en la consulta
+    // ?? B�SQUEDA DIRECTA PRIMERO - Si el nombre del producto est� en la consulta
     // Esto captura casos como "mega pack golden", "megapack golden", etc.
     for (const product of this.products) {
       const productNameLower = product.name.toLowerCase()
       // Buscar coincidencia directa del nombre completo o parcial significativo
       const productWords = productNameLower.split(/\s+/)
       
-      // Si todas las palabras del producto están en la consulta
+      // Si todas las palabras del producto est�n en la consulta
       const allWordsMatch = productWords.every(word => 
         word.length > 2 && queryLower.includes(word)
       )
       if (allWordsMatch && productWords.length >= 2) {
-        console.log(`✅ Encontrado por coincidencia directa: ${product.name}`)
+        console.log(`? Encontrado por coincidencia directa: ${product.name}`)
         return product
       }
       
-      // Buscar palabras distintivas (no genéricas) del nombre del producto
+      // Buscar palabras distintivas (no gen�ricas) del nombre del producto
       const distinctiveWords = productWords.filter((w: string) => 
-        w.length > 4 && !['mega', 'pack', 'curso', 'cursos', 'de', 'para', 'desde', 'con', 'sin', 'usb', 'wifi', 'ram', 'ssd', 'ddr4', 'ddr5', 'fhd', 'intel', 'core', 'amd', 'ryzen', 'pantalla', 'completo', 'completa', 'premium', 'profesional', 'avanzado', 'basico', 'básico', 'master', 'full', 'total', 'pack'].includes(w)
+        w.length > 4 && !['mega', 'pack', 'curso', 'cursos', 'de', 'para', 'desde', 'con', 'sin', 'usb', 'wifi', 'ram', 'ssd', 'ddr4', 'ddr5', 'fhd', 'intel', 'core', 'amd', 'ryzen', 'pantalla', 'completo', 'completa', 'premium', 'profesional', 'avanzado', 'basico', 'b�sico', 'master', 'full', 'total', 'pack'].includes(w)
       )
       for (const word of distinctiveWords) {
         if (queryLower.includes(word)) {
-          console.log(`✅ Encontrado por palabra distintiva "${word}": ${product.name}`)
+          console.log(`? Encontrado por palabra distintiva "${word}": ${product.name}`)
           return product
         }
       }
     }
 
-    // Palabras genéricas a ignorar
-    const stopWords = ['hola', 'buenos', 'buenas', 'dias', 'tardes', 'noches', 'quiero', 'necesito', 'tienes', 'tienen', 'hay', 'disponible', 'interesa', 'precio', 'costo', 'cuanto', 'cuánto', 'que', 'qué', 'cual', 'cuál', 'como', 'cómo', 'para', 'por', 'con', 'sin', 'una', 'uno', 'los', 'las', 'del', 'the', 'sobre', 'info', 'información', 'curso', 'cursos', 'mega', 'pack', 'me', 'un', 'estudiar', 'trabajar', 'usar', 'de', 'algo', 'desde', 'casa', 'aprender']
+    // Palabras gen�ricas a ignorar
+    const stopWords = ['hola', 'buenos', 'buenas', 'dias', 'tardes', 'noches', 'quiero', 'necesito', 'tienes', 'tienen', 'hay', 'disponible', 'interesa', 'precio', 'costo', 'cuanto', 'cu�nto', 'que', 'qu�', 'cual', 'cu�l', 'como', 'c�mo', 'para', 'por', 'con', 'sin', 'una', 'uno', 'los', 'las', 'del', 'the', 'sobre', 'info', 'informaci�n', 'curso', 'cursos', 'mega', 'pack', 'me', 'un', 'estudiar', 'trabajar', 'usar', 'de', 'algo', 'desde', 'casa', 'aprender']
 
-    // 🔧 CORRECCIÓN DE TYPOS COMUNES (búsqueda local rápida)
+    // ?? CORRECCI�N DE TYPOS COMUNES (b�squeda local r�pida)
     const typoCorrections: { [key: string]: string } = {
       // Golden
       'goldem': 'golden', 'golder': 'golden', 'goldenn': 'golden',
@@ -1079,14 +1091,14 @@ export class SalesAgentSimple {
       'pino': 'piano', 'pianos': 'piano',
       // Excel
       'exel': 'excel', 'exsel': 'excel', 'ecxel': 'excel', 'excell': 'excel',
-      // Inglés
-      'ingles': 'inglés', 'englis': 'inglés', 'english': 'inglés', 'inlges': 'inglés',
+      // Ingl�s
+      'ingles': 'ingl�s', 'englis': 'ingl�s', 'english': 'ingl�s', 'inlges': 'ingl�s',
       // Trading
       'tradign': 'trading', 'traiding': 'trading', 'tradng': 'trading',
-      // Diseño
-      'diseno': 'diseño', 'disenio': 'diseño',
-      // Programación
-      'programasion': 'programación', 'programacion': 'programación', 'programing': 'programación',
+      // Dise�o
+      'diseno': 'dise�o', 'disenio': 'dise�o',
+      // Programaci�n
+      'programasion': 'programaci�n', 'programacion': 'programaci�n', 'programing': 'programaci�n',
       // MegaPack
       'megapak': 'megapack', 'megapck': 'megapack',
       // Resina
@@ -1106,7 +1118,7 @@ export class SalesAgentSimple {
     for (const word of words) {
       if (typoCorrections[word]) {
         correctedWords.push(typoCorrections[word])
-        console.log(`🔧 Typo corregido: "${word}" → "${typoCorrections[word]}"`)
+        console.log(`?? Typo corregido: "${word}" ? "${typoCorrections[word]}"`)
         wasTypoCorrected = true
       } else {
         correctedWords.push(word)
@@ -1115,58 +1127,58 @@ export class SalesAgentSimple {
     
     if (wasTypoCorrected) {
       correctedQuery = correctedWords.join(' ')
-      console.log(`🔍 Buscando con consulta corregida: "${correctedQuery}"`)
+      console.log(`?? Buscando con consulta corregida: "${correctedQuery}"`)
       for (const product of this.products) {
         const productNameLower = product.name.toLowerCase()
         // Buscar palabras distintivas en la consulta corregida
         const searchWords = correctedWords.filter(w => w.length > 3 && !stopWords.includes(w))
         for (const word of searchWords) {
           if (productNameLower.includes(word)) {
-            console.log(`✅ Encontrado por typo corregido "${word}": ${product.name}`)
+            console.log(`? Encontrado por typo corregido "${word}": ${product.name}`)
             return product
           }
         }
       }
     }
 
-    // 🎯 DETECCIÓN DE INTENCIONES AMBIGUAS
+    // ?? DETECCI�N DE INTENCIONES AMBIGUAS
     // Mapea intenciones a productos relevantes
     // IMPORTANTE: Usar frases completas para evitar falsos positivos
     const intentionMap: { [key: string]: string[] } = {
       'ganar dinero': ['trading', 'marketing'],
       'dinero extra': ['trading', 'marketing'],
       'ingresos pasivos': ['trading', 'marketing'],
-      'negocio propio': ['marketing', 'excel', 'diseño'],
+      'negocio propio': ['marketing', 'excel', 'dise�o'],
       'emprender': ['marketing', 'trading'],
-      'aprender música': ['piano'],
+      'aprender m�sica': ['piano'],
       'tocar instrumento': ['piano'],
       'mejorar trabajo': ['excel', 'office'],
       'trabajo oficina': ['excel', 'office'],
-      'crear contenido': ['diseño', 'marketing'],
+      'crear contenido': ['dise�o', 'marketing'],
       'redes sociales': ['marketing', 'redes'],
-      'freelance': ['diseño', 'programación'],
-      'trabajar desde casa': ['diseño', 'marketing', 'excel'],
-      'trabajo remoto': ['diseño', 'programación'],
-      'aprender ingles': ['inglés'],
-      'aprender inglés': ['inglés'],
-      'hablar ingles': ['inglés'],
-      'hablar inglés': ['inglés'],
-      'idioma ingles': ['inglés'],
-      'idioma inglés': ['inglés'],
-      'curso ingles': ['inglés'],
-      'curso inglés': ['inglés']
+      'freelance': ['dise�o', 'programaci�n'],
+      'trabajar desde casa': ['dise�o', 'marketing', 'excel'],
+      'trabajo remoto': ['dise�o', 'programaci�n'],
+      'aprender ingles': ['ingl�s'],
+      'aprender ingl�s': ['ingl�s'],
+      'hablar ingles': ['ingl�s'],
+      'hablar ingl�s': ['ingl�s'],
+      'idioma ingles': ['ingl�s'],
+      'idioma ingl�s': ['ingl�s'],
+      'curso ingles': ['ingl�s'],
+      'curso ingl�s': ['ingl�s']
     }
 
     // Buscar intenciones completas (frases exactas primero)
     for (const [intention, keywords] of Object.entries(intentionMap)) {
-      // Verificar que la frase completa esté en la consulta
+      // Verificar que la frase completa est� en la consulta
       if (queryLower.includes(intention)) {
         for (const keyword of keywords) {
           const producto = this.products.find(p => 
             p.name.toLowerCase().includes(keyword)
           )
           if (producto) {
-            console.log(`✅ Encontrado por intención "${intention}": ${producto.name}`)
+            console.log(`? Encontrado por intenci�n "${intention}": ${producto.name}`)
             return producto
           }
         }
@@ -1174,11 +1186,11 @@ export class SalesAgentSimple {
     }
 
     const keywords = queryLower
-      .replace(/[¿?!.,]/g, '')
+      .replace(/[�?!.,]/g, '')
       .split(/\s+/)
       .filter(word => word.length > 2 && !stopWords.includes(word))
 
-    console.log(`🔑 Palabras clave: ${keywords.join(', ')}`)
+    console.log(`?? Palabras clave: ${keywords.join(', ')}`)
 
     // Buscar en nombre del producto
     for (const keyword of keywords) {
@@ -1186,7 +1198,7 @@ export class SalesAgentSimple {
         p.name.toLowerCase().includes(keyword)
       )
       if (producto) {
-        console.log(`✅ Encontrado por nombre: ${producto.name}`)
+        console.log(`? Encontrado por nombre: ${producto.name}`)
         return producto
       }
     }
@@ -1198,12 +1210,12 @@ export class SalesAgentSimple {
         return tags.some((tag: string) => tag.toLowerCase().includes(keyword))
       })
       if (producto) {
-        console.log(`✅ Encontrado por tag: ${producto.name}`)
+        console.log(`? Encontrado por tag: ${producto.name}`)
         return producto
       }
     }
 
-    console.log(`❌ No se encontró producto`)
+    console.log(`? No se encontr� producto`)
     return null
   }
 
@@ -1216,11 +1228,11 @@ export class SalesAgentSimple {
     let categoria: string | null = null
     let productos: any[] = []
 
-    if (queryLower.includes('portátil') || queryLower.includes('portatil') || queryLower.includes('laptop') || queryLower.includes('notebook')) {
-      categoria = 'portátiles'
+    if (queryLower.includes('port�til') || queryLower.includes('portatil') || queryLower.includes('laptop') || queryLower.includes('notebook')) {
+      categoria = 'port�tiles'
       productos = this.products.filter(p => {
         const name = p.name.toLowerCase()
-        return name.includes('portátil') || name.includes('portatil') || name.includes('laptop') || name.includes('notebook') || name.includes('macbook')
+        return name.includes('port�til') || name.includes('portatil') || name.includes('laptop') || name.includes('notebook') || name.includes('macbook')
       })
     } else if (queryLower.includes('impresora') || queryLower.includes('imprimir')) {
       categoria = 'impresoras'
@@ -1240,21 +1252,21 @@ export class SalesAgentSimple {
         const name = p.name.toLowerCase()
         return name.includes('mega pack') || name.includes('curso') || p.category === 'DIGITAL'
       })
-    } else if (queryLower.includes('diseño') || queryLower.includes('photoshop')) {
-      categoria = 'cursos de diseño'
+    } else if (queryLower.includes('dise�o') || queryLower.includes('photoshop')) {
+      categoria = 'cursos de dise�o'
       productos = this.products.filter(p => {
         const name = p.name.toLowerCase()
-        return name.includes('diseño') || name.includes('photoshop') || name.includes('gráfico')
+        return name.includes('dise�o') || name.includes('photoshop') || name.includes('gr�fico')
       })
-    } else if (queryLower.includes('programación') || queryLower.includes('programacion') || queryLower.includes('desarrollo')) {
-      categoria = 'cursos de programación'
+    } else if (queryLower.includes('programaci�n') || queryLower.includes('programacion') || queryLower.includes('desarrollo')) {
+      categoria = 'cursos de programaci�n'
       productos = this.products.filter(p => {
         const name = p.name.toLowerCase()
-        return name.includes('programación') || name.includes('programacion') || name.includes('desarrollo')
+        return name.includes('programaci�n') || name.includes('programacion') || name.includes('desarrollo')
       })
     }
 
-    console.log(`📂 Categoría: ${categoria}, Productos: ${productos.length}`)
+    console.log(`?? Categor�a: ${categoria}, Productos: ${productos.length}`)
     return { productos, categoria }
   }
 
@@ -1302,29 +1314,29 @@ export class SalesAgentSimple {
       if (imageUrl) {
         imageUrl = imageUrl.trim()
         
-        // 1. Si es URL pública (http/https), retornar directamente
+        // 1. Si es URL p�blica (http/https), retornar directamente
         if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-          console.log(`📸 Imagen URL para ${product.name}: ${imageUrl.substring(0, 50)}...`)
+          console.log(`?? Imagen URL para ${product.name}: ${imageUrl.substring(0, 50)}...`)
           return imageUrl
         }
         
         // 2. Si es ruta local (/fotos/...), retornar para que Baileys la maneje
         if (imageUrl.startsWith('/fotos/') || imageUrl.startsWith('fotos/')) {
-          console.log(`📸 Imagen local para ${product.name}: ${imageUrl}`)
+          console.log(`?? Imagen local para ${product.name}: ${imageUrl}`)
           return imageUrl
         }
         
         // 3. Otra ruta relativa
         if (imageUrl.startsWith('/')) {
-          console.log(`📸 Imagen relativa para ${product.name}: ${imageUrl}`)
+          console.log(`?? Imagen relativa para ${product.name}: ${imageUrl}`)
           return imageUrl
         }
       }
       
-      console.log(`⚠️ No se encontró imagen para: ${product.name}`)
+      console.log(`?? No se encontr� imagen para: ${product.name}`)
       return null
     } catch (error) {
-      console.error(`❌ Error obteniendo imagen:`, error)
+      console.error(`? Error obteniendo imagen:`, error)
       return null
     }
   }
@@ -1333,40 +1345,40 @@ export class SalesAgentSimple {
     const price = this.formatPrice(product.price)
     const isPhysical = this.isPhysicalProduct(product)
     
-    // ═══════════════════════════════════════
-    // 📸 FORMATO CARD PROFESIONAL
-    // ═══════════════════════════════════════
+    // ---------------------------------------
+    // ?? FORMATO CARD PROFESIONAL
+    // ---------------------------------------
     
-    let caption = `╔══════════════════════════╗\n`
-    caption += `   🎯 *${product.name}*\n`
-    caption += `╚══════════════════════════╝\n\n`
+    let caption = `+--------------------------+\n`
+    caption += `   ?? *${product.name}*\n`
+    caption += `+--------------------------+\n\n`
     
     // Precio destacado
-    caption += `💰 *PRECIO: ${price} COP*\n\n`
+    caption += `?? *PRECIO: ${price} COP*\n\n`
     
-    // Descripción corta
+    // Descripci�n corta
     if (product.description) {
       const shortDesc = product.description.length > 150 
         ? product.description.substring(0, 150) + '...'
         : product.description
-      caption += `📝 ${shortDesc}\n\n`
+      caption += `?? ${shortDesc}\n\n`
     }
     
-    // Beneficios según tipo
-    caption += `━━━━━━━━━━━━━━━━━━━━\n`
+    // Beneficios seg�n tipo
+    caption += `????????????????????\n`
     if (isPhysical) {
-      caption += `✅ Producto nuevo con garantía\n`
-      caption += `🚚 Envío a toda Colombia\n`
-      caption += `🔧 Soporte técnico incluido\n`
+      caption += `? Producto nuevo con garant�a\n`
+      caption += `?? Env�o a toda Colombia\n`
+      caption += `?? Soporte t�cnico incluido\n`
     } else {
-      caption += `✅ Acceso de por vida\n`
-      caption += `📦 Entrega inmediata (Google Drive)\n`
-      caption += `🔄 Actualizaciones incluidas\n`
+      caption += `? Acceso de por vida\n`
+      caption += `?? Entrega inmediata (Google Drive)\n`
+      caption += `?? Actualizaciones incluidas\n`
     }
-    caption += `━━━━━━━━━━━━━━━━━━━━\n\n`
+    caption += `????????????????????\n\n`
     
     // Call to action
-    caption += `💬 *¿Te interesa? Escríbeme y te cuento más* 😊`
+    caption += `?? *�Te interesa? Escr�beme y te cuento m�s* ??`
     
     return caption
   }
@@ -1408,7 +1420,7 @@ export class SalesAgentSimple {
         }
       }
     } catch (error) {
-      console.error('Error obteniendo imágenes:', error)
+      console.error('Error obteniendo im�genes:', error)
     }
     
     return images
@@ -1420,15 +1432,15 @@ export class SalesAgentSimple {
     
     const name = product.name.toLowerCase()
     const physicalKeywords = [
-      'portátil', 'portatil', 'laptop', 'notebook',
+      'port�til', 'portatil', 'laptop', 'notebook',
       'computador', 'pc', 'desktop',
       'impresora', 'multifuncional', 'scanner',
       'tablet', 'ipad', 'monitor', 'pantalla',
-      'teclado', 'mouse', 'ratón',
+      'teclado', 'mouse', 'rat�n',
       'disco', 'ssd', 'memoria ram',
-      'cargador', 'batería', 'bateria',
-      'audífonos', 'audifonos', 'auriculares',
-      'cámara', 'camara', 'webcam',
+      'cargador', 'bater�a', 'bateria',
+      'aud�fonos', 'audifonos', 'auriculares',
+      'c�mara', 'camara', 'webcam',
       'router', 'modem', 'moto',
       'asus', 'hp', 'dell', 'lenovo', 'acer', 'apple', 'samsung', 'huawei', 'epson', 'canon', 'brother'
     ]
@@ -1444,39 +1456,39 @@ export class SalesAgentSimple {
     const price = this.formatPrice(product.price)
     const isPhysical = this.isPhysicalProduct(product)
 
-    // ═══════════════════════════════════════
-    // 📦 FORMATO CARD PROFESIONAL PARA TEXTO
-    // ═══════════════════════════════════════
+    // ---------------------------------------
+    // ?? FORMATO CARD PROFESIONAL PARA TEXTO
+    // ---------------------------------------
     
-    let response = `╔══════════════════════════╗\n`
-    response += `   🎯 *${product.name}*\n`
-    response += `╚══════════════════════════╝\n\n`
+    let response = `+--------------------------+\n`
+    response += `   ?? *${product.name}*\n`
+    response += `+--------------------------+\n\n`
     
-    response += `💰 *PRECIO: ${price} COP*\n\n`
+    response += `?? *PRECIO: ${price} COP*\n\n`
 
-    // Mostrar descripción REAL del producto
+    // Mostrar descripci�n REAL del producto
     if (product.description) {
       const desc = this.getProductDescription(product.description)
-      response += `📝 *DESCRIPCIÓN:*\n${desc}\n\n`
+      response += `?? *DESCRIPCI�N:*\n${desc}\n\n`
     }
 
-    // Beneficios según tipo
-    response += `━━━━━━━━━━━━━━━━━━━━\n`
-    response += `✨ *INCLUYE:*\n`
+    // Beneficios seg�n tipo
+    response += `????????????????????\n`
+    response += `? *INCLUYE:*\n`
     if (isPhysical) {
-      response += `   ✅ Producto nuevo\n`
-      response += `   🛡️ Garantía del fabricante\n`
-      response += `   🚚 Envío a toda Colombia\n`
-      response += `   🔧 Soporte técnico\n`
+      response += `   ? Producto nuevo\n`
+      response += `   ??? Garant�a del fabricante\n`
+      response += `   ?? Env�o a toda Colombia\n`
+      response += `   ?? Soporte t�cnico\n`
     } else {
-      response += `   ✅ Acceso de por vida\n`
-      response += `   📦 Entrega inmediata (Google Drive)\n`
-      response += `   🔄 Actualizaciones incluidas\n`
-      response += `   💬 Soporte por WhatsApp\n`
+      response += `   ? Acceso de por vida\n`
+      response += `   ?? Entrega inmediata (Google Drive)\n`
+      response += `   ?? Actualizaciones incluidas\n`
+      response += `   ?? Soporte por WhatsApp\n`
     }
-    response += `━━━━━━━━━━━━━━━━━━━━\n\n`
+    response += `????????????????????\n\n`
 
-    response += `💬 *¿Te interesa? Dime "sí" y te paso los datos de pago* 😊`
+    response += `?? *�Te interesa? Dime "s�" y te paso los datos de pago* ??`
     
     return response
   }
@@ -1484,12 +1496,12 @@ export class SalesAgentSimple {
   private getProductDescription(description: string): string {
     if (!description) return ''
     
-    // Limpiar y formatear la descripción
+    // Limpiar y formatear la descripci�n
     const lines = description.split('\n')
       .map(l => l.trim())
       .filter(l => l.length > 0)
     
-    // Mostrar hasta 300 caracteres o 5 líneas
+    // Mostrar hasta 300 caracteres o 5 l�neas
     let result = ''
     let charCount = 0
     let lineCount = 0
@@ -1534,7 +1546,7 @@ export class SalesAgentSimple {
       uso = 'para gaming'
     }
 
-    let response = `¡Claro! 😊 Tenemos varias opciones de *${categoria}*${uso ? ' ' + uso : ''}:\n\n`
+    let response = `�Claro! ?? Tenemos varias opciones de *${categoria}*${uso ? ' ' + uso : ''}:\n\n`
 
     const productosOrdenados = productos.sort((a, b) => a.price - b.price)
     const maxProductos = Math.min(productosOrdenados.length, 4)
@@ -1548,16 +1560,16 @@ export class SalesAgentSimple {
 
       response += `*${num}.* ${p.name}\n`
       if (specs) {
-        response += `   📋 ${specs}\n`
+        response += `   ?? ${specs}\n`
       }
-      response += `   💰 *${price} COP*\n\n`
+      response += `   ?? *${price} COP*\n\n`
     }
 
     if (productos.length > maxProductos) {
-      response += `_...y ${productos.length - maxProductos} opciones más_\n\n`
+      response += `_...y ${productos.length - maxProductos} opciones m�s_\n\n`
     }
 
-    response += `💡 Dime cuál te llama la atención o el número, y te cuento más 😊`
+    response += `?? Dime cu�l te llama la atenci�n o el n�mero, y te cuento m�s ??`
 
     return response
   }
@@ -1588,32 +1600,32 @@ export class SalesAgentSimple {
     const price = this.formatPrice(product.price)
     const isPhysical = this.isPhysicalProduct(product)
 
-    let response = `¡Me encanta! 🤩 Sabía que te iba a gustar.\n\nMira, te voy a pasar toda la info para que puedas completar tu compra:\n\n`
-    response += `╔══════════════════════════╗\n`
-    response += `   📦 *${product.name}*\n`
-    response += `   💰 *Total: ${price} COP*\n`
-    response += `╚══════════════════════════╝\n\n`
+    let response = `�Me encanta! ?? Sab�a que te iba a gustar.\n\nMira, te voy a pasar toda la info para que puedas completar tu compra:\n\n`
+    response += `+--------------------------+\n`
+    response += `   ?? *${product.name}*\n`
+    response += `   ?? *Total: ${price} COP*\n`
+    response += `+--------------------------+\n\n`
 
-    // Para productos FÍSICOS: Preguntar método de entrega primero
+    // Para productos F�SICOS: Preguntar m�todo de entrega primero
     if (isPhysical) {
-      response += `🚚 *¿CÓMO PREFIERES RECIBIRLO?*\n\n`
-      response += `1️⃣ *Recoger en tienda* (Cali)\n`
-      response += `   📍 Sin costo adicional\n\n`
-      response += `2️⃣ *Contraentrega* (Envío a domicilio)\n`
-      response += `   🚛 Pagas cuando lo recibas\n\n`
-      response += `━━━━━━━━━━━━━━━━━━━━\n\n`
+      response += `?? *�C�MO PREFIERES RECIBIRLO?*\n\n`
+      response += `1?? *Recoger en tienda* (Cali)\n`
+      response += `   ?? Sin costo adicional\n\n`
+      response += `2?? *Contraentrega* (Env�o a domicilio)\n`
+      response += `   ?? Pagas cuando lo recibas\n\n`
+      response += `????????????????????\n\n`
     }
 
-    response += `💳 *MÉTODOS DE PAGO:*\n\n`
+    response += `?? *M�TODOS DE PAGO:*\n\n`
 
-    // MercadoPago dinámico
+    // MercadoPago din�mico
     let mercadoPagoLink = product.paymentLinkMercadoPago
     if (!mercadoPagoLink && product.id) {
       try {
         const { getOrCreateMercadoPagoLink } = await import('./mercadopago-service')
         mercadoPagoLink = await getOrCreateMercadoPagoLink(product.id)
         if (mercadoPagoLink) {
-          console.log(`✅ Link MercadoPago generado para ${product.name}`)
+          console.log(`? Link MercadoPago generado para ${product.name}`)
         }
       } catch (error) {
         console.error('Error generando link MercadoPago:', error)
@@ -1621,10 +1633,10 @@ export class SalesAgentSimple {
     }
 
     if (mercadoPagoLink) {
-      response += `🔵 *MercadoPago (Tarjeta/PSE):*\n${mercadoPagoLink}\n\n`
+      response += `?? *MercadoPago (Tarjeta/PSE):*\n${mercadoPagoLink}\n\n`
     }
     
-    // PayPal dinámico - SIEMPRE forzar generación nueva para evitar links vencidos
+    // PayPal din�mico - SIEMPRE forzar generaci�n nueva para evitar links vencidos
     let paypalLink = null
     if (product.id) {
       try {
@@ -1632,37 +1644,37 @@ export class SalesAgentSimple {
         // forceNew = true por defecto en getOrCreatePayPalLink
         paypalLink = await getOrCreatePayPalLink(product.id, true)
         if (paypalLink) {
-          console.log(`✅ Link PayPal renovado para ${product.name}`)
+          console.log(`? Link PayPal renovado para ${product.name}`)
         }
       } catch (error) {
         console.error('Error generando link PayPal:', error)
-        // Fallback al link estático de la BD si la generación falla
+        // Fallback al link est�tico de la BD si la generaci�n falla
         paypalLink = product.paymentLinkPayPal
       }
     }
     
     if (paypalLink) {
-      response += `🟡 *PayPal:*\n${paypalLink}\n\n`
+      response += `?? *PayPal:*\n${paypalLink}\n\n`
     }
     
     // Link personalizado (Hotmart, etc.)
     if (product.paymentLinkCustom) {
-      response += `🟢 *Link de pago:*\n${product.paymentLinkCustom}\n\n`
+      response += `?? *Link de pago:*\n${product.paymentLinkCustom}\n\n`
     }
 
-    // Nequi/Daviplata - Número fijo: 3136174267
-    response += `📱 *Transferencia directa:*\n`
-    response += `▸ *Nequi:* 3136174267\n`
-    response += `▸ *Daviplata:* 3136174267\n\n`
+    // Nequi/Daviplata - N�mero fijo: 3136174267
+    response += `?? *Transferencia directa:*\n`
+    response += `? *Nequi:* 3136174267\n`
+    response += `? *Daviplata:* 3136174267\n\n`
 
-    response += `━━━━━━━━━━━━━━━━━━━━\n\n`
+    response += `????????????????????\n\n`
 
     if (isPhysical) {
-      response += `📝 *SIGUIENTE PASO:*\n`
-      response += `Dime si prefieres recoger o contraentrega, y envía el comprobante de pago 📸`
+      response += `?? *SIGUIENTE PASO:*\n`
+      response += `Dime si prefieres recoger o contraentrega, y env�a el comprobante de pago ??`
     } else {
-      response += `📝 *SIGUIENTE PASO:*\n`
-      response += `Envía el comprobante y te entrego el acceso por *Google Drive* inmediatamente 🚀`
+      response += `?? *SIGUIENTE PASO:*\n`
+      response += `Env�a el comprobante y te entrego el acceso por *Google Drive* inmediatamente ??`
     }
 
     return response
@@ -1678,25 +1690,25 @@ export class SalesAgentSimple {
   private generatePhysicalValueResponse(product: any): string {
     const price = this.formatPrice(product.price)
 
-    let response = `🌟 *Más detalles de ${product.name}*\n\n`
-    response += `━━━━━━━━━━━━━━━━━━━━\n\n`
-    response += `📋 *ESPECIFICACIONES*\n\n`
+    let response = `?? *M�s detalles de ${product.name}*\n\n`
+    response += `????????????????????\n\n`
+    response += `?? *ESPECIFICACIONES*\n\n`
     response += this.getPhysicalSpecs(product)
-    response += `\n━━━━━━━━━━━━━━━━━━━━\n\n`
-    response += `✨ *BENEFICIOS*\n\n`
+    response += `\n????????????????????\n\n`
+    response += `? *BENEFICIOS*\n\n`
     response += this.getPhysicalBenefits(product)
-    response += `\n━━━━━━━━━━━━━━━━━━━━\n\n`
-    response += `🛡️ *GARANTÍA*\n\n`
-    response += `   ▫️ Producto 100% nuevo\n\n`
-    response += `   ▫️ Garantía del fabricante\n\n`
-    response += `   ▫️ Soporte técnico incluido\n\n`
-    response += `━━━━━━━━━━━━━━━━━━━━\n\n`
-    response += `🚚 *ENTREGA*\n\n`
-    response += `   ▫️ Envío a toda Colombia\n\n`
-    response += `   ▫️ Retiro en Cali disponible\n\n`
-    response += `━━━━━━━━━━━━━━━━━━━━\n\n`
-    response += `💰 *Precio: ${price} COP*\n\n`
-    response += `Si te gusta, solo dime y te lo aparto 😊`
+    response += `\n????????????????????\n\n`
+    response += `??? *GARANT�A*\n\n`
+    response += `   ?? Producto 100% nuevo\n\n`
+    response += `   ?? Garant�a del fabricante\n\n`
+    response += `   ?? Soporte t�cnico incluido\n\n`
+    response += `????????????????????\n\n`
+    response += `?? *ENTREGA*\n\n`
+    response += `   ?? Env�o a toda Colombia\n\n`
+    response += `   ?? Retiro en Cali disponible\n\n`
+    response += `????????????????????\n\n`
+    response += `?? *Precio: ${price} COP*\n\n`
+    response += `Si te gusta, solo dime y te lo aparto ??`
 
     return response
   }
@@ -1706,77 +1718,77 @@ export class SalesAgentSimple {
     const desc = (product.description || '').toLowerCase()
     let specs = ''
 
-    if (name.includes('portátil') || name.includes('portatil') || name.includes('laptop')) {
+    if (name.includes('port�til') || name.includes('portatil') || name.includes('laptop')) {
       const ramMatch = (name + ' ' + desc).match(/(\d+)\s*gb\s*(ram|ddr)/i)
       const storageMatch = (name + ' ' + desc).match(/(\d+)\s*(gb|tb)\s*(ssd|hdd)/i)
 
       if (name.includes('ryzen')) {
         const ryzenMatch = name.match(/ryzen\s*(\d+)/i)
-        if (ryzenMatch) specs += `   🔹 Procesador: AMD Ryzen ${ryzenMatch[1]}\n\n`
+        if (ryzenMatch) specs += `   ?? Procesador: AMD Ryzen ${ryzenMatch[1]}\n\n`
       } else if (name.includes('i5')) {
-        specs += `   🔹 Procesador: Intel Core i5\n\n`
+        specs += `   ?? Procesador: Intel Core i5\n\n`
       } else if (name.includes('i7')) {
-        specs += `   🔹 Procesador: Intel Core i7\n\n`
+        specs += `   ?? Procesador: Intel Core i7\n\n`
       } else if (name.includes('i3')) {
-        specs += `   🔹 Procesador: Intel Core i3\n\n`
+        specs += `   ?? Procesador: Intel Core i3\n\n`
       }
 
-      if (ramMatch) specs += `   🔹 Memoria RAM: ${ramMatch[1]}GB\n\n`
-      if (storageMatch) specs += `   🔹 Almacenamiento: ${storageMatch[1]}${storageMatch[2].toUpperCase()} ${storageMatch[3].toUpperCase()}\n\n`
+      if (ramMatch) specs += `   ?? Memoria RAM: ${ramMatch[1]}GB\n\n`
+      if (storageMatch) specs += `   ?? Almacenamiento: ${storageMatch[1]}${storageMatch[2].toUpperCase()} ${storageMatch[3].toUpperCase()}\n\n`
 
       if (name.includes('15') || name.includes('15.6')) {
-        specs += `   🔹 Pantalla: 15.6 pulgadas\n\n`
+        specs += `   ?? Pantalla: 15.6 pulgadas\n\n`
       } else if (name.includes('14')) {
-        specs += `   🔹 Pantalla: 14 pulgadas\n\n`
+        specs += `   ?? Pantalla: 14 pulgadas\n\n`
       }
 
-      specs += `   🔹 Sistema: Windows 11\n`
+      specs += `   ?? Sistema: Windows 11\n`
     } else if (name.includes('impresora')) {
       if (name.includes('multifuncional')) {
-        specs += `   🔹 Tipo: Multifuncional\n\n`
-        specs += `   🔹 Funciones: Imprime, Escanea, Copia\n\n`
+        specs += `   ?? Tipo: Multifuncional\n\n`
+        specs += `   ?? Funciones: Imprime, Escanea, Copia\n\n`
       } else {
-        specs += `   🔹 Tipo: Impresora\n\n`
+        specs += `   ?? Tipo: Impresora\n\n`
       }
-      if (name.includes('wifi') || name.includes('inalámbrica')) {
-        specs += `   🔹 Conectividad: WiFi + USB\n\n`
+      if (name.includes('wifi') || name.includes('inal�mbrica')) {
+        specs += `   ?? Conectividad: WiFi + USB\n\n`
       }
       if (name.includes('tinta continua') || name.includes('ecotank')) {
-        specs += `   🔹 Sistema de tinta continua\n`
+        specs += `   ?? Sistema de tinta continua\n`
       }
     } else {
-      specs += `   🔹 ${product.description || 'Producto de alta calidad'}\n`
+      specs += `   ?? ${product.description || 'Producto de alta calidad'}\n`
     }
 
-    return specs || `   🔹 Consultar especificaciones\n`
+    return specs || `   ?? Consultar especificaciones\n`
   }
 
   private getPhysicalBenefits(product: any): string {
     const name = product.name.toLowerCase()
     let benefits = ''
 
-    if (name.includes('portátil') || name.includes('portatil') || name.includes('laptop')) {
+    if (name.includes('port�til') || name.includes('portatil') || name.includes('laptop')) {
       if (name.includes('ryzen 7') || name.includes('i7') || name.includes('16gb')) {
-        benefits = `   ⭐ Alto rendimiento\n\n`
-        benefits += `   ⭐ Multitarea sin problemas\n\n`
-        benefits += `   ⭐ Ideal para diseño y programación\n\n`
-        benefits += `   ⭐ Batería de larga duración\n`
+        benefits = `   ? Alto rendimiento\n\n`
+        benefits += `   ? Multitarea sin problemas\n\n`
+        benefits += `   ? Ideal para dise�o y programaci�n\n\n`
+        benefits += `   ? Bater�a de larga duraci�n\n`
       } else if (name.includes('ryzen 5') || name.includes('i5')) {
-        benefits = `   ⭐ Excelente calidad-precio\n\n`
-        benefits += `   ⭐ Perfecto para estudio y trabajo\n\n`
-        benefits += `   ⭐ Rápido y eficiente\n\n`
-        benefits += `   ⭐ Portátil y liviano\n`
+        benefits = `   ? Excelente calidad-precio\n\n`
+        benefits += `   ? Perfecto para estudio y trabajo\n\n`
+        benefits += `   ? R�pido y eficiente\n\n`
+        benefits += `   ? Port�til y liviano\n`
       } else {
-        benefits = `   ⭐ Ideal para tareas cotidianas\n\n`
-        benefits += `   ⭐ Navegación y Office\n\n`
-        benefits += `   ⭐ Económico y funcional\n`
+        benefits = `   ? Ideal para tareas cotidianas\n\n`
+        benefits += `   ? Navegaci�n y Office\n\n`
+        benefits += `   ? Econ�mico y funcional\n`
       }
     } else if (name.includes('impresora')) {
-      benefits = `   ⭐ Impresiones de alta calidad\n\n`
-      benefits += `   ⭐ Bajo costo por página\n\n`
-      benefits += `   ⭐ Fácil instalación\n`
+      benefits = `   ? Impresiones de alta calidad\n\n`
+      benefits += `   ? Bajo costo por p�gina\n\n`
+      benefits += `   ? F�cil instalaci�n\n`
     } else {
-      benefits = `▸ Producto de calidad garantizada\n▸ Marca reconocida\n▸ Durabilidad comprobada\n`
+      benefits = `? Producto de calidad garantizada\n? Marca reconocida\n? Durabilidad comprobada\n`
     }
 
     return benefits
@@ -1787,36 +1799,36 @@ export class SalesAgentSimple {
     const marketPrice = Math.round(product.price * 7.5) // Precio de mercado estimado
     const savings = marketPrice - product.price
 
-    let response = `🌟 *¿Por qué ${product.name}?*\n\n`
+    let response = `?? *�Por qu� ${product.name}?*\n\n`
     
     // Valor real vs nuestro precio
-    response += `💎 *VALOR REAL:*\n`
-    response += `▸ En el mercado: ${this.formatPrice(marketPrice)} COP\n`
-    response += `▸ *Nuestro precio: ${price} COP*\n`
-    response += `▸ 💰 *Ahorras: ${this.formatPrice(savings)} COP*\n\n`
+    response += `?? *VALOR REAL:*\n`
+    response += `? En el mercado: ${this.formatPrice(marketPrice)} COP\n`
+    response += `? *Nuestro precio: ${price} COP*\n`
+    response += `? ?? *Ahorras: ${this.formatPrice(savings)} COP*\n\n`
     
     // Lo que incluye
-    response += `✨ *LO QUE OBTIENES:*\n`
+    response += `? *LO QUE OBTIENES:*\n`
     response += this.getDigitalIncludes(product)
     response += `\n`
     
     // Beneficios
-    response += `🚀 *CÓMO TE BENEFICIA:*\n`
+    response += `?? *C�MO TE BENEFICIA:*\n`
     response += this.getDigitalBenefits(product)
     response += `\n`
     
     // Aplicaciones
-    response += `💼 *PUEDES APLICARLO EN:*\n`
+    response += `?? *PUEDES APLICARLO EN:*\n`
     response += this.getDigitalApplications(product)
     response += `\n`
     
     // Oferta
-    response += `⏰ *OFERTA ESPECIAL:*\n`
+    response += `? *OFERTA ESPECIAL:*\n`
     response += `Este precio es por tiempo limitado.\n`
     response += `Acceso de por vida + actualizaciones incluidas.\n\n`
     
-    response += `🎯 *¿Te gustaría aprovechar esta oportunidad hoy?*\n`
-    response += `Solo dime "dale" y te paso los datos de pago 💳`
+    response += `?? *�Te gustar�a aprovechar esta oportunidad hoy?*\n`
+    response += `Solo dime "dale" y te paso los datos de pago ??`
 
     return response
   }
@@ -1826,49 +1838,49 @@ export class SalesAgentSimple {
     let includes = ''
 
     if (name.includes('piano')) {
-      includes = `▸ 19 horas de video HD\n`
-      includes += `▸ 34 artículos de teoría\n`
-      includes += `▸ 157 recursos descargables\n`
-      includes += `▸ 5 estilos: Clásico, Jazz, Blues, Pop, Balada\n`
-    } else if (name.includes('diseño') || name.includes('photoshop')) {
-      includes = `▸ Domina Photoshop, Illustrator, InDesign\n`
-      includes += `▸ +50 cursos completos\n`
-      includes += `▸ Proyectos prácticos\n`
-      // includes += `▸ Certificado de finalización\n`
+      includes = `? 19 horas de video HD\n`
+      includes += `? 34 art�culos de teor�a\n`
+      includes += `? 157 recursos descargables\n`
+      includes += `? 5 estilos: Cl�sico, Jazz, Blues, Pop, Balada\n`
+    } else if (name.includes('dise�o') || name.includes('photoshop')) {
+      includes = `? Domina Photoshop, Illustrator, InDesign\n`
+      includes += `? +50 cursos completos\n`
+      includes += `? Proyectos pr�cticos\n`
+      // includes += `? Certificado de finalizaci�n\n`
     } else if (name.includes('excel') || name.includes('office')) {
-      includes = `▸ Excel básico a avanzado\n`
-      includes += `▸ Fórmulas y funciones\n`
-      includes += `▸ Tablas dinámicas y macros\n`
-      includes += `▸ Plantillas profesionales\n`
-    } else if (name.includes('programación') || name.includes('programacion')) {
-      includes = `▸ Python, JavaScript, Java y más\n`
-      includes += `▸ +100 cursos completos\n`
-      includes += `▸ Proyectos reales\n`
-      includes += `▸ Desarrollo web y móvil\n`
+      includes = `? Excel b�sico a avanzado\n`
+      includes += `? F�rmulas y funciones\n`
+      includes += `? Tablas din�micas y macros\n`
+      includes += `? Plantillas profesionales\n`
+    } else if (name.includes('programaci�n') || name.includes('programacion')) {
+      includes = `? Python, JavaScript, Java y m�s\n`
+      includes += `? +100 cursos completos\n`
+      includes += `? Proyectos reales\n`
+      includes += `? Desarrollo web y m�vil\n`
     } else if (name.includes('marketing')) {
-      includes = `▸ SEO y posicionamiento\n`
-      includes += `▸ Google Ads y Facebook Ads\n`
-      includes += `▸ Email marketing\n`
-      includes += `▸ Estrategias de ventas\n`
-    } else if (name.includes('inglés') || name.includes('ingles') || name.includes('idioma')) {
-      includes = `▸ Básico a avanzado\n`
-      includes += `▸ Conversación fluida\n`
-      includes += `▸ Inglés de negocios\n`
-      includes += `▸ Pronunciación perfecta\n`
+      includes = `? SEO y posicionamiento\n`
+      includes += `? Google Ads y Facebook Ads\n`
+      includes += `? Email marketing\n`
+      includes += `? Estrategias de ventas\n`
+    } else if (name.includes('ingl�s') || name.includes('ingles') || name.includes('idioma')) {
+      includes = `? B�sico a avanzado\n`
+      includes += `? Conversaci�n fluida\n`
+      includes += `? Ingl�s de negocios\n`
+      includes += `? Pronunciaci�n perfecta\n`
     } else if (name.includes('trading')) {
-      includes = `▸ Análisis técnico completo\n`
-      includes += `▸ Forex y criptomonedas\n`
-      includes += `▸ Gestión de riesgo\n`
-      includes += `▸ Estrategias probadas\n`
+      includes = `? An�lisis t�cnico completo\n`
+      includes += `? Forex y criptomonedas\n`
+      includes += `? Gesti�n de riesgo\n`
+      includes += `? Estrategias probadas\n`
     } else {
-      // Usar descripción del producto
+      // Usar descripci�n del producto
       if (product.description) {
         const lines = product.description.split('\n').slice(0, 4)
-        includes = lines.map((l: string) => `▸ ${l.trim()}`).join('\n') + '\n'
+        includes = lines.map((l: string) => `? ${l.trim()}`).join('\n') + '\n'
       } else {
-        includes = `▸ Contenido profesional completo\n`
-        includes += `▸ Material de alta calidad\n`
-        includes += `▸ Acceso inmediato\n`
+        includes = `? Contenido profesional completo\n`
+        includes += `? Material de alta calidad\n`
+        includes += `? Acceso inmediato\n`
       }
     }
 
@@ -1880,37 +1892,37 @@ export class SalesAgentSimple {
     let benefits = ''
 
     if (name.includes('piano')) {
-      benefits = `▸ Toca tus canciones favoritas\n`
-      benefits += `▸ Impresiona a familia y amigos\n`
-      benefits += `▸ Habilidad para toda la vida\n`
-    } else if (name.includes('diseño')) {
-      benefits = `▸ Crea diseños profesionales\n`
-      benefits += `▸ Trabaja como freelancer\n`
-      benefits += `▸ Aumenta tus ingresos\n`
+      benefits = `? Toca tus canciones favoritas\n`
+      benefits += `? Impresiona a familia y amigos\n`
+      benefits += `? Habilidad para toda la vida\n`
+    } else if (name.includes('dise�o')) {
+      benefits = `? Crea dise�os profesionales\n`
+      benefits += `? Trabaja como freelancer\n`
+      benefits += `? Aumenta tus ingresos\n`
     } else if (name.includes('excel') || name.includes('office')) {
-      benefits = `▸ Destaca en tu trabajo\n`
-      benefits += `▸ Automatiza tareas\n`
-      benefits += `▸ Mejora tu productividad\n`
-    } else if (name.includes('programación') || name.includes('programacion')) {
-      benefits = `▸ Trabaja en tecnología\n`
-      benefits += `▸ Buenos salarios\n`
-      benefits += `▸ Trabaja remoto\n`
+      benefits = `? Destaca en tu trabajo\n`
+      benefits += `? Automatiza tareas\n`
+      benefits += `? Mejora tu productividad\n`
+    } else if (name.includes('programaci�n') || name.includes('programacion')) {
+      benefits = `? Trabaja en tecnolog�a\n`
+      benefits += `? Buenos salarios\n`
+      benefits += `? Trabaja remoto\n`
     } else if (name.includes('marketing')) {
-      benefits = `▸ Vende más en tu negocio\n`
-      benefits += `▸ Consigue clientes online\n`
-      benefits += `▸ Genera ingresos pasivos\n`
-    } else if (name.includes('inglés') || name.includes('ingles') || name.includes('idioma')) {
-      benefits = `▸ Mejores oportunidades\n`
-      benefits += `▸ Viaja sin barreras\n`
-      benefits += `▸ Accede a contenido global\n`
+      benefits = `? Vende m�s en tu negocio\n`
+      benefits += `? Consigue clientes online\n`
+      benefits += `? Genera ingresos pasivos\n`
+    } else if (name.includes('ingl�s') || name.includes('ingles') || name.includes('idioma')) {
+      benefits = `? Mejores oportunidades\n`
+      benefits += `? Viaja sin barreras\n`
+      benefits += `? Accede a contenido global\n`
     } else if (name.includes('trading')) {
-      benefits = `▸ Ingresos desde casa\n`
-      benefits += `▸ Libertad financiera\n`
-      benefits += `▸ Trabaja cuando quieras\n`
+      benefits = `? Ingresos desde casa\n`
+      benefits += `? Libertad financiera\n`
+      benefits += `? Trabaja cuando quieras\n`
     } else {
-      benefits = `▸ Nuevas habilidades\n`
-      benefits += `▸ Mejor perfil profesional\n`
-      benefits += `▸ Más oportunidades\n`
+      benefits = `? Nuevas habilidades\n`
+      benefits += `? Mejor perfil profesional\n`
+      benefits += `? M�s oportunidades\n`
     }
 
     return benefits
@@ -1921,58 +1933,58 @@ export class SalesAgentSimple {
     let apps = ''
 
     if (name.includes('piano')) {
-      apps = `▸ Eventos familiares\n`
-      apps += `▸ Presentaciones\n`
-      apps += `▸ Composición propia\n`
-      apps += `▸ Relajación personal\n`
-    } else if (name.includes('diseño')) {
-      apps = `▸ Redes sociales\n`
-      apps += `▸ Publicidad\n`
-      apps += `▸ Branding empresarial\n`
-      apps += `▸ Freelance\n`
+      apps = `? Eventos familiares\n`
+      apps += `? Presentaciones\n`
+      apps += `? Composici�n propia\n`
+      apps += `? Relajaci�n personal\n`
+    } else if (name.includes('dise�o')) {
+      apps = `? Redes sociales\n`
+      apps += `? Publicidad\n`
+      apps += `? Branding empresarial\n`
+      apps += `? Freelance\n`
     } else if (name.includes('excel') || name.includes('office')) {
-      apps = `▸ Reportes empresariales\n`
-      apps += `▸ Control de inventarios\n`
-      apps += `▸ Análisis de datos\n`
-      apps += `▸ Presupuestos\n`
-    } else if (name.includes('programación') || name.includes('programacion')) {
-      apps = `▸ Desarrollo web\n`
-      apps += `▸ Apps móviles\n`
-      apps += `▸ Automatización\n`
-      apps += `▸ Startups\n`
+      apps = `? Reportes empresariales\n`
+      apps += `? Control de inventarios\n`
+      apps += `? An�lisis de datos\n`
+      apps += `? Presupuestos\n`
+    } else if (name.includes('programaci�n') || name.includes('programacion')) {
+      apps = `? Desarrollo web\n`
+      apps += `? Apps m�viles\n`
+      apps += `? Automatizaci�n\n`
+      apps += `? Startups\n`
     } else if (name.includes('marketing')) {
-      apps = `▸ Tu propio negocio\n`
-      apps += `▸ Agencia digital\n`
-      apps += `▸ E-commerce\n`
-      apps += `▸ Consultoría\n`
-    } else if (name.includes('inglés') || name.includes('ingles') || name.includes('idioma')) {
-      apps = `▸ Trabajo internacional\n`
-      apps += `▸ Viajes\n`
-      apps += `▸ Estudios en el exterior\n`
-      apps += `▸ Negocios globales\n`
+      apps = `? Tu propio negocio\n`
+      apps += `? Agencia digital\n`
+      apps += `? E-commerce\n`
+      apps += `? Consultor�a\n`
+    } else if (name.includes('ingl�s') || name.includes('ingles') || name.includes('idioma')) {
+      apps = `? Trabajo internacional\n`
+      apps += `? Viajes\n`
+      apps += `? Estudios en el exterior\n`
+      apps += `? Negocios globales\n`
     } else if (name.includes('trading')) {
-      apps = `▸ Inversiones personales\n`
-      apps += `▸ Ingresos extra\n`
-      apps += `▸ Independencia financiera\n`
-      apps += `▸ Gestión de portafolio\n`
+      apps = `? Inversiones personales\n`
+      apps += `? Ingresos extra\n`
+      apps += `? Independencia financiera\n`
+      apps += `? Gesti�n de portafolio\n`
     } else {
-      apps = `▸ Trabajo\n`
-      apps += `▸ Emprendimiento\n`
-      apps += `▸ Desarrollo personal\n`
-      apps += `▸ Freelance\n`
+      apps = `? Trabajo\n`
+      apps += `? Emprendimiento\n`
+      apps += `? Desarrollo personal\n`
+      apps += `? Freelance\n`
     }
 
     return apps
   }
 
   /**
-   * 🆕 Maneja preguntas frecuentes sobre productos digitales
+   * ?? Maneja preguntas frecuentes sobre productos digitales
    * Responde preguntas como:
-   * - ¿Es un curso completo?
-   * - ¿Tengo que pagar algo más?
-   * - ¿Puedo descargarlo?
-   * - ¿Cómo lo recibo?
-   * - ¿Acceso de por vida?
+   * - �Es un curso completo?
+   * - �Tengo que pagar algo m�s?
+   * - �Puedo descargarlo?
+   * - �C�mo lo recibo?
+   * - �Acceso de por vida?
    */
   private handleDigitalProductFAQ(message: string, product: any): string {
     const msg = message.toLowerCase()
@@ -1981,184 +1993,184 @@ export class SalesAgentSimple {
     
     // Detectar tipo de pregunta y responder apropiadamente
     
-    // ¿Es curso completo? / ¿Todo incluido?
+    // �Es curso completo? / �Todo incluido?
     if (/(curso|pack|megapack)\s*(completo|full)|todo\s*incluido|completo/i.test(msg)) {
-      return `¡Sí! 😊 El *${productName}* es un curso/pack COMPLETO.\n\n` +
-        `✅ *Incluye TODO el contenido*\n` +
-        `✅ Sin módulos ocultos\n` +
-        `✅ Sin pagos adicionales\n` +
-        `✅ Acceso de por vida\n\n` +
-        `Es un pago único de *${price} COP* y ya tienes acceso a todo el material 🎯\n\n` +
-        `¿Te lo aparto? 💳`
+      return `�S�! ?? El *${productName}* es un curso/pack COMPLETO.\n\n` +
+        `? *Incluye TODO el contenido*\n` +
+        `? Sin m�dulos ocultos\n` +
+        `? Sin pagos adicionales\n` +
+        `? Acceso de por vida\n\n` +
+        `Es un pago �nico de *${price} COP* y ya tienes acceso a todo el material ??\n\n` +
+        `�Te lo aparto? ??`
     }
     
-    // ¿Hay que pagar algo más? / ¿Pagos adicionales?
-    if (/(pagar\s*(algo\s*)?(más|mas|extra|adicional)|pago\s*(único|unico|una\s*vez)|sin\s*(pagos?\s*)?(adicionales?|extras?))/i.test(msg)) {
-      return `¡No! 🙌 Es un *pago único* de *${price} COP*\n\n` +
-        `✅ Sin suscripciones mensuales\n` +
-        `✅ Sin pagos ocultos\n` +
-        `✅ Sin renovaciones\n` +
-        `✅ Acceso permanente\n\n` +
-        `Pagas una vez y el contenido es tuyo para siempre 💪\n\n` +
-        `¿Quieres los datos de pago? 💳`
+    // �Hay que pagar algo m�s? / �Pagos adicionales?
+    if (/(pagar\s*(algo\s*)?(m�s|mas|extra|adicional)|pago\s*(�nico|unico|una\s*vez)|sin\s*(pagos?\s*)?(adicionales?|extras?))/i.test(msg)) {
+      return `�No! ?? Es un *pago �nico* de *${price} COP*\n\n` +
+        `? Sin suscripciones mensuales\n` +
+        `? Sin pagos ocultos\n` +
+        `? Sin renovaciones\n` +
+        `? Acceso permanente\n\n` +
+        `Pagas una vez y el contenido es tuyo para siempre ??\n\n` +
+        `�Quieres los datos de pago? ??`
     }
     
-    // ¿Puedo descargarlo? / ¿Se puede descargar?
+    // �Puedo descargarlo? / �Se puede descargar?
     if (/(puedo\s*(descargarlo|bajarlo|guardarlo)|se\s*(puede\s*)?(descargar|bajar|guardar))/i.test(msg)) {
-      return `¡Claro que sí! 📥\n\n` +
+      return `�Claro que s�! ??\n\n` +
         `El *${productName}* lo puedes:\n\n` +
-        `✅ *Descargar* a tu computador o celular\n` +
-        `✅ *Ver online* cuando quieras\n` +
-        `✅ *Guardar* en tu Google Drive personal\n\n` +
-        `Te envío el acceso por Google Drive apenas confirmes el pago 🚀\n\n` +
-        `¿Te paso los datos? 💳`
+        `? *Descargar* a tu computador o celular\n` +
+        `? *Ver online* cuando quieras\n` +
+        `? *Guardar* en tu Google Drive personal\n\n` +
+        `Te env�o el acceso por Google Drive apenas confirmes el pago ??\n\n` +
+        `�Te paso los datos? ??`
     }
     
-    // ¿Puedo verlo online?
-    if (/(verlo\s*(en\s*)?(línea|linea|online)|ver\s*online)/i.test(msg)) {
-      return `¡Sí! 💻 Puedes verlo online o descargarlo.\n\n` +
+    // �Puedo verlo online?
+    if (/(verlo\s*(en\s*)?(l�nea|linea|online)|ver\s*online)/i.test(msg)) {
+      return `�S�! ?? Puedes verlo online o descargarlo.\n\n` +
         `El *${productName}* te lo comparto por Google Drive:\n\n` +
-        `✅ Ver online desde cualquier dispositivo\n` +
-        `✅ Descargar para ver sin internet\n` +
-        `✅ Acceso 24/7 sin límites\n\n` +
-        `¿Listo para obtenerlo? 🎯`
+        `? Ver online desde cualquier dispositivo\n` +
+        `? Descargar para ver sin internet\n` +
+        `? Acceso 24/7 sin l�mites\n\n` +
+        `�Listo para obtenerlo? ??`
     }
     
-    // ¿Acceso de por vida? / ¿Expira?
-    if (/(acceso\s*(de\s*por\s*vida|permanente|ilimitado)|cuánto\s*tiempo\s*(tengo|dura)|expira|caduca|vence|es\s*para\s*siempre)/i.test(msg)) {
-      return `¡Acceso DE POR VIDA! ♾️\n\n` +
+    // �Acceso de por vida? / �Expira?
+    if (/(acceso\s*(de\s*por\s*vida|permanente|ilimitado)|cu�nto\s*tiempo\s*(tengo|dura)|expira|caduca|vence|es\s*para\s*siempre)/i.test(msg)) {
+      return `�Acceso DE POR VIDA! ??\n\n` +
         `El *${productName}*:\n\n` +
-        `✅ *No expira nunca*\n` +
-        `✅ Acceso permanente\n` +
-        `✅ Puedes verlo las veces que quieras\n` +
-        `✅ Incluye actualizaciones futuras\n\n` +
-        `Una vez que pagas, es tuyo para siempre 🎁\n\n` +
-        `¿Te interesa? 💳`
+        `? *No expira nunca*\n` +
+        `? Acceso permanente\n` +
+        `? Puedes verlo las veces que quieras\n` +
+        `? Incluye actualizaciones futuras\n\n` +
+        `Una vez que pagas, es tuyo para siempre ??\n\n` +
+        `�Te interesa? ??`
     }
     
-    // ¿Cómo lo recibo? / ¿Por dónde lo envían?
-    if (/(cómo\s*(lo\s*)?(recibo|obtengo|accedo)|por\s*dónde\s*(lo\s*)?(envían|mandan|recibo)|google\s*drive|link\s*de\s*(descarga|acceso)|entrega\s*inmediata|acceso\s*inmediato)/i.test(msg)) {
-      return `¡Entrega INMEDIATA! ⚡\n\n` +
-        `Así funciona:\n\n` +
-        `1️⃣ Realizas el pago (Nequi, Daviplata, etc.)\n` +
-        `2️⃣ Me envías el comprobante 📸\n` +
-        `3️⃣ Te envío el link de Google Drive al instante\n\n` +
-        `✅ Acceso en menos de 5 minutos\n` +
-        `✅ Disponible 24/7\n\n` +
-        `¿Procedemos? 🚀`
+    // �C�mo lo recibo? / �Por d�nde lo env�an?
+    if (/(c�mo\s*(lo\s*)?(recibo|obtengo|accedo)|por\s*d�nde\s*(lo\s*)?(env�an|mandan|recibo)|google\s*drive|link\s*de\s*(descarga|acceso)|entrega\s*inmediata|acceso\s*inmediato)/i.test(msg)) {
+      return `�Entrega INMEDIATA! ?\n\n` +
+        `As� funciona:\n\n` +
+        `1?? Realizas el pago (Nequi, Daviplata, etc.)\n` +
+        `2?? Me env�as el comprobante ??\n` +
+        `3?? Te env�o el link de Google Drive al instante\n\n` +
+        `? Acceso en menos de 5 minutos\n` +
+        `? Disponible 24/7\n\n` +
+        `�Procedemos? ??`
     }
     
-    // Respuesta genérica para otras preguntas FAQ
-    return `¡Buena pregunta! 😊\n\n` +
+    // Respuesta gen�rica para otras preguntas FAQ
+    return `�Buena pregunta! ??\n\n` +
       `Sobre el *${productName}*:\n\n` +
-      `✅ Es un curso/pack COMPLETO\n` +
-      `✅ Pago único de *${price} COP*\n` +
-      `✅ Sin pagos adicionales\n` +
-      `✅ Acceso de por vida\n` +
-      `✅ Puedes descargarlo o verlo online\n` +
-      `✅ Entrega inmediata por Google Drive\n\n` +
-      `¿Alguna otra duda o te paso los datos de pago? 💳`
+      `? Es un curso/pack COMPLETO\n` +
+      `? Pago �nico de *${price} COP*\n` +
+      `? Sin pagos adicionales\n` +
+      `? Acceso de por vida\n` +
+      `? Puedes descargarlo o verlo online\n` +
+      `? Entrega inmediata por Google Drive\n\n` +
+      `�Alguna otra duda o te paso los datos de pago? ??`
   }
 
   /**
-   * 🆕 Maneja objeciones de desconfianza
+   * ?? Maneja objeciones de desconfianza
    * Cuando el cliente expresa dudas sobre legitimidad:
-   * - "Es estafa", "piden más plata", "no mandan nada", etc.
+   * - "Es estafa", "piden m�s plata", "no mandan nada", etc.
    */
   private handleDistrustObjection(message: string, product: any): string {
     const productName = product.name
     const price = this.formatPrice(product.price)
     
-    // Respuesta empática que aborda la desconfianza
-    return `Entiendo tu preocupación, es normal tener dudas 🤝\n\n` +
-      `Te cuento cómo trabajamos con el *${productName}*:\n\n` +
-      `✅ *Pago único de ${price} COP* - No pedimos más después\n` +
-      `✅ *Entrega inmediata* - Apenas pagas, te envío el link\n` +
-      `✅ *Todo el material completo* - Sin módulos ocultos\n` +
-      `✅ *Por Google Drive* - Puedes verificar que está todo\n\n` +
-      `🔒 *Garantía:* Si no recibes el material, te devuelvo el dinero.\n\n` +
-      `Llevamos años vendiendo cursos digitales y tenemos clientes satisfechos que pueden dar referencias.\n\n` +
-      `¿Tienes alguna otra duda? Estoy aquí para ayudarte 😊`
+    // Respuesta emp�tica que aborda la desconfianza
+    return `Entiendo tu preocupaci�n, es normal tener dudas ??\n\n` +
+      `Te cuento c�mo trabajamos con el *${productName}*:\n\n` +
+      `? *Pago �nico de ${price} COP* - No pedimos m�s despu�s\n` +
+      `? *Entrega inmediata* - Apenas pagas, te env�o el link\n` +
+      `? *Todo el material completo* - Sin m�dulos ocultos\n` +
+      `? *Por Google Drive* - Puedes verificar que est� todo\n\n` +
+      `?? *Garant�a:* Si no recibes el material, te devuelvo el dinero.\n\n` +
+      `Llevamos a�os vendiendo cursos digitales y tenemos clientes satisfechos que pueden dar referencias.\n\n` +
+      `�Tienes alguna otra duda? Estoy aqu� para ayudarte ??`
   }
 
   /**
-   * 🆕 Maneja objeciones de precio
-   * Cuando el cliente dice que está caro, no tiene plata, etc.
+   * ?? Maneja objeciones de precio
+   * Cuando el cliente dice que est� caro, no tiene plata, etc.
    */
   private handlePriceObjection(message: string, product: any): string {
     const productName = product.name
     const price = this.formatPrice(product.price)
     const msg = message.toLowerCase()
     
-    // Detectar tipo de objeción de precio
+    // Detectar tipo de objeci�n de precio
     const noTienePlata = /(no tengo|no cuento|no dispongo|sin plata|sin dinero|no hay plata)/i.test(msg)
     const pideDscto = /(descuento|rebaja|menos|promo|oferta)/i.test(msg)
     const estaCaro = /(caro|costoso|mucho|elevado)/i.test(msg)
     
     if (noTienePlata) {
       // Cliente no tiene dinero ahora
-      return `Entiendo perfectamente, a veces el presupuesto está ajustado 💪\n\n` +
-        `El *${productName}* estará disponible cuando puedas:\n\n` +
-        `💰 Precio: ${price} COP\n` +
-        `📦 Entrega inmediata por Google Drive\n\n` +
-        `Si quieres, te puedo guardar la info y me escribes cuando estés listo 😊\n\n` +
-        `¿O prefieres que te muestre opciones más económicas?`
+      return `Entiendo perfectamente, a veces el presupuesto est� ajustado ??\n\n` +
+        `El *${productName}* estar� disponible cuando puedas:\n\n` +
+        `?? Precio: ${price} COP\n` +
+        `?? Entrega inmediata por Google Drive\n\n` +
+        `Si quieres, te puedo guardar la info y me escribes cuando est�s listo ??\n\n` +
+        `�O prefieres que te muestre opciones m�s econ�micas?`
     }
     
     if (pideDscto) {
       // Cliente pide descuento
-      return `¡Claro que te entiendo! Todos buscamos el mejor precio 😊\n\n` +
+      return `�Claro que te entiendo! Todos buscamos el mejor precio ??\n\n` +
         `Te cuento: el *${productName}* ya tiene un precio especial de *${price} COP*\n\n` +
-        `✅ Incluye TODO el material completo\n` +
-        `✅ Acceso de por vida\n` +
-        `✅ Entrega inmediata\n\n` +
-        `Es una inversión que vale cada peso 💪\n\n` +
-        `¿Te lo aparto? 🎯`
+        `? Incluye TODO el material completo\n` +
+        `? Acceso de por vida\n` +
+        `? Entrega inmediata\n\n` +
+        `Es una inversi�n que vale cada peso ??\n\n` +
+        `�Te lo aparto? ??`
     }
     
-    // Objeción general de precio (está caro)
-    return `Entiendo que el precio es importante 🤝\n\n` +
+    // Objeci�n general de precio (est� caro)
+    return `Entiendo que el precio es importante ??\n\n` +
       `Mira lo que incluye el *${productName}* por ${price} COP:\n\n` +
-      `✅ Material completo y actualizado\n` +
-      `✅ Acceso permanente (de por vida)\n` +
-      `✅ Sin pagos adicionales\n` +
-      `✅ Entrega inmediata por Google Drive\n\n` +
-      `Comparado con cursos presenciales o plataformas de suscripción, es una inversión única que te queda para siempre 💪\n\n` +
-      `¿Qué te parece? ¿Te lo aparto?`
+      `? Material completo y actualizado\n` +
+      `? Acceso permanente (de por vida)\n` +
+      `? Sin pagos adicionales\n` +
+      `? Entrega inmediata por Google Drive\n\n` +
+      `Comparado con cursos presenciales o plataformas de suscripci�n, es una inversi�n �nica que te queda para siempre ??\n\n` +
+      `�Qu� te parece? �Te lo aparto?`
   }
 
   private generateFollowUpResponse(product: any): string {
     const price = this.formatPrice(product.price)
     const productName = product.name
     
-    // Respuesta empática y no presionante
-    let response = `¡Hey, sin problema! 😊 Entiendo que quieras pensarlo.\n\n`
-    response += `El *${productName}* aquí sigue disponible. Cuando estés listo, solo me escribes y lo retomamos. Sin presión, ¿va? 🤝\n\n`
-    response += `💰 Precio: ${price} COP\n`
-    response += `📦 Entrega inmediata\n\n`
-    response += `━━━━━━━━━━━━━━━━━━━━\n\n`
-    response += `¿Hay algo más en lo que pueda ayudarte? 🤝`
+    // Respuesta emp�tica y no presionante
+    let response = `�Hey, sin problema! ?? Entiendo que quieras pensarlo.\n\n`
+    response += `El *${productName}* aqu� sigue disponible. Cuando est�s listo, solo me escribes y lo retomamos. Sin presi�n, �va? ??\n\n`
+    response += `?? Precio: ${price} COP\n`
+    response += `?? Entrega inmediata\n\n`
+    response += `????????????????????\n\n`
+    response += `�Hay algo m�s en lo que pueda ayudarte? ??`
     
     return response
   }
 
   private generateFutureInterestResponse(product: any | null = null): string {
-    let response = `¡Claro que sí! Quedo muy pendiente. 😊\n\n`
+    let response = `�Claro que s�! Quedo muy pendiente. ??\n\n`
     if (product) {
-       response += `Aquí guardaré la info del *${product.name}* para cuando estés listo.\n\n`
+       response += `Aqu� guardar� la info del *${product.name}* para cuando est�s listo.\n\n`
     }
-    response += `Escríbeme cuando quieras retomar. ¡Un saludo! 👋`
+    response += `Escr�beme cuando quieras retomar. �Un saludo! ??`
     return response
   }
 
   /**
-   * Saludo dinámico - muestra categorías reales de productos cargados, SIN PRECIOS
+   * Saludo din�mico - muestra categor�as reales de productos cargados, SIN PRECIOS
    */
   private async getGreetingResponse(): Promise<string> {
-    // Obtener categorías dinámicas de los productos cargados
+    // Obtener categor�as din�micas de los productos cargados
     const categories = this.getAvailableCategories()
     
-    // Intentar obtener configuración del negocio
+    // Intentar obtener configuraci�n del negocio
     let businessName = 'Tecnovariedades D&S'
     try {
       if (this.userId) {
@@ -2170,35 +2182,35 @@ export class SalesAgentSimple {
         }
       }
     } catch (error) {
-      console.error('Error obteniendo configuración:', error)
+      console.error('Error obteniendo configuraci�n:', error)
     }
 
-    // Construir lista de categorías dinámicamente
+    // Construir lista de categor�as din�micamente
     let categoriesText = ''
     for (const cat of categories) {
       categoriesText += `   ${cat.emoji} ${cat.name}\n\n`
     }
 
-    // Si no hay categorías, mostrar mensaje genérico
+    // Si no hay categor�as, mostrar mensaje gen�rico
     if (!categoriesText) {
-      categoriesText = `   📦 Productos disponibles\n\n`
+      categoriesText = `   ?? Productos disponibles\n\n`
     }
 
-    return `¡Hola! 👋 
+    return `�Hola! ?? 
 
 Bienvenido a *${businessName}*
 
-━━━━━━━━━━━━━━━━━━━━
+????????????????????
 
 Tenemos de todo para ti:
 
-${categoriesText}━━━━━━━━━━━━━━━━━━━━
+${categoriesText}????????????????????
 
-Cuéntame qué andas buscando 😊`
+Cu�ntame qu� andas buscando ??`
   }
 
   /**
-   * Obtiene las categorías disponibles basándose en los productos cargados
+   * Obtiene las categor�as disponibles bas�ndose en los productos cargados
    */
   private getAvailableCategories(): { name: string; emoji: string }[] {
     if (!this.products || this.products.length === 0) {
@@ -2210,52 +2222,52 @@ Cuéntame qué andas buscando 😊`
     for (const product of this.products) {
       const name = product.name.toLowerCase()
       
-      if (name.includes('portátil') || name.includes('portatil') || name.includes('laptop') || name.includes('notebook')) {
+      if (name.includes('port�til') || name.includes('portatil') || name.includes('laptop') || name.includes('notebook')) {
         const key = 'laptops'
         if (!categoryMap.has(key)) {
-          categoryMap.set(key, { name: 'Laptops y Computadores', emoji: '💻', count: 0 })
+          categoryMap.set(key, { name: 'Laptops y Computadores', emoji: '??', count: 0 })
         }
         categoryMap.get(key)!.count++
       } else if (name.includes('impresora') || name.includes('multifuncional')) {
         const key = 'impresoras'
         if (!categoryMap.has(key)) {
-          categoryMap.set(key, { name: 'Impresoras', emoji: '🖨️', count: 0 })
+          categoryMap.set(key, { name: 'Impresoras', emoji: '???', count: 0 })
         }
         categoryMap.get(key)!.count++
       } else if (name.includes('tablet') || name.includes('ipad')) {
         const key = 'tablets'
         if (!categoryMap.has(key)) {
-          categoryMap.set(key, { name: 'Tablets', emoji: '📱', count: 0 })
+          categoryMap.set(key, { name: 'Tablets', emoji: '??', count: 0 })
         }
         categoryMap.get(key)!.count++
       } else if (name.includes('monitor') || name.includes('pantalla')) {
         const key = 'monitores'
         if (!categoryMap.has(key)) {
-          categoryMap.set(key, { name: 'Monitores', emoji: '🖥️', count: 0 })
+          categoryMap.set(key, { name: 'Monitores', emoji: '???', count: 0 })
         }
         categoryMap.get(key)!.count++
       } else if (name.includes('moto') || name.includes('motocicleta')) {
         const key = 'motos'
         if (!categoryMap.has(key)) {
-          categoryMap.set(key, { name: 'Motos', emoji: '🏍️', count: 0 })
+          categoryMap.set(key, { name: 'Motos', emoji: '???', count: 0 })
         }
         categoryMap.get(key)!.count++
       } else if (name.includes('mega pack') || name.includes('megapack') || name.includes('curso') || product.category === 'DIGITAL') {
         const key = 'cursos'
         if (!categoryMap.has(key)) {
-          categoryMap.set(key, { name: 'Cursos Digitales', emoji: '📚', count: 0 })
+          categoryMap.set(key, { name: 'Cursos Digitales', emoji: '??', count: 0 })
         }
         categoryMap.get(key)!.count++
-      } else if (name.includes('audífono') || name.includes('audifono') || name.includes('auricular')) {
+      } else if (name.includes('aud�fono') || name.includes('audifono') || name.includes('auricular')) {
         const key = 'audifonos'
         if (!categoryMap.has(key)) {
-          categoryMap.set(key, { name: 'Audífonos', emoji: '🎧', count: 0 })
+          categoryMap.set(key, { name: 'Aud�fonos', emoji: '??', count: 0 })
         }
         categoryMap.get(key)!.count++
-      } else if (name.includes('teclado') || name.includes('mouse') || name.includes('ratón')) {
+      } else if (name.includes('teclado') || name.includes('mouse') || name.includes('rat�n')) {
         const key = 'accesorios'
         if (!categoryMap.has(key)) {
-          categoryMap.set(key, { name: 'Accesorios', emoji: '⌨️', count: 0 })
+          categoryMap.set(key, { name: 'Accesorios', emoji: '??', count: 0 })
         }
         categoryMap.get(key)!.count++
       }
@@ -2282,42 +2294,42 @@ Cuéntame qué andas buscando 😊`
           const whatsappNumber = settings.whatsappNumber || '+57 3136174267'
           const businessAddress = settings.businessAddress || 'Cali, Valle del Cauca'
           
-          return `📞 *CONTACTO ${businessName.toUpperCase()}*
+          return `?? *CONTACTO ${businessName.toUpperCase()}*
 
-✅ WhatsApp: ${whatsappNumber}
-📍 ${businessAddress}
+? WhatsApp: ${whatsappNumber}
+?? ${businessAddress}
 
-¿Algo más en lo que te pueda colaborar? 😊`
+�Algo m�s en lo que te pueda colaborar? ??`
         }
       }
     } catch (error) {
-      console.error('Error obteniendo configuración:', error)
+      console.error('Error obteniendo configuraci�n:', error)
     }
 
-    return `📞 *CONTACTO TECNOVARIEDADES D&S*
+    return `?? *CONTACTO TECNOVARIEDADES D&S*
 
-✅ WhatsApp: +57 3136174267
-📍 Cali, Valle del Cauca
+? WhatsApp: +57 3136174267
+?? Cali, Valle del Cauca
 
-¿Algo más en lo que te pueda colaborar? 😊`
+�Algo m�s en lo que te pueda colaborar? ??`
   }
 
   private getFarewellResponse(lastProduct: any): string {
-    let response = `¡Gracias por escribirnos! 🙏\n\n`
+    let response = `�Gracias por escribirnos! ??\n\n`
     if (lastProduct) {
-      response += `Recuerda que el *${lastProduct.name}* está disponible cuando lo necesites.\n\n`
+      response += `Recuerda que el *${lastProduct.name}* est� disponible cuando lo necesites.\n\n`
     }
-    response += `📞 WhatsApp: +57 3136174267\n`
-    response += `¡Que tengas un excelente día! 😊`
+    response += `?? WhatsApp: +57 3136174267\n`
+    response += `�Que tengas un excelente d�a! ??`
     return response
   }
 
   /**
-   * 📝 CLIENTE VA A ENVIAR COMPROBANTE
+   * ?? CLIENTE VA A ENVIAR COMPROBANTE
    * Usa IA para responder de forma natural y no repetitiva
    */
   private async handleWillSendReceipt(lastProduct: any, message: string, history: { role: string; content: string }[]): Promise<string> {
-    console.log('📝 [WillSendReceipt] Cliente indica que enviará comprobante - usando IA')
+    console.log('?? [WillSendReceipt] Cliente indica que enviar� comprobante - usando IA')
     
     // Construir contexto para la IA
     let productContext = ''
@@ -2326,7 +2338,7 @@ Cuéntame qué andas buscando 😊`
 PRODUCTO EN CONTEXTO:
 - Nombre: ${lastProduct.name}
 - Precio: ${this.formatPrice(lastProduct.price)} COP
-- Tipo: ${this.isPhysicalProduct(lastProduct) ? 'Físico' : 'Digital'}
+- Tipo: ${this.isPhysicalProduct(lastProduct) ? 'F�sico' : 'Digital'}
 `
     }
     
@@ -2336,24 +2348,24 @@ El cliente acaba de indicar que va a enviar el comprobante de pago.
 ${productContext}
 
 INSTRUCCIONES:
-- Responde de forma breve, amable y natural (1-2 oraciones máximo)
-- Confirma que estarás pendiente del comprobante
-- NO repitas los métodos de pago
+- Responde de forma breve, amable y natural (1-2 oraciones m�ximo)
+- Confirma que estar�s pendiente del comprobante
+- NO repitas los m�todos de pago
 - NO des instrucciones largas
-- Conserva un tono conversacional y cálido
-- Puedes usar 1-2 emojis máximo
+- Conserva un tono conversacional y c�lido
+- Puedes usar 1-2 emojis m�ximo
 - Si hay producto en contexto, puedes mencionarlo brevemente
 
 EJEMPLOS DE RESPUESTAS BUENAS:
-- "¡Perfecto! Aquí estaré pendiente 😊"
-- "¡Genial! Cuando lo tengas me avisas y te paso el acceso"
-- "¡Listo! Te espero con el comprobante"
-- "Ok, aquí estoy cuando lo envíes 👍"
+- "�Perfecto! Aqu� estar� pendiente ??"
+- "�Genial! Cuando lo tengas me avisas y te paso el acceso"
+- "�Listo! Te espero con el comprobante"
+- "Ok, aqu� estoy cuando lo env�es ??"
 
 Responde SOLO con el mensaje, sin explicaciones adicionales.`
 
     try {
-      // Usar IA híbrida para responder
+      // Usar IA h�brida para responder
       const aiResponse = await askGroq(message, systemPrompt)
       
       if (aiResponse && aiResponse.length > 0 && aiResponse.length < 300) {
@@ -2365,95 +2377,95 @@ Responde SOLO con el mensaje, sin explicaciones adicionales.`
     
     // Fallback simple si la IA falla
     if (lastProduct) {
-      return `¡Perfecto! 👍 Aquí estaré pendiente de tu comprobante para *${lastProduct.name}*.`
+      return `�Perfecto! ?? Aqu� estar� pendiente de tu comprobante para *${lastProduct.name}*.`
     }
-    return `¡Perfecto! 👍 Aquí estaré pendiente.`
+    return `�Perfecto! ?? Aqu� estar� pendiente.`
   }
 
   /**
-   * 📦 MANEJO DE COMPROBANTE DE PAGO
-   * Cuando el cliente envía comprobante, entrega el link de Google Drive
+   * ?? MANEJO DE COMPROBANTE DE PAGO
+   * Cuando el cliente env�a comprobante, entrega el link de Google Drive
    */
   private async handlePaymentReceipt(lastProduct: any, userPhone: string): Promise<string> {
-    console.log('📦 [PaymentReceipt] Cliente envía comprobante de pago')
+    console.log('?? [PaymentReceipt] Cliente env�a comprobante de pago')
     
     // Si hay producto en contexto, entregar ese
     if (lastProduct && lastProduct.deliveryLink) {
-      console.log(`📦 [PaymentReceipt] Entregando: ${lastProduct.name}`)
+      console.log(`?? [PaymentReceipt] Entregando: ${lastProduct.name}`)
       
-      return `🎉 *¡PAGO RECIBIDO!*
+      return `?? *�PAGO RECIBIDO!*
 
-¡Gracias por tu compra! 🙏
+�Gracias por tu compra! ??
 
-📦 *Producto:* ${lastProduct.name}
-💰 *Valor:* ${this.formatPrice(lastProduct.price)} COP
+?? *Producto:* ${lastProduct.name}
+?? *Valor:* ${this.formatPrice(lastProduct.price)} COP
 
-🔗 *Tu acceso está listo:*
+?? *Tu acceso est� listo:*
 ${lastProduct.deliveryLink}
 
-📝 *Instrucciones:*
+?? *Instrucciones:*
 1. Haz clic en el enlace
-2. Inicia sesión con tu cuenta de Google
-3. ¡Disfruta tu contenido!
+2. Inicia sesi�n con tu cuenta de Google
+3. �Disfruta tu contenido!
 
-💡 *Importante:*
+?? *Importante:*
 - El acceso es de por vida
 - Puedes descargar el contenido
 - Guarda este mensaje
 
-❓ ¿Tienes alguna duda? Escríbeme 😊
+? �Tienes alguna duda? Escr�beme ??
 
-_Tecnovariedades D&S_ ✨`
+_Tecnovariedades D&S_ ?`
     }
     
-    // Si hay producto pero sin link de entrega (producto físico)
+    // Si hay producto pero sin link de entrega (producto f�sico)
     if (lastProduct && !lastProduct.deliveryLink) {
       const isPhysical = this.isPhysicalProduct(lastProduct)
       
       if (isPhysical) {
-        return `✅ *¡Comprobante recibido!*
+        return `? *�Comprobante recibido!*
 
-Gracias por tu pago de *${lastProduct.name}* 🙏
+Gracias por tu pago de *${lastProduct.name}* ??
 
-📦 *Siguiente paso:*
-Nuestro equipo verificará el pago y te contactará para coordinar la entrega.
+?? *Siguiente paso:*
+Nuestro equipo verificar� el pago y te contactar� para coordinar la entrega.
 
-📍 *Opciones de entrega:*
-▸ Recoger en tienda (Cali)
-▸ Contraentrega
+?? *Opciones de entrega:*
+? Recoger en tienda (Cali)
+? Contraentrega
 
-📞 Te confirmaremos en breve.
+?? Te confirmaremos en breve.
 
-_Tecnovariedades D&S_ ✨`
+_Tecnovariedades D&S_ ?`
       }
     }
     
     // Si no hay producto en contexto
-    return `✅ *¡Comprobante recibido!*
+    return `? *�Comprobante recibido!*
 
-Gracias por enviarlo 🙏
+Gracias por enviarlo ??
 
 Para entregarte tu acceso, por favor confirma:
-📦 *¿Cuál producto compraste?*
+?? *�Cu�l producto compraste?*
 
-Dime el nombre y te envío el link de acceso inmediatamente 🚀`
+Dime el nombre y te env�o el link de acceso inmediatamente ??`
   }
 
   /**
-   * Respuesta genérica - USA IA HÍBRIDA, nunca menú estático
+   * Respuesta gen�rica - USA IA H�BRIDA, nunca men� est�tico
    * Ollama primero, Groq si falla
    */
   private async getGenericResponseWithAI(message: string, history: { role: string; content: string }[]): Promise<string> {
-    // Construir contexto de la conversación
+    // Construir contexto de la conversaci�n
     const context = history.slice(-6).map(h => `${h.role}: ${h.content}`).join('\n')
     
-    // Usar sistema híbrido
+    // Usar sistema h�brido
     const aiResponse = await getHybridResponse(message, context, this.products)
     return aiResponse
   }
 
   /**
-   * Respuesta con contexto de producto específico
+   * Respuesta con contexto de producto espec�fico
    * Usa IA para responder preguntas sobre el producto actual
    */
   private async getProductContextResponse(
@@ -2468,9 +2480,9 @@ Dime el nombre y te envío el link de acceso inmediatamente 🚀`
     const productInfo = `
 PRODUCTO ACTUAL: ${product.name}
 PRECIO: ${price} COP
-TIPO: ${isPhysical ? 'Producto físico' : 'Producto digital'}
-DESCRIPCIÓN: ${product.description || 'Sin descripción'}
-ENTREGA: ${isPhysical ? 'Envío a toda Colombia' : 'Entrega inmediata por Google Drive'}
+TIPO: ${isPhysical ? 'Producto f�sico' : 'Producto digital'}
+DESCRIPCI�N: ${product.description || 'Sin descripci�n'}
+ENTREGA: ${isPhysical ? 'Env�o a toda Colombia' : 'Entrega inmediata por Google Drive'}
 LINKS DE PAGO:
 ${product.paymentLinkMercadoPago ? `- MercadoPago: ${product.paymentLinkMercadoPago}` : ''}
 ${product.paymentLinkPayPal ? `- PayPal: ${product.paymentLinkPayPal}` : ''}
@@ -2499,7 +2511,7 @@ ${product.paymentLinkCustom ? `- Otro: ${product.paymentLinkCustom}` : ''}
   }
 
   /**
-   * Respuesta genérica simple (fallback sin IA)
+   * Respuesta gen�rica simple (fallback sin IA)
    */
   private getGenericResponse(): string {
     const categories = this.getAvailableCategories()
@@ -2510,15 +2522,15 @@ ${product.paymentLinkCustom ? `- Otro: ${product.paymentLinkCustom}` : ''}
     }
 
     if (!categoriesText) {
-      categoriesText = `📦 Productos disponibles\n`
+      categoriesText = `?? Productos disponibles\n`
     }
 
-    return `¡Claro! 😊 
+    return `�Claro! ?? 
 
-Cuéntame más sobre lo que buscas:
+Cu�ntame m�s sobre lo que buscas:
 
 ${categoriesText}
-¿Para qué lo necesitas? Así te recomiendo la mejor opción 🎯`
+�Para qu� lo necesitas? As� te recomiendo la mejor opci�n ??`
   }
 
   clearContext(userPhone: string) {
@@ -2530,9 +2542,9 @@ ${categoriesText}
   }
 
   /**
-   * 🆕 Procesa mensaje usando el nuevo sistema multi-servicio
-   * Este método es OPCIONAL - usa UnifiedResponseService para negocios
-   * que no son solo tiendas (servicios, restaurantes, híbridos)
+   * ?? Procesa mensaje usando el nuevo sistema multi-servicio
+   * Este m�todo es OPCIONAL - usa UnifiedResponseService para negocios
+   * que no son solo tiendas (servicios, restaurantes, h�bridos)
    */
   async processMessageMultiService(
     message: string, 
@@ -2543,7 +2555,7 @@ ${categoriesText}
       // Verificar si hay userId
       const userId = context?.userId || this.userId
       if (!userId) {
-        console.log('⚠️ No userId, usando sistema tradicional')
+        console.log('?? No userId, usando sistema tradicional')
         return this.processMessage(message, userPhone, context)
       }
 
@@ -2552,12 +2564,12 @@ ${categoriesText}
       
       // Si es tienda tradicional (STORE) o no detectado, usar sistema actual
       if (businessContext.type === 'STORE' || businessContext.type === 'UNKNOWN') {
-        console.log(`🏪 Negocio tipo ${businessContext.type}, usando sistema tradicional`)
+        console.log(`?? Negocio tipo ${businessContext.type}, usando sistema tradicional`)
         return this.processMessage(message, userPhone, context)
       }
 
       // Para SERVICE, RESTAURANT o HYBRID, usar nuevo sistema
-      console.log(`🎯 Negocio tipo ${businessContext.type}, usando sistema multi-servicio`)
+      console.log(`?? Negocio tipo ${businessContext.type}, usando sistema multi-servicio`)
       
       // Convertir productos al formato Item
       const items = this.products.map(p => ({
@@ -2592,20 +2604,20 @@ ${categoriesText}
       }
 
     } catch (error) {
-      console.error('❌ Error en multi-service, fallback a tradicional:', error)
+      console.error('? Error en multi-service, fallback a tradicional:', error)
       return this.processMessage(message, userPhone, context)
     }
   }
 
   /**
-   * 🆕 Detecta y actualiza el tipo de negocio basado en los productos
+   * ?? Detecta y actualiza el tipo de negocio basado en los productos
    */
   async detectBusinessType(): Promise<string> {
     if (!this.userId) return 'UNKNOWN'
     
     try {
       const context = await BusinessContextDetector.detectAndSave(this.userId)
-      console.log(`🏢 Tipo de negocio detectado: ${context.type} (${(context.confidence * 100).toFixed(0)}%)`)
+      console.log(`?? Tipo de negocio detectado: ${context.type} (${(context.confidence * 100).toFixed(0)}%)`)
       return context.type
     } catch (error) {
       console.error('Error detectando tipo de negocio:', error)
@@ -2614,39 +2626,39 @@ ${categoriesText}
   }
 
   /**
-   * Genera una respuesta inteligente para preguntas que no tienen un template específico
+   * Genera una respuesta inteligente para preguntas que no tienen un template espec�fico
    */
   private async generateAIAnswer(
     question: string,
     currentProduct: any | null,
     history: any[]
   ): Promise<string> {
-    const prompt = `Eres un asesor de ventas experto de "Tecnovariedades D&S". Tu objetivo es responder la pregunta del cliente de forma profesional, cálida y orientada a la venta.
+    const prompt = `Eres un asesor de ventas experto de "Tecnovariedades D&S". Tu objetivo es responder la pregunta del cliente de forma profesional, c�lida y orientada a la venta.
 
 CONTEXTO DEL PRODUCTO:
 ${currentProduct ? `${currentProduct.name} ($${currentProduct.price} COP): ${currentProduct.description}
 ${currentProduct.paymentLinkMercadoPago ? `- Link MercadoPago (Tarjeta/PSE): ${currentProduct.paymentLinkMercadoPago}` : ''}
 ${currentProduct.paymentLinkPayPal ? `- Link PayPal: ${currentProduct.paymentLinkPayPal}` : ''}
-${currentProduct.paymentLinkCustom ? `- Otro Link de Pago: ${currentProduct.paymentLinkCustom}` : ''}` : 'No hay un producto específico en este momento.'}
+${currentProduct.paymentLinkCustom ? `- Otro Link de Pago: ${currentProduct.paymentLinkCustom}` : ''}` : 'No hay un producto espec�fico en este momento.'}
 
-HISTORIAL DE CONVERSACIÓN:
+HISTORIAL DE CONVERSACI�N:
 ${history.slice(-4).map(h => `${h.role === 'user' ? 'Cliente' : 'Asistente'}: ${h.content}`).join('\n')}
 
 PREGUNTA DEL CLIENTE:
 "${question}"
 
-INSTRUCCIONES CRÍTICAS:
-- ❌ NUNCA inventes información que no esté en el contexto de arriba
-- ❌ NO menciones productos, precios o características que no aparezcan arriba
-- ✅ USA SOLO la información del producto y links de pago proporcionados
-- ✅ Si no tienes la información exacta, di "déjame verificar eso" o "un momento, te confirmo"
-- ✅ Responde directamente, sin rodeos, máximo 3-4 líneas
-- ✅ Usa un tono humano, profesional y cálido
-- ✅ Incluye 1-2 emojis naturales
-- ✅ Si preguntan por contacto: WhatsApp +57 3136174267, Ubicación: Cali, Valle del Cauca
-- ✅ Si piden datos de pago: Nequi/Daviplata 3136174267 (Tecnovariedades D&S)
+INSTRUCCIONES CR�TICAS:
+- ? NUNCA inventes informaci�n que no est� en el contexto de arriba
+- ? NO menciones productos, precios o caracter�sticas que no aparezcan arriba
+- ? USA SOLO la informaci�n del producto y links de pago proporcionados
+- ? Si no tienes la informaci�n exacta, di "d�jame verificar eso" o "un momento, te confirmo"
+- ? Responde directamente, sin rodeos, m�ximo 3-4 l�neas
+- ? Usa un tono humano, profesional y c�lido
+- ? Incluye 1-2 emojis naturales
+- ? Si preguntan por contacto: WhatsApp +57 3136174267, Ubicaci�n: Cali, Valle del Cauca
+- ? Si piden datos de pago: Nequi/Daviplata 3136174267 (Tecnovariedades D&S)
 
-RESPUESTA (en español):`;
+RESPUESTA (en espa�ol):`;
 
     try {
       const url = process.env.OLLAMA_URL || 'http://localhost:11434/api/generate';
@@ -2677,7 +2689,7 @@ RESPUESTA (en español):`;
         return data.response.trim();
       }
     } catch (e) {
-      console.log('⚠️ Ollama falló en generateAIAnswer, usando Groq...');
+      console.log('?? Ollama fall� en generateAIAnswer, usando Groq...');
     }
 
     const completion = await this.groq.chat.completions.create({
@@ -2685,22 +2697,22 @@ RESPUESTA (en español):`;
       model: process.env.GROQ_MODEL || 'llama-3.1-8b-instant',
     });
 
-    return completion.choices[0]?.message?.content?.trim() || 'Entiendo tu duda. Déjame consultar la información exacta para ayudarte mejor. 😊';
+    return completion.choices[0]?.message?.content?.trim() || 'Entiendo tu duda. D�jame consultar la informaci�n exacta para ayudarte mejor. ??';
   }
 }
 
-// 🆕 Multi-tenant Instance Cache
+// ?? Multi-tenant Instance Cache
 const salesAgentInstances = new Map<string, SalesAgentSimple>()
 
 /**
- * Obtiene o crea una instancia de SalesAgentSimple para un usuario específico
- * @param userId ID del dueño de la tienda (tenant)
+ * Obtiene o crea una instancia de SalesAgentSimple para un usuario espec�fico
+ * @param userId ID del due�o de la tienda (tenant)
  */
 export function getSalesAgent(userId?: string): SalesAgentSimple {
   const key = userId || 'default'
   
   if (!salesAgentInstances.has(key)) {
-    console.log(`🆕 Creando nueva instancia de SalesAgent para: ${key}`)
+    console.log(`?? Creando nueva instancia de SalesAgent para: ${key}`)
     salesAgentInstances.set(key, new SalesAgentSimple(userId))
   }
   
