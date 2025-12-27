@@ -48,6 +48,7 @@ DECISIONES POSIBLES:
 
 INSTRUCCIONES CRÍTICAS:
 - ❌ NO inventes productos. Si el cliente pregunta por algo que NO está en el catálogo (ej. "computadora" y solo hay "teléfonos"), DEBES devolver "selectedProductIndex": null.
+- ⚡ **REGLA DE ORO DE ENTREGAS**: Si el cliente pregunta cómo se entrega un "Mega Pack" o "Curso", la respuesta es SIEMPRE Digital (Google Drive). NUNCA sugieras envío físico o recogida para estos.
 - ✅ Analiza si el cliente se refiere a un producto específico del catálogo anterior.
 - ✅ Si el cliente dice "sí", "dale", "me interesa" después de que le mostraste un producto, decide 'show_payment'.
 - ✅ Si el cliente elige o menciona un método de pago específico (Tarjeta de crédito, PayPal, Nequi, Transferencia, etc.), decide 'payment_method_selected'.

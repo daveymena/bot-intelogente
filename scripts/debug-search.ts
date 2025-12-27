@@ -1,122 +1,44 @@
 
-import { db } from '../src/lib/db';
+import { PrismaClient } from '@prisma/client';
+import * as fs from 'fs';
+const prisma = new PrismaClient();
 
-async function debugSearch(query: string, userId: string = 'user2') {
-    console.log(`\n🔎 DEBUGGING SEARCH: "${query}" for User: ${userId}`);
-    
-    // 1. REPLICATE LOGIC FROM ProductRAG.search
-    const queryLower = query.toLowerCase();
-
-    // Check DB
-    // Try to find ANY user if user2 fails, just to check existence
-    const users = await db.user.findMany();
-    console.log(`👤 Users in DB: ${users.length} (${users.map(u => u.phone).join(', ')})`);
-    
-    const targetUserId = userId === 'user2' ? users[0]?.id : userId; // Use first user if user2 not found
-    console.log(`🎯 Using UserId: ${targetUserId}`);
-
-    const products = await db.product.findMany({
-        where: {
-            userId: targetUserId,
-            status: 'AVAILABLE'
-        }
+async function debug() {
+  try {
+    const products = await prisma.product.findMany({
+      where: { status: 'AVAILABLE' }
     });
 
-    console.log(`📦 Total Products for User: ${products.length}`);
+    let output = `Total available products: ${products.length}\n`;
 
-    if (products.length === 0) {
-        console.log('❌ NO PRODUCTS FOUND FOR USER');
-        return;
-    }
+    const idiomas = products.filter(p => 
+      p.name.toLowerCase().includes('idioma') || 
+      (p.description || '').toLowerCase().includes('idioma') ||
+      (p.tags || '').toLowerCase().includes('idioma') ||
+      p.name.toLowerCase().includes('ingl') ||
+      p.name.toLowerCase().includes('franc')
+    );
 
-    // CATEGORIAS MAPPING
-    const categorias = {
-      'idiomas': ['idiomas', 'idioma', 'ingles', 'frances', 'aleman', 'portugues', 'italiano', 'chino', 'japones', 'language', 'languages'],
-      'piano': ['piano'],
-      // ... others
-      'pack': ['pack', 'megapack', 'mega'] 
-    };
-
-    // Detect Category
-    let categoriaDetectada: string | null = null;
-    for (const [categoria, palabras] of Object.entries(categorias)) {
-      if (palabras.some(p => queryLower.includes(p))) {
-        categoriaDetectada = categoria;
-        console.log(`🏷️  Categoría detectada: ${categoria}`);
-        // break; // Original code breaks? perfect-bot-system.ts line 70
-        // FIX: The original code breaks on first match. 
-        // If "mega psck de idiomas" matches "pack" first (if I added it), it might ignore "idiomas".
-        // In original file:
-        // 'idiomas' is first in list? No, it's an object, order not guaranteed but usually definition order.
-        // In perfect-bot-system.ts:
-        /*
-        const categorias = {
-          'idiomas': [...],
-          'piano': [...],
-          'guitarra': [...],
-          'diseño': [...],
-          'laptop': [...],
-          'moto': [...],
-          'album': [...]
-        }
-        */
-      }
-    }
-    // Replicating original exact order logic
-    const categoriasOriginal = {
-      'idiomas': ['idiomas', 'idioma', 'ingles', 'frances', 'aleman', 'portugues', 'italiano', 'chino', 'japones', 'language', 'languages'],
-      'piano': ['piano'],
-      'guitarra': ['guitarra', 'guitar'],
-      'diseño': ['diseño', 'design', 'grafico', 'photoshop', 'illustrator', 'corel'],
-      'laptop': ['laptop', 'computador', 'portatil', 'notebook', 'asus', 'hp', 'lenovo', 'dell'],
-      'moto': ['moto', 'motocicleta', 'pulsar', 'bajaj', 'yamaha', 'honda'],
-      'album': ['album', 'albumes', 'coleccion', 'collection']
-    }
-    
-    let catDetectada = null;
-    for (const [cat, words] of Object.entries(categoriasOriginal)) {
-         if (words.some(p => queryLower.includes(p))) {
-             catDetectada = cat;
-             console.log(`🏷️  [REAL] Categoría detectada: ${cat}`);
-             break;
-         }
-    }
-
-    // SCORING
-    const scored = products.map(p => {
-        let score = 0;
-        const nombreLower = p.name.toLowerCase();
-        const descLower = (p.description || '').toLowerCase();
-        const trace = [];
-
-        // 1. CATEGORY
-        if (catDetectada) {
-            const palabrasCategoria = categoriasOriginal[catDetectada as keyof typeof categoriasOriginal];
-            const pertenece = palabrasCategoria.some(w => nombreLower.includes(w) || descLower.includes(w));
-            if (pertenece) {
-                score += 100;
-                trace.push('+100 Category Match');
-            } else {
-                score -= 100;
-                trace.push('-100 Category Mismatch');
-            }
-        }
-
-        // 2. KEYWORDS
-        // ... (simplified)
-        if (queryLower.includes('mega') && nombreLower.includes('mega')) score += 15;
-        if (queryLower.includes('idiomas') && nombreLower.includes('idiomas')) score += 15;
-
-        return { name: p.name, score, trace };
+    output += '\n--- IDIOMAS CANDIDATES ---\n';
+    idiomas.forEach(p => {
+      output += `- [${p.id}] ${p.name}\n`;
+      output += `  Tags: ${p.tags}\n`;
     });
 
-    scored.sort((a,b) => b.score - a.score);
+    const diseño = products.filter(p => 
+      p.name.toLowerCase().includes('diseño')
+    );
+    output += '\n--- DISEÑO CANDIDATES ---\n';
+    diseño.slice(0, 5).forEach(p => output += `- ${p.name}\n`);
 
-    console.log('\n📊 Top 5 Results:');
-    scored.slice(0, 5).forEach(s => {
-        console.log(`   ${s.score} | ${s.name} | ${s.trace.join(', ')}`);
-    });
+    fs.writeFileSync('search_debug.txt', output);
+    console.log('Results written to search_debug.txt');
+
+  } catch (e) {
+    console.error(e);
+  } finally {
+    await prisma.$disconnect();
+  }
 }
 
-// Run
-debugSearch('Busco un mega psck de idiomas');
+debug();

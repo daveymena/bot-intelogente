@@ -294,7 +294,7 @@ export default function DescargasPage() {
               <Button 
                 variant="outline"
                 className="border-slate-600 text-slate-300 hover:bg-slate-700"
-                onClick={() => window.open('https://wa.me/573136174267', '_blank')}
+                onClick={() => window.open('https://wa.me/573042748687', '_blank')}
               >
                 Contactar Soporte
               </Button>

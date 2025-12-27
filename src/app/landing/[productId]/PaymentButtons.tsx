@@ -20,7 +20,7 @@ export default function PaymentButtons({
 }: PaymentButtonsProps) {
   
   const handleWhatsApp = () => {
-    const whatsappNumber = '573136174267';
+    const whatsappNumber = '573042748687';
     const message = `Hola! Quiero comprar: ${productName} - Precio: $${price.toLocaleString('es-CO')} COP`;
     window.open(
       `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, 

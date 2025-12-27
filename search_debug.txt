@@ -1,0 +1,12 @@
+Total available products: 71
+
+--- IDIOMAS CANDIDATES ---
+- [cmjg69kmj001rkmbgx1do4qet] Mega Pack 03: Cursos Inglés
+  Tags: []
+- [cmjhgc77b005nmi3kow8mb7vf] MegaPack Golden
+  Tags: ["mega pack","cursos"]
+
+--- DISEÑO CANDIDATES ---
+- Mega Pack 01: Cursos Diseño Gráfico
+- Mega Pack 24: Recursos para diseño Arquitectura
+- Mega Pack 07: Archivos editables de diseño gráfico

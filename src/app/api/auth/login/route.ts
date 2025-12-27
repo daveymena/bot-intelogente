@@ -10,6 +10,8 @@ const loginSchema = z.object({
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
+    console.log('🔐 Login attempt:', { email: body.email, passwordLength: body.password?.length })
+    
     const validatedData = loginSchema.parse(body)
 
     const { user, token } = await AuthService.login(validatedData)

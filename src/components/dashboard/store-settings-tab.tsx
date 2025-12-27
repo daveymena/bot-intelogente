@@ -26,6 +26,7 @@ interface StoreSettings {
   instagram: string
   twitter: string
   tiktok: string
+  layoutTemplate: string
 }
 
 export function StoreSettingsTab() {
@@ -51,7 +52,8 @@ export function StoreSettingsTab() {
     facebook: '',
     instagram: '',
     twitter: '',
-    tiktok: ''
+    tiktok: '',
+    layoutTemplate: 'smartjoys'
   })
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -148,6 +150,54 @@ export function StoreSettingsTab() {
               rows={3}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
+          </div>
+        </div>
+      </div>
+
+      {/* Diseño de Tienda */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <Palette className="w-6 h-6 text-indigo-600" />
+          <h2 className="text-xl font-bold">Diseño de la Tienda</h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div 
+            onClick={() => setSettings({ ...settings, layoutTemplate: 'modern' })}
+            className={`cursor-pointer rounded-xl border-2 p-4 transition-all hover:shadow-md ${
+              settings.layoutTemplate === 'modern' ? 'border-blue-600 bg-blue-50' : 'border-gray-200 bg-white'
+            }`}
+          >
+            <div className="aspect-video bg-gray-200 rounded-lg mb-3 flex items-center justify-center text-gray-400 font-bold">
+              Diseño Moderno (Default)
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="font-bold">Moderno</span>
+              {settings.layoutTemplate === 'modern' && <div className="w-3 h-3 bg-blue-600 rounded-full" />}
+            </div>
+            <p className="text-xs text-gray-500 mt-1">Limpio, minimalista y adaptable a cualquier marca.</p>
+          </div>
+
+          <div 
+            onClick={() => setSettings({ ...settings, layoutTemplate: 'smartjoys' })}
+            className={`cursor-pointer rounded-xl border-2 p-4 transition-all hover:shadow-md ${
+              settings.layoutTemplate === 'smartjoys' ? 'border-red-600 bg-red-50' : 'border-gray-200 bg-white'
+            }`}
+          >
+            <div className="aspect-video bg-gray-900 rounded-lg mb-3 flex flex-col items-center justify-center p-2">
+              <div className="w-full h-2 bg-red-600 rounded mb-1" />
+              <div className="text-[10px] text-white font-bold">Tienda Dos (SmartJoys style)</div>
+              <div className="w-full flex-1 grid grid-cols-3 gap-1 mt-1">
+                <div className="bg-gray-700 rounded h-4" />
+                <div className="bg-gray-700 rounded h-4" />
+                <div className="bg-gray-700 rounded h-4" />
+              </div>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="font-bold">Tienda Dos (SmartJoys)</span>
+              {settings.layoutTemplate === 'smartjoys' && <div className="w-3 h-3 bg-red-600 rounded-full" />}
+            </div>
+            <p className="text-xs text-gray-500 mt-1">Diseño de alto impacto enfocado en conversión y tecnología.</p>
           </div>
         </div>
       </div>

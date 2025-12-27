@@ -17,7 +17,7 @@ export default function WhatsAppButton({
   children 
 }: WhatsAppButtonProps) {
   const handleClick = () => {
-    const whatsappNumber = '573136174267';
+    const whatsappNumber = '573042748687';
     const fullMessage = `${message} ${productName}`;
     window.open(
       `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(fullMessage)}`, 

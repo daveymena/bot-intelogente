@@ -50,6 +50,7 @@ export async function GET(request: NextRequest) {
           address: '',
           city: '',
           country: 'Colombia',
+          layoutTemplate: 'smartjoys',
           facebook: '',
           instagram: '',
           twitter: '',

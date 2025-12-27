@@ -52,14 +52,25 @@ export function useSessionPersistence() {
   // Renovar sesión al hacer focus en la ventana
   useEffect(() => {
     const handleFocus = async () => {
+      // Evitar fetch si no hay internet
+      if (typeof window !== 'undefined' && !window.navigator.onLine) return
+
       try {
         await fetch('/api/auth/session', {
           method: 'GET',
-          credentials: 'include'
+          credentials: 'include',
+          // Timeout corto para evitar colgar la UI
+          signal: AbortSignal.timeout(5000)
         })
         console.log('✅ Sesión renovada (focus)')
       } catch (error) {
-        console.error('Error renovando sesión:', error)
+        // Silenciar errores de red o interrupciones de extensiones
+        if (error instanceof Error && error.name === 'AbortError') {
+          console.warn('⚠️ Renovación de sesión cancelada por timeout')
+        } else {
+          // No loguear como error fatal para evitar ruido en consola del usuario
+          console.log('ℹ️ Reintento de sesión pospuesto (red/fetch ocupado)')
+        }
       }
     }
 
