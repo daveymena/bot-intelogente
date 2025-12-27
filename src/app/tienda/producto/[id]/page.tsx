@@ -214,12 +214,32 @@ export default function ProductoPage({ params }: { params: { id: string } }) {
         window.open(data.paymentUrl, '_blank')
       } else {
         console.error('❌ Error en respuesta:', data)
-        const errorMsg = data.error || 'Error generando link de pago'
-        alert(`❌ ${errorMsg}\n\nPor favor verifica que MercadoPago esté configurado correctamente.`)
+        
+        // Construir mensaje de error más útil
+        let errorMsg = data.error || 'Error generando link de pago'
+        
+        // Si hay detalles adicionales, mostrarlos
+        if (data.details) {
+          console.error('📋 Detalles del error:', data.details)
+        }
+        
+        // Mensaje específico si no hay token configurado
+        if (errorMsg.includes('no configurado') || errorMsg.includes('Access Token')) {
+          alert(`❌ MercadoPago no está configurado\n\n` +
+                `Para usar MercadoPago necesitas:\n` +
+                `1. Obtener tu Access Token de MercadoPago\n` +
+                `2. Configurarlo en el Dashboard\n` +
+                `3. Asegurarte de que tu cuenta de MercadoPago esté activa y verificada.\n\n` +
+                `Mientras tanto, puedes usar:\n` +
+                `• WhatsApp para coordinar el pago\n` +
+                `• Contraentrega (pago al recibir)`)
+        } else {
+          alert(`❌ ${errorMsg}\n\nPor favor intenta de nuevo o contacta por WhatsApp.`)
+        }
       }
     } catch (error) {
       console.error('❌ Error generando link:', error)
-      alert('❌ Error de conexión. Por favor intenta de nuevo.')
+      alert('❌ Error de conexión. Por favor intenta de nuevo o contacta por WhatsApp.')
     } finally {
       setGeneratingPayment(false)
     }

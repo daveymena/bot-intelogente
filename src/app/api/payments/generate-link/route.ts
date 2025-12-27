@@ -93,9 +93,21 @@ async function generateMercadoPagoLink(productId: string, productName: string, a
 
     if (!response.ok) {
       console.error('[MercadoPago] Error en respuesta:', data)
+      
+      // Extraer mensaje de error más descriptivo
+      let errorMessage = 'Error creando preferencia en MercadoPago'
+      if (data.message) {
+        errorMessage = data.message
+      } else if (data.error) {
+        errorMessage = typeof data.error === 'string' ? data.error : JSON.stringify(data.error)
+      } else if (data.cause && data.cause.length > 0) {
+        errorMessage = data.cause.map((c: any) => c.description || c.code).join(', ')
+      }
+      
       return NextResponse.json({ 
         success: false, 
-        error: data.message || 'Error creando preferencia en MercadoPago' 
+        error: errorMessage,
+        details: data
       }, { status: response.status })
     }
 
@@ -108,16 +120,18 @@ async function generateMercadoPagoLink(productId: string, productName: string, a
       })
     }
 
-    console.error('[MercadoPago] No se recibió init_point')
+    console.error('[MercadoPago] No se recibió init_point:', data)
     return NextResponse.json({ 
       success: false, 
-      error: 'No se pudo generar el link de pago' 
+      error: 'No se pudo generar el link de pago. Verifica tu configuración de MercadoPago.',
+      details: data
     }, { status: 500 })
   } catch (error) {
     console.error('[MercadoPago] Error:', error)
     return NextResponse.json({ 
       success: false, 
-      error: error instanceof Error ? error.message : 'Error con MercadoPago' 
+      error: error instanceof Error ? error.message : 'Error con MercadoPago. Verifica tu Access Token.',
+      details: error instanceof Error ? error.stack : String(error)
     }, { status: 500 })
   }
 }
