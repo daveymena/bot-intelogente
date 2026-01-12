@@ -36,33 +36,15 @@ export class AIService {
     }
 
     async generateResponse(prompt, context = {}) {
-        // Intentar con Ollama primero (gratis y local)
-        if (process.env.USE_OLLAMA === 'true') {
-            try {
-                console.log('🤖 Usando Ollama (IA local)...');
-                const response = await this.callOllama(prompt, context);
-                this.failureCount.ollama = 0; // Reset contador de fallos
-                return response;
-            } catch (error) {
-                this.failureCount.ollama++;
-                console.log(`⚠️ Ollama falló (${this.failureCount.ollama} veces), usando Groq como respaldo...`);
-            }
+        // Usar Ollama siempre (Easypanel)
+        try {
+            console.log('🤖 Consultando Ollama en Easypanel...');
+            const response = await this.callOllama(prompt, context);
+            return response;
+        } catch (error) {
+            console.error('❌ Error en Ollama:', error.message);
+            throw new Error('Servicio de Ollama no disponible temporalmente');
         }
-
-        // Fallback a Groq (rápido en la nube)
-        if (this.hybridEnabled && this.groqKeys.length > 0) {
-            try {
-                console.log('☁️ Usando Groq (IA en la nube)...');
-                const response = await this.callGroq(prompt, context);
-                this.failureCount.groq = 0;
-                return response;
-            } catch (error) {
-                this.failureCount.groq++;
-                console.error('❌ Groq también falló:', error.message);
-            }
-        }
-
-        throw new Error('No hay proveedores de IA disponibles');
     }
 
     async callOllama(prompt, context) {

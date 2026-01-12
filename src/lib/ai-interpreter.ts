@@ -76,7 +76,7 @@ export interface InterpretedMessage {
 }
 
 /**
- * 🧠 Interpreta el mensaje del cliente usando IA
+ * 🧠 Interpreta el mensaje del cliente usando Ollama (Easypanel)
  */
 export async function interpretMessage(
   message: string,
@@ -88,16 +88,11 @@ export async function interpretMessage(
   }
 ): Promise<InterpretedMessage> {
   
-  const client = getGroqClient()
-  
-  // Si no hay Groq, usar análisis local básico
-  if (!client) {
-    console.log('⚠️ Groq no disponible, usando análisis local')
-    return analyzeLocally(message, products, conversationContext)
-  }
-  
+  const ollamaUrl = process.env.OLLAMA_BASE_URL || 'http://localhost:11434'
+  const ollamaModel = process.env.OLLAMA_MODEL || 'qwen2.5:7b'
+
   try {
-    console.log(`🧠 AI Interpreter analizando: "${message}"`)
+    console.log(`🧠 AI Interpreter (Ollama) analizando: "${message}"`)
     
     // Crear lista de productos para el contexto
     const productList = products.slice(0, 50).map((p, i) => 
@@ -114,6 +109,7 @@ export async function interpretMessage(
     ).join('\n') || ''
 
     const systemPrompt = `Eres un analizador de intenciones para un bot de ventas colombiano.
+RESPONDE ÚNICAMENTE CON UN OBJETO JSON VÁLIDO. NO incluyas explicaciones ni markdown.
 
 TU TAREA: Analizar el mensaje del cliente y extraer:
 1. INTENCIÓN: Qué quiere hacer el cliente
@@ -128,105 +124,57 @@ HISTORIAL RECIENTE:
 ${historyInfo || 'Sin historial'}
 
 INTENCIONES POSIBLES:
-- greeting: Saludo ("hola", "buenos días", "qué tal")
-- product_search: Busca producto específico ("tienes laptops", "quiero el mega pack golden")
-- category_browse: Quiere ver categoría ("muéstrame portátiles", "qué cursos tienes")
-- more_options: Quiere más opciones ("tienes más", "otras referencias", "qué más hay")
-- product_info: Pregunta sobre producto en contexto ("qué incluye", "cómo funciona")
-- price_inquiry: Pregunta precio ("cuánto cuesta", "precio")
-- payment_inquiry: Pregunta pago ("cómo pago", "métodos de pago", "aceptan nequi")
-- buy_intent: Quiere comprar ("lo quiero", "sí", "dale", "me interesa comprarlo")
-- send_receipt: Va a enviar comprobante ("te envío el recibo", "ya te mando")
-- receipt_sent: Ya envió comprobante ("ya pagué", "aquí está el comprobante")
-- rejection: No interesa ("no gracias", "muy caro", "lo pienso")
-- contact_request: Pide contacto ("número", "dirección", "ubicación")
-- farewell: Se despide ("gracias", "chao", "hasta luego")
-- general_question: Otra pregunta
-- unknown: No se puede determinar
+- greeting, product_search, category_browse, more_options, product_info, price_inquiry, payment_inquiry, buy_intent, send_receipt, receipt_sent, rejection, contact_request, farewell, general_question, unknown
 
-CORRECCIÓN DE TYPOS - Entiende estas variaciones:
-- "goldem/golder/goldenn" = "golden"
-- "pino/pianos" = "piano"
-- "exel/exsel/ecxel" = "excel"
-- "ingles/englis" = "inglés"
-- "tradign/traiding" = "trading"
-- "megapak/mega pak" = "megapack"
-- "portatil/laptop/notebook" = portátil
-- "quieto/kiero" = "quiero"
-- "conprarlo" = "comprarlo"
-
-DETECCIÓN DE INTENCIONES IMPLÍCITAS:
-- "quiero ganar dinero" → busca Trading o Marketing
-- "algo para mi negocio" → busca Marketing, Excel
-- "aprender música" → busca Piano
-- "trabajar desde casa" → busca Diseño, Marketing
-
-RESPONDE EN JSON EXACTO:
+JSON FORMAT:
 {
   "intent": "tipo_de_intencion",
   "confidence": 0.95,
-  "productMatch": {
-    "productId": "id_del_producto",
-    "productName": "nombre exacto del catálogo",
-    "matchReason": "razón del match"
-  },
-  "categoryMatch": {
-    "category": "nombre_categoria",
-    "keywords": ["palabra1", "palabra2"]
-  },
-  "extractedData": {
-    "budget": { "min": 0, "max": 0 },
-    "preferences": ["preferencia1"],
-    "question": "pregunta extraída"
-  },
-  "suggestedAction": "descripción de qué debe hacer el bot",
-  "suggestedResponse": "respuesta sugerida si es caso simple"
-}
+  "productMatch": { "productId": "id", "productName": "nombre", "matchReason": "razon" },
+  "suggestedAction": "accion",
+  "suggestedResponse": "respuesta"
+}`
 
-REGLAS:
-1. Si el cliente menciona un producto, SIEMPRE incluye productMatch con el ID exacto del catálogo
-2. Si hay producto en contexto y pregunta sobre él, usa product_info
-3. Si dice "sí", "dale", "ok" después de ver producto, es buy_intent
-4. Corrige typos automáticamente para encontrar productos
-5. confidence debe reflejar qué tan seguro estás (0.5-1.0)`
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 120000)
 
-    const completion = await client.chat.completions.create({
-      model: 'llama-3.1-8b-instant',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: `Analiza este mensaje del cliente: "${message}"` }
-      ],
-      temperature: 0.1, // Muy bajo para respuestas consistentes
-      max_tokens: 500,
-      response_format: { type: 'json_object' }
+    const response = await fetch(`${ollamaUrl}/api/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: ollamaModel,
+        prompt: `${systemPrompt}\n\nMensaje: "${message}"\n\nJSON:`,
+        stream: false,
+        format: 'json',
+        options: {
+          temperature: 0.1,
+          num_predict: 500
+        }
+      }),
+      signal: controller.signal
     })
 
-    const responseText = completion.choices[0]?.message?.content?.trim() || '{}'
-    
-    try {
-      const parsed = JSON.parse(responseText)
-      console.log(`✅ AI Interpreter resultado:`, {
-        intent: parsed.intent,
-        product: parsed.productMatch?.productName,
-        action: parsed.suggestedAction?.substring(0, 50)
-      })
-      
-      return {
-        intent: parsed.intent || 'unknown',
-        confidence: parsed.confidence || 0.5,
-        productMatch: parsed.productMatch,
-        categoryMatch: parsed.categoryMatch,
-        extractedData: parsed.extractedData,
-        suggestedAction: parsed.suggestedAction || 'Responder de forma general',
-        suggestedResponse: parsed.suggestedResponse
-      }
-    } catch (parseError) {
-      console.log('⚠️ Error parseando respuesta IA, usando análisis local')
+    clearTimeout(timeoutId)
+
+    if (!response.ok) {
+      console.log('⚠️ Ollama no disponible, usando análisis local')
       return analyzeLocally(message, products, conversationContext)
     }
+
+    const data: any = await response.json()
+    const parsed = JSON.parse(data.response)
     
+    return {
+      intent: parsed.intent || 'unknown',
+      confidence: parsed.confidence || 0.5,
+      productMatch: parsed.productMatch,
+      categoryMatch: parsed.categoryMatch,
+      extractedData: parsed.extractedData,
+      suggestedAction: parsed.suggestedAction || 'Responder de forma general',
+      suggestedResponse: parsed.suggestedResponse
+    }
   } catch (error: any) {
-    console.log(`⚠️ Error AI Interpreter: ${error.message}`)
+    console.log(`⚠️ Error AI Interpreter Ollama: ${error.message}`)
     return analyzeLocally(message, products, conversationContext)
   }
 }

@@ -14,7 +14,7 @@
  */
 
 import { db } from './db'
-import Groq from 'groq-sdk'
+import fetch from 'node-fetch'
 import { interpretMessage, InterpretedMessage, IntentType } from './ai-interpreter'
 import { analyzeWithAI, AIDecision } from './ai-intent-analyzer'
 // Importar sistema multi-servicio (opcional)
@@ -22,13 +22,7 @@ import { UnifiedResponseService, ResponseResult } from './unified-response-servi
 import { BusinessContextDetector } from './business-context-detector'
 
 // Cliente Groq para análisis profundo
-let groqClient: Groq | null = null
-function getGroqClient(): Groq | null {
-  if (!groqClient && process.env.GROQ_API_KEY) {
-    groqClient = new Groq({ apiKey: process.env.GROQ_API_KEY })
-  }
-  return groqClient
-}
+// Groq REMOVIDO por petición del usuario
 
 // ============================================
 // ÔÅ│ SIMULACIÓN DE ESCRITURA (TYPING)
@@ -53,7 +47,7 @@ export async function simulateTyping(delayMs: number): Promise<void> {
 }
 
 // ============================================
-// 🤖 SISTEMA HÍBRIDO: OLLAMA + GROQ
+// 🤖 SISTEMA IA: OLLAMA (EASYPANEL)
 // ============================================
 
 /**
@@ -64,29 +58,17 @@ export async function simulateTyping(delayMs: number): Promise<void> {
  */
 async function askOllama(prompt: string, context: string = ''): Promise<string | null> {
   try {
-    // Usar OLLAMA_BASE_URL (Easypanel) o OLLAMA_URL (local) como fallback
-    const ollamaUrl = process.env.OLLAMA_BASE_URL || process.env.OLLAMA_URL || 'http://localhost:11434'
-    const model = process.env.OLLAMA_MODEL || 'gemma2:2b'
+    const ollamaUrl = process.env.OLLAMA_BASE_URL || 'http://localhost:11434'
+    const model = process.env.OLLAMA_MODEL || 'qwen2.5:7b'
     
-    console.log(`­ƒªÖ Consultando Ollama (${model})...`)
+    console.log(`📡 Consultando Ollama (${model})...`)
     
-    const systemPrompt = `Eres un agente de ventas profesional de Tecnovariedades D&S en Colombia.
+    const systemPrompt = `Eres David Martínez, un asesor de ventas experto de Tecnovariedades D&S en Colombia.
+RESPONDE BREVEMENTE (máximo 4-5 líneas). USA EMOJIS.
+${context ? `\nCONTEXTO:\n${context}` : ''}`
 
-REGLAS CRÍTICAS - OBLIGATORIAS:
-1. ❌ NUNCA inventes información, precios o características
-2. ✅ USA SOLO la información proporcionada en el contexto
-3. ✅ Si no tienes la información, di "déjame verificar"
-4. ✅ Responde en español, natural y amigable
-5. ✅ Guía sutilmente hacia la venta sin ser agresivo
-
-ENTREGA:
-- DIGITALES: Envío por Google Drive después del pago
-- FÍSICOS: Recoger en tienda (Cali) o Contraentrega
-${context ? `\nINFORMACIÓN DISPONIBLE:\n${context}` : ''}`
-
-    // Timeout de 10 segundos para Ollama
     const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 10000)
+    const timeoutId = setTimeout(() => controller.abort(), 120000)
 
     const response = await fetch(`${ollamaUrl}/api/generate`, {
       method: 'POST',
@@ -97,7 +79,7 @@ ${context ? `\nINFORMACIÓN DISPONIBLE:\n${context}` : ''}`
         stream: false,
         options: {
           temperature: 0.7,
-          num_predict: 300
+          num_predict: 400
         }
       }),
       signal: controller.signal
@@ -105,131 +87,16 @@ ${context ? `\nINFORMACIÓN DISPONIBLE:\n${context}` : ''}`
 
     clearTimeout(timeoutId)
 
-    if (!response.ok) {
-      console.log(`⚠️ Ollama no disponible: ${response.status}`)
-      return null
-    }
-
+    if (!response.ok) return null
     const data = await response.json()
-    const answer = data.response?.trim()
-    
-    if (answer && answer.length > 10) {
-      console.log(`✅ Ollama respondió: ${answer.substring(0, 50)}...`)
-      return answer
-    }
-    
-    return null
+    return data.response?.trim() || null
   } catch (error: any) {
-    console.log(`⚠️ Error Ollama: ${error.message}`)
+    console.log(`⚠️ Error Ollama en Agente: ${error.message}`)
     return null
   }
 }
 
-/**
- * Consulta a Groq (análisis profundo) - Segunda opción
- * @param prompt - Mensaje del usuario
- * @param context - Contexto de la conversación
- * @param products - Lista de productos disponibles
- * @returns Respuesta de Groq o null si falla
- */
-async function askGroq(prompt: string, context: string = '', products: any[] = []): Promise<string | null> {
-  try {
-    const client = getGroqClient()
-    if (!client) {
-      console.log('⚠️ Groq no configurado')
-      return null
-    }
-
-    console.log('🧠 Consultando Groq (Agente de Ventas Profesional)...')
-
-    // Crear catálogo organizado por categorías
-    const digitales = products.filter(p => p.category === 'DIGITAL' || p.name.toLowerCase().includes('mega') || p.name.toLowerCase().includes('curso'))
-    const fisicos = products.filter(p => p.category !== 'DIGITAL' && !p.name.toLowerCase().includes('mega') && !p.name.toLowerCase().includes('curso'))
-    
-    const formatProduct = (p: any) => {
-      let info = `ÔÇó ${p.name} - ${p.price?.toLocaleString('es-CO') || '?'} COP`
-      if (p.paymentLinkMercadoPago) info += `\n  - MercadoPago: ${p.paymentLinkMercadoPago}`
-      if (p.paymentLinkPayPal) info += `\n  - PayPal: ${p.paymentLinkPayPal}`
-      if (p.paymentLinkCustom) info += `\n  - Link: ${p.paymentLinkCustom}`
-      return info
-    }
-    
-    const catalogoDigital = digitales.map(formatProduct).join('\n')
-    const catalogoFisico = fisicos.map(formatProduct).join('\n')
-
-    const systemPrompt = `Eres un AGENTE DE VENTAS PROFESIONAL de Tecnovariedades D&S (Colombia).
-
-🎯 TU PERSONALIDAD:
-- Amigable, cercano y natural (como hablar con un amigo que sabe de tecnología)
-- Paciente y comprensivo (el cliente puede escribir mal o no saber qué busca)
-- Persuasivo pero NO agresivo (guías hacia la venta sin presionar)
-- Resolutivo (siempre das una respuesta útil, nunca dejas al cliente sin ayuda)
-
-🧠 TUS CAPACIDADES:
-1. ENTENDER: Comprende lo que el cliente quiere aunque escriba mal, use jerga o sea ambiguo
-2. RAZONAR: Analiza qué producto le conviene según lo que dice
-3. DIALOGAR: Mantén conversaciones naturales, haz preguntas para entender mejor
-4. RESOLVER: Responde dudas sobre productos, pagos, entregas, garantías
-5. VENDER: Guía sutilmente hacia la compra destacando beneficios
-
-📦 CATÁLOGO COMPLETO - PRODUCTOS DIGITALES (${digitales.length}):
-${catalogoDigital || 'Sin productos digitales'}
-
-📦 CATÁLOGO COMPLETO - PRODUCTOS FÍSICOS (${fisicos.length}):
-${catalogoFisico || 'Sin productos físicos'}
-
-­ƒÆ│ MÉTODOS DE PAGO:
-- Nequi: 3136174267
-- Daviplata: 3136174267  
-- MercadoPago (tarjeta/PSE)
-- PayPal (internacional)
-
-­ƒô¼ ENTREGA:
-- DIGITALES (Mega Packs, Cursos, Software): Inmediata por Google Drive después del pago. (NUNCA ofrecer recogida física para estos).
-- FÍSICOS (Impresoras, Laptops, etc): Contraentrega a toda Colombia o recoger en Cali.
-
-­ƒÜ¿­ƒÜ¿­ƒÜ¿ REGLAS CRÍTICAS - OBLIGATORIAS ­ƒÜ¿­ƒÜ¿­ƒÜ¿:
-1. ❌ PROHIBIDO INVENTAR: NO menciones productos que NO estén en el catálogo de arriba
-2. ❌ NO INVENTES MARCAS: Si no ves "Dell XPS", "Acer Aspire", "HP Pavilion" en el catálogo, NO los menciones
-3. ❌ NO INVENTES PRECIOS: Solo usa precios que aparezcan en el catálogo
-4. ✅ SOLO CATÁLOGO: Cuando el cliente pida "más referencias" o "otros modelos", lista SOLO productos del catálogo
-5. ✅ USA NOMBRES EXACTOS: Copia el nombre del producto tal cual aparece en el catálogo
-6. ✅ Si el cliente pide algo que no existe, di "actualmente tenemos estos modelos:" y lista los del catálogo
-7. ✅ Responde en español colombiano natural
-8. ✅ Usa emojis con moderación (1-3 por mensaje)
-9. ✅ Mantén respuestas concisas (máximo 5 líneas)
-
-🎯 ESTRATEGIA DE VENTA (AIDA):
-- Atención: Capta el interés con el beneficio principal
-- Interés: Explica qué incluye y por qué es valioso
-- Deseo: Destaca el ahorro o la oportunidad única
-- Acción: Invita a comprar de forma natural ("¿Te lo aparto?", "¿Quieres los datos de pago?")
-
-${context ? `\n💬 CONVERSACIÓN PREVIA:\n${context}` : ''}`
-
-    const completion = await client.chat.completions.create({
-      model: 'llama-3.1-8b-instant',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: prompt }
-      ],
-      temperature: 0.3, // Más bajo para evitar que invente
-      max_tokens: 400
-    })
-
-    const answer = completion.choices[0]?.message?.content?.trim()
-    
-    if (answer && answer.length > 10) {
-      console.log(`✅ Groq respondió: ${answer.substring(0, 50)}...`)
-      return answer
-    }
-
-    return null
-  } catch (error: any) {
-    console.log(`⚠️ Error Groq: ${error.message}`)
-    return null
-  }
-}
+// Groq REMOVIDO por petición del usuario
 
 /**
  * 🧠 BÚSQUEDA INTELIGENTE CON IA
@@ -243,86 +110,50 @@ async function searchProductWithAI(
   products: any[]
 ): Promise<{ product: any | null; response: string | null }> {
   try {
-    const client = getGroqClient()
-    if (!client || products.length === 0) {
-      return { product: null, response: null }
-    }
+    const ollamaUrl = process.env.OLLAMA_BASE_URL || 'http://localhost:11434'
+    const model = process.env.OLLAMA_MODEL || 'qwen2.5:7b'
 
-    console.log(`🧠 Búsqueda inteligente IA para: "${query}"`)
+    if (products.length === 0) return { product: null, response: null }
 
-    // Crear lista de productos para que la IA busque
-    const productList = products.map((p, i) => {
-      const precio = p.price?.toLocaleString('es-CO') || '?'
-      return `${i + 1}. ${p.name} - ${precio} COP`
-    }).join('\n')
+    console.log(`📡 Búsqueda con Ollama (${model}) para: "${query}"`)
 
-    const systemPrompt = `Eres un buscador de productos inteligente para una tienda colombiana.
+    const productList = products.map((p, i) => `${i + 1}. ${p.name} - ${p.price} COP`).join('\n')
 
-TAREA: Analiza lo que el cliente busca y encuentra el producto más relevante del catálogo.
+    const systemPrompt = `Eres un buscador de productos. TAREA: Encuentra el producto más relevante.
+Responde SOLO con el número del producto (1, 2, 3...) o "0" si no hay coincidencia.
+CATÁLOGO:
+${productList}`
 
-CATÁLOGO (${products.length} productos):
-${productList}
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 120000)
 
-INSTRUCCIONES CRÍTICAS:
-1. Entiende la INTENCIÓN del cliente aunque escriba mal (typos, errores ortográficos)
-2. Busca coincidencias por: nombre, tema, categoría, palabras clave
-3. Si encuentras un producto relevante, responde SOLO con el número
-4. REGLA DE HONESTIDAD: Si el producto NO está en el catálogo, responde "0". 
-   ❌ NUNCA inventes o sugieras productos que NO tengan relación directa.
-   ❌ Si el cliente pide algo específico que no está en la lista (ej: curso de idiomas), responde "0".
-
-CORRECCIONES DE TYPOS COMUNES:
-- "megapak", "megapack", "mega pak" ÔåÆ buscar "Mega Pack"
-- "goldem", "golder", "goldenn" ÔåÆ buscar "Golden"
-- "pino", "pian" ÔåÆ buscar "Piano"
-- "exel", "exsel", "ecxel" ÔåÆ buscar "Excel"
-- "ingles", "inglés", "englis" ÔåÆ buscar "Inglés"
-- "tradign", "tradin", "traiding" ÔåÆ buscar "Trading"
-- "diseño", "diseno", "disenio" ÔåÆ buscar "Diseño"
-- "programasion", "programacion" ÔåÆ buscar "Programación" o "Hacking"
-
-EJEMPLOS DE BÚSQUEDA:
-- "megapak goldem" ÔåÆ buscar producto con "Golden" en el nombre
-- "curso de pino" ÔåÆ buscar producto con "Piano" en el nombre
-- "quiero aprender ingles" ÔåÆ buscar producto con "Inglés" en el nombre
-- "algo de diseño grafico" ÔåÆ buscar producto con "Diseño" en el nombre
-- "tradign forex" ÔåÆ buscar producto con "Trading" en el nombre
-- "exel avanzado" ÔåÆ buscar producto con "Excel" en el nombre
-- "resina epoxica" ÔåÆ buscar producto con "Resina" en el nombre
-
-INTENCIONES AMBIGUAS - Sugiere el producto más relevante:
-- "quiero ganar dinero" ÔåÆ Trading o Marketing
-- "necesito para mi negocio" ÔåÆ Marketing, Excel o Diseño
-- "algo para aprender música" ÔåÆ Piano
-- "mejorar mi trabajo" ÔåÆ Excel o Office
-- "emprender" ÔåÆ Marketing o Trading
-- "trabajar desde casa" ÔåÆ Diseño, Marketing o Excel
-
-Responde SOLO con el número del producto (1, 2, 3...) o "0" si no hay coincidencia.`
-
-    const completion = await client.chat.completions.create({
-      model: 'llama-3.1-8b-instant',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: `Cliente busca: "${query}"` }
-      ],
-      temperature: 0.1, // Más determinístico para búsquedas
-      max_tokens: 10
+    const response = await fetch(`${ollamaUrl}/api/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model,
+        prompt: `${systemPrompt}\n\nCliente busca: "${query}"\n\nRespuesta (Solo número):`,
+        stream: false,
+        options: { temperature: 0.1, num_predict: 5 }
+      }),
+      signal: controller.signal
     })
 
-    const answer = completion.choices[0]?.message?.content?.trim() || '0'
+    clearTimeout(timeoutId)
+
+    if (!response.ok) return { product: null, response: null }
+
+    const data = await response.json()
+    const answer = data.response?.trim() || '0'
     const productIndex = parseInt(answer) - 1
 
     if (productIndex >= 0 && productIndex < products.length) {
-      const foundProduct = products[productIndex]
-      console.log(`✅ IA encontró: ${foundProduct.name}`)
-      return { product: foundProduct, response: null }
+      return { product: products[productIndex], response: null }
     }
 
-    console.log(`❌ IA no encontró producto específico`)
     return { product: null, response: null }
   } catch (error: any) {
-    console.log(`⚠️ Error en búsqueda IA: ${error.message}`)
+    console.log(`⚠️ Error en búsqueda Ollama: ${error.message}`)
     return { product: null, response: null }
   }
 }
@@ -336,22 +167,14 @@ async function getHybridResponse(
   context: string = '', 
   products: any[] = []
 ): Promise<string> {
-  // 1. Intentar con Ollama (local, rápido)
+  // 1. Solo Ollama (Easypanel)
   const ollamaResponse = await askOllama(message, context)
   if (ollamaResponse) {
     return ollamaResponse
   }
 
-  // 2. Si Ollama falla, usar Groq (análisis profundo)
-  const groqResponse = await askGroq(message, context, products)
-  if (groqResponse) {
-    return groqResponse
-  }
-
-  // 3. Fallback inteligente (nunca menú genérico)
-  return `¡Claro! 😊 Cuéntame más sobre lo que buscas y te ayudo a encontrar la mejor opción.
-
-¿Es para uso personal, trabajo o estudio? Así te puedo recomendar algo que se ajuste a tus necesidades 🎯`
+  // 2. Fallback de emergencia
+  return `¡Hola! 👋 Cuéntame un poco más sobre lo que buscas para poder ayudarte mejor 😊`
 }
 
 interface ConversationContext {
@@ -375,7 +198,7 @@ export class SalesAgentSimple {
   private conversations: Map<string, ConversationContext> = new Map()
   private products: any[] = []
   private userId: string | null = null
-  private groq = new Groq({ apiKey: process.env.GROQ_API_KEY || '' })
+  
 
   constructor(userId?: string) {
     if (userId) {
@@ -487,42 +310,51 @@ export class SalesAgentSimple {
       const userCtx = this.conversations.get(userPhone)!
       userCtx.history.push({ role: 'user', content: message })
 
-      // 🧠 IA RAZONAMIENTO: Analizar intención y producto con Ollama/Groq
+      // 1. 🔍 DETECCIÓN LOCAL RÁPIDA (Regex / Keywords)
+      const regexIntent = this.detectIntent(message)
+      const localProduct = this.buscarProducto(message)
+      
+      // Lista de intenciones que son suficientemente claras localmente
+      const isLocalClear = ['greeting', 'farewell', 'payment_receipt', 'contact_request', 'payment_inquiry'].includes(regexIntent)
+
+      // 🧠 IA RAZONAMIENTO: Solo si no es claro localmente
       let aiDecision: AIDecision
-      try {
-        const productsSafe = this.products || []
-        aiDecision = await analyzeWithAI(message, userCtx.history, productsSafe)
-        console.log(`🧠 IA Decide: ${aiDecision.action} | Razón: ${aiDecision.reasoning}`)
-      } catch (aiError) {
-        console.error('❌ Error crítico en analyzeWithAI:', aiError)
-        // Fallback seguro
+      
+      if (!isLocalClear && !localProduct) {
+        try {
+          console.log(`🧠 Local no detectó producto/intención clara. Consultando IA...`)
+          const productsSafe = this.products || []
+          aiDecision = await analyzeWithAI(message, userCtx.history, productsSafe)
+          console.log(`🧠 IA Decide: ${aiDecision.action} | Razón: ${aiDecision.reasoning}`)
+        } catch (aiError) {
+          console.error('❌ Error crítico en analyzeWithAI:', aiError)
+          aiDecision = {
+            action: 'general_inquiry',
+            selectedProductIndex: null,
+            reasoning: 'Error interno de IA, fallback a general',
+            emotionalTone: 'neutral',
+            additionalContext: ''
+          }
+        }
+      } else {
+        console.log(`⚡ Usando detección local rápida (Intent: ${regexIntent}, Product: ${localProduct?.name || 'ninguno'})`)
         aiDecision = {
-          action: 'general_inquiry',
-          selectedProductIndex: null,
-          reasoning: 'Error interno de IA, fallback a general',
-          emotionalTone: 'neutral',
+          action: (localProduct ? 'show_product' : regexIntent) as any,
+          selectedProductIndex: localProduct ? this.products.findIndex(p => p.id === localProduct.id) : null,
+          reasoning: 'Detección local optimizada',
+          emotionalTone: 'enthusiastic',
           additionalContext: ''
         }
       }
       
-      // Asignar producto si la IA lo identificó
-      if (aiDecision.selectedProductIndex !== null && this.products[aiDecision.selectedProductIndex]) {
+      // Asignar producto si fue identificado
+      if (aiDecision.selectedProductIndex !== null && aiDecision.selectedProductIndex !== -1 && this.products[aiDecision.selectedProductIndex]) {
         userCtx.lastProduct = this.products[aiDecision.selectedProductIndex]
-        console.log(`🎯 IA identificó producto: ${userCtx.lastProduct.name}`)
+        console.log(`🎯 Producto en contexto: ${userCtx.lastProduct.name}`)
       }
 
-      // Prioridad absoluta a la intención detectada por regex/reglas locales
-      // Esto evita que la IA divague cuando hay un comando o palabra clave clara
-      const regexIntent = this.detectIntent(message)
       let intent = aiDecision.action as any
-      
-      if (regexIntent !== 'general_inquiry') {
-        console.log(`🎯 Override de intención: ${aiDecision.action} -> ${regexIntent}`)
-        intent = regexIntent
-      }
-
       console.log(`🎯 Intención final: ${intent}`)
-      console.log(`📦 Producto en contexto: ${userCtx.lastProduct?.name || 'ninguno'}`)
 
       // Guardar contexto adicional para personalizar templates
       // REMOVIDO: aiPrefix filtrado del output para evitar fugas de razonamiento
@@ -1005,18 +837,18 @@ export class SalesAgentSimple {
       return 'payment_inquiry'
     }
 
-    // SALUDO PURO
-    if (/^(hola|buenos|buenas|hey|hi|hello|saludos|qué tal|que tal|buenas noches|buenos días|buenos dias|buenas tardes)(\s|$|!|\?|\.)*$/i.test(msg)) {
+    // SALUDO
+    if (/(hola|buenos|buenas|hey|hi|hello|saludos|qu[eé] tal|qu[eé] hubo|c[oó]mo vas|c[oó]mo est[aá]s)/i.test(msg)) {
       return 'greeting'
     }
 
     // CONTACTO
-    if (/(contacto|número|numero|teléfono|telefono|whatsapp|llamar|ubicación|ubicacion|dirección|direccion|donde están|donde estan)/i.test(msg)) {
+    if (/(contacto|n[uú]mero|numero|tel[eé]fono|telefono|whatsapp|llamar|ubicaci[oó]n|ubicacion|direcci[oó]n|direccion|donde est[aá]n|donde estan|d[oó]nde est[aá]n|d[oó]nde estan|donde se encuentran)/i.test(msg)) {
       return 'contact_request'
     }
 
     // DESPEDIDA
-    if (/^(gracias|bye|adiós|adios|chao|hasta luego|nos vemos|muchas gracias|te agradezco|genial gracias)(\s|$|!|\?|\.)*$/i.test(msg)) {
+    if (/(gracias|bye|adi[oó]s|adios|chao|hasta luego|nos vemos|muchas gracias|te agradezco|agradecido)/i.test(msg)) {
       return 'farewell'
     }
 
@@ -2416,8 +2248,8 @@ EJEMPLOS DE RESPUESTAS BUENAS:
 Responde SOLO con el mensaje, sin explicaciones adicionales.`
 
     try {
-      // Usar IA híbrida para responder
-      const aiResponse = await askGroq(message, systemPrompt)
+      // Usar IA para responder
+      const aiResponse = await askOllama(message, systemPrompt)
       
       if (aiResponse && aiResponse.length > 0 && aiResponse.length < 300) {
         return aiResponse
@@ -2545,16 +2377,10 @@ ${product.paymentLinkCustom ? `- Otro: ${product.paymentLinkCustom}` : ''}
     
     const fullContext = `${productInfo}\n\nHISTORIAL:\n${recentHistory}`
     
-    // Intentar con Ollama primero
+    // Intentar con Ollama
     const ollamaResponse = await askOllama(message, fullContext)
     if (ollamaResponse) {
       return ollamaResponse
-    }
-    
-    // Si Ollama falla, usar Groq
-    const groqResponse = await askGroq(message, fullContext, [product])
-    if (groqResponse) {
-      return groqResponse
     }
     
     // Fallback: Respuesta basada en el producto
@@ -2713,17 +2539,17 @@ INSTRUCCIONES CRÍTICAS:
 RESPUESTA (en español):`;
 
     try {
-      const url = process.env.OLLAMA_URL || 'http://localhost:11434/api/generate';
+      const url = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
       
       // Timeout para Ollama
       const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 10000)
+      const timeoutId = setTimeout(() => controller.abort(), 120000)
 
-      const response = await fetch(url, {
+      const response = await fetch(`${url}/api/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: process.env.OLLAMA_MODEL || 'gemma2:2b',
+          model: process.env.OLLAMA_MODEL || 'qwen2.5:7b',
           prompt: prompt,
           stream: false,
           options: {
@@ -2741,19 +2567,10 @@ RESPUESTA (en español):`;
         return data.response.trim();
       }
     } catch (e) {
-      console.log('⚠️ Ollama falló en generateAIAnswer, usando Groq...');
+      console.log('⚠️ Ollama falló en generateAIAnswer:', (e as Error).message);
     }
 
-    try {
-      const completion = await this.groq.chat.completions.create({
-        messages: [{ role: 'user', content: prompt }],
-        model: process.env.GROQ_MODEL || 'llama-3.1-8b-instant',
-      });
-      return completion.choices[0]?.message?.content?.trim() || 'Entiendo tu duda. Déjame consultar la información exacta para ayudarte mejor. 😊';
-    } catch (groqError) {
-      console.error('❌ Error crítico en Groq:', groqError);
-      return '¡Hola! 👋 Por el momento estoy teniendo dificultades técnicas para responderte. ¿Podrías intentar de nuevo en unos minutos? O escríbeme directamente al WhatsApp +57 3136174267 para atenderte personalmente. 😊';
-    }
+    return 'Entiendo tu duda. Déjame consultar la información exacta para ayudarte mejor. 😊';
   }
 }
 

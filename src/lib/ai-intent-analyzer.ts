@@ -1,4 +1,3 @@
-import Groq from 'groq-sdk';
 import dotenv from 'dotenv';
 import fetch from 'node-fetch';
 
@@ -13,7 +12,31 @@ export interface AIDecision {
 }
 
 /**
- * Analiza el mensaje con IA (Ollama primero, Groq como fallback)
+ * Filtra productos relevantes para reducir el tamaño del prompt
+ */
+function getRelevantProducts(message: string, products: any[]): any[] {
+  const query = message.toLowerCase();
+  const keywords = query.split(/\s+/).filter(w => w.length > 3);
+  
+  if (keywords.length === 0) return products.slice(0, 5); // Si no hay keywords, enviar pocos
+
+  const scored = products.map(p => {
+    let score = 0;
+    const name = p.name.toLowerCase();
+    keywords.forEach(k => {
+      if (name.includes(k)) score += 10;
+    });
+    return { ...p, score };
+  });
+
+  return scored
+    .filter(p => p.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 15); // Máximo 15 productos relevantes
+}
+
+/**
+ * Analiza el mensaje con IA (Ollama)
  */
 export async function analyzeWithAI(
   message: string,
@@ -21,66 +44,42 @@ export async function analyzeWithAI(
   availableProducts: any[]
 ): Promise<AIDecision> {
   
-  const productsList = availableProducts.map((p, index) => 
-    `${index}. ${p.name} ($${p.price} COP): ${p.description?.substring(0, 150)}...`
-  ).join('\n');
+  // Optimización: Solo enviar productos relevantes para ahorrar tokens y tiempo
+  const relevantProducts = getRelevantProducts(message, availableProducts);
+  
+  const productsList = relevantProducts.map((p) => {
+    const originalIndex = availableProducts.findIndex(ap => ap.id === p.id);
+    return `${originalIndex}. ${p.name} ($${p.price} COP)`;
+  }).join('\n');
 
-  const prompt = `Eres un experto asesor de ventas de "Tecnovariedades D&S". Tu objetivo es analizar el mensaje del cliente y decidir qué acción tomar, priorizando siempre ayudar al cliente y cerrar la venta de forma natural.
-
-HISTORIAL DE CONVERSACIÓN:
-${conversationHistory.slice(-6).map(h => `${h.role === 'user' ? 'Cliente' : 'Asistente'}: ${h.content}`).join('\n')}
-
-MENSAJE ACTUAL DEL CLIENTE:
-"${message}"
-
-PRODUCTOS EN CATÁLOGO:
-${productsList}
-
-DECISIONES POSIBLES:
-1. show_product: El cliente busca un producto, pregunta por opciones o quiere ver qué hay.
-2. show_payment: El cliente explícitamente quiere pagar, pide datos de pago o dice "sí" al ofrecimiento de compra.
-3. payment_method_selected: El cliente menciona o elige un método de pago específico (Nequi, Transferencia, Tarjeta, PayPal, etc.).
-4. handle_objection: El cliente tiene una duda, queja o dice que es caro/necesita pensarlo.
-5. answer_question: Pregunta técnica o específica que no es una compra directa.
-6. greet: Es solo un saludo inicial (Hola, buenos días).
-7. farewell: El cliente se despide.
-8. general_inquiry: No encaja en lo anterior.
-
-INSTRUCCIONES CRÍTICAS:
-- ❌ NO inventes productos. Si el cliente pregunta por algo que NO está en el catálogo (ej. "computadora" y solo hay "teléfonos"), DEBES devolver "selectedProductIndex": null.
-- ⚡ **REGLA DE ORO DE ENTREGAS**: Si el cliente pregunta cómo se entrega un "Mega Pack" o "Curso", la respuesta es SIEMPRE Digital (Google Drive). NUNCA sugieras envío físico o recogida para estos.
-- ✅ Analiza si el cliente se refiere a un producto específico del catálogo anterior.
-- ✅ Si el cliente dice "sí", "dale", "me interesa" después de que le mostraste un producto, decide 'show_payment'.
-- ✅ Si el cliente elige o menciona un método de pago específico (Tarjeta de crédito, PayPal, Nequi, Transferencia, etc.), decide 'payment_method_selected'.
-- ✅ Selecciona el índice del producto SOLAMENTE si hay una coincidencia clara y lógica. En caso de duda sobre qué producto es, devuelve null.
-
+  const prompt = `Eres un experto asesor de ventas de "Tecnovariedades D&S". Tu objetivo es analizar el mensaje del cliente y decidir qué acción tomar.
 RESPONDE ÚNICAMENTE CON UN OBJETO JSON VÁLIDO. NO incluyas explicaciones ni markdown.
 
-JSON:
+HISTORIAL:
+${conversationHistory.slice(-6).map(h => `${h.role === 'user' ? 'Cliente' : 'Asistente'}: ${h.content}`).join('\n')}
+
+MENSAJE ACTUAL: "${message}"
+
+CATÁLOGO RELEVANTE:
+${productsList || 'No se encontraron productos específicos relacionados.'}
+... (Hay otros ${availableProducts.length - relevantProducts.length} productos en el catálogo)
+
+JSON FORMAT:
 {
   "action": "show_product | show_payment | payment_method_selected | handle_objection | answer_question | greet | farewell | general_inquiry",
   "selectedProductIndex": index_of_product_or_null,
   "reasoning": "short explanation",
   "emotionalTone": "enthusiastic | cautious | skeptical | neutral",
-  "additionalContext": "short greeting or transition phrase in Spanish"
+  "additionalContext": "short greeting in Spanish"
 }`;
 
   try {
-    // 1. Intentar con Ollama (Local)
-    console.log('🦙 Intentando analizar con Ollama...');
+    console.log('📡 Analizando con Ollama (Easypanel)...');
     const result = await queryOllama(prompt);
     if (result) return result;
+    throw new Error('No se pudo obtener respuesta de Ollama');
   } catch (error) {
-    console.log('⚠️ Ollama no disponible o falló:', (error as Error).message);
-  }
-
-  // 2. Fallback a Groq
-  try {
-    console.log('⚡ Fallback a Groq...');
-    return await queryGroq(prompt);
-  } catch (error) {
-    console.error('❌ Error fatal en análisis de IA:', error);
-    // Fallback de emergencia a algo que el bot pueda manejar
+    console.error('❌ Error en análisis de IA:', (error as Error).message);
     return {
       action: 'general_inquiry',
       selectedProductIndex: null,
@@ -92,48 +91,42 @@ JSON:
 }
 
 async function queryOllama(prompt: string): Promise<AIDecision | null> {
-  const url = process.env.OLLAMA_URL || 'http://localhost:11434/api/generate';
+  const url = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
   try {
-    // Timeout de 8 segundos para análisis de intención
     const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 8000)
+    const timeoutId = setTimeout(() => controller.abort(), 180000)
 
-    const response = await fetch(url, {
+    const model = process.env.OLLAMA_MODEL || 'qwen2.5:3b';
+    console.log(`📡 [Ollama] Enviando prompt (${model})...`);
+    
+    const response = await fetch(`${url}/api/generate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: process.env.OLLAMA_MODEL || 'gemma2:2b',
+        model,
         prompt: prompt,
         stream: false,
-        format: 'json'
+        format: 'json',
+        options: {
+          temperature: 0.1,
+          num_predict: 300
+        }
       }),
       signal: controller.signal
     });
 
     clearTimeout(timeoutId)
 
-    if (!response.ok) return null;
+    if (!response.ok) {
+      console.log(`❌ [Ollama] Error en respuesta: ${response.status}`);
+      return null;
+    }
+    
     const data: any = await response.json();
+    console.log(`✅ [Ollama] Respuesta recibida con éxito`);
     return JSON.parse(data.response);
-  } catch {
+  } catch (error) {
+    console.error('⚠️ Error queryOllama:', error);
     return null;
   }
-}
-
-async function queryGroq(prompt: string): Promise<AIDecision> {
-  const apiKey = process.env.GROQ_API_KEY;
-  if (!apiKey) {
-    throw new Error('GROQ_API_KEY no configurada');
-  }
-  
-  const groq = new Groq({ apiKey });
-  const completion = await groq.chat.completions.create({
-    messages: [{ role: 'user', content: prompt }],
-    model: process.env.GROQ_MODEL || 'llama-3.1-8b-instant',
-    response_format: { type: 'json_object' }
-  });
-
-  const content = completion.choices[0]?.message?.content;
-  if (!content) throw new Error('Respuesta de Groq vacía');
-  return JSON.parse(content);
 }

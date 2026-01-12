@@ -37,78 +37,87 @@ export class GeneralQAAgent extends BaseAgent {
   }
   
   /**
-   * Maneja con IA
+   * Maneja con IA o KnowledgeService
    */
   async handleWithAI(message: string, memory: SharedMemory): Promise<AgentResponse> {
-    this.log('Usando IA para responder pregunta general');
+    this.log('Intentando responder con KnowledgeService primero');
     
     try {
+      // 1. PRIMERO: Intentar responder con KnowledgeService (datos reales)
+      const { KnowledgeService } = await import('@/lib/knowledge-service');
+      
+      const productId = memory.currentProduct?.id;
+      const productName = memory.currentProduct?.name;
+      
+      const answer = await KnowledgeService.answerProductQuestion(
+        message,
+        productId,
+        productName
+      );
+      
+      // Si la respuesta tiene alta confianza, usarla directamente
+      if (answer.confidence === 'high' || answer.confidence === 'medium') {
+        this.log(`✅ Respondido con KnowledgeService (${answer.confidence} confidence)`);
+        
+        return {
+          text: answer.answer,
+          nextAgent: answer.requiresHumanAssistance ? 'closing' : 'search',
+          confidence: answer.confidence === 'high' ? 0.95 : 0.75,
+        };
+      }
+      
+      // 2. Si KnowledgeService no puede responder con confianza, usar IA SOLO para reformular
+      this.log('KnowledgeService no pudo responder, usando IA como fallback');
+      
       const { AIMultiProvider } = await import('@/lib/ai-multi-provider');
       
       // Construir contexto
       const context = this.buildContext(memory);
       
-      // Prompt especializado para preguntas generales
-      const systemPrompt = `Eres un asistente de ventas de Tecnovariedades D&S.
+      // Prompt MUY RESTRICTIVO - solo reformular, NO inventar
+      const systemPrompt = `Eres un asistente de Tecnovariedades D&S.
 
-Tu rol es responder preguntas generales del cliente de forma amigable y profesional.
+REGLA CRÍTICA: NUNCA inventes información sobre productos. Solo usa información REAL.
 
-REGLAS IMPORTANTES:
-1. Si la pregunta es sobre productos que NO vendes, di que no los tienes pero ofrece alternativas
-2. Si la pregunta es sobre servicios, explica qué servicios ofreces
-3. Si la pregunta es sobre horarios, ubicación, contacto, proporciona la información
-4. Si no sabes algo, sé honesto y ofrece contactar al equipo
-5. Mantén respuestas cortas (máximo 3-4 líneas)
-6. Siempre menciona "Tecnovariedades D&S" al menos una vez
-7. Termina preguntando si necesita algo más
+Si el cliente pregunta algo que no sabes, di:
+"No tengo esa información específica. ¿Puedo ayudarte con algo más?"
 
-INFORMACIÓN DE LA EMPRESA:
-- Nombre: Tecnovariedades D&S
-- Productos: Computadores, laptops, motos, cursos digitales, megapacks educativos
-- Servicios: Reparación de computadores, mantenimiento, asesoría técnica
+INFORMACIÓN REAL:
 - Métodos de pago: MercadoPago, PayPal, Nequi, Daviplata, Contraentrega
-- Envíos: A toda Colombia
-- Contacto: WhatsApp +57 304 274 8687
+- Envíos: A toda Colombia (2-5 días hábiles)
+- Garantía: 7 días
+- WhatsApp: +57 304 274 8687
 
 ${context}`;
 
-      const userPrompt = `Pregunta del cliente: "${message}"
+      const userPrompt = `Pregunta: "${message}"
 
-Responde de forma amigable y profesional.`;
+Responde SOLO si tienes información real. Si no, admite que no sabes.
+Máximo 2-3 líneas.`;
 
       const response = await AIMultiProvider.generateResponse(
         systemPrompt,
         userPrompt,
         {
-          temperature: 0.7,
-          maxTokens: 200,
+          temperature: 0.3, // Baja temperatura = menos creatividad = menos invención
+          maxTokens: 150,
         }
       );
       
       return {
         text: response,
         nextAgent: 'search',
-        confidence: 0.8,
+        confidence: 0.6,
       };
       
     } catch (error) {
-      this.log('Error usando IA:', error);
+      this.log('Error en Q&A:', error);
       
-      // Fallback si la IA falla
+      // Fallback ultra-simple
       return {
-        text: `Disculpa, no entendí bien tu pregunta 😅
-
-¿Podrías reformularla o decirme qué producto o servicio te interesa?
-
-En Tecnovariedades D&S tenemos:
-• Computadores y laptops
-• Motos
-• Cursos digitales
-• Servicios técnicos
-
-¿Qué necesitas? 😊`,
+        text: `No tengo esa información. ¿Puedo ayudarte con algo más sobre nuestros productos?`,
         nextAgent: 'search',
-        confidence: 0.5,
+        confidence: 0.4,
       };
     }
   }

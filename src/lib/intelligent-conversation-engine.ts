@@ -90,7 +90,49 @@ export class IntelligentConversationEngine {
       usuario: userName || 'desconocido'
     });
 
-    // 🎯 NUEVO: Intentar usar el sistema de agentes primero
+    // 🎯 PASO 0: DETECCIÓN TEMPRANA de preguntas fuera de alcance
+    // Esto previene que el bot malinterprete frases como "nos veamos" como búsqueda de productos
+    try {
+      const { KnowledgeService } = await import('@/lib/knowledge-service');
+      
+      // Obtener memoria actual para contexto
+      const memory = this.getOrCreateMemory(chatId, userName);
+      const productId = memory.context.currentProduct?.id;
+      const productName = memory.context.currentProduct?.name;
+      
+      console.log('[IntelligentEngine] 🔍 Verificando si es pregunta fuera de alcance...');
+      const quickAnswer = await KnowledgeService.answerProductQuestion(
+        message,
+        productId,
+        productName
+      );
+      
+      // Si es pregunta fuera de alcance (reunión, personal, etc.), responder inmediatamente
+      if (quickAnswer.confidence === 'high' && 
+          (quickAnswer.question === 'reunión presencial' || 
+           quickAnswer.question === 'solicitud personal' ||
+           quickAnswer.question === 'fuera de alcance')) {
+        console.log('[IntelligentEngine] ⚠️ Pregunta fuera de alcance detectada:', quickAnswer.question);
+        
+        // Agregar a memoria
+        this.addToMemory(memory, 'user', message);
+        this.addToMemory(memory, 'assistant', quickAnswer.answer);
+        
+        return {
+          text: quickAnswer.answer,
+          actions: [],
+          context: memory.context,
+          confidence: 0.95
+        };
+      }
+      
+      console.log('[IntelligentEngine] ✅ No es pregunta fuera de alcance, continuando con agentes');
+    } catch (error) {
+      console.error('[IntelligentEngine] ⚠️ Error en detección temprana:', error);
+      // Continuar con el flujo normal si hay error
+    }
+
+    // 🎯 PASO 1: Intentar usar el sistema de agentes
     try {
       const { Orchestrator } = await import('@/agents/orchestrator');
       const { SharedMemoryService } = await import('@/agents/shared-memory');

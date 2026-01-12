@@ -1,7 +1,7 @@
 # 🤖 INTEGRACIÓN OLLAMA EN EASYPANEL
 
 **URL:** https://bot-whatsapp-ollama.sqaoeo.easypanel.host  
-**Modelo:** gemma:2b  
+**Modelo:** qwen2.5:7b (Mejor compresión y respuesta en español)  
 **Estado:** ✅ ACTIVADO
 
 ---
@@ -15,8 +15,9 @@
 
 ### 2. **Rápido**
 - ✅ Respuestas en 1-3 segundos
-- ✅ Modelo pequeño (gemma:2b)
-- ✅ Optimizado para velocidad
+- ✅ Respuestas en 1-3 segundos
+- ✅ Modelo potente (qwen2.5:7b)
+- ✅ Optimizado para español y compresión razonada
 
 ### 3. **Ahorra Groq**
 - ✅ Groq solo como respaldo
@@ -51,7 +52,7 @@ Cliente envía mensaje
 
 ```env
 OLLAMA_BASE_URL=https://bot-whatsapp-ollama.sqaoeo.easypanel.host
-OLLAMA_MODEL=gemma:2b
+OLLAMA_MODEL=qwen2.5:7b
 OLLAMA_ENABLED=true
 OLLAMA_TIMEOUT=30000
 OLLAMA_MAX_TOKENS=500
@@ -68,7 +69,7 @@ npx tsx scripts/verificar-ollama.ts
 **Salida esperada:**
 ```
 ✅ Ollama está corriendo
-✅ Modelo gemma:2b disponible
+✅ Modelo qwen2.5:7b disponible
 ✅ Generación de respuestas funciona
 ```
 
@@ -112,7 +113,7 @@ En Easypanel → Environment:
 
 ```env
 OLLAMA_BASE_URL=https://bot-whatsapp-ollama.sqaoeo.easypanel.host
-OLLAMA_MODEL=gemma:2b
+OLLAMA_MODEL=qwen2.5:7b
 OLLAMA_ENABLED=true
 OLLAMA_TIMEOUT=30000
 OLLAMA_MAX_TOKENS=500

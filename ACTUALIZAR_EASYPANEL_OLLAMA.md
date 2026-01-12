@@ -23,7 +23,7 @@ OLLAMA_BASE_URL=https://bot-whatsapp-ollama.sqaoeo.easypanel.host
 OLLAMA_BASE_URL=http://ollama:11434
 
 # Modelo más potente
-OLLAMA_MODEL=llama3.1:8b
+OLLAMA_MODEL=qwen2.5:7b
 OLLAMA_ENABLED=true
 OLLAMA_TIMEOUT=30000
 OLLAMA_MAX_TOKENS=800
@@ -62,7 +62,7 @@ Si `llama3.1:8b` no está instalado:
 
 ```bash
 # Conectar a Easypanel Console
-docker exec -it ollama ollama pull llama3.1:8b
+docker exec -it ollama ollama pull qwen2.5:7b
 
 # O modelo más pequeño pero rápido:
 docker exec -it ollama ollama pull llama3.2:3b
@@ -74,7 +74,7 @@ docker exec -it ollama ollama pull llama3.2:3b
 
 ```env
 OLLAMA_BASE_URL=http://ollama:11434
-OLLAMA_MODEL=llama3.1:8b
+OLLAMA_MODEL=qwen2.5:7b
 AI_PROVIDER=ollama
 ```
 
@@ -87,7 +87,7 @@ AI_PROVIDER=ollama
 
 ```env
 OLLAMA_BASE_URL=https://bot-whatsapp-ollama.sqaoeo.easypanel.host
-OLLAMA_MODEL=llama3.1:8b
+OLLAMA_MODEL=qwen2.5:7b
 AI_PROVIDER=ollama
 ```
 
@@ -101,7 +101,7 @@ AI_PROVIDER=ollama
 1. **Reiniciar el servicio** en Easypanel
 2. **Verificar logs** para ver que usa Ollama:
    ```
-   [Ollama] Usando modelo llama3.1:8b
+   [Ollama] Usando modelo qwen2.5:7b
    ✅ Búsqueda local: 4 productos encontrados (sin usar IA)
    ```
 
@@ -129,7 +129,7 @@ OLLAMA_BASE_URL=http://ollama:11434
 
 **Solución:** Instalar el modelo
 ```bash
-docker exec -it ollama ollama pull llama3.1:8b
+docker exec -it ollama ollama pull qwen2.5:7b
 ```
 
 ### Ollama muy lento
