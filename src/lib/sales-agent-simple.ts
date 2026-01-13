@@ -492,7 +492,8 @@ export class SalesAgentSimple {
       let product = this.buscarProducto(message)
       
       // 🧠 Si búsqueda local falla, usar IA para buscar (entiende typos y errores)
-      if (!product && this.products.length > 0) {
+      // SOLO si no se detectó una intención clara localmente (como saludo o despedida)
+      if (!product && this.products.length > 0 && !isLocalClear) {
         console.log(`🧠 Búsqueda local falló, intentando con IA...`)
         const aiSearch = await searchProductWithAI(message, this.products)
         if (aiSearch.product) {
