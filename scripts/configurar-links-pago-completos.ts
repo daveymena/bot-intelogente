@@ -28,6 +28,9 @@ async function configurarLinks() {
 ✅ 17,000 Códigos Fuente
 ✅ 29,522+ Nodos
 
+💻 FORMATO: Digital (100% Pregrabado)
+📲 ENTREGA: Inmediata por Correo / Drive
+
 💰 OPCIONES DE PAGO:
 
 1️⃣ MercadoPago - $49.99 USD (Precio completo)
@@ -36,11 +39,12 @@ async function configurarLinks() {
 2️⃣ PayPal - $15.00 USD (Opción económica)
    🔗 https://www.paypal.com/invoice/p/#INV2-U2K8-6UU6-HMTD-NETG
 
-🎁 BONOS:
-• Acceso de por vida
+🎁 BENEFICIOS:
+• Contenido Descargable
 • Actualizaciones gratuitas
 • Soporte prioritario
 • Comunidad privada
+⚠️ No incluye certificado
 
 Este pack tiene TODO lo que necesitas para dominar el mundo digital y empezar a generar ingresos desde hoy.
 
@@ -64,10 +68,13 @@ Este pack tiene TODO lo que necesitas para dominar el mundo digital y empezar a 
     })
 
     if (piano) {
-      const pianoResponse = piano.autoResponse || ''
+      const pianoResponse = piano.autoResponse ? piano.autoResponse.split('💰 OPCIONES DE PAGO')[0] : ''
       
       // Agregar opciones de pago al final de la respuesta existente
       const updatedResponse = `${pianoResponse}
+
+💻 FORMATO: Online (Pregrabado)
+⚠️ No incluye certificado
 
 💰 OPCIONES DE PAGO:
 

@@ -1,0 +1,51 @@
+{
+  "producto": "MegaSuperpack Completo",
+  "productId": "megapack-completo",
+  "categoria": "DIGITAL",
+  "precio": 60000,
+  "linkPago": "https://mpago.li/32cJgK3",
+  "faqs": [
+    {
+      "id": 1,
+      "pregunta": "¿Qué incluye el megapack?",
+      "keywords": ["incluye", "trae", "contiene", "qué es", "megapack"],
+      "respuesta": "📦 El MegaSuperpack es nuestra colección más completa:\n✅ 2,056 Flujos N8N Profesionales\n✅ 1TB de Cursos Premium\n✅ 20,000+ Templates\n✅ 6H Curso N8N\n✅ 17,000 Códigos Fuente\n✅ 29,522+ Nodos"
+    },
+    {
+      "id": 2,
+      "pregunta": "¿Cómo es la entrega?",
+      "keywords": ["entrega", "envio", "recibo", "como llega", "drive", "correo"],
+      "respuesta": "📲 La entrega es inmediata y digital. Una vez confirmado el pago, te enviamos el acceso a un servidor de Google Drive o vía Correo Electrónico/WhatsApp con todos los archivos listos para descargar."
+    },
+    {
+      "id": 3,
+      "pregunta": "¿Las clases son en vivo?",
+      "keywords": ["en vivo", "directo", "horario", "pregrabado", "grabado"],
+      "respuesta": "No, todo el material es 100% PREGRABADO 🎬. Esto te permite avanzar a tu propio ritmo, descargar el contenido y verlo cuando quieras sin presiones de horarios."
+    },
+    {
+      "id": 4,
+      "pregunta": "¿Dan certificado?",
+      "keywords": ["certificado", "diploma", "titulo", "acreditacion"],
+      "respuesta": "⚠️ No emitimos certificados ni diplomas. Este es un paquete de recursos técnicos y educativos para uso profesional y autodidacta."
+    },
+    {
+      "id": 5,
+      "pregunta": "¿Cuál es el precio?",
+      "keywords": ["precio", "costo", "valor", "cuanto vale", "cuanto cuesta"],
+      "respuesta": "El MegaSuperpack tiene un valor promocional de $49.99 USD vía MercadoPago o una opción económica de $15.00 USD vía PayPal 💰."
+    },
+    {
+      "id": 6,
+      "pregunta": "¿Tengo acceso de por vida?",
+      "keywords": ["acceso", "siempre", "vence", "caduca", "tiempo"],
+      "respuesta": "Sí, una vez recibes los links puedes descargar todo el contenido a tu computador o disco duro externo. El acceso al Drive se mantiene para que descargues lo que necesites."
+    }
+  ],
+  "informacionAdicional": {
+    "formato": "Digital / Descargable",
+    "entrega": "Drive / Correo",
+    "tipo": "Pregrabado / Autodidacta",
+    "certificado": "No incluye"
+  }
+}

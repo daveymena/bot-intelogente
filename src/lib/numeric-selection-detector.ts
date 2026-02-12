@@ -36,7 +36,7 @@ export class NumericSelectionDetector {
     // MÉTODO 1: Usar memoria compartida si está disponible (más confiable)
     if (chatId) {
       try {
-        const { SharedMemoryService } = await import('../agents/shared-memory')
+        const { SharedMemoryService } = await import('./bot/agents/shared-memory')
         const memoryService = SharedMemoryService.getInstance()
 
         if (memoryService.hasActiveProductList(chatId)) {

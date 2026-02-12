@@ -15,6 +15,9 @@ interface ProductData {
   images: string[];
   stock: number | null;
   deliveryLink: string | null;
+  tipo_producto: string;
+  tipo_entrega: string;
+  configurations: string | null;
 }
 
 export class RealDataEnforcer {
@@ -33,7 +36,10 @@ export class RealDataEnforcer {
           description: true,
           category: true,
           images: true,
-          stock: true
+          stock: true,
+          tipo_producto: true,
+          tipo_entrega: true,
+          configurations: true
         }
       });
 
@@ -79,7 +85,10 @@ export class RealDataEnforcer {
             return trimmed;
           }),
         stock: product.stock,
-        deliveryLink: null // Campo no existe en schema actual
+        deliveryLink: null,
+        tipo_producto: product.tipo_producto,
+        tipo_entrega: product.tipo_entrega,
+        configurations: product.configurations
       };
 
       console.log(`[RealDataEnforcer] ✅ Datos reales obtenidos:`);
@@ -104,9 +113,9 @@ export class RealDataEnforcer {
       const product = await db.product.findFirst({
         where: {
           OR: [
-            { name: { contains: query, mode: 'insensitive' } },
-            { description: { contains: query, mode: 'insensitive' } },
-            { tags: { has: query.toLowerCase() } }
+            { name: { contains: query } },
+            { description: { contains: query } },
+            { tags: { contains: query } }
           ]
         },
         select: {
@@ -116,7 +125,10 @@ export class RealDataEnforcer {
           description: true,
           category: true,
           images: true,
-          stock: true
+          stock: true,
+          tipo_producto: true,
+          tipo_entrega: true,
+          configurations: true
         }
       });
 
@@ -217,9 +229,9 @@ export class RealDataEnforcer {
       const megapacks = await db.product.findMany({
         where: {
           OR: [
-            { name: { contains: 'Mega Pack', mode: 'insensitive' } },
-            { name: { contains: 'Megapack', mode: 'insensitive' } },
-            { category: 'MEGAPACK' }
+            { name: { contains: 'Mega Pack' } },
+            { name: { contains: 'Megapack' } },
+            { customCategory: { contains: 'MEGAPACK' } }
           ]
         },
         select: {

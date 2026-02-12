@@ -1,0 +1,19 @@
+{
+  "agent": {
+    "model": "groq/llama-3.1-8b-instant",
+    "identity": {
+      "name": "David",
+      "emoji": "🚀"
+    }
+  },
+  "channels": {
+    "whatsapp": {
+      "enabled": true,
+      "allowFrom": ["*"]
+    }
+  },
+  "gateway": {
+    "port": 18789,
+    "verbose": true
+  }
+}

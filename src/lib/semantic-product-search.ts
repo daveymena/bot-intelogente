@@ -268,9 +268,14 @@ IMPORTANTE: Responde SOLO el JSON, sin texto adicional.`;
           }
         ],
         stream: false,
+        keep_alive: "5m", 
         options: {
-          temperature: 0.2, // Más preciso para búsqueda
-          num_predict: 300
+          temperature: 0.1, // Más preciso para búsqueda
+          num_predict: 150, // Reducido drásticamente para velocidad
+          num_ctx: 3072,    // Contexto suficiente pero eficiente
+          top_k: 20,
+          top_p: 0.9,
+          stop: ["}", "]", "JSON:"] // Detener generación al cerrar JSON
         }
       }),
       signal: controller.signal
@@ -399,11 +404,8 @@ function fallbackKeywordSearch(
 /**
  * 🎯 Búsqueda rápida por ID (cuando ya sabemos qué producto)
  */
-export async function getProductById(productId: number) {
+export async function getProductById(productId: string) {
   return await prisma.product.findUnique({
-    where: { id: productId },
-    include: {
-      images: true
-    }
+    where: { id: productId }
   });
 }

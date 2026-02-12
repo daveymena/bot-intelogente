@@ -14,15 +14,14 @@ import fs from 'fs'
 import { db } from './db'
 import QRCode from 'qrcode'
 import pino from 'pino'
-import { createGroqHybridSystem } from './hybrid-intelligent-response-system'
-import { HybridIntelligentResponseSystem } from './hybrid-intelligent-response-system'
 import { AudioTranscriptionService } from './audio-transcription-service'
 import { VoiceGenerationService } from './voice-generation-service'
-import * as Personality from './conversational-personality'
-import { FlowIntegration } from './flow-integration'
 // 🛡️ Sistema Anti-Ban
 import { SafeBaileysSender } from './safe-baileys-sender'
 import { SafeReconnectManager } from './safe-reconnect-manager'
+// @ts-ignore
+import { ProfessionalResponseFormatter } from './professional-response-formatter'
+import { routeMessage } from './bot/core/agentRouter'
 
 interface BaileysSession {
   socket: WASocket | null
@@ -35,14 +34,17 @@ interface BaileysSession {
 }
 
 export class BaileysStableService {
-  private static sessions: Map<string, BaileysSession> = new Map()
+  // Cache de Productos para optimización de velocidad
+  private static productsCache: any[] | null = null
+  private static lastCacheUpdate: number = 0
+
+  private static sessions: Map<string, any> = new Map()
   private static qrCallbacks: Map<string, (qr: string) => void> = new Map()
   private static reconnectTimers: Map<string, NodeJS.Timeout> = new Map()
   private static connectionLocks: Map<string, number> = new Map() // 🔒 Bloqueo de conexiones con timestamp
   private static keepAliveTimers: Map<string, NodeJS.Timeout> = new Map() // 💓 Keep-alive timers
   private static messageHandlersConfigured: Map<string, boolean> = new Map() // 🎯 Rastrear handlers configurados
 
-  private static hybridSystem: HybridIntelligentResponseSystem | null = null as HybridIntelligentResponseSystem | null
   private static conversationHistories: Map<string, any[]> = new Map()
 
   // Logger silencioso
@@ -55,22 +57,6 @@ export class BaileysStableService {
   /**
    * Inicializar sistema híbrido
    */
-  private static async initializeHybridSystem() {
-    if (this.hybridSystem) return
-
-    try {
-      const groqApiKey = process.env.GROQ_API_KEY
-      if (groqApiKey) {
-        this.hybridSystem = await createGroqHybridSystem(groqApiKey)
-        console.log('[Baileys] ✅ Sistema híbrido inicializado')
-      } else {
-        console.log('[Baileys] ⚠️  GROQ_API_KEY no encontrada, sistema híbrido desactivado')
-      }
-    } catch (error) {
-      console.error('[Baileys] ❌ Error inicializando sistema híbrido:', error)
-    }
-  }
-
   static async initializeConnection(userId: string): Promise<{ success: boolean; qr?: string; error?: string }> {
     try {
       // 🔒 Verificar si ya hay una conexión en proceso
@@ -431,88 +417,69 @@ export class BaileysStableService {
           //   continue
           // }
 
-          // 🎯 SISTEMA SIMPLE DE VENTAS
-          // Basado en el bot funcional probado
-          console.log('[Baileys] 🎯 Usando SalesAgentSimple')
+          // LOG DE MENSAJE RECIBIDO
+          console.log(`[Baileys] 📩 Mensaje de ${from}: ${messageText.slice(0, 50)}...`);
+          fs.appendFileSync('debug_baileys.log', `[${new Date().toISOString()}] FROM: ${from} MSG: ${messageText}\n`);
+          // 🎯 SISTEMA AGENT ROUTER (Venta con Datos Reales)
+          console.log('[Baileys] 🧠 Procesando con AgentRouter (Real Data Logic)...')
           
           try {
-            const { getSalesAgent, calculateTypingDelay, simulateTyping } = await import('./sales-agent-simple')
-            const salesAgent = getSalesAgent(userId)
+            const result = await routeMessage(userId, from, messageText);
             
-            console.log('[Baileys] 📝 Procesando:', messageText.substring(0, 50))
+            // 🎨 FORMATO CARD MODE (Aplicar formato profesional)
+            const formattedText = ProfessionalResponseFormatter.cleanOldFormat(result.text);
+
+            console.log(`[Baileys] ✅ Respuesta generada por AgentRouter`);
             
-            const result = await salesAgent.processMessage(messageText, from)
-            
-            console.log(`[Baileys] ✅ Respuesta generada (intent: ${result.intent}, stage: ${result.salesStage})`)
-            
-            // ⏳ SIMULAR ESCRITURA - Mostrar "escribiendo..." antes de enviar
+            // ⏳ SIMULAR ESCRITURA
             try {
-              await socket.sendPresenceUpdate('composing', from)
-              const typingDelay = calculateTypingDelay(result.text.length)
-              console.log(`[Baileys] ⏳ Simulando escritura por ${typingDelay}ms...`)
-              await simulateTyping(typingDelay)
-              await socket.sendPresenceUpdate('paused', from)
-            } catch (typingError) {
-              // Ignorar errores de typing, no es crítico
-              console.log('[Baileys] ⚠️ No se pudo simular escritura')
-            }
+              await socket.sendPresenceUpdate('composing', from);
+              await new Promise(resolve => setTimeout(resolve, 1500));
+              await socket.sendPresenceUpdate('paused', from);
+            } catch (e) { /* ignore */ }
             
-            // Enviar respuesta de texto
-            await socket.sendMessage(from, { text: result.text })
-            console.log('[Baileys] ✅ Respuesta enviada')
-            
-            // Enviar fotos si es necesario
-            if (result.sendPhotos && result.photos && result.photos.length > 0) {
-              console.log(`[Baileys] 📸 Enviando ${result.photos.length} foto(s)...`)
-              for (const photoUrl of result.photos) {
-                try {
-                  let imageSource: { url: string } | { stream: fs.ReadStream } | null = null
-                  
-                  // 1. Si es URL pública (http/https)
-                  if (photoUrl && (photoUrl.startsWith('http://') || photoUrl.startsWith('https://'))) {
-                    imageSource = { url: photoUrl }
-                    console.log(`[Baileys] 🌐 Usando URL pública: ${photoUrl.substring(0, 50)}...`)
-                  }
-                  // 2. Si es ruta local (/fotos/... o fotos/...)
-                  else if (photoUrl && (photoUrl.startsWith('/fotos/') || photoUrl.startsWith('fotos/'))) {
-                    const localPath = path.join(process.cwd(), 'public', photoUrl.startsWith('/') ? photoUrl.substring(1) : photoUrl)
-                    if (fs.existsSync(localPath)) {
-                      imageSource = { stream: fs.createReadStream(localPath) }
-                      console.log(`[Baileys] 📁 Usando archivo local: ${localPath}`)
-                    } else {
-                      console.log(`[Baileys] ⚠️ Archivo no encontrado: ${localPath}`)
+            // 📸 GESTIÓN DE ENVÍO (Imagen con Caption de Card)
+            if (result.media && result.media.length > 0) {
+                console.log(`[Baileys] 📸 Enviando Card Visual (Imagen + Texto)...`);
+                const mainImage = result.media[0];
+                
+                if (mainImage && typeof mainImage === 'string') {
+                    try {
+                        // Enviar la imagen con TODO el texto de la card como caption
+                        await socket.sendMessage(from, { 
+                            image: { url: mainImage },
+                            caption: formattedText
+                        });
+                        
+                        // Si hay más fotos, enviarlas después (sin duplicar el texto)
+                        if (result.media.length > 1) {
+                            const additionalImages = result.media.slice(1, 3);
+                            for (const imageUrl of additionalImages) {
+                                if (!imageUrl || typeof imageUrl !== 'string') continue;
+                                try {
+                                    await socket.sendMessage(from, { image: { url: imageUrl } });
+                                } catch (e) { }
+                            }
+                        }
+                        
+                        console.log(`[Baileys] ✅ Card visual enviada exitosamente`);
+                        return; // 🛑 Salir para no enviar el texto solo abajo
+                    } catch (e) {
+                        console.error('[Baileys] Error enviando card visual, reintentando solo texto:', e);
                     }
-                  }
-                  
-                  // Enviar imagen si tenemos fuente válida
-                  if (imageSource) {
-                    await socket.sendMessage(from, {
-                      image: imageSource,
-                      caption: result.product?.name || ''
-                    })
-                    console.log('[Baileys] ✅ Foto enviada')
-                  }
-                } catch (photoError: any) {
-                  console.error('[Baileys] ⚠️ Error enviando foto:', photoError.message)
                 }
-              }
             }
             
-            // Guardar en DB
-            await this.saveOutgoingMessage(userId, from, result.text, conversation.id)
+            // 📝 Enviar solo Texto (si no hay imagen o falló el envío visual)
+            await socket.sendMessage(from, { text: formattedText });
+            
+            // Nota: El router ya guarda los mensajes en la DB (INCOMING y OUTGOING)
             
           } catch (handlerError: any) {
-            console.error('[Baileys] ❌ Error en SalesAgentSimple:', handlerError.message)
-            console.error('[Baileys] Stack:', handlerError.stack)
-            
-            // Fallback simple
+            console.error('[Baileys] ❌ Error en AgentRouter:', handlerError.message)
             try {
-              await socket.sendMessage(from, { 
-                text: '😅 Disculpa, tuve un problema. ¿Puedes repetir?' 
-              })
-            } catch (fallbackError) {
-              console.error('[Baileys] ❌ Error en fallback:', fallbackError)
-            }
+                await socket.sendMessage(from, { text: '😅 David: Tuve un pequeño contratiempo. ¿Qué necesitas?' })
+            } catch (e) { }
           }
 
         } catch (error) {
@@ -522,468 +489,6 @@ export class BaileysStableService {
     })
 
     console.log(`[Baileys] ✅ Manejador de mensajes configurado`)
-  }
-
-  /**
-   * Manejar respuesta automática con IA
-   */
-  private static async handleAutoResponse(
-    socket: WASocket,
-    userId: string,
-    from: string,
-    messageText: string,
-    conversationId: string
-  ) {
-    console.log(`[Baileys] 🤖 Iniciando respuesta automática...`)
-
-    try {
-      // Verificar que la sesión esté lista antes de procesar
-      const session = this.sessions.get(userId)
-      if (!session || !session.isReady || session.status !== 'CONNECTED') {
-        console.log(`[Baileys] ⏸️ Sesión no lista, esperando reconexión...`)
-        // Guardar mensaje para procesar después
-        return
-      }
-
-      // Importar servicios dinámicamente
-      const { AIService } = await import('./ai-service')
-      const { IntelligentResponseService } = await import('./intelligent-response-service')
-
-      // Verificar si debe responder
-      if (!AIService.shouldAutoRespond(messageText)) {
-        console.log(`[Baileys] ⏭️ Mensaje ignorado (muy corto o comando)`)
-        return
-      }
-
-      // Obtener historial
-      const history = await AIService.getConversationHistory(conversationId)
-
-      // Generar respuesta
-      const intelligentResponse = await IntelligentResponseService.generateResponseWithHumanTouch(
-        userId,
-        messageText,
-        from,
-        history
-      )
-
-      console.log(`[Baileys] ✅ Respuesta generada (${intelligentResponse.responseTime}ms)`)
-
-      // Verificar de nuevo que sigue conectado antes de enviar
-      if (!session.isReady || session.status !== 'CONNECTED') {
-        console.log(`[Baileys] ⚠️ Conexión perdida durante generación de respuesta`)
-        return
-      }
-
-      // Enviar respuesta con retry
-      let enviado = false
-      for (let intento = 1; intento <= 3; intento++) {
-        try {
-          await socket.sendMessage(from, { text: intelligentResponse.message })
-          console.log(`[Baileys] 📤 Respuesta enviada`)
-          enviado = true
-          break
-        } catch (sendError) {
-          console.log(`[Baileys] ⚠️ Intento ${intento}/3 falló, reintentando...`)
-          if (intento < 3) {
-            await new Promise(resolve => setTimeout(resolve, 1000))
-          }
-        }
-      }
-
-      if (!enviado) {
-        console.log(`[Baileys] ❌ No se pudo enviar después de 3 intentos`)
-        return
-      }
-
-      // Guardar en DB
-      await db.message.create({
-        data: {
-          conversationId,
-          content: intelligentResponse.message,
-          direction: 'OUTGOING',
-          type: 'TEXT'
-        }
-      })
-
-      await db.conversation.update({
-        where: { id: conversationId },
-        data: { lastMessageAt: new Date() }
-      })
-
-      console.log(`[Baileys] ✅ Respuesta guardada en DB`)
-
-      // 📸 NOTA: El envío de fotos ahora se maneja en handleHybridResponse
-      // Este código antiguo ya no se usa
-
-    } catch (error) {
-      console.error('[Baileys] ❌ Error en respuesta automática:', error)
-    }
-  }
-
-  /**
-   * Manejar respuesta con sistema híbrido (NUEVO)
-   */
-  private static async handleHybridResponse(
-    socket: WASocket,
-    userId: string,
-    from: string,
-    messageText: string,
-    conversationId: string
-  ) {
-    console.log('[Baileys] 🧠 Usando SISTEMA HÍBRIDO CON CALIFICACIÓN')
-
-    try {
-      // Inicializar sistema híbrido si no está listo
-      if (!this.hybridSystem) {
-        await this.initializeHybridSystem()
-      }
-
-      // Obtener historial de conversación
-      let history = this.conversationHistories.get(from) || []
-      
-      // 🔢 DETECTAR SELECCIÓN NUMÉRICA PRIMERO
-      const { NumericSelectionDetector } = await import('./numeric-selection-detector')
-      const selection = await NumericSelectionDetector.detectSelection(
-        messageText,
-        history,
-        userId
-      )
-      
-      if (selection.isSelection && selection.selectedProduct) {
-        console.log(`[Baileys] 🔢 Selección numérica detectada: ${selection.selectedProduct.name}`)
-        
-        // Enviar producto seleccionado con foto
-        try {
-          const { ProductPhotoSender } = await import('./product-photo-sender')
-          
-          const confirmMessage = `¡Perfecto! 😊 Elegiste la opción ${selection.selectedNumber}\n\nTe envío los detalles:`
-          await socket.sendMessage(from, { text: confirmMessage })
-          await this.saveOutgoingMessage(userId, from, confirmMessage, conversationId)
-          
-          // Enviar producto con foto
-          const result = await ProductPhotoSender.sendProductsWithPhotos(
-            socket,
-            from,
-            [selection.selectedProduct],
-            1
-          )
-          
-          console.log(`[Baileys] ✅ Producto enviado: ${result.sent}`)
-          
-          // Actualizar historial
-          history.push(
-            { role: 'user', content: messageText },
-            { role: 'assistant', content: `Producto seleccionado: ${selection.selectedProduct.name}` }
-          )
-          
-          if (history.length > 20) {
-            history = history.slice(-20)
-          }
-          this.conversationHistories.set(from, history)
-          
-          return // Terminar aquí
-        } catch (error) {
-          console.error('[Baileys] ❌ Error enviando producto seleccionado:', error)
-          // Continuar con flujo normal si falla
-        }
-      }
-
-      // 🎯 USAR EL SISTEMA HÍBRIDO QUE TIENE CALIFICACIÓN
-      if (this.hybridSystem && typeof this.hybridSystem.processMessage === 'function') {
-        console.log('[Baileys] 🎯 Procesando con sistema híbrido (con calificación)')
-        
-        const response = await this.hybridSystem.processMessage(
-          messageText,
-          userId,
-          history,
-          from
-        )
-        
-        // Enviar respuesta
-        await socket.sendMessage(from, { text: response })
-        
-        // Guardar en DB
-        await this.saveOutgoingMessage(userId, from, response, conversationId)
-        
-        // Actualizar historial
-        history.push(
-          { role: 'user', content: messageText },
-          { role: 'assistant', content: response }
-        )
-        
-        if (history.length > 20) {
-          history = history.slice(-20)
-        }
-        this.conversationHistories.set(from, history)
-        
-        console.log('[Baileys] ✅ Respuesta enviada con sistema híbrido')
-        return
-      }
-
-      // FALLBACK: Si no hay sistema híbrido, usar búsqueda inteligente
-      console.log('[Baileys] ⚠️ Sistema híbrido no disponible, usando fallback')
-      const { intelligentProductSearch, generateProductResponse } = await import('./intelligent-product-search')
-      
-      // Extraer productos mencionados previamente
-      const previousProducts = history
-        .filter((msg: any) => msg.role === 'assistant')
-        .map((msg: any) => {
-          const match = msg.content.match(/\*([^*]+)\*/);
-          return match ? match[1] : null;
-        })
-        .filter(Boolean);
-
-      // Buscar producto con IA
-      const productMatch = await intelligentProductSearch({
-        userMessage: messageText,
-        previousProducts,
-        conversationHistory: history.map((h: any) => h.content)
-      });
-
-      // Si encontró producto(s), manejar según el tipo de consulta
-      if (productMatch && productMatch.confidence >= 70) {
-        console.log('[Baileys] ✅ Producto(s) encontrado(s) con IA');
-        
-        try {
-          const { ProductPhotoSender } = await import('./product-photo-sender')
-          const { ConversationContextService } = await import('./conversation-context-service')
-          
-          // 🔍 CONSULTA GENERAL: Mostrar opciones sin fotos
-          if (productMatch.isGeneralQuery && productMatch.products) {
-            console.log(`[Baileys] 📋 Consulta general detectada, mostrando ${productMatch.products.length} opciones`)
-            
-            // Intros naturales variadas
-            const intros = [
-              '¡Perfecto! Mira, tengo varias opciones que te pueden servir:',
-              '¡Claro! Déjame mostrarte lo que tengo:',
-              '¡Dale! Te muestro las opciones disponibles:',
-              'Súper, tengo estas opciones para ti:',
-              '¡Genial! Fíjate en estas opciones:'
-            ];
-            
-            const intro = intros[Math.floor(Math.random() * intros.length)];
-            let optionsMessage = `${intro}\n\n`;
-            
-            productMatch.products.forEach((product: any, index: number) => {
-              const price = typeof product.price === 'number' 
-                ? Personality.formatPriceNaturally(product.price)
-                : product.price;
-              
-              optionsMessage += `${index + 1}️⃣ *${product.name}*\n`;
-              optionsMessage += `   💰 ${price}\n`;
-              if (product.description) {
-                const shortDesc = product.description.substring(0, 80);
-                optionsMessage += `   📝 ${shortDesc}${product.description.length > 80 ? '...' : ''}\n`;
-              }
-              optionsMessage += '\n';
-            });
-            
-            // Cierres naturales variados
-            const closes = [
-              '¿Cuál te llama más la atención?',
-              '¿Alguna te gusta? Puedes decirme el número',
-              '¿Cuál te interesa? Dime el número o el nombre',
-              '¿Te gusta alguna? Cuéntame',
-              '¿Cuál te cuadra más?'
-            ];
-            
-            optionsMessage += closes[Math.floor(Math.random() * closes.length)] + ' 😊';
-            
-            // Enviar mensaje con opciones
-            await socket.sendMessage(from, { text: optionsMessage })
-            console.log('[Baileys] ✅ Opciones enviadas')
-            
-            // Guardar en DB
-            await this.saveOutgoingMessage(userId, from, optionsMessage, conversationId)
-            
-            // Actualizar historial
-            history.push(
-              { role: 'user', content: messageText },
-              { role: 'assistant', content: optionsMessage }
-            )
-            
-            if (history.length > 10) {
-              history = history.slice(-10)
-            }
-            this.conversationHistories.set(from, history)
-            
-            return // Terminar aquí
-          }
-          
-          // 🎯 CONSULTA ESPECÍFICA: Enviar producto con foto
-          const products = Array.isArray(productMatch.products) 
-            ? productMatch.products 
-            : [productMatch.product]
-          
-          console.log(`[Baileys] 📸 Enviando ${products.length} producto(s) con fotos`)
-          
-          // Si es una recomendación (reason contiene justificación), enviar mensaje explicativo primero
-          if (productMatch.reason && productMatch.reason.length > 50 && products.length === 1) {
-            const intros = [
-              '✨ *Mira, te recomiendo este:*',
-              '💡 *Este es perfecto para ti:*',
-              '🎯 *Mi recomendación:*',
-              '⭐ *Este te va a gustar:*',
-              '👌 *Fíjate en este:*'
-            ];
-            
-            const intro = intros[Math.floor(Math.random() * intros.length)];
-            const recommendationMessage = `${intro}\n\n${productMatch.reason}\n\nTe envío los detalles completos:`;
-            
-            await socket.sendMessage(from, { text: recommendationMessage });
-            await this.saveOutgoingMessage(userId, from, recommendationMessage, conversationId);
-            console.log('[Baileys] 💡 Mensaje de recomendación enviado');
-          }
-          
-          // Enviar productos con fotos
-          const result = await ProductPhotoSender.sendProductsWithPhotos(
-            socket,
-            from,
-            products,
-            5 // máximo 5 productos
-          )
-          
-          console.log(`[Baileys] ✅ Enviados: ${result.sent}, Fallidos: ${result.failed}`)
-          
-          // 💾 GUARDAR CONTEXTO: Recordar el último producto enviado
-          if (products.length > 0) {
-            const conversationKey = `${userId}:${from}`
-            const lastProduct = products[products.length - 1] // Último producto enviado
-            ConversationContextService.setProductContext(
-              conversationKey,
-              lastProduct.id,
-              lastProduct.name
-            )
-          }
-          
-          // Guardar en DB
-          await this.saveOutgoingMessage(
-            userId, 
-            from, 
-            `[Enviados ${result.sent} productos con fotos]`, 
-            conversationId
-          )
-          
-          // Actualizar historial
-          history.push(
-            { role: 'user', content: messageText },
-            { role: 'assistant', content: `Productos enviados: ${products.map((p: any) => p.name).join(', ')}` }
-          )
-          
-          if (history.length > 10) {
-            history = history.slice(-10)
-          }
-          this.conversationHistories.set(from, history)
-          
-          return // Terminar aquí, ya enviamos todo
-          
-        } catch (photoError) {
-          console.error('[Baileys] ⚠️ Error enviando fotos:', photoError)
-          // Continuar con sistema normal si falla
-        }
-      }
-
-      // Si no encontró producto o confianza baja, usar sistema híbrido normal
-      let response: string
-
-      if (this.hybridSystem && typeof this.hybridSystem.processMessage === 'function') {
-        // Usar sistema híbrido (BD + IA + Formato + Conocimiento Externo)
-        console.log('[Baileys] 🧠 Procesando con sistema híbrido (BD + IA + Conocimiento Externo)')
-        response = await this.hybridSystem.processMessage(
-          messageText,
-          userId,
-          history,
-          from
-        )
-      } else {
-        // Fallback: usar sistema local (solo BD)
-        console.log('[Baileys] 📦 Procesando con sistema local (solo BD)')
-        const { IntelligentProductQuerySystem } = await import('./intelligent-product-query-system')
-        response = await IntelligentProductQuerySystem.processQuery(
-          messageText,
-          userId,
-          history
-        )
-      }
-
-      // 🎭 AÑADIR PERSONALIDAD Y NATURALIDAD
-      const buyingIntent = Personality.detectBuyingIntent(messageText);
-      const isFirstMessage = history.length === 0;
-      
-      // Hacer la respuesta más natural y humana
-      response = Personality.generateNaturalResponse({
-        baseMessage: response,
-        context: {
-          isFirstMessage,
-          conversationCount: history.length,
-        },
-        addEmpathy: messageText.includes('?') ? 'question' : undefined
-      });
-      
-      // Si hay intención de compra fuerte, añadir respuesta apropiada
-      if (buyingIntent.hasBuyingIntent && buyingIntent.intentType === 'ready') {
-        const intentResponse = Personality.generateIntentBasedResponse(buyingIntent);
-        if (intentResponse) {
-          response = `${intentResponse}\n\n${response}`;
-        }
-      }
-
-      // Actualizar historial
-      history.push(
-        { role: 'user', content: messageText },
-        { role: 'assistant', content: response }
-      )
-
-      // Mantener solo últimos 10 mensajes
-      if (history.length > 10) {
-        history = history.slice(-10)
-      }
-      this.conversationHistories.set(from, history)
-
-      // Enviar respuesta (texto + audio opcional)
-      await socket.sendMessage(from, { text: response })
-      console.log('[Baileys] ✅ Respuesta híbrida enviada')
-
-      // 📸 NO REENVIAR FOTOS EN PREGUNTAS DE SEGUIMIENTO
-      // Solo continuar la conversación con texto
-      console.log('[Baileys] 💬 Continuando conversación sin reenviar fotos')
-
-      // 🎙️ ENVIAR AUDIO SI ESTÁ HABILITADO
-      if (process.env.VOICE_ENABLED === 'true') {
-        try {
-          const voiceService = new VoiceGenerationService()
-
-          if (voiceService.isConfigured()) {
-            console.log('[Baileys] 🎙️ Generando respuesta de voz...')
-
-            // Generar audio
-            const audioBuffer = await voiceService.generateVoice(response)
-
-            // Enviar audio
-            await socket.sendMessage(from, {
-              audio: audioBuffer,
-              mimetype: 'audio/mp4',
-              ptt: true // Push-to-talk (nota de voz)
-            })
-
-            console.log('[Baileys] ✅ Audio enviado')
-          }
-        } catch (error: any) {
-          console.error('[Baileys] ⚠️ Error enviando audio:', error.message)
-          // No fallar si el audio falla, ya se envió el texto
-        }
-      }
-
-      // Guardar en DB
-      await this.saveOutgoingMessage(userId, from, response, conversationId)
-
-    } catch (error) {
-      console.error('[Baileys] ❌ Error en respuesta híbrida:', error)
-
-      // Fallback a respuesta simple
-      const fallbackResponse = '😅 Disculpa, tuve un problema procesando tu mensaje. ¿Puedes intentar de nuevo?'
-      await socket.sendMessage(from, { text: fallbackResponse })
-    }
   }
 
   /**
@@ -1197,145 +702,6 @@ export class BaileysStableService {
   }
 
   /**
-   * 📸 Enviar fotos del producto si el cliente las pidió
-   */
-  private static async sendProductPhotosIfRequested(
-    socket: WASocket,
-    userId: string,
-    to: string,
-    messageText: string,
-    conversationId: string
-  ): Promise<void> {
-    try {
-      // Detectar si pidió fotos
-      const photoRequest = this.detectPhotoRequest(messageText)
-      if (!photoRequest.isPhotoRequest) {
-        return // No pidió fotos
-      }
-
-      console.log(`[Baileys] 📸 Cliente pidió fotos - Buscando producto en contexto...`)
-
-      // Buscar producto en contexto
-      const { ConversationContextService } = await import('./conversation-context-service')
-      const conversationKey = `${userId}:${to}`
-      const context = ConversationContextService.getProductContext(conversationKey)
-
-      if (!context) {
-        console.log(`[Baileys] ⚠️ No hay producto en contexto para enviar fotos`)
-        return
-      }
-
-      // Obtener producto de la base de datos
-      const product = await db.product.findUnique({
-        where: { id: context.lastProductId }
-      })
-
-      if (!product) {
-        console.log(`[Baileys] ⚠️ Producto no encontrado en BD`)
-        return
-      }
-
-      console.log(`[Baileys] ✅ Producto encontrado: ${product.name}`)
-
-      // Obtener fotos del producto
-      const photos = product.images ? JSON.parse(product.images as string) : []
-
-      if (photos.length === 0) {
-        console.log(`[Baileys] ⚠️ Producto no tiene fotos`)
-        return
-      }
-
-      console.log(`[Baileys] 📸 Enviando ${photos.length} foto(s) del producto...`)
-
-      // Enviar cada foto
-      const { MediaService } = await import('./media-service')
-      const fs = await import('fs')
-      const { createGroqHybridSystem, HybridIntelligentResponseSystem } = await import('./hybrid-intelligent-response-system')
-      const { CustomGreetingSystem } = await import('./custom-greeting-system')
-
-      for (let i = 0; i < Math.min(photos.length, 3); i++) { // Máximo 3 fotos
-        const photoUrl = photos[i]
-
-        try {
-          console.log(`[Baileys] 📤 Enviando foto ${i + 1}/${Math.min(photos.length, 3)}: ${photoUrl}`)
-
-          const imageData = await MediaService.prepareImageMessage(
-            photoUrl,
-            i === 0 ? `${product.name}\n💰 $${product.price.toLocaleString('es-CO')} COP` : undefined
-          )
-
-          // Enviar imagen con Baileys
-          await socket.sendMessage(to, {
-            image: imageData.image,
-            caption: imageData.caption || ''
-          })
-
-          console.log(`[Baileys] ✅ Foto ${i + 1} enviada`)
-
-          // Guardar en DB
-          await db.message.create({
-            data: {
-              conversationId,
-              content: `[Foto ${i + 1} de ${product.name}]`,
-              direction: 'OUTGOING',
-              type: 'IMAGE'
-            }
-          })
-
-          // Pequeña pausa entre fotos
-          if (i < Math.min(photos.length, 3) - 1) {
-            await new Promise(resolve => setTimeout(resolve, 1000))
-          }
-
-        } catch (error) {
-          console.error(`[Baileys] ❌ Error enviando foto ${i + 1}:`, error)
-        }
-      }
-
-      console.log(`[Baileys] ✅ Todas las fotos enviadas`)
-
-    } catch (error) {
-      console.error('[Baileys] ❌ Error enviando fotos del producto:', error)
-    }
-  }
-
-  /**
-   * Detectar si el mensaje es una solicitud de fotos
-   */
-  private static detectPhotoRequest(message: string): { isPhotoRequest: boolean; confidence: number } {
-    const normalized = message.toLowerCase().trim()
-
-    const photoPatterns = [
-      /\b(foto|fotos|imagen|imagenes|imágenes|pic|pics|picture|pictures)\b/i,
-      /\b(me\s+(envía|envia|manda|pasa|muestra|enseña))\s+(foto|fotos|imagen|imagenes|imágenes)/i,
-      /\b(tiene|tienes|hay)\s+(foto|fotos|imagen|imagenes|imágenes)/i,
-      /\b(ver|mirar|revisar)\s+(foto|fotos|imagen|imagenes|imágenes)/i,
-      /\b(foto|fotos|imagen|imagenes|imágenes)\s+(del|de|para|sobre)/i,
-      /\b(cómo|como)\s+(se\s+ve|luce|es)/i,
-      /\b(me\s+envía|me\s+envia|me\s+manda|me\s+pasa|me\s+muestra|envíame|enviame)\b/i
-    ]
-
-    for (const pattern of photoPatterns) {
-      if (pattern.test(normalized)) {
-        return { isPhotoRequest: true, confidence: 0.95 }
-      }
-    }
-
-    const weakPatterns = [
-      /\b(ver|mirar|revisar)\b/i,
-      /\b(muestra|enseña|pasa)\b/i
-    ]
-
-    for (const pattern of weakPatterns) {
-      if (pattern.test(normalized) && normalized.length < 20) {
-        return { isPhotoRequest: true, confidence: 0.7 }
-      }
-    }
-
-    return { isPhotoRequest: false, confidence: 0 }
-  }
-
-  /**
    * 💓 Iniciar keep-alive para mantener la conexión activa
    * Envía presencia cada 30 segundos para evitar que el servidor cierre la conexión
    */
@@ -1495,119 +861,6 @@ export class BaileysStableService {
       await socket.sendMessage(from, {
         text: 'Disculpa, tuve un problema al procesar tu mensaje. ¿Podrías intentar de nuevo? 🙏'
       })
-    }
-  }
-
-  /**
-   * 💳 DETECTAR Y MANEJAR SOLICITUD DE PAGO
-   * Detecta cuando el usuario quiere pagar y genera los links automáticamente
-   */
-  private static async detectAndHandlePayment(
-    socket: WASocket,
-    userId: string,
-    from: string,
-    messageText: string,
-    conversationId: string
-  ): Promise<boolean> {
-    try {
-      const normalized = messageText.toLowerCase().trim()
-
-      // Patrones de solicitud de pago
-      const paymentPatterns = [
-        /\b(quiero|deseo|me\s+gustaría|quisiera)\s+(pagar|comprar|adquirir)/i,
-        /\b(cómo|como)\s+(pago|compro|puedo\s+pagar)/i,
-        /\b(métodos?\s+de\s+pago|formas?\s+de\s+pago)/i,
-        /\b(link\s+de\s+pago|enlace\s+de\s+pago)/i,
-        /\b(dame|envía|envia|pasa|manda)\s+(el\s+)?(link|enlace)/i,
-        /\b(proceder\s+con\s+(la\s+)?compra)/i,
-        /\b(realizar\s+(el\s+)?pago)/i,
-        /\b(pagar|comprar|adquirir)\b/i,
-      ]
-
-      let isPaymentRequest = false
-      for (const pattern of paymentPatterns) {
-        if (pattern.test(normalized)) {
-          isPaymentRequest = true
-          break
-        }
-      }
-
-      if (!isPaymentRequest) {
-        return false // No es solicitud de pago
-      }
-
-      console.log(`[Baileys] 💳 Solicitud de pago detectada`)
-
-      // Buscar producto en contexto
-      const { ConversationContextService } = await import('./conversation-context-service')
-      const conversationKey = `${userId}:${from}`
-      const context = ConversationContextService.getProductContext(conversationKey)
-
-      if (!context) {
-        console.log(`[Baileys] ⚠️ No hay producto en contexto para generar pago`)
-        const noProductMessage = `Para generar el link de pago, necesito saber qué producto te interesa 🤔
-
-¿Podrías decirme cuál producto quieres comprar?`
-        
-        await socket.sendMessage(from, { text: noProductMessage })
-        await this.saveOutgoingMessage(userId, from, noProductMessage, conversationId)
-        return true // Manejado
-      }
-
-      console.log(`[Baileys] ✅ Producto en contexto: ${context.lastProductName}`)
-
-      // 🔥 GENERAR LINKS DE PAGO CON TU SISTEMA
-      const { BotPaymentLinkGenerator } = await import('./bot-payment-link-generator')
-      
-      console.log(`[Baileys] 🔄 Generando links para producto ID: ${context.lastProductId}, Usuario: ${userId}`)
-      
-      const paymentResult = await BotPaymentLinkGenerator.generatePaymentLinks(
-        context.lastProductId,
-        userId,
-        1 // cantidad
-      )
-
-      console.log(`[Baileys] 📊 Resultado de generación:`, {
-        success: paymentResult.success,
-        hasMercadoPago: !!paymentResult.mercadoPagoLink,
-        hasPayPal: !!paymentResult.payPalLink,
-        messageLength: paymentResult.message?.length
-      })
-
-      if (paymentResult.success && paymentResult.message) {
-        console.log(`[Baileys] ✅ Links de pago generados exitosamente`)
-        
-        // Enviar mensaje con los links
-        await socket.sendMessage(from, { text: paymentResult.message })
-        
-        // Guardar en BD
-        await this.saveOutgoingMessage(userId, from, paymentResult.message, conversationId)
-        
-        return true // Manejado
-      } else {
-        console.log(`[Baileys] ⚠️ No se pudieron generar links de pago`)
-        
-        // Fallback: enviar mensaje genérico
-        const fallbackMessage = `¡Perfecto! Para proceder con el pago de *${context.lastProductName}*, puedes usar:
-
-💳 *Métodos de pago disponibles:*
-• MercadoPago
-• PayPal
-• Nequi
-• Daviplata
-• Transferencia bancaria
-
-Escríbeme para coordinar el pago 😊`
-        
-        await socket.sendMessage(from, { text: fallbackMessage })
-        await this.saveOutgoingMessage(userId, from, fallbackMessage, conversationId)
-        
-        return true // Manejado
-      }
-
-    } catch (error) {
-      console.error('[Baileys] ❌ Error detectando/manejando pago:', error)
-      return false // No manejado
     }
   }
 }

@@ -78,13 +78,13 @@ export function MainDashboard() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-green-50/20 to-emerald-50/30">
-      {/* Top Navigation - Suave y Profesional */}
-      <nav className="bg-white/95 backdrop-blur-sm border-b border-gray-200 fixed w-full z-30 top-0 shadow-sm">
-        <div className="px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#f8fafc]">
+      {/* Top Navigation - Ultra Premium */}
+      <nav className="bg-white/80 backdrop-blur-xl border-b border-slate-200/50 fixed w-full z-30 top-0">
+        <div className="px-4 sm:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Left side */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-4">
               <button
                 onClick={() => {
                   if (isMobile) {
@@ -93,69 +93,62 @@ export function MainDashboard() {
                     setSidebarCollapsed(!sidebarCollapsed)
                   }
                 }}
-                className="p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none transition-all duration-200"
+                className="p-2.5 rounded-xl text-slate-600 hover:text-green-600 hover:bg-green-50 transition-all duration-300"
                 aria-label="Toggle menu"
               >
-                <Menu className="h-5 w-5 sm:h-6 sm:w-6" />
+                <Menu className="h-5 w-5" />
               </button>
 
-              {/* Logo con Iniciales */}
-              <div className="flex items-center gap-2">
-                <div className="relative flex-shrink-0">
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-[#25d366] to-[#128c7e] rounded-xl flex items-center justify-center shadow-lg shadow-[#25d366]/20">
-                    <span className="text-white font-bold text-sm sm:text-base tracking-tight">
-                      SSB
-                    </span>
+              {/* Logo Premium */}
+              <div className="flex items-center gap-3">
+                <div className="relative group">
+                  <div className="w-10 h-10 bg-gradient-to-tr from-[#25d366] to-[#128c7e] rounded-xl flex items-center justify-center shadow-lg shadow-green-200 group-hover:scale-105 transition-transform duration-300">
+                    <Bot className="text-white w-6 h-6" />
                   </div>
-                  <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-[#25d366] rounded-full border-2 border-white animate-pulse"></div>
+                  <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white animate-pulse"></div>
+                </div>
+                <div className="hidden sm:block">
+                  <span className="text-xl font-black bg-gradient-to-r from-slate-900 via-emerald-800 to-slate-900 bg-clip-text text-transparent tracking-tight">
+                    OpenClaw<span className="text-emerald-500 font-extrabold">System</span>
+                  </span>
                 </div>
               </div>
             </div>
 
             {/* Right side */}
-            <div className="flex items-center gap-1 sm:gap-2 md:gap-3">
-              {/* Subscription Badge - Más compacto */}
-              {subscription && (
-                <Badge
-                  variant={subscription.hasAccess ? "default" : "destructive"}
-                  className="hidden lg:flex text-xs px-2 py-0.5"
-                >
-                  {subscription.type}
-                  {subscription.daysLeft && ` ${subscription.daysLeft}d`}
-                </Badge>
-              )}
+            <div className="flex items-center gap-4">
+              {/* Search Bar Premium */}
+              <div className="hidden md:flex relative group">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-green-500 transition-colors" />
+                <input 
+                  type="text" 
+                  placeholder="Buscar..." 
+                  className="pl-10 pr-4 py-2 bg-slate-100 border-none rounded-xl text-sm w-64 focus:ring-2 focus:ring-green-500/20 focus:bg-white transition-all outline-none"
+                />
+              </div>
 
-              {/* Notifications - Más pequeño */}
-              <button
-                className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
-                aria-label="Notificaciones"
-              >
-                <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
-              </button>
-
-              {/* User Menu - Compacto */}
-              <div className="flex items-center gap-1 sm:gap-2">
-                <Avatar className="h-8 w-8 sm:h-9 sm:w-9">
-                  <AvatarFallback className="bg-green-600 text-white text-sm">
-                    {user?.name?.charAt(0) || user?.email?.charAt(0) || 'U'}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="hidden lg:block max-w-[120px]">
-                  <p className="text-xs font-medium text-gray-700 truncate leading-tight">
-                    {user?.name || 'Usuario'}
+              {/* User Menu */}
+              <div className="flex items-center gap-3 pl-4 border-l border-slate-100">
+                <div className="text-right hidden lg:block">
+                  <p className="text-sm font-bold text-slate-900 leading-none">
+                    {user?.name || 'Administrador'}
                   </p>
-                  <p className="text-[10px] text-gray-500 truncate leading-tight">
+                  <p className="text-[11px] text-slate-500 mt-1">
                     {user?.email}
                   </p>
                 </div>
+                <Avatar className="h-10 w-10 border-2 border-white shadow-xl ring-2 ring-emerald-100 ring-offset-2 transition-transform hover:scale-110">
+                  <AvatarFallback className="bg-gradient-to-br from-emerald-400 to-teal-600 text-white font-bold text-shadow-sm">
+                    {user?.name?.charAt(0) || 'A'}
+                  </AvatarFallback>
+                </Avatar>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => logout()}
-                  className="h-8 w-8 sm:h-9 sm:w-9 p-0"
-                  aria-label="Cerrar sesión"
+                  className="text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl"
                 >
-                  <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  <LogOut className="h-5 w-5" />
                 </Button>
               </div>
             </div>
@@ -163,72 +156,73 @@ export function MainDashboard() {
         </div>
       </nav>
 
-      {/* Overlay para móvil - Suave */}
-      {isMobile && sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-20 top-16 transition-opacity duration-300"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      {/* Sidebar - Verde WhatsApp */}
+      {/* Sidebar Moderno */}
       <aside
-        className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-gradient-to-b from-[#075e54] to-[#128c7e] border-r border-[#128c7e]/30 transition-all duration-300 z-30 shadow-lg ${isMobile
+        className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-white border-r border-slate-200/50 transition-all duration-300 z-30 ${isMobile
           ? sidebarOpen
-            ? 'translate-x-0 w-64'
-            : '-translate-x-full w-64'
+            ? 'translate-x-0 w-72'
+            : '-translate-x-full w-72'
           : sidebarCollapsed
-            ? 'w-20'
-            : 'w-64'
+            ? 'w-24'
+            : 'w-72'
           }`}
       >
-        <nav className="p-3 space-y-1">
-          {menuItems.map((item) => {
-            const Icon = item.icon
-            const isActive = activeTab === item.id
-            return (
-              <button
-                key={item.id}
-                onClick={() => {
-                  setActiveTab(item.id)
-                  if (isMobile) setSidebarOpen(false)
-                }}
-                className={`group w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 ${isActive
-                  ? 'bg-white/20 text-white shadow-lg backdrop-blur-sm border-l-4 border-white'
-                  : 'text-white/70 hover:bg-white/10 hover:text-white'
-                  } ${sidebarCollapsed && !isMobile ? 'justify-center' : ''}`}
-                title={sidebarCollapsed && !isMobile ? item.label : ''}
-              >
-                <Icon className={`h-5 w-5 flex-shrink-0 transition-all duration-200 ${isActive ? 'text-white' : 'text-white/70 group-hover:text-white group-hover:scale-110'
-                  }`} />
-                {(!sidebarCollapsed || isMobile) && (
-                  <span className="font-medium text-sm">{item.label}</span>
-                )}
-                {isActive && (!sidebarCollapsed || isMobile) && (
-                  <div className="ml-auto">
-                    <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                  </div>
-                )}
-              </button>
-            )
-          })}
-        </nav>
+        <div className="p-4 flex flex-col h-full">
+          <nav className="space-y-1 flex-1">
+            {menuItems.map((item) => {
+              const Icon = item.icon
+              const isActive = activeTab === item.id
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setActiveTab(item.id)
+                    if (isMobile) setSidebarOpen(false)
+                  }}
+                  className={`group w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-200 ${isActive
+                    ? 'bg-green-50 text-green-700 shadow-sm border border-green-100'
+                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+                    } ${sidebarCollapsed && !isMobile ? 'justify-center' : ''}`}
+                >
+                  <Icon className={`h-5 w-5 transition-transform duration-300 group-hover:scale-110 ${isActive ? 'text-green-600' : ''}`} />
+                  {(!sidebarCollapsed || isMobile) && (
+                    <span className="font-semibold text-sm tracking-tight">{item.label}</span>
+                  )}
+                  {isActive && (!sidebarCollapsed || isMobile) && (
+                    <div className="ml-auto w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                  )}
+                </button>
+              )
+            })}
+          </nav>
 
-        {/* Decorative gradient at bottom */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#075e54] via-transparent to-transparent pointer-events-none"></div>
+          {/* Upgrade Card */}
+          {(!sidebarCollapsed || isMobile) && (
+            <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-6 text-white relative overflow-hidden mt-8 mb-4">
+              <div className="relative z-10">
+                <p className="text-xs font-bold text-green-400 uppercase tracking-widest mb-2">Plan Pro</p>
+                <h4 className="font-black text-lg mb-4 leading-tight">Mejora tu Bot con IA</h4>
+                <Button className="w-full bg-green-500 hover:bg-green-600 text-white border-none rounded-xl font-bold py-5">
+                  Actualizar
+                </Button>
+              </div>
+              <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-green-500/20 rounded-full blur-2xl"></div>
+            </div>
+          )}
+        </div>
       </aside>
 
-      {/* Main Content - Suave y Profesional */}
+      {/* Main Content */}
       <main
-        className={`pt-16 transition-all duration-300 min-h-screen ${isMobile
+        className={`pt-16 transition-all duration-500 min-h-screen ${isMobile
           ? 'ml-0'
           : sidebarCollapsed
-            ? 'ml-20'
-            : 'ml-64'
+            ? 'ml-24'
+            : 'ml-72'
           }`}
       >
-        <div className="p-4 sm:p-6 lg:p-8">
-          <div className="max-w-7xl mx-auto">
+        <div className="p-4 sm:p-10">
+          <div className="max-w-7xl mx-auto page-transition">
             {activeTab === 'overview' && <OverviewTab />}
             {activeTab === 'whatsapp' && <WhatsAppConnection />}
             {activeTab === 'products' && <ProductsManagement />}
@@ -308,8 +302,11 @@ function OverviewTab() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Panel de Control</h1>
-        <p className="text-gray-600 mt-2">Bienvenido a tu dashboard de Smart Sales Bot</p>
+        <h1 className="text-4xl font-black tracking-tight text-slate-900 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">Panel de Inteligencia</h1>
+        <p className="text-slate-500 mt-2 font-medium flex items-center gap-2">
+          <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+          Sistema OpenClaw v1.0 • Gestión Avanzada de WhatsApp
+        </p>
       </div>
 
       {/* Subscription Status */}
@@ -379,30 +376,27 @@ function OverviewTab() {
           </CardContent>
         </Card>
 
-        {/* Estado Bot - Con indicador en vivo */}
-        <Card className="relative overflow-hidden">
+        {/* OpenClaw Intelligence Status - Ultra Mode */}
+        <Card className="relative overflow-hidden group border-2 border-emerald-100 shadow-emerald-50 bg-white/50 backdrop-blur-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Estado Bot</CardTitle>
-            <Bot className={`h-4 w-4 ${stats?.isConnected ? 'text-green-600' : 'text-gray-400'}`} />
+            <CardTitle className="text-sm font-black text-slate-800 uppercase tracking-wider">Motor OpenClaw</CardTitle>
+            <Brain className={`h-5 w-5 ${stats?.isConnected ? 'text-emerald-500 animate-pulse' : 'text-slate-300'}`} />
           </CardHeader>
           <CardContent>
-            <div className="flex items-center gap-2">
-              <div className={`w-3 h-3 rounded-full ${stats?.isConnected ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
-              <div className="text-2xl font-bold">
-                {stats?.isConnected ? (
-                  <span className="text-green-600">Activo</span>
-                ) : (
-                  <span className="text-gray-500">Inactivo</span>
-                )}
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-2">
+                <Badge className={`${stats?.isConnected ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-slate-400'} text-xs font-bold`}>
+                  {stats?.isConnected ? 'IA NATIVA ACTIVA' : 'SISTEMA STANDBY'}
+                </Badge>
+                <Badge variant="outline" className="text-[10px] font-bold border-emerald-200 text-emerald-700">GROQ Priority</Badge>
               </div>
+              <p className="text-[11px] text-slate-500 mt-2 font-medium">
+                {stats?.isConnected 
+                  ? 'Orquestando agentes y herramientas en tiempo real...' 
+                  : 'Esperando conexión de WhatsApp...'}
+              </p>
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              {stats?.isConnected 
-                ? `Conectado ${stats?.phoneNumber ? `(${stats.phoneNumber})` : ''}`
-                : 'Conecta WhatsApp para empezar'
-              }
-            </p>
-            <div className={`absolute top-0 right-0 w-20 h-20 rounded-full -mr-10 -mt-10 opacity-50 ${stats?.isConnected ? 'bg-green-50' : 'bg-gray-50'}`}></div>
+            <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-emerald-50 rounded-full opacity-30 group-hover:scale-125 transition-transform duration-500"></div>
           </CardContent>
         </Card>
       </div>
@@ -629,344 +623,4 @@ function SettingsTab() {
   )
 }
 
-// COMPONENTE ANTIGUO - REEMPLAZADO POR /dashboard/configuracion
-function SettingsTabOLD() {
-  const { user } = useAuth()
-  const [settings, setSettings] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
 
-  useEffect(() => {
-    fetchSettings()
-  }, [])
-
-  const fetchSettings = async () => {
-    try {
-      const response = await fetch('/api/settings')
-      const data = await response.json()
-      if (data.success) {
-        // Obtener datos del usuario desde la base de datos
-        const userResponse = await fetch('/api/auth/session')
-        const userData = await userResponse.json()
-
-        // Combinar settings del bot con datos del usuario
-        setSettings({
-          ...data.settings,
-          userName: userData.user?.name || '',
-          userPhone: userData.user?.phone || '',
-          userBusinessName: userData.user?.businessName || '',
-          userWhatsappNumber: userData.user?.whatsappNumber || ''
-        })
-      }
-    } catch (error) {
-      console.error('Error fetching settings:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleSave = async () => {
-    setSaving(true)
-    try {
-      // Guardar configuración del bot
-      const settingsResponse = await fetch('/api/settings', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(settings)
-      })
-
-      // Guardar perfil de usuario
-      const profileResponse = await fetch('/api/user/profile', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: settings?.userName,
-          phone: settings?.userPhone,
-          businessName: settings?.userBusinessName,
-          whatsappNumber: settings?.userWhatsappNumber
-        })
-      })
-
-      const settingsData = await settingsResponse.json()
-      const profileData = await profileResponse.json()
-
-      if (settingsData.success && profileData.success) {
-        toast.success('✅ Configuración y perfil guardados correctamente')
-        // Recargar para actualizar el contexto de usuario
-        window.location.reload()
-      } else {
-        toast.error('Error al guardar algunos datos')
-      }
-    } catch (error) {
-      console.error('Error saving settings:', error)
-      toast.error('Error de conexión')
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
-      </div>
-    )
-  }
-
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Configuración</h1>
-        <p className="text-gray-600 mt-2">Personaliza tu bot y preferencias</p>
-      </div>
-
-      {/* Perfil del Usuario */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Perfil de Usuario</CardTitle>
-          <CardDescription>Información de tu cuenta</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm font-medium text-gray-700">Nombre</label>
-              <input
-                type="text"
-                value={settings?.userName || user?.name || ''}
-                onChange={(e) => setSettings({ ...settings, userName: e.target.value })}
-                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                placeholder="Tu nombre"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-700">Email</label>
-              <input
-                type="email"
-                value={user?.email}
-                disabled
-                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed"
-                title="El email no se puede cambiar"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-700">Teléfono</label>
-              <input
-                type="tel"
-                value={settings?.userPhone || user?.phone || ''}
-                onChange={(e) => setSettings({ ...settings, userPhone: e.target.value })}
-                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                placeholder="+57 300 000 0000"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-700">Nombre del Negocio</label>
-              <input
-                type="text"
-                value={settings?.userBusinessName || user?.businessName || ''}
-                onChange={(e) => setSettings({ ...settings, userBusinessName: e.target.value })}
-                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                placeholder="Mi Negocio"
-              />
-            </div>
-            <div className="md:col-span-2">
-              <label className="text-sm font-medium text-gray-700">WhatsApp del Negocio</label>
-              <input
-                type="tel"
-                value={settings?.userWhatsappNumber || ''}
-                onChange={(e) => setSettings({ ...settings, userWhatsappNumber: e.target.value })}
-                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                placeholder="+57 300 000 0000"
-              />
-              <p className="mt-1 text-xs text-gray-500">
-                Este es el número que usarás para conectar el bot de WhatsApp
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Configuración del Bot */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Configuración del Bot</CardTitle>
-          <CardDescription>Ajusta el comportamiento de las respuestas automáticas</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium text-gray-700">Nombre del Negocio</label>
-              <input
-                type="text"
-                value={settings?.businessName || ''}
-                onChange={(e) => setSettings({ ...settings, businessName: e.target.value })}
-                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md"
-                placeholder="Mi Negocio"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium text-gray-700">Teléfono del Negocio</label>
-              <input
-                type="text"
-                value={settings?.businessPhone || ''}
-                onChange={(e) => setSettings({ ...settings, businessPhone: e.target.value })}
-                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md"
-                placeholder="+57 300 000 0000"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium text-gray-700">
-                Retraso de Respuesta (segundos)
-              </label>
-              <input
-                type="number"
-                value={settings?.responseDelay || 2}
-                onChange={(e) => setSettings({ ...settings, responseDelay: parseInt(e.target.value) })}
-                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md"
-                min="0"
-                max="10"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                Tiempo de espera antes de responder (más natural)
-              </p>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div>
-                <label className="text-sm font-medium text-gray-700">Respuestas Automáticas</label>
-                <p className="text-xs text-gray-500">Activar respuestas automáticas del bot</p>
-              </div>
-              <input
-                type="checkbox"
-                checked={settings?.autoResponseEnabled || false}
-                onChange={(e) => setSettings({ ...settings, autoResponseEnabled: e.target.checked })}
-                className="h-4 w-4 text-green-600 rounded"
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div>
-                <label className="text-sm font-medium text-gray-700">Espera Inteligente</label>
-                <p className="text-xs text-gray-500">No responder si el cliente está escribiendo</p>
-              </div>
-              <input
-                type="checkbox"
-                checked={settings?.smartWaitingEnabled || false}
-                onChange={(e) => setSettings({ ...settings, smartWaitingEnabled: e.target.checked })}
-                className="h-4 w-4 text-green-600 rounded"
-              />
-            </div>
-          </div>
-
-          <Button
-            onClick={handleSave}
-            disabled={saving}
-            className="w-full bg-green-600 hover:bg-green-700"
-          >
-            {saving ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Guardando...
-              </>
-            ) : (
-              'Guardar Configuración'
-            )}
-          </Button>
-        </CardContent>
-      </Card>
-
-      {/* Configuración de IA */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Configuración de IA</CardTitle>
-          <CardDescription>Ajusta los parámetros del modelo de inteligencia artificial</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <label className="text-sm font-medium text-gray-700">
-              Tokens Máximos
-            </label>
-            <input
-              type="number"
-              value={settings?.maxTokens || 500}
-              onChange={(e) => setSettings({ ...settings, maxTokens: parseInt(e.target.value) })}
-              className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md"
-              min="100"
-              max="2000"
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              Longitud máxima de las respuestas (100-2000)
-            </p>
-          </div>
-
-          <div>
-            <label className="text-sm font-medium text-gray-700">
-              Temperatura: {settings?.temperature || 0.7}
-            </label>
-            <input
-              type="range"
-              value={settings?.temperature || 0.7}
-              onChange={(e) => setSettings({ ...settings, temperature: parseFloat(e.target.value) })}
-              className="mt-1 w-full"
-              min="0"
-              max="1"
-              step="0.1"
-            />
-            <div className="flex justify-between text-xs text-gray-500 mt-1">
-              <span>Más preciso</span>
-              <span>Más creativo</span>
-            </div>
-          </div>
-
-          <Button
-            onClick={handleSave}
-            disabled={saving}
-            className="w-full bg-green-600 hover:bg-green-700"
-          >
-            {saving ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Guardando...
-              </>
-            ) : (
-              'Guardar Configuración'
-            )}
-          </Button>
-        </CardContent>
-      </Card>
-
-      {/* Suscripción */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Suscripción</CardTitle>
-          <CardDescription>Información de tu plan actual</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium text-gray-900">Plan Actual</p>
-                <p className="text-sm text-gray-500">{user?.membershipType || 'FREE'}</p>
-              </div>
-              <Badge className="bg-green-600">Activo</Badge>
-            </div>
-
-            {user?.trialEnds && (
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <p className="text-sm text-blue-900">
-                  🎉 Período de prueba activo hasta:{' '}
-                  {new Date(user.trialEnds).toLocaleDateString('es-ES')}
-                </p>
-              </div>
-            )}
-
-            <Button variant="outline" className="w-full">
-              Ver Planes y Precios
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-}

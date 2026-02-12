@@ -1,263 +1,252 @@
 /**
- * 🎭 MESSAGE VARIATION SERVICE
- * Servicio para generar variaciones inteligentes de mensajes
+ * 🎭 SERVICIO DE VARIACIONES DE MENSAJES
+ * Genera variaciones inteligentes de mensajes para evitar detección de spam
  */
 
 export class MessageVariationService {
+  
   /**
-   * Plantillas de variación por contexto
+   * Generar variación completa de un mensaje
    */
-  private static readonly TEMPLATES = {
-    // Saludos
-    greeting: {
-      patterns: [/^(hola|hey|buenos|buenas|qué tal)/i],
-      variations: [
-        (msg: string) => msg,
-        (msg: string) => `¡${msg}!`,
-        (msg: string) => `${msg} 😊`,
-        (msg: string) => `${msg} ¿Cómo estás?`,
-        (msg: string) => `${msg} ¿Qué tal todo?`,
-        (msg: string) => `Hey! ${msg.replace(/^(hola|hey)/i, '')}`,
-        (msg: string) => `Buenas! ${msg.replace(/^(hola|hey|buenos|buenas)/i, '')}`,
-      ]
-    },
+  static generateCompleteVariation(originalMessage: string, variationIndex: number = 0): string {
+    let variation = originalMessage
 
-    // Confirmaciones
-    confirmation: {
-      patterns: [/(sí|claro|perfecto|ok|listo|entendido|correcto)/i],
-      variations: [
-        (msg: string) => msg,
-        (msg: string) => `${msg} ✅`,
-        (msg: string) => `${msg} 👍`,
-        (msg: string) => `Perfecto! ${msg}`,
-        (msg: string) => `Claro! ${msg}`,
-        (msg: string) => `Por supuesto! ${msg}`,
-        (msg: string) => `Exacto! ${msg}`,
-        (msg: string) => `${msg} Genial!`,
-      ]
-    },
-
-    // Agradecimientos
-    thanks: {
-      patterns: [/(gracias|te agradezco|muchas gracias)/i],
-      variations: [
-        (msg: string) => msg,
-        (msg: string) => `${msg} 😊`,
-        (msg: string) => `${msg} ¡Un placer ayudarte!`,
-        (msg: string) => `${msg} Estamos para servirte`,
-        (msg: string) => `De nada! ${msg.replace(/gracias/i, '')}`,
-        (msg: string) => `Con gusto! ${msg.replace(/gracias/i, '')}`,
-        (msg: string) => `${msg} 🙌`,
-      ]
-    },
-
-    // Preguntas
-    question: {
-      patterns: [/\?$/],
-      variations: [
-        (msg: string) => msg,
-        (msg: string) => `${msg} 🤔`,
-        (msg: string) => `Déjame preguntarte: ${msg}`,
-        (msg: string) => `Una pregunta: ${msg}`,
-        (msg: string) => `${msg} ¿Qué opinas?`,
-        (msg: string) => `Cuéntame: ${msg}`,
-        (msg: string) => `Me gustaría saber: ${msg}`,
-      ]
-    },
-
-    // Información de productos
-    productInfo: {
-      patterns: [/(producto|precio|disponible|stock|características)/i],
-      variations: [
-        (msg: string) => msg,
-        (msg: string) => `${msg} 📦`,
-        (msg: string) => `Te cuento: ${msg}`,
-        (msg: string) => `Mira: ${msg}`,
-        (msg: string) => `Aquí está la info: ${msg}`,
-        (msg: string) => `${msg} ¿Te interesa?`,
-        (msg: string) => `Déjame mostrarte: ${msg}`,
-      ]
-    },
-
-    // Despedidas
-    farewell: {
-      patterns: [/(adiós|hasta luego|nos vemos|chao|bye)/i],
-      variations: [
-        (msg: string) => msg,
-        (msg: string) => `${msg} 👋`,
-        (msg: string) => `${msg} ¡Que tengas un excelente día!`,
-        (msg: string) => `${msg} Estamos para servirte`,
-        (msg: string) => `${msg} ¡Vuelve pronto!`,
-        (msg: string) => `${msg} 😊`,
-        (msg: string) => `${msg} ¡Hasta pronto!`,
-      ]
-    },
-
-    // Ofertas/Promociones
-    offer: {
-      patterns: [/(oferta|descuento|promoción|rebaja|precio especial)/i],
-      variations: [
-        (msg: string) => msg,
-        (msg: string) => `${msg} 🎉`,
-        (msg: string) => `${msg} ¡No te lo pierdas!`,
-        (msg: string) => `¡Atención! ${msg}`,
-        (msg: string) => `${msg} 🔥`,
-        (msg: string) => `Mira esta oferta: ${msg}`,
-        (msg: string) => `${msg} ¡Aprovecha!`,
-      ]
-    },
-
-    // Ayuda/Soporte
-    help: {
-      patterns: [/(ayuda|problema|error|no funciona|ayúdame)/i],
-      variations: [
-        (msg: string) => msg,
-        (msg: string) => `${msg} 🤝`,
-        (msg: string) => `Claro! ${msg}`,
-        (msg: string) => `Con gusto te ayudo: ${msg}`,
-        (msg: string) => `${msg} Estoy aquí para ayudarte`,
-        (msg: string) => `Déjame ayudarte: ${msg}`,
-        (msg: string) => `${msg} ¿En qué más puedo ayudarte?`,
-      ]
-    },
-  }
-
-  /**
-   * Generar variación de mensaje según contexto
-   */
-  static generateVariation(message: string, variationIndex: number = 0): string {
-    // Detectar contexto del mensaje
-    const context = this.detectContext(message)
-
-    // Obtener plantilla de variaciones
-    const template = this.TEMPLATES[context]
-    if (!template) {
-      // Si no hay plantilla, usar variación genérica
-      return this.genericVariation(message, variationIndex)
+    // Aplicar diferentes tipos de variaciones según el índice
+    switch (variationIndex % 6) {
+      case 0:
+        variation = this.addGreetingVariation(variation)
+        break
+      case 1:
+        variation = this.addEmphasisVariation(variation)
+        break
+      case 2:
+        variation = this.addPolitenessVariation(variation)
+        break
+      case 3:
+        variation = this.addCasualVariation(variation)
+        break
+      case 4:
+        variation = this.addFormalVariation(variation)
+        break
+      case 5:
+        variation = this.addEmojiVariation(variation)
+        break
     }
 
-    // Seleccionar variación según el índice
-    const variations = template.variations
-    const selectedVariation = variations[variationIndex % variations.length]
-
-    // Aplicar variación
-    return selectedVariation(message)
+    return variation
   }
 
   /**
-   * Detectar contexto del mensaje
+   * Agregar variación de saludo
    */
-  private static detectContext(message: string): keyof typeof MessageVariationService.TEMPLATES {
-    for (const [context, template] of Object.entries(this.TEMPLATES)) {
-      for (const pattern of template.patterns) {
-        if (pattern.test(message)) {
-          return context as keyof typeof MessageVariationService.TEMPLATES
-        }
-      }
-    }
-    return 'productInfo' // Contexto por defecto
-  }
-
-  /**
-   * Variación genérica (cuando no hay contexto específico)
-   */
-  private static genericVariation(message: string, variationIndex: number): string {
-    const variations = [
-      (msg: string) => msg,
-      (msg: string) => `${msg} 😊`,
-      (msg: string) => `${msg} 👍`,
-      (msg: string) => `${msg} ✅`,
-      (msg: string) => `Claro! ${msg}`,
-      (msg: string) => `${msg} ¿Te ayudo en algo más?`,
-      (msg: string) => `${msg} 🙌`,
+  private static addGreetingVariation(message: string): string {
+    const greetings = [
+      'Hola! ',
+      'Hey! ',
+      'Buenas! ',
+      'Qué tal! ',
+      'Saludos! ',
+      'Hola, espero estés bien! ',
+      'Hey, ¿cómo estás? ',
+      'Buenas tardes! ',
+      'Hola, ¿qué tal todo? ',
+      'Hey, espero tengas un buen día! '
     ]
 
-    const selectedVariation = variations[variationIndex % variations.length]
-    return selectedVariation(message)
-  }
-
-  /**
-   * Agregar variaciones de palabras comunes
-   */
-  static replaceCommonWords(message: string): string {
-    const replacements: Record<string, string[]> = {
-      'hola': ['hola', 'hey', 'qué tal', 'buenas', 'saludos'],
-      'gracias': ['gracias', 'muchas gracias', 'te agradezco', 'mil gracias', 'super agradecido'],
-      'sí': ['sí', 'claro', 'por supuesto', 'exacto', 'correcto', 'afirmativo'],
-      'no': ['no', 'nop', 'negativo', 'no exactamente', 'no es así'],
-      'bien': ['bien', 'genial', 'perfecto', 'excelente', 'muy bien', 'súper'],
-      'ok': ['ok', 'vale', 'entendido', 'perfecto', 'listo', 'de acuerdo'],
-      'producto': ['producto', 'artículo', 'item', 'mercancía'],
-      'precio': ['precio', 'costo', 'valor', 'tarifa'],
-      'comprar': ['comprar', 'adquirir', 'llevar', 'obtener'],
-      'envío': ['envío', 'entrega', 'despacho', 'delivery'],
-    }
-
-    let result = message
-
-    // Seleccionar aleatoriamente una palabra para reemplazar
-    const words = Object.keys(replacements)
-    const shuffled = words.sort(() => Math.random() - 0.5)
-
-    for (const word of shuffled) {
-      const regex = new RegExp(`\\b${word}\\b`, 'gi')
-      if (regex.test(result)) {
-        const variations = replacements[word]
-        const replacement = variations[Math.floor(Math.random() * variations.length)]
-        result = result.replace(regex, replacement)
-        break // Solo reemplazar una palabra
-      }
-    }
-
-    return result
-  }
-
-  /**
-   * Agregar emojis contextuales
-   */
-  static addContextualEmoji(message: string): string {
-    const emojiMap: Record<string, string[]> = {
-      'producto': ['📦', '🛍️', '🎁'],
-      'precio': ['💰', '💵', '💳'],
-      'oferta': ['🎉', '🔥', '⚡', '✨'],
-      'gracias': ['😊', '🙏', '❤️', '🤗'],
-      'hola': ['👋', '😊', '🙂'],
-      'pregunta': ['🤔', '❓', '💭'],
-      'ayuda': ['🤝', '💪', '🆘'],
-      'envío': ['🚚', '📦', '🚀'],
-      'disponible': ['✅', '👍', '🟢'],
-    }
-
-    for (const [keyword, emojis] of Object.entries(emojiMap)) {
-      if (new RegExp(keyword, 'i').test(message)) {
-        const emoji = emojis[Math.floor(Math.random() * emojis.length)]
-        // 50% al inicio, 50% al final
-        return Math.random() > 0.5 ? `${emoji} ${message}` : `${message} ${emoji}`
-      }
+    // Solo agregar saludo si no empieza con uno
+    if (!message.toLowerCase().startsWith('hola') && 
+        !message.toLowerCase().startsWith('hey') && 
+        !message.toLowerCase().startsWith('buenas')) {
+      const greeting = greetings[Math.floor(Math.random() * greetings.length)]
+      return greeting + message
     }
 
     return message
   }
 
   /**
-   * Generar variación completa (combina todas las técnicas)
+   * Agregar variación de énfasis
    */
-  static generateCompleteVariation(message: string, variationIndex: number = 0): string {
-    let result = message
+  private static addEmphasisVariation(message: string): string {
+    const emphasisWords = [
+      'definitivamente',
+      'absolutamente',
+      'sin duda',
+      'por supuesto',
+      'claramente',
+      'obviamente',
+      'realmente',
+      'verdaderamente'
+    ]
 
-    // 1. Aplicar variación de contexto
-    result = this.generateVariation(result, variationIndex)
+    const word = emphasisWords[Math.floor(Math.random() * emphasisWords.length)]
+    
+    // Insertar palabra de énfasis al inicio o después de la primera coma
+    if (message.includes(',')) {
+      return message.replace(',', `, ${word},`)
+    } else {
+      return `${word.charAt(0).toUpperCase() + word.slice(1)}, ${message.toLowerCase()}`
+    }
+  }
 
-    // 2. Reemplazar palabras comunes (30% de probabilidad)
-    if (Math.random() > 0.7) {
-      result = this.replaceCommonWords(result)
+  /**
+   * Agregar variación de cortesía
+   */
+  private static addPolitenessVariation(message: string): string {
+    const politeEndings = [
+      ' Por favor, déjame saber si necesitas algo más.',
+      ' Espero haberte ayudado.',
+      ' Cualquier duda, no dudes en preguntar.',
+      ' Estoy aquí para ayudarte.',
+      ' Gracias por tu paciencia.',
+      ' Que tengas un excelente día.',
+      ' Espero que esta información te sea útil.',
+      ' Si tienes más preguntas, estaré encantado de ayudarte.',
+      ' Muchas gracias por tu interés.',
+      ' Espero poder ayudarte pronto.'
+    ]
+
+    const ending = politeEndings[Math.floor(Math.random() * politeEndings.length)]
+    return message + ending
+  }
+
+  /**
+   * Agregar variación casual
+   */
+  private static addCasualVariation(message: string): string {
+    const casualPhrases = [
+      'Oye, ',
+      'Mira, ',
+      'Fíjate que ',
+      'Te cuento que ',
+      'La cosa es que ',
+      'Resulta que ',
+      'Lo que pasa es que ',
+      'Te comento que ',
+      'Déjame decirte que ',
+      'La verdad es que '
+    ]
+
+    const phrase = casualPhrases[Math.floor(Math.random() * casualPhrases.length)]
+    return phrase + message.toLowerCase()
+  }
+
+  /**
+   * Agregar variación formal
+   */
+  private static addFormalVariation(message: string): string {
+    const formalPhrases = [
+      'Me complace informarle que ',
+      'Tengo el gusto de comunicarle que ',
+      'Es un placer poder decirle que ',
+      'Me es grato informarle que ',
+      'Permítame comunicarle que ',
+      'Tengo el honor de informarle que ',
+      'Es mi deber informarle que ',
+      'Me dirijo a usted para comunicarle que ',
+      'Aprovecho la oportunidad para informarle que ',
+      'Me es muy satisfactorio comunicarle que '
+    ]
+
+    const phrase = formalPhrases[Math.floor(Math.random() * formalPhrases.length)]
+    return phrase + message.toLowerCase()
+  }
+
+  /**
+   * Agregar variación con emojis
+   */
+  private static addEmojiVariation(message: string): string {
+    const startEmojis = ['😊', '👋', '🙌', '✨', '💫', '🎉', '👍', '😄', '🤝', '💪']
+    const endEmojis = ['😊', '👍', '✅', '🙌', '💪', '🎉', '✨', '👌', '😄', '🤝', '💯', '🔥', '⭐']
+
+    const startEmoji = startEmojis[Math.floor(Math.random() * startEmojis.length)]
+    const endEmoji = endEmojis[Math.floor(Math.random() * endEmojis.length)]
+
+    return `${startEmoji} ${message} ${endEmoji}`
+  }
+
+  /**
+   * Generar variación de palabra específica
+   */
+  static generateWordVariation(word: string): string {
+    const wordVariations: Record<string, string[]> = {
+      'hola': ['hola', 'hey', 'qué tal', 'buenas', 'saludos', 'holi'],
+      'gracias': ['gracias', 'muchas gracias', 'te agradezco', 'mil gracias', 'thanks', 'genial'],
+      'sí': ['sí', 'claro', 'por supuesto', 'exacto', 'correcto', 'así es', 'efectivamente'],
+      'no': ['no', 'nop', 'negativo', 'no exactamente', 'para nada', 'ni modo'],
+      'bien': ['bien', 'genial', 'perfecto', 'excelente', 'muy bien', 'súper', 'increíble'],
+      'ok': ['ok', 'vale', 'entendido', 'perfecto', 'listo', 'de acuerdo', 'okey'],
+      'bueno': ['bueno', 'bien', 'vale', 'está bien', 'perfecto', 'genial'],
+      'precio': ['precio', 'costo', 'valor', 'tarifa', 'monto', 'cantidad'],
+      'producto': ['producto', 'artículo', 'item', 'mercancía', 'elemento'],
+      'disponible': ['disponible', 'en stock', 'hay', 'tenemos', 'contamos con'],
+      'envío': ['envío', 'entrega', 'despacho', 'delivery', 'domicilio'],
+      'pago': ['pago', 'abono', 'cancelación', 'transacción', 'compra']
     }
 
-    // 3. Agregar emoji contextual (40% de probabilidad)
-    if (Math.random() > 0.6) {
-      result = this.addContextualEmoji(result)
+    const variations = wordVariations[word.toLowerCase()]
+    if (variations) {
+      return variations[Math.floor(Math.random() * variations.length)]
     }
 
-    return result
+    return word
+  }
+
+  /**
+   * Aplicar variaciones sutiles a un texto
+   */
+  static applySubtleVariations(text: string): string {
+    let result = text
+
+    // 1. Variaciones de puntuación (20% probabilidad)
+    if (Math.random() < 0.2) {
+      result = result.replace(/\./g, '...')
+    }
+
+    // 2. Variaciones de mayúsculas (15% probabilidad)
+    if (Math.random() < 0.15) {
+      result = result.replace(/\b\w/g, (match) => 
+        Math.random() < 0.5 ? match.toUpperCase() : match.toLowerCase()
+      )
+    }
+
+    // 3. Agregar espacios extra (10% probabilidad)
+    if (Math.random() < 0.1) {
+      result = result.replace(/([.!?])/g, '$1 ')
+    }
+
+    // 4. Reemplazar palabras comunes (25% probabilidad)
+    if (Math.random() < 0.25) {
+      const words = result.split(' ')
+      const randomIndex = Math.floor(Math.random() * words.length)
+      const originalWord = words[randomIndex]
+      const variation = this.generateWordVariation(originalWord)
+      words[randomIndex] = variation
+      result = words.join(' ')
+    }
+
+    return result.trim()
+  }
+
+  /**
+   * Generar múltiples variaciones de un mensaje
+   */
+  static generateMultipleVariations(message: string, count: number = 5): string[] {
+    const variations: string[] = []
+    
+    for (let i = 0; i < count; i++) {
+      let variation = this.generateCompleteVariation(message, i)
+      variation = this.applySubtleVariations(variation)
+      variations.push(variation)
+    }
+
+    return variations
+  }
+
+  /**
+   * Seleccionar variación aleatoria de una lista
+   */
+  static selectRandomVariation(variations: string[]): string {
+    return variations[Math.floor(Math.random() * variations.length)]
   }
 }

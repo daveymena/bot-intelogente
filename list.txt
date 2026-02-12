@@ -1,0 +1,8 @@
+﻿NAME               ID              SIZE      MODIFIED     
+qwen2.5:7b         845dbda0ea48    4.7 GB    4 weeks ago     
+llama3.1:latest    46e0c10c039e    4.9 GB    2 months ago    
+gpt-oss:20b        17052f91a42e    13 GB     2 months ago    
+deepseek-r1:8b     6995872bfe4c    5.2 GB    2 months ago    
+gemma2:2b          8ccf136fdd52    1.6 GB    2 months ago    
+gemma3:4b          a2af6cc3eb7f    3.3 GB    2 months ago    
+qwen3:4b           359d7dd4bcda    2.5 GB    2 months ago    

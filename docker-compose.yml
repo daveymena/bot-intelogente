@@ -1,49 +1,38 @@
 version: '3.8'
 
 services:
-  # Ollama - IA Local
-  ollama:
-    image: ollama/ollama:latest
-    container_name: ollama
-    ports:
-      - "11434:11434"
-    volumes:
-      - ollama_data:/root/.ollama
-    restart: unless-stopped
-    command: >
-      sh -c "ollama serve & sleep 10 && ollama pull gemma:2b && wait"
-
-  # Bot Principal
-  bot:
+  app:
     build: .
-    container_name: smart-sales-bot
     ports:
       - "3000:3000"
     environment:
-      # IA
+      - NODE_ENV=${NODE_ENV:-development}
+      - PORT=${PORT:-3000}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - AI_PROVIDER=${AI_PROVIDER:-groq}
       - GROQ_API_KEY=${GROQ_API_KEY}
-      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
-      - OLLAMA_BASE_URL=http://ollama:11434
-      - AI_FALLBACK_ORDER=groq,openrouter,ollama
-      - AI_AUTO_MODEL_DETECTION=true
-      
-      # Next.js
-      - NODE_ENV=production
-      - PORT=3000
-      
-      # WhatsApp
-      - WHATSAPP_PROVIDER=baileys
-      
-      # Database
-      - DATABASE_URL=file:/data/dev.db
+      - OPENCLAW_API_KEY=${OPENCLAW_API_KEY}
     volumes:
-      - bot_data:/data
-      - whatsapp_sessions:/app/.wwebjs_auth
-    depends_on:
-      - ollama
-    restart: unless-stopped
+      - .:/app
+      - /app/node_modules
 
-volumes:
-  ollama_data:
-  bot_data:
-  whatsapp_sessions:
+  # Local Postgres (Commented out to use EasyPanel DB)
+  # postgres:
+  #   image: postgres:15
+  #   restart: always
+  #   environment:
+  #     - POSTGRES_USER=botuser
+  #     - POSTGRES_PASSWORD=123456
+  #     - POSTGRES_DB=botdb
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - pgdata:/var/lib/postgresql/data
+  #     - ./src/database/schema.sql:/docker-entrypoint-initdb.d/init.sql
+
+# volumes:
+#   pgdata:

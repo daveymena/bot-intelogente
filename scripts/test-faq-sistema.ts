@@ -10,7 +10,7 @@ async function main() {
   // Inicializar
   await ProductFAQService.initialize();
 
-  const productId = 'cmhpw941q0000kmp85qvjm0o5-curso-completo-de-piano-online';
+  const productId = 'Curso Completo de Piano Online';
 
   // Preguntas de prueba
   const preguntas = [
@@ -31,7 +31,7 @@ async function main() {
   for (const pregunta of preguntas) {
     console.log(`❓ Pregunta: "${pregunta}"`);
     
-    const resultado = await ProductFAQService.findAnswer(productId, pregunta);
+    const resultado = await ProductFAQService.findAnswer(pregunta, productId);
     
     if (resultado.found) {
       console.log(`✅ Respuesta encontrada (confianza: ${(resultado.confidence * 100).toFixed(0)}%)`);

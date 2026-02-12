@@ -1,0 +1,46 @@
+{
+  "name": "reminder-app",
+  "version": "1.0.0",
+  "description": "App de Recordatorios con WhatsApp y Email - Basada en Smart Sales Bot Pro",
+  "main": "reminder-app-example.ts",
+  "scripts": {
+    "dev": "nodemon --exec \"npx tsx reminder-app-example.ts\"",
+    "start": "npx tsx reminder-app-example.ts",
+    "build": "npx tsc",
+    "test:whatsapp": "npx tsx -e \"import('./reminder-app-whatsapp-service').then(m => console.log('WhatsApp Service loaded'))\"",
+    "test:email": "npx tsx -e \"import('./reminder-app-email-service').then(m => console.log('Email Service loaded'))\"",
+    "test:scheduler": "npx tsx -e \"import('./reminder-app-scheduler').then(m => console.log('Scheduler loaded'))\"",
+    "connect:whatsapp": "npx tsx -e \"import('./reminder-app-example').then(m => m.connectWhatsApp())\"",
+    "send:test-email": "npx tsx -e \"import('./reminder-app-example').then(m => m.setupEmails())\"",
+    "schedule:reminders": "npx tsx -e \"import('./reminder-app-example').then(m => m.scheduleReminders())\"",
+    "cleanup": "npx tsx -e \"import('./reminder-app-scheduler').then(m => m.ReminderScheduler.cleanup())\"",
+    "status": "npx tsx -e \"import('./reminder-app-scheduler').then(m => console.log(JSON.stringify(m.ReminderScheduler.getSystemStatus(), null, 2)))\""
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^7.0.0-rc.6",
+    "@hapi/boom": "^10.0.1",
+    "nodemailer": "^6.10.1",
+    "qrcode": "^1.5.4",
+    "pino": "^10.1.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/nodemailer": "^7.0.3",
+    "@types/qrcode": "^1.5.6",
+    "tsx": "^4.20.3",
+    "typescript": "^5.9.3",
+    "nodemon": "^3.1.10"
+  },
+  "keywords": [
+    "recordatorios",
+    "whatsapp",
+    "email",
+    "scheduler",
+    "notifications",
+    "baileys",
+    "nodemailer"
+  ],
+  "author": "Tu Nombre",
+  "license": "MIT"
+}

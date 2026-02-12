@@ -1,0 +1,78 @@
+﻿­ƒöì INICIANDO TEST DE CONOCIMIENTO (Q&A)
+
+Base de Datos: SQLite (dev.db)
+Model: Llama 3.3 70B (Groq)
+
+­ƒôª PRODUCTOS REALES EN BASE DE DATOS:
+- [cmjhgc77b005nmi3kow8mb7vf] MegaPack Golden: $60000 COP
+- [cmjggqipw0001km1w9sqycjz3] MEGA PACK COMPLETO - 81 Cursos Profesionales: $60000 COP
+- [cmjg69kwn003bkmbgocf5mh9q] Mega Pack 02: Cursos Microsoft Office: $20000 COP
+- [cmjg69klo000rkmbgzaydduge] Impresora Brother Multifuncional MFC-T4500DW: $3049900 COP
+- [cmjg69kw6002ikmbgv359gvka] Port├ítil Asus Vivobook Go E1504fa-L1745 Amd Ryzen 5-7520u Ram 16gb Ddr5 512 Ssd Pantalla 15.6 Oled Fhd: $1899900 COP
+
+======================================================================
+
+ÔØô PREGUNTA: "┬┐Qu├® precio tiene la impresora Brother?"
+[AgentRouter] Procesando mensaje de 573009998877
+[AgentRouter] Intenci├│n detectada: consulta_precio (95%)
+[AgentRouter] Enrutando a agente: sales
+­ƒñû RESPUESTA DEL BOT:
+­ƒÿè La impresora Brother Multifuncional MFC-T4500DW tiene un precio de $3.049.900 COP. Es un producto original con garant├¡a y ofrecemos env├¡o a toda Colombia. ┬┐Le gustar├¡a saber m├ís sobre las caracter├¡sticas y beneficios de esta impresora o est├í interesado en realizar una compra? ­ƒôê
+
+----------------------------------------------------------------------
+
+ÔØô PREGUNTA: "┬┐Cu├íles son las caracter├¡sticas del Asus Vivobook?"
+[AgentRouter] Procesando mensaje de 573009998877
+[AgentRouter] Intenci├│n detectada: otro (80%)
+[AgentRouter] Enrutando a agente: sales
+­ƒñû RESPUESTA DEL BOT:
+­ƒæï Me alegra que est├®s interesado en el Asus Vivobook. Este port├ítil cuenta con algunas caracter├¡sticas destacadas, como:
+
+* Procesador AMD Ryzen 5-7520u, que ofrece un rendimiento ├│ptimo para tareas diarias y exigentes.
+* 16GB de RAM DDR5, lo que garantiza una velocidad y eficiencia en el manejo de m├║ltiples aplicaciones.
+* Un disco duro SSD de 512GB, que proporciona una capacidad de almacenamiento adecuada y una velocidad de carga r├ípida.
+* Una pantalla OLED de 15.6 pulgadas con resoluci├│n FHD, que ofrece una experiencia visual impresionante y vibrante.
+
+Todo esto viene en un paquete atractivo y con una garant├¡a, lo que te da tranquilidad al realizar tu compra. ­ƒôê
+
+┬┐Te gustar├¡a saber m├ís sobre la disponibilidad y el proceso de env├¡o del Asus Vivobook, o est├ís considerando comprarlo? ­ƒñö
+
+----------------------------------------------------------------------
+
+ÔØô PREGUNTA: "┬┐Cu├íntos cursos trae el MegaPack Golden?"
+[AgentRouter] Procesando mensaje de 573009998877
+[AgentRouter] Intenci├│n detectada: consulta_disponibilidad (80%)
+[AgentRouter] Enrutando a agente: sales
+­ƒñû RESPUESTA DEL BOT:
+­ƒÖé El MegaPack Golden es una colecci├│n ├®pica que trae m├ís de **1000 cursos** de alto valor, cubriendo una amplia variedad de temas como marketing, programaci├│n, dise├▒o gr├ífico, finanzas, desarrollo personal, idiomas y mucho m├ís. ┬íEs una oportunidad incre├¡ble para aprender lo que siempre quisiste! ­ƒôÜ
+
+┬┐Est├ís interesado en saber m├ís sobre los cursos espec├¡ficos que incluye el MegaPack Golden o en c├│mo puedes adquirirlo? ­ƒñö
+
+----------------------------------------------------------------------
+
+ÔØô PREGUNTA: "┬┐Tienen alg├║n producto de menos de $50,000?"
+[AgentRouter] Procesando mensaje de 573009998877
+[AgentRouter] Intenci├│n detectada: consulta_precio (90%)
+[AgentRouter] Enrutando a agente: sales
+­ƒñû RESPUESTA DEL BOT:
+­ƒÖé Desafortunadamente, nuestros productos m├ís asequibles son el Mega Pack 02: Cursos Microsoft Office, que cuesta $20.000 COP. No tenemos productos por debajo de esta cantidad en nuestra lista actual.
+
+Sin embargo, si est├ís buscando algo espec├¡fico, puedo ofrecerte informaci├│n sobre el Mega Pack 02, que incluye cursos completos de Word, Excel, PowerPoint y Access, desde b├ísico hasta avanzado. ┬┐Te gustar├¡a saber m├ís sobre este producto o est├ís considerando otras opciones? ­ƒñö
+
+----------------------------------------------------------------------
+
+ÔØô PREGUNTA: "┬┐C├│mo puedo pagar el Mega Pack de Office?"
+[AgentRouter] Procesando mensaje de 573009998877
+[AgentRouter] Intenci├│n detectada: informacion_pago (90%)
+[AgentRouter] Enrutando a agente: sales
+­ƒñû RESPUESTA DEL BOT:
+­ƒÿè Excelente elecci├│n! El Mega Pack de Office es un producto valioso que te brindar├í habilidades ├║tiles en el uso de Microsoft Office. 
+
+Para pagar el Mega Pack de Office, ofrecemos varias opciones de pago seguras y convenientes. Puedes pagar mediante transferencia bancaria, pago en l├¡nea con tarjeta de cr├®dito o d├®bito, o incluso en efectivo en nuestras tiendas f├¡sicas. 
+
+Si prefieres pagar en l├¡nea, podemos enviarle un enlace de pago seguro para que pueda realizar la transacci├│n de manera r├ípida y segura. 
+
+┬┐Le gustar├¡a que le enviemos el enlace de pago o prefiere pagar de otra manera? ­ƒôê
+
+----------------------------------------------------------------------
+

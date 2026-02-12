@@ -35,7 +35,7 @@ interface ConversationMemory {
   }>;
   
   // Estado de la conversación
-  conversationStage: 'greeting' | 'browsing' | 'interested' | 'negotiating' | 'closing' | 'completed';
+  conversationStage: 'greeting' | 'browsing' | 'interested' | 'negotiating' | 'closing' | 'completed' | 'advising_use' | 'advising_budget';
   messageCount: number;
   lastInteraction: Date;
   

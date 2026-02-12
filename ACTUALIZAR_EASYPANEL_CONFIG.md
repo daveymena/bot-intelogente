@@ -33,17 +33,16 @@ GROQ_MAX_TOKENS=500
 GROQ_TIMEOUT=60000
 
 OLLAMA_BASE_URL=https://bot-whatsapp-ollama.sqaoeo.easypanel.host
-OLLAMA_MODEL=qwen2.5:7b
+OLLAMA_MODEL=llama3.2:1b # ⚡ ULTRA-RÁPIDO (RECOMENDADO PARA EASYPANEL)
 OLLAMA_ENABLED=true
-OLLAMA_TIMEOUT=30000
-OLLAMA_MAX_TOKENS=400
-
-AI_PROVIDER=groq
-DEFAULT_AI_PROVIDER=groq
-AI_FALLBACK_ENABLED=true
 AI_FALLBACK_ORDER=groq,ollama
 AI_USE_REASONING=false
 ```
+
+### ⚡ Notas de Rendimiento:
+- Para máxima velocidad usa: `llama3.2:1b` (1-2s response)
+- Para mejor inteligencia usa: `qwen2.5:3b` (5-10s response)
+- `qwen2.5:7b` puede demorar 15-30s en Easypanel sin GPU.
 
 ## 🎯 Cómo Actualizar en Easypanel
 

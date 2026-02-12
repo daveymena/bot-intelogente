@@ -6,7 +6,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const dev = process.env.NODE_ENV !== 'production';
-const currentPort = parseInt(process.env.PORT || '4000', 10);
+const currentPort = parseInt(process.env.PORT || '3000', 10);
 // En producción, escuchar en todas las interfaces (0.0.0.0) para Docker/Easypanel
 const hostname = process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1';
 
@@ -50,7 +50,7 @@ async function createCustomServer() {
 
     // Setup Socket.IO dynamically
     try {
-      const socketModule = await import('./src/lib/socket.js');
+      const socketModule = await import('./src/lib/socket');
       socketModule.setupSocket(io);
     } catch (error) {
       console.error('Error loading socket module:', error);
@@ -63,19 +63,10 @@ async function createCustomServer() {
       
       // Inicializar Baileys automáticamente
       try {
-        const { SessionManager } = await import('./src/lib/session-manager.js');
+        const { SessionManager } = await import('./src/lib/session-manager');
         await SessionManager.initialize();
       } catch (error) {
         console.error('> Error initializing Baileys:', error);
-      }
-
-      // 🚀 Inicializar sistema de auto-reconexión de WhatsApp (MEJORADO)
-      try {
-        const { WhatsAppAutoReconnect } = await import('./src/lib/whatsapp-auto-reconnect.js');
-        await WhatsAppAutoReconnect.initialize();
-        console.log('> ✅ Sistema de auto-reconexión de WhatsApp iniciado');
-      } catch (error) {
-        console.error('> ❌ Error initializing WhatsApp auto-reconnect:', error);
       }
     });
 

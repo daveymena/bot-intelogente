@@ -140,7 +140,7 @@ export class FlowBaileysIntegration {
 
 /**
  * Función helper para activar el FlowEngine en lugar del clean-bot
- * Usar en baileys-stable-service.ts
+ * Usar en wa-service.ts
  */
 export async function handleMessageWithFlowEngine(params: {
   sock: WASocket;
@@ -151,3 +151,4 @@ export async function handleMessageWithFlowEngine(params: {
 }) {
   return FlowBaileysIntegration.handleMessageWithFlow(params);
 }
+

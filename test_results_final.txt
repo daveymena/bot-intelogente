@@ -1,0 +1,50 @@
+﻿­ƒñû Probando Sistema Multi-Agente
+
+============================================================
+
+­ƒô▒ Cliente: "Hola, buenos d├¡as"
+­ƒÄ» Esperado: Saludo
+------------------------------------------------------------
+[AgentRouter] Procesando mensaje de 573001234567
+[AgentRouter] Intenci├│n detectada: saludo (99%)
+[AgentRouter] Enrutando a agente: sales
+­ƒñû Bot: Disculpa, tuve un problema al procesar tu solicitud. ┬┐Podr├¡as intentarlo de nuevo?
+============================================================
+
+­ƒô▒ Cliente: "┬┐Cu├ínto cuesta el MegaPack Golden?"
+­ƒÄ» Esperado: Consulta de precio
+------------------------------------------------------------
+[AgentRouter] Procesando mensaje de 573001234567
+[AgentRouter] Intenci├│n detectada: consulta_precio (95%)
+[AgentRouter] Enrutando a agente: sales
+­ƒñû Bot: Disculpa, tuve un problema al procesar tu solicitud. ┬┐Podr├¡as intentarlo de nuevo?
+============================================================
+
+­ƒô▒ Cliente: "Quiero comprar cursos de programaci├│n"
+­ƒÄ» Esperado: Intenci├│n de compra
+------------------------------------------------------------
+[AgentRouter] Procesando mensaje de 573001234567
+[AgentRouter] Intenci├│n detectada: compra (90%)
+[AgentRouter] Enrutando a agente: sales
+­ƒñû Bot: Disculpa, tuve un problema al procesar tu solicitud. ┬┐Podr├¡as intentarlo de nuevo?
+============================================================
+
+­ƒô▒ Cliente: "┬┐Tienen laptops disponibles?"
+­ƒÄ» Esperado: Consulta de disponibilidad
+------------------------------------------------------------
+[AgentRouter] Procesando mensaje de 573001234567
+[AgentRouter] Intenci├│n detectada: consulta_disponibilidad (90%)
+[AgentRouter] Enrutando a agente: sales
+­ƒñû Bot: Disculpa, tuve un problema al procesar tu solicitud. ┬┐Podr├¡as intentarlo de nuevo?
+============================================================
+
+­ƒô▒ Cliente: "Necesito una impresora"
+­ƒÄ» Esperado: B├║squeda de producto
+------------------------------------------------------------
+[AgentRouter] Procesando mensaje de 573001234567
+[AgentRouter] Intenci├│n detectada: consulta_disponibilidad (80%)
+[AgentRouter] Enrutando a agente: sales
+­ƒñû Bot: Disculpa, tuve un problema al procesar tu solicitud. ┬┐Podr├¡as intentarlo de nuevo?
+============================================================
+
+Ô£à Pruebas completadas!

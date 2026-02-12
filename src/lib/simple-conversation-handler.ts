@@ -61,6 +61,9 @@ export class SimpleConversationHandler {
       case 'followup':
         response = await this.handleFollowUp(message, chatId, userId);
         break;
+      case 'borrower':
+        response = await this.handleBorrowerForm(message, chatId, userId);
+        break;
       default:
         response = await this.handleGeneral(message, chatId, userId);
     }
@@ -73,9 +76,9 @@ export class SimpleConversationHandler {
   }
 
   /**
-   * Detecta el tipo de mensaje (simple, 4 categorías)
+   * Detecta el tipo de mensaje (simple, 5 categorías)
    */
-  private detectMessageType(message: string, userId: string, chatId: string): 'payment' | 'search' | 'followup' | 'general' {
+  private detectMessageType(message: string, userId: string, chatId: string): 'payment' | 'search' | 'followup' | 'borrower' | 'general' {
     const lower = message.toLowerCase();
     const contextKey = this.getContextKey(userId, chatId);
 
@@ -92,14 +95,45 @@ export class SimpleConversationHandler {
       }
     }
 
-    // 3. BÚSQUEDA (tiene keywords de productos)
-    // Solo si no es seguimiento
+    // 3. ASESOR (Detección de interés general en laptops sin modelo específico)
+    if (/(quiero|necesito|busco|recomiéndame|cuál).* (portátil|laptop|computador|pc|maquina)/i.test(lower)) {
+      if (!this.containsSpecificModel(lower)) {
+        return 'search'; // Irá por search pero detectará modo asesor
+      }
+    }
+
+    // 4. BÚSQUEDA (tiene keywords de productos)
     if (/(busco|quiero|necesito|tienes|curso|laptop|moto|megapack|mega|pack|interesa|precio)/i.test(lower)) {
       return 'search';
     }
 
-    // 4. GENERAL (saludos, despedidas, preguntas generales)
+    // 5. REGISTRO PRESTATARIO (PRESTAR/DATOS)
+    if (/(prestar|prestamista|mis datos|registro|formulario|link.*datos|ingresar.*datos)/i.test(lower)) {
+      return 'borrower';
+    }
+
     return 'general';
+  }
+
+  /**
+   * Verifica si el mensaje contiene algún modelo específico de la base de datos
+   */
+  private containsSpecificModel(message: string): boolean {
+    // Lista de modelos que usualmente requieren ficha directa
+    const specificModels = ['macbook', 'vostro', 'inspiron', 'thinkpad', 'vivobook', 'zenbook', 'pavilion', 'victus', 'legion', 'alienware'];
+    return specificModels.some(model => message.includes(model));
+  }
+
+  /**
+   * Maneja REGISTRO DE DATOS PARA PRÉSTAMOS
+   */
+  private async handleBorrowerForm(message: string, chatId: string, userId: string): Promise<SimpleResponse> {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bot-intelogente.vercel.app';
+    const registerUrl = `${baseUrl}/p/${userId}/datos`;
+    
+    return {
+      text: `🤝 *Registro de Prestatarios*\n\nHola. Para poder procesar tu solicitud de préstamo y realizar el desembolso correctamente, por favor ingresa tus datos en el siguiente enlace seguro:\n\n🔗 ${registerUrl}\n\nAllí podrás registrar tu información personal y los datos de tu cuenta bancaria (Colombia o Internacional). 😊`
+    };
   }
 
   /**
@@ -116,18 +150,14 @@ export class SimpleConversationHandler {
       };
     }
 
-    // Generar links reales y dinámicos (Usando userId para obtener config correcta)
-    // PaymentLinkGenerator ya obtiene userId del producto
     const paymentLinks = await PaymentLinkGenerator.generatePaymentLinks(product.id);
 
     if (!paymentLinks) {
-      // Fallback por si falla la generación
       return {
         text: `Tuve un pequeño problema técnico generando el link para ${product.name}. Por favor escribe "asesor" para que te ayudemos manualmente. 🙏`
       };
     }
 
-    // Si el usuario mencionó un método específico, mostrar solo ese
     const lower = message.toLowerCase();
     if (lower.includes('nequi') || lower.includes('daviplata') || lower.includes('paypal') || lower.includes('tarjeta') || lower.includes('transferencia')) {
       const specificMethod = lower.match(/(nequi|daviplata|paypal|tarjeta|transferencia|bancaria)/i)?.[0] || '';
@@ -136,158 +166,144 @@ export class SimpleConversationHandler {
       }
     }
 
-    // Si no, mostrar todos (instrucciones generales)
     return { text: PaymentLinkGenerator.formatForWhatsApp(paymentLinks) };
   }
 
   /**
-   * Maneja BÚSQUEDA - BÚSQUEDA INTELIGENTE + IA
+   * Maneja BÚSQUEDA - BÚSQUEDA INTELIGENTE + IA + MODO ASESOR
    */
   private async handleSearch(message: string, chatId: string, userId: string): Promise<SimpleResponse> {
-    console.log('[SimpleHandler] 🔍 Búsqueda inteligente iniciada');
-    console.log('[SimpleHandler] 📝 Query del usuario:', message);
-    
-    // 1. BÚSQUEDA INTELIGENTE PREVIA - Filtrar productos relevantes
-    const relevantProducts = await this.smartProductSearch(message, userId);
-    
-    console.log(`[SimpleHandler] 📊 Productos relevantes encontrados: ${relevantProducts.length}`);
-    
-    // 🔍 LOG: Mostrar productos encontrados
-    if (relevantProducts.length > 0) {
-      console.log(`[SimpleHandler] 🎯 Top productos relevantes:`);
-      relevantProducts.slice(0, 5).forEach((p, i) => {
-        console.log(`[SimpleHandler]    ${i + 1}. ${p.name} - ${p.price.toLocaleString('es-CO')} COP`);
-      });
+    const lower = message.toLowerCase();
+    const { PersistentMemoryManager } = await import('./persistent-memory-manager');
+    const memory = await PersistentMemoryManager.getMemory(chatId, userId);
+    const { ProfessionalResponseFormatter } = await import('./professional-response-formatter');
+
+    // MODO ASESOR: Si es interés general en laptops
+    if (/(portátil|laptop|computador|pc)/i.test(lower) && !this.containsSpecificModel(lower)) {
+      await PersistentMemoryManager.updateStage(chatId, userId, 'advising_use');
+      return {
+        text: ProfessionalResponseFormatter.formatAdvisorStep1()
+      };
     }
 
-    // ❌ NO HAY PRODUCTOS RELEVANTES
+    // Si ya estamos en modo asesor y responde un número
+    if (memory.conversationStage.startsWith('advising_') && /^[1-4]$/.test(message.trim())) {
+      return await this.handleAdvisor(message.trim(), chatId, userId, memory);
+    }
+
+    console.log('[SimpleHandler] 🔍 Búsqueda inteligente iniciada');
+    const relevantProducts = await this.smartProductSearch(message, userId);
+    
     if (relevantProducts.length === 0) {
       return {
         text: 'No encontré productos que coincidan con tu búsqueda. ¿Podrías ser más específico? 😊\n\n¿O prefieres ver todo nuestro catálogo?'
       };
     }
 
-    // 2. ENVIAR SOLO PRODUCTOS RELEVANTES A LA IA
-    // La IA recibirá productos PRE-FILTRADOS (máximo 10)
     const responseText = await this.generateResponse({
       message,
-      products: relevantProducts, // ✅ Solo productos RELEVANTES pre-filtrados
+      products: relevantProducts.slice(0, 5),
       chatId,
       context: 'search',
       userId
     });
 
-    // 3. EXTRAER PRODUCTOS MENCIONADOS EN LA RESPUESTA DE LA IA
-    // La IA debe mencionar los productos relevantes en su respuesta
     const mentionedProducts = this.extractMentionedProducts(responseText.text, relevantProducts);
     
-    console.log(`[SimpleHandler] 🎯 Productos mencionados por IA: ${mentionedProducts.length}`);
-
-    // ❌ LA IA NO ENCONTRÓ PRODUCTOS RELEVANTES
     if (mentionedProducts.length === 0) {
-      // La IA tiene libertad para responder naturalmente sin productos
-      return {
-        text: responseText.text || 'No encontré productos que coincidan con tu búsqueda. ¿Podrías ser más específico? 😊'
-      };
+      return { text: responseText.text };
     }
 
-    // ✅ GUARDAR PRIMER PRODUCTO (USA CLAVE COMPUESTA)
     SimpleConversationHandler.currentProduct.set(this.getContextKey(userId, chatId), mentionedProducts[0]);
 
-    // 🎯 DECISIÓN INTELIGENTE: ¿Búsqueda específica o genérica?
-    const isSpecificSearch = this.isSpecificProductSearch(message);
-    
-    console.log(`[SimpleHandler] 🤔 Tipo de búsqueda: ${isSpecificSearch ? 'ESPECÍFICA' : 'GENÉRICA'}`);
-    console.log(`[SimpleHandler] 📊 Productos encontrados: ${mentionedProducts.length}`);
-
-    if (isSpecificSearch && mentionedProducts.length === 1) {
-      // ═══════════════════════════════════════════════════════
-      // CASO 1: PRODUCTO ESPECÍFICO → HÍBRIDO + FOTOS CARD
-      // ═══════════════════════════════════════════════════════
-      console.log('[SimpleHandler] 🎯 Producto específico → Modo HÍBRIDO + FOTOS CARD');
-      
+    if (mentionedProducts.length === 1) {
       const product = mentionedProducts[0];
-      
-      // 1. VERIFICAR DATOS REALES
       const { RealDataEnforcer } = await import('./real-data-enforcer');
       const realData = await RealDataEnforcer.getProductData(product.id);
+      const botSettings = await db.botSettings.findUnique({ where: { userId } });
       
-      if (realData) {
-        // Actualizar con datos REALES
-        product.price = realData.price;
-        product.name = realData.name;
-        product.description = realData.description;
-        product.images = realData.images;
-        console.log('[SimpleHandler] ✅ Datos REALES verificados');
-        console.log('[SimpleHandler]    Precio REAL: ' + RealDataEnforcer.formatPrice(realData.price));
-        console.log('[SimpleHandler]    Imágenes: ' + realData.images.length);
-      }
-      
-      // 2. PREPARAR FOTOS CON CAPTION CARD
+      // USAR FORMATO ESPECIALIZADO
+      const cardText = ProfessionalResponseFormatter.formatAutoCard(realData || product, botSettings?.businessAddress || '');
+
       const actions: Array<{ type: string; data: any }> = [];
-      if (product.images && product.images.length > 0) {
+      if (product.images && JSON.parse(product.images || '[]').length > 0) {
         actions.push({
-          type: 'send_photo_card', // Nuevo tipo específico para CARD
-          data: { 
-            product: product,
-            useCardFormat: true // Flag para usar CardPhotoSender
-          }
+          type: 'send_photo_card',
+          data: { product: realData || product, useCardFormat: true }
         });
-        console.log('[SimpleHandler] 📸 Preparando fotos CARD para: ' + product.name);
-      } else {
-        console.log('[SimpleHandler] ⚠️ Producto sin imágenes: ' + product.name);
       }
       
-      return {
-        text: responseText.text,
-        actions
-      };
-      
-    } else if (mentionedProducts.length >= 2 && mentionedProducts.length <= 3) {
-      // ═══════════════════════════════════════════════════════
-      // CASO 2: 2-3 PRODUCTOS → OPCIONES PARA ELEGIR
-      // ═══════════════════════════════════════════════════════
-      console.log('[SimpleHandler] 📋 Búsqueda genérica → Mostrando 2-3 opciones');
-      
-      // 1. VERIFICAR DATOS REALES de todos
-      const { RealDataEnforcer } = await import('./real-data-enforcer');
-      for (const product of mentionedProducts) {
-        const realData = await RealDataEnforcer.getProductData(product.id);
-        if (realData) {
-          product.price = realData.price;
-          product.name = realData.name;
-          console.log('[SimpleHandler] ✅ Datos REALES: ' + product.name + ' - ' + RealDataEnforcer.formatPrice(realData.price));
-        }
-      }
-      
-      // 2. FOTO del primer producto (para dar contexto visual)
-      const actions: Array<{ type: string; data: any }> = [];
-      if (mentionedProducts[0].images && mentionedProducts[0].images.length > 0) {
-        actions.push({
-          type: 'send_photo',
-          data: { product: mentionedProducts[0] }
-        });
-        console.log('[SimpleHandler] 📸 Foto del primero: ' + mentionedProducts[0].name);
-      }
-      
-      return {
-        text: responseText.text,
-        actions
-      };
-      
-    } else {
-      // ═══════════════════════════════════════════════════════
-      // CASO 3: MUCHOS PRODUCTOS → IA LIBRE PARA FILTRAR
-      // ═══════════════════════════════════════════════════════
-      console.log('[SimpleHandler] 🎯 Muchos productos → IA filtra y recomienda');
-      
-      // La IA tiene libertad total para analizar y recomendar
-      // Solo enviamos el texto, sin fotos (para no saturar)
-      return {
-        text: responseText.text
-      };
+      return { text: cardText, actions };
     }
+
+    return { text: responseText.text };
   }
+
+  /**
+   * Maneja el flujo interactivo de asesoramiento
+   */
+  private async handleAdvisor(choice: string, chatId: string, userId: string, memory: any): Promise<SimpleResponse> {
+    const { PersistentMemoryManager } = await import('./persistent-memory-manager');
+    const { ProfessionalResponseFormatter } = await import('./professional-response-formatter');
+
+    if (memory.conversationStage === 'advising_use') {
+      const preferences = { ...memory.preferences, use: choice };
+      await PersistentMemoryManager.updateMemory(chatId, userId, { 
+        preferences,
+        conversationStage: 'advising_budget'
+      });
+      return { text: ProfessionalResponseFormatter.formatAdvisorStep2(choice) };
+    }
+
+    if (memory.conversationStage === 'advising_budget') {
+      const preferences = { ...memory.preferences, budget_range: choice };
+      await PersistentMemoryManager.updateMemory(chatId, userId, { 
+        preferences,
+        conversationStage: 'browsing'
+      });
+
+      // Ejecutar búsqueda real en BD según filtros
+      const products = await this.filterProductsByAdvisor(preferences, userId);
+      
+      if (products.length === 0) {
+        return { text: "No encontré opciones exactas con ese presupuesto, pero aquí tienes los mejores disponibles actualmente. 😊" };
+      }
+
+      return { text: ProfessionalResponseFormatter.formatAdvisorRecommendations(products) };
+    }
+
+    return { text: "Cuéntame más sobre qué buscas. 😊" };
+  }
+
+  /**
+   * Filtra productos basados en la asesoría
+   */
+  private async filterProductsByAdvisor(prefs: any, userId: string): Promise<any[]> {
+    const budgetMap: Record<string, { min: number, max: number }> = {
+      '1': { min: 0, max: 2000000 },
+      '2': { min: 2000000, max: 3000000 },
+      '3': { min: 3000000, max: 99999999 }
+    };
+
+    const range = budgetMap[prefs.budget_range] || { min: 0, max: 99999999 };
+
+    return await db.product.findMany({
+      where: {
+        userId,
+        status: 'AVAILABLE',
+        category: 'PHYSICAL',
+        price: { gte: range.min, lte: range.max },
+        OR: [
+          { name: { contains: 'laptop' } },
+          { name: { contains: 'portátil' } },
+          { description: { contains: 'computador' } }
+        ]
+      },
+      take: 3,
+      orderBy: { searchPriority: 'desc' }
+    });
+  }
+
 
   /**
    * BÚSQUEDA INTELIGENTE - Filtra productos relevantes ANTES de enviar a la IA
@@ -340,7 +356,7 @@ export class SimpleConversationHandler {
       keywords.forEach(kw => {
         if (nameLower.includes(kw)) score += 10;
         if (descLower.includes(kw)) score += 3;
-        if (p.tags?.some(t => t.toLowerCase().includes(kw))) score += 5;
+        if (p.tags && p.tags.toLowerCase().includes(kw)) score += 5;
       });
       
       // Bonus si coincide con query completa
@@ -560,29 +576,14 @@ export class SimpleConversationHandler {
     const recentHistory = history.slice(-5);
 
     // Prompt Maestro Dinámico - FORZAR ESPAÑOL SIEMPRE
-    let systemPrompt = `🇪🇸 IDIOMA OBLIGATORIO: ESPAÑOL (COLOMBIA) 🇪🇸
-⚠️ NUNCA RESPONDAS EN INGLÉS - SOLO ESPAÑOL ⚠️
+    let systemPrompt = `Eres el Asesor de Ventas de ${businessName}. IDIOMA: ESPAÑOL (COLOMBIA).
 
-Eres el Asesor de Ventas de ${businessName}.
-Tu misión es AYUDAR al cliente y CERRAR VENTAS de forma amable.
-
-🚨 REGLA CRÍTICA DE IDIOMA:
-- SIEMPRE responde en ESPAÑOL (Colombia)
-- NUNCA uses inglés, ni una sola palabra
-- Si el cliente pregunta en inglés, responde en ESPAÑOL
-- Eres un vendedor colombiano, NO un asistente genérico de IA
-
-IDENTIDAD:
-- Trabajas para: ${businessName}
-- Vendes: Productos reales de nuestro catálogo
-- NO eres ChatGPT, Claude, ni asistente genérico
-- Eres un VENDEDOR PROFESIONAL colombiano
-
-REGLAS DE ACTITUD:
-1. Sé EMPÁTICO y PROFESIONAL
-2. USA EMOJIS para dar vida al texto (😊, 💻, 💰, ✅, 🚀)
-3. ORGANIZACIÓN VISUAL: Usa listas numeradas y espaciado claro
-4. TEXTO LIMPIO: NO uses asteriscos ni guiones bajos para formato
+MISIÓN:
+- Cerrar ventas de forma profesional y empática.
+- NUNCA respondas en inglés.
+- NO uses asteriscos (*) ni guiones bajos (_).
+- DOBLE SALTO DE LÍNEA entre párrafos.
+- Usa emojis (😊, 💻, 💰, ✅).
 
 🚨 FORMATO CRÍTICO - LEE ESTO:
 ❌ NO uses asteriscos (*)
@@ -810,8 +811,9 @@ Tu trabajo es ATRAER, CONVENCER y CERRAR VENTAS usando los productos del catálo
     }
 
     // 🎨 LIMPIAR FORMATO ANTIGUO (asteriscos, puntos, etc)
-    const { ProfessionalCardFormatter } = await import('./professional-card-formatter');
-    text = ProfessionalCardFormatter.cleanOldFormat(text);
+    // 🎨 LIMPIAR FORMATO ANTIGUO (asteriscos, puntos, etc)
+    const { ProfessionalResponseFormatter } = await import('./professional-response-formatter');
+    text = ProfessionalResponseFormatter.cleanOldFormat(text);
 
     console.log(`[generateResponse] ✨ Respuesta formateada: "${text}"`);
 

@@ -1,0 +1,47 @@
+﻿­ƒöÑ TEST INTENSIVO DE INTELIGENCIA FUSE.JS ­ƒöÑ
+--------------------------------------------------
+
+TEST #1: "hola buenas"
+   > T├®rmino limpio: ""
+   > Resultado: NADA (Stopwords eliminaron todo) Ô£à
+
+TEST #2: "quiero aprender ingles"
+   > T├®rmino limpio: "ingles"
+   > Match: "Mega Pack 40: Educaci├│n"
+   > Confianza: 6.8%
+   > Estado: Ô£à CORRECTO
+
+TEST #3: "busco algo para cocina"
+   > T├®rmino limpio: "busco algo para cocina"
+   ÔØî ERROR: No encontr├│ "Mega Pack 40: Educaci├│n"
+
+TEST #4: "tienes teclado?"
+   > T├®rmino limpio: "tienes teclado?"
+   ÔØî ERROR: No encontr├│ "Teclado Mec├ínico Redragon Kumara"
+
+TEST #5: "me interesa el curso de memoria"
+   > T├®rmino limpio: "interesa memoria"
+   ÔØî ERROR: No encontr├│ "Curso de Memoria Poderosa"
+
+TEST #6: "busco pino"
+   > T├®rmino limpio: "busco pino"
+   ÔØî ERROR: No encontr├│ "Mega Pack 40: Educaci├│n"
+
+TEST #7: "mouse g502 precio"
+   > T├®rmino limpio: "mouse g502"
+   > Match: "Mouse Logitech G502 Hero"
+   > Confianza: 20.5%
+   > Estado: Ô£à CORRECTO
+
+TEST #8: "silla negra"
+   > T├®rmino limpio: "silla negra"
+   > Match: "Silla Ergon├│mica Ejecutiva"
+   > Confianza: 35.3%
+   > Estado: Ô£à CORRECTO
+
+TEST #9: "curso de ingenieria civil"
+   > T├®rmino limpio: "ingenieria civil"
+   > Resultado: NADA (Correcto, no existe) Ô£à
+
+--------------------------------------------------
+FIN DEL TEST

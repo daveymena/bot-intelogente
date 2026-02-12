@@ -294,3 +294,4 @@ Si no, entiendo perfectamente y puedes volver cuando quieras 💬`
 
 // Exportar instancia singleton
 export const paymentFollowUpService = PaymentFollowUpService.getInstance();
+

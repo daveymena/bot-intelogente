@@ -35,10 +35,19 @@ export async function procesarFlujoDigital(
   if (esPreguntaEspecifica) {
     console.log('[FlujoDigital] 🧠 Pregunta específica detectada - Usando IA para razonamiento');
     
-    try {
-      const { AIMultiProvider } = await import('@/lib/ai-multi-provider');
+      // 🎯 INTENTO 0: BUSCAR EN FAQ (Cero Tokens, Respuesta Instantánea)
+      const { ProductFAQService } = await import('@/lib/product-faq-service');
+      const faqResult = ProductFAQService.findAnswer(mensaje, producto.nombre);
       
-      const prompt = `
+      if (faqResult.found) {
+          console.log('[FlujoDigital] ⚡ Respuesta FAQ encontrada (Confianza:', faqResult.confidence, ')');
+          return `🤖 *${producto.nombre}*\n\n${faqResult.answer}\n\n💬 ¿Te ayudo con algo más?`;
+      }
+
+      console.log('[FlujoDigital] 🧠 Pregunta específica detectada - Usando IA para razonamiento');
+      try {
+        const { AIMultiProvider } = await import('@/lib/ai-multi-provider');
+        const prompt = `
 PRODUCTO:
 Nombre: ${producto.nombre}
 Precio: $${producto.precio.toLocaleString('es-CO')}
@@ -104,7 +113,8 @@ function generarRespuestaAIDA(producto: ProductoInfo): string {
   }
   
   // 🔥 DESEO: Beneficios clave (compacto)
-  respuesta += `🎁 Acceso inmediato y de por vida\n`;
+  respuesta += `💻 100% Pregrabado (No requiere horarios)\n`;
+  respuesta += `📲 Entrega inmediata por Correo/WhatsApp\n`;
   respuesta += `✅ Soporte incluido\n\n`;
   
   // ✅ ACCIÓN: Call-to-Action claro
@@ -183,28 +193,29 @@ function generarSeccionDeseo(producto: ProductoInfo): string {
   // Beneficios según tipo de producto
   if (categoryLower.includes('curso') || categoryLower.includes('digital')) {
     return `🎁 *¿Qué obtienes?*
-✅ Acceso inmediato y de por vida
-✅ Aprende a tu propio ritmo
-✅ Material de alta calidad
+✅ 100% Pregrabado (Sin horarios)
+✅ Entrega por Correo/Drive/WhatsApp
+✅ Contenido descargable
 ✅ Soporte incluido
+⚠️ *No incluye certificado*
 
-🚀 *Inversión en tu futuro profesional*`;
+🚀 *Aprende a tu ritmo sin presiones*`;
   }
   
   if (categoryLower.includes('megapack')) {
     return `🎁 *¿Qué incluye?*
 ✅ Múltiples cursos en un solo paquete
-✅ Acceso de por vida
-✅ Actualizaciones gratuitas
-✅ Ahorro del 70% vs compra individual
+✅ Envío por Drive/Correo
+✅ 100% autodidacta
+⚠️ No incluye certificados
 
-💎 *Máximo valor por tu inversión*`;
+💎 *Máximo valor al mejor precio*`;
   }
   
   // Genérico para productos digitales
   return `🎁 *Beneficios:*
-✅ Entrega digital inmediata
-✅ Acceso de por vida
+✅ Entrega digital inmediata (Drive/Correo)
+✅ 100% autodidacta
 ✅ Sin costos de envío
 ✅ Soporte incluido
 

@@ -25,37 +25,38 @@ export class CardPhotoSender {
     const esDigital = product.category === 'DIGITAL' || product.category === 'MEGAPACK';
     const emoji = esDigital ? '📚' : '💻';
 
-    let caption = `${emoji} *${product.name}*\n`;
-    caption += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+    let caption = `╔══════════════════════╗\n`;
+    caption += `  ${emoji} ${product.name.toUpperCase()}\n`;
+    caption += `╚══════════════════════╝\n\n`;
     
     // Precio destacado
-    caption += `💰 *PRECIO:* ${RealDataEnforcer.formatPrice(product.price)}\n\n`;
+    caption += `💰 INVERSIÓN: ${RealDataEnforcer.formatPrice(product.price)}\n\n`;
 
     // Descripción
     if (product.description) {
       const shortDesc = product.description.length > 150 
         ? product.description.substring(0, 150) + '...' 
         : product.description;
-      caption += `📝 ${shortDesc}\n\n`;
+      caption += `📋 ${shortDesc}\n\n`;
     }
 
     // Características según tipo
     if (esDigital) {
-      caption += `✅ *INCLUYE:*\n`;
-      caption += `   • Acceso inmediato\n`;
-      caption += `   • Entrega por WhatsApp\n`;
-      caption += `   • Soporte incluido\n`;
-      caption += `   • Actualizaciones gratis\n\n`;
+      caption += `✨ INCLUYE:\n`;
+      caption += `• Acceso inmediato\n`;
+      caption += `• Entrega automática\n`;
+      caption += `• Soporte VIP 24/7\n\n`;
     } else {
-      caption += `✅ *CARACTERÍSTICAS:*\n`;
-      caption += `   • Producto nuevo\n`;
-      caption += `   • Garantía incluida\n`;
-      caption += `   • Envío disponible\n\n`;
+      caption += `✨ CARACTERÍSTICAS:\n`;
+      caption += `• Producto Garantizado\n`;
+      caption += `• Envío Asegurado\n`;
+      caption += `• Pago Contra Entrega\n\n`;
     }
 
     // Call to action
-    caption += `👉 *¿Te interesa?* Escribe "comprar" o "más info"\n`;
-    caption += `━━━━━━━━━━━━━━━━━━━━`;
+    caption += `━━━━━━━━━━━━━━━━━━━━\n`;
+    caption += `🎯 ¿Te gustaría asegurar el tuyo ahora?\n`;
+    caption += `Responde COMPRAR o déjanos tus dudas. 😊`;
 
     return caption;
   }

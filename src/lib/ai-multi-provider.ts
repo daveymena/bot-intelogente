@@ -438,17 +438,17 @@ export class AIMultiProvider {
           stream: false,
           keep_alive: "5m", // ⚡ OPTIMIZACIÓN: Mantener modelo en RAM 5 min
           options: {
-            // Optimizaciones para velocidad
-            temperature: options.temperature || 0.7,
-            num_predict: options.max_tokens || 300, 
-            top_k: 40,
-            top_p: 0.9,
+            // Optimizaciones para máxima velocidad en Easypanel
+            temperature: options.temperature || 0.5,
+            num_predict: options.max_tokens || 250, 
+            top_k: 20,
+            top_p: 0.85,
             repeat_penalty: 1.1,
-            // Parámetros de rendimiento
-            num_ctx: 2048, 
+            // Parámetros de rendimiento optimizados
+            num_ctx: 4096, 
             num_batch: 512,
-            num_gpu: 1, 
-            num_thread: 4, 
+            num_thread: 8, // Aumentado para mejor uso de CPU
+            stop: ["Contexto:", "Cliente:", "User:"] // Stop tokens
           }
         }),
         signal: controller.signal

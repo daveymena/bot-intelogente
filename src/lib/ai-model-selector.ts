@@ -1,261 +1,188 @@
 /**
- * 🤖 SELECTOR INTELIGENTE DE MODELOS DE IA
- * Detecta automáticamente qué modelos están disponibles y los usa
- * Evita rate limits rotando entre modelos disponibles
+ * 🧠 AI Model Selector - Selección inteligente de modelos
+ * Detecta automáticamente qué modelos están disponibles y cuáles funcionan mejor
  */
 
-import Groq from 'groq-sdk'
-
 interface ModelInfo {
-  id: string
   name: string
-  tokensPerDay: number
-  speed: 'fast' | 'medium' | 'slow'
-  quality: 'high' | 'medium' | 'low'
+  provider: 'groq' | 'openai' | 'claude' | 'gemini'
   available: boolean
-  lastError?: string
-  lastUsed?: Date
+  lastTested: Date
+  failureCount: number
+  avgResponseTime: number
+  maxTokens: number
 }
 
 export class AIModelSelector {
-  private static groq = new Groq({
-    apiKey: process.env.GROQ_API_KEY || ''
-  })
-
-  private static modelCache: ModelInfo[] = []
+  private static models: Map<string, ModelInfo> = new Map()
   private static lastCheck: Date | null = null
   private static checkInterval = 5 * 60 * 1000 // 5 minutos
 
   /**
-   * Lista de modelos de Groq ordenados por preferencia
-   */
-  private static readonly GROQ_MODELS = [
-    {
-      id: 'llama-3.1-8b-instant',
-      name: 'Llama 3.1 8B Instant',
-      tokensPerDay: 100000,
-      speed: 'fast' as const,
-      quality: 'high' as const
-    },
-    {
-      id: 'llama-3.2-3b-preview',
-      name: 'Llama 3.2 3B Preview',
-      tokensPerDay: 100000,
-      speed: 'fast' as const,
-      quality: 'medium' as const
-    },
-    {
-      id: 'llama-3.2-1b-preview',
-      name: 'Llama 3.2 1B Preview',
-      tokensPerDay: 100000,
-      speed: 'fast' as const,
-      quality: 'medium' as const
-    },
-    {
-      id: 'gemma2-9b-it',
-      name: 'Gemma 2 9B',
-      tokensPerDay: 100000,
-      speed: 'fast' as const,
-      quality: 'high' as const
-    },
-    {
-      id: 'gemma-7b-it',
-      name: 'Gemma 7B',
-      tokensPerDay: 100000,
-      speed: 'fast' as const,
-      quality: 'medium' as const
-    },
-    {
-      id: 'mixtral-8x7b-32768',
-      name: 'Mixtral 8x7B',
-      tokensPerDay: 100000,
-      speed: 'medium' as const,
-      quality: 'high' as const
-    },
-    {
-      id: 'llama-3.3-70b-versatile',
-      name: 'Llama 3.3 70B Versatile',
-      tokensPerDay: 100000,
-      speed: 'slow' as const,
-      quality: 'high' as const
-    }
-  ]
-
-  /**
    * Obtener el mejor modelo disponible
    */
-  static async getBestAvailableModel(): Promise<string> {
-    try {
-      // Si el caché es reciente, usarlo
-      if (this.modelCache.length > 0 && this.lastCheck) {
-        const timeSinceCheck = Date.now() - this.lastCheck.getTime()
-        if (timeSinceCheck < this.checkInterval) {
-          const available = this.modelCache.find(m => m.available)
-          if (available) {
-            console.log(`[Model Selector] 📦 Usando modelo en caché: ${available.id}`)
-            return available.id
-          }
-        }
-      }
-
-      // Actualizar lista de modelos disponibles
-      await this.updateAvailableModels()
-
-      // Obtener el mejor modelo disponible
-      const bestModel = this.modelCache.find(m => m.available)
-
-      if (bestModel) {
-        console.log(`[Model Selector] ✅ Mejor modelo disponible: ${bestModel.id}`)
-        return bestModel.id
-      }
-
-      // Fallback al modelo por defecto
-      console.log(`[Model Selector] ⚠️ No se encontraron modelos disponibles, usando fallback`)
-      return 'llama-3.1-8b-instant'
-    } catch (error) {
-      console.error('[Model Selector] ❌ Error obteniendo modelo:', error)
-      return 'llama-3.1-8b-instant'
-    }
-  }
-
-  /**
-   * Actualizar lista de modelos disponibles
-   */
-  private static async updateAvailableModels(): Promise<void> {
-    console.log('[Model Selector] 🔍 Detectando modelos disponibles...')
-
-    const availableModels: ModelInfo[] = []
-
-    for (const model of this.GROQ_MODELS) {
-      try {
-        // Intentar una llamada de prueba muy pequeña
-        const testResponse = await this.groq.chat.completions.create({
-          model: model.id,
-          messages: [{ role: 'user', content: 'Hi' }],
-          max_tokens: 5,
-          temperature: 0
-        })
-
-        if (testResponse.choices && testResponse.choices.length > 0) {
-          availableModels.push({
-            ...model,
-            available: true,
-            lastUsed: new Date()
-          })
-          console.log(`[Model Selector] ✅ ${model.id} - Disponible`)
-        }
-      } catch (error: any) {
-        const errorMessage = error?.message || String(error)
-        
-        // Si es rate limit, el modelo existe pero está agotado
-        if (errorMessage.includes('rate_limit_exceeded')) {
-          availableModels.push({
-            ...model,
-            available: false,
-            lastError: 'Rate limit exceeded'
-          })
-          console.log(`[Model Selector] ⏳ ${model.id} - Rate limit alcanzado`)
-        } 
-        // Si es modelo no encontrado, no está disponible
-        else if (errorMessage.includes('model_not_found') || errorMessage.includes('404')) {
-          console.log(`[Model Selector] ❌ ${model.id} - No encontrado`)
-        }
-        // Otros errores
-        else {
-          availableModels.push({
-            ...model,
-            available: false,
-            lastError: errorMessage
-          })
-          console.log(`[Model Selector] ⚠️ ${model.id} - Error: ${errorMessage.substring(0, 50)}`)
-        }
-      }
-
-      // Pequeña pausa entre pruebas para no saturar la API
-      await new Promise(resolve => setTimeout(resolve, 100))
-    }
-
-    this.modelCache = availableModels
-    this.lastCheck = new Date()
-
-    const availableCount = availableModels.filter(m => m.available).length
-    console.log(`[Model Selector] 📊 Resumen: ${availableCount}/${this.GROQ_MODELS.length} modelos disponibles`)
-  }
-
-  /**
-   * Obtener lista de modelos disponibles
-   */
-  static async getAvailableModels(): Promise<ModelInfo[]> {
-    if (this.modelCache.length === 0 || !this.lastCheck) {
-      await this.updateAvailableModels()
-    }
-    return this.modelCache.filter(m => m.available)
-  }
-
-  /**
-   * Obtener estadísticas de modelos
-   */
-  static async getModelStats(): Promise<{
-    total: number
-    available: number
-    rateLimited: number
-    models: ModelInfo[]
-  }> {
-    if (this.modelCache.length === 0 || !this.lastCheck) {
-      await this.updateAvailableModels()
-    }
-
-    return {
-      total: this.modelCache.length,
-      available: this.modelCache.filter(m => m.available).length,
-      rateLimited: this.modelCache.filter(m => m.lastError?.includes('rate_limit')).length,
-      models: this.modelCache
-    }
-  }
-
-  /**
-   * Forzar actualización de modelos
-   */
-  static async forceUpdate(): Promise<void> {
-    this.lastCheck = null
-    this.modelCache = []
-    await this.updateAvailableModels()
-  }
-
-  /**
-   * Obtener modelo alternativo si el actual falla
-   */
-  static async getAlternativeModel(failedModel: string): Promise<string | null> {
-    const available = this.modelCache.filter(m => m.available && m.id !== failedModel)
+  static async getBestAvailableModel(): Promise<string | null> {
+    await this.updateModelAvailability()
     
-    if (available.length > 0) {
-      // Ordenar por velocidad y calidad
-      available.sort((a, b) => {
-        const speedScore = { fast: 3, medium: 2, slow: 1 }
-        const qualityScore = { high: 3, medium: 2, low: 1 }
-        
-        const scoreA = speedScore[a.speed] + qualityScore[a.quality]
-        const scoreB = speedScore[b.speed] + qualityScore[b.quality]
-        
-        return scoreB - scoreA
+    // Filtrar modelos disponibles y ordenar por rendimiento
+    const availableModels = Array.from(this.models.values())
+      .filter(model => model.available && model.failureCount < 3)
+      .sort((a, b) => {
+        // Priorizar por menor tiempo de respuesta y menos fallos
+        const scoreA = a.avgResponseTime + (a.failureCount * 1000)
+        const scoreB = b.avgResponseTime + (b.failureCount * 1000)
+        return scoreA - scoreB
       })
 
-      console.log(`[Model Selector] 🔄 Modelo alternativo: ${available[0].id}`)
-      return available[0].id
-    }
+    return availableModels.length > 0 ? availableModels[0].name : null
+  }
 
-    return null
+  /**
+   * Obtener modelo alternativo cuando uno falla
+   */
+  static async getAlternativeModel(failedModel: string): Promise<string | null> {
+    const availableModels = Array.from(this.models.values())
+      .filter(model => 
+        model.name !== failedModel && 
+        model.available && 
+        model.failureCount < 3
+      )
+      .sort((a, b) => a.failureCount - b.failureCount)
+
+    return availableModels.length > 0 ? availableModels[0].name : null
   }
 
   /**
    * Marcar modelo como fallido
    */
-  static markModelAsFailed(modelId: string, error: string): void {
-    const model = this.modelCache.find(m => m.id === modelId)
+  static markModelAsFailed(modelName: string, reason: string): void {
+    const model = this.models.get(modelName)
     if (model) {
-      model.available = false
-      model.lastError = error
-      console.log(`[Model Selector] ❌ Modelo ${modelId} marcado como fallido: ${error}`)
+      model.failureCount++
+      model.lastTested = new Date()
+      
+      // Si falla mucho, marcarlo como no disponible temporalmente
+      if (model.failureCount >= 3) {
+        model.available = false
+      }
+      
+      console.log(`⚠️ Modelo ${modelName} marcado como fallido: ${reason} (fallos: ${model.failureCount})`)
     }
+  }
+
+  /**
+   * Marcar modelo como exitoso
+   */
+  static markModelAsSuccessful(modelName: string, responseTime: number): void {
+    let model = this.models.get(modelName)
+    if (!model) {
+      // Crear entrada si no existe
+      model = {
+        name: modelName,
+        provider: this.detectProvider(modelName),
+        available: true,
+        lastTested: new Date(),
+        failureCount: 0,
+        avgResponseTime: responseTime,
+        maxTokens: this.getMaxTokens(modelName)
+      }
+      this.models.set(modelName, model)
+    } else {
+      // Actualizar estadísticas
+      model.available = true
+      model.lastTested = new Date()
+      model.failureCount = Math.max(0, model.failureCount - 1) // Reducir fallos en éxito
+      model.avgResponseTime = (model.avgResponseTime + responseTime) / 2 // Promedio móvil
+    }
+  }
+
+  /**
+   * Actualizar disponibilidad de modelos
+   */
+  private static async updateModelAvailability(): Promise<void> {
+    const now = new Date()
+    
+    // Solo verificar cada 5 minutos
+    if (this.lastCheck && (now.getTime() - this.lastCheck.getTime()) < this.checkInterval) {
+      return
+    }
+
+    this.lastCheck = now
+
+    // Modelos por defecto a verificar
+    const defaultModels = [
+      'llama-3.1-8b-instant',
+      'llama-3.1-70b-versatile',
+      'mixtral-8x7b-32768',
+      'gemma2-9b-it'
+    ]
+
+    for (const modelName of defaultModels) {
+      if (!this.models.has(modelName)) {
+        this.models.set(modelName, {
+          name: modelName,
+          provider: this.detectProvider(modelName),
+          available: true, // Asumir disponible hasta que falle
+          lastTested: now,
+          failureCount: 0,
+          avgResponseTime: 2000, // 2s por defecto
+          maxTokens: this.getMaxTokens(modelName)
+        })
+      }
+    }
+  }
+
+  /**
+   * Detectar proveedor por nombre del modelo
+   */
+  private static detectProvider(modelName: string): 'groq' | 'openai' | 'claude' | 'gemini' {
+    if (modelName.includes('llama') || modelName.includes('mixtral') || modelName.includes('gemma')) {
+      return 'groq'
+    }
+    if (modelName.includes('gpt')) {
+      return 'openai'
+    }
+    if (modelName.includes('claude')) {
+      return 'claude'
+    }
+    if (modelName.includes('gemini')) {
+      return 'gemini'
+    }
+    return 'groq' // Por defecto
+  }
+
+  /**
+   * Obtener límite de tokens por modelo
+   */
+  private static getMaxTokens(modelName: string): number {
+    const tokenLimits: Record<string, number> = {
+      'llama-3.1-8b-instant': 8192,
+      'llama-3.1-70b-versatile': 8192,
+      'mixtral-8x7b-32768': 32768,
+      'gemma2-9b-it': 8192,
+      'gpt-4': 8192,
+      'gpt-3.5-turbo': 4096,
+      'claude-3-sonnet': 4096
+    }
+    
+    return tokenLimits[modelName] || 4096
+  }
+
+  /**
+   * Obtener estadísticas de todos los modelos
+   */
+  static getModelStats(): ModelInfo[] {
+    return Array.from(this.models.values())
+  }
+
+  /**
+   * Resetear estadísticas de fallos
+   */
+  static resetFailureStats(): void {
+    for (const model of this.models.values()) {
+      model.failureCount = 0
+      model.available = true
+    }
+    console.log('✅ Estadísticas de fallos reseteadas')
   }
 }

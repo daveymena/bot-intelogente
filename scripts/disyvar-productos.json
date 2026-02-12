@@ -2,9 +2,9 @@
   {
     "name": "Silla plástica para niños",
     "description": "Descripción\nSilla plástica para niños: ¡El complemento ideal para el espacio de juego de tus pequeños! Diseñada con un estilo moderno y vibrante, esta silla plástica es duradera y ligera, perfecta para que los niños se sienten cómodamente mientras juegan, dibujan o comparten momentos con amigos.\nSu material resistente facilita la limpieza, lo que la convierte en una opción práctica para cualquier hogar. Haz que la diversión nunca se detenga con la silla plástica para niños. ¡Adquiere la tuya y transforma el área de juegos de tus hijos!\nSKU 1008",
-    "price": 56990,
+    "price": 57000,
     "originalPrice": 0,
-    "category": "Muebles",
+    "category": "Tecnología",
     "images": [
       "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/silla-plastica-para-ninos-1-4-c88697ad1182778d7917195971337339-480-0.webp"
     ],
@@ -15,22 +15,44 @@
     "description": "Descripción\n¡Mima a tu gato con este cepillo decorado con una hermosa flor! Con cerdas suaves y delicadas, es perfecto para acicalar a tu mascota y mantener su pelaje brillante y sedoso. Haz que el momento del cepillado sea especial para tu gato con este accesorio único.\nSKU 4019",
     "price": 19990,
     "originalPrice": 0,
-    "category": "Cuidado Personal",
+    "category": "Tecnología",
     "images": [
       "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/4019-cepillo-deslanador-1-2-2e94ef305cd25b992417208040817878-480-0.webp"
     ],
     "url": "https://disyvar.com.co/productos/cepillo-deslanador1/"
   },
   {
-    "name": "SILLA PLEGABLE REDONDA BUTACA",
-    "description": "Descripción\nSILLA BUTACO PLEGABLE RETRACTIL PORTATIL La silla ideal para comodidad y facilidad de transporte, adecuada para viajes, camping, pesca y ambientes al aire libre o interiores. Segura, confiable y de larga duración por sus materiales resistentes. Incluye correa para llevar en la mano o colgar.\nSKU 1308",
-    "price": 34990,
+    "name": "CEPILLO DE DIENTES HAPPY TOOTH PAQUETE X 12 UNIDADES",
+    "description": "Descripción \n \nEl Cepillo de Dientes Happy Tooth es un producto de higiene oral básico, práctico y económico, ideal para uso familiar, institucional o para reemplazar frecuentemente.\nSe presenta en un conveniente paquete que contiene 12 unidades.\n\nDiseño: Su diseño es funcional, generalmente con un mango ergonómico y cerdas de dureza media o suave para una limpieza efectiva y cómoda de dientes y encías.\nPresentación: Es común que el paquete contenga cepillos en colores surtidos para que cada usuario pueda identificar el suyo.\n\nEs una opción sencilla y funcional para el cuidado dental diario.\n \nSKU 3141",
+    "price": 18000,
     "originalPrice": 0,
-    "category": "Muebles",
+    "category": "Tecnología",
     "images": [
-      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/silla-plegable-redonda-butaca-1-e84ddabcfcfbca303e17500873168247-480-0.webp"
+      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/cepillo-de-dientes-happy-tooth-paquete-x-12-unidades-29ab5d99e8522a417b17616632469429-480-0.webp"
     ],
-    "url": "https://disyvar.com.co/productos/silla-plegable-redonda-butaca/"
+    "url": "https://disyvar.com.co/productos/cepillo-de-dientes-happy-tooth-paquete-x-12-unidades-wtsgl/"
+  },
+  {
+    "name": "LLAVERO PARA CONTROL DE ACCESO MIFARE (PAQUETE X 10)",
+    "description": "Descripción\nLlavero para control de acceso tipo Proximidad de 13.56 Mhz (Tipo Mifare Classic).\nEspecificaciones Técnicas:\n●        Material de fabricación PVC.\n●        Color Azul.\n●        Dimensiones: milímetros.\nSKU 3072",
+    "price": 49990,
+    "originalPrice": 0,
+    "category": "Tecnología",
+    "images": [
+      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/llavero-para-control-de-acceso-mifare-paquete-x-10-3-c772c36906d29f7ba517393788557518-480-0.webp"
+    ],
+    "url": "https://disyvar.com.co/productos/llavero-para-control-de-acceso-mifare-paquete-x-10/"
+  },
+  {
+    "name": "TARJETA MIFARE CLASSIC/MEMORIA 1K (PAQUETE X 10)",
+    "description": "Descripción\nLa Tarjeta Mifare Classic 1K 13.56 MHz es una solución ideal para sistemas de control de acceso, diseñada específicamente para ofrecer seguridad y eficiencia. Con una frecuencia de 13.56 MHz y una capacidad de almacenamiento de datos de 1K, esta tarjeta permite gestionar información de manera efectiva. Fabricada en PVC, es resistente y duradera, lo que garantiza un uso prolongado. Su diseño blanco en ambos lados permite personalizarla fácilmente mediante impresión con la máquina adecuada. Esta tarjeta no tiene fecha de vencimiento, lo que la convierte en una opción práctica y económica a largo plazo.\nSKU 3071",
+    "price": 41990,
+    "originalPrice": 0,
+    "category": "Tecnología",
+    "images": [
+      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/tarjeta-mifare-classic-memoria-1k-paquete-x-10-1-e0916ecdb106e3728f17393792636011-480-0.webp"
+    ],
+    "url": "https://disyvar.com.co/productos/tarjeta-mifare-classic-memoria-1k-paquete-x-10/"
   },
   {
     "name": "ENVASE CAMPANA JABON DE MANOS",
@@ -101,7 +123,7 @@
   {
     "name": "Papel air fryer por 100",
     "description": "Descripción\nOptimiza tus comidas con nuestro Papel air fryer por 100. Este producto es ideal para facilitar la limpieza y mejorar la cocción de tus alimentos en la freidora de aire.\nHecho de materiales resistentes, el papel ayuda a que tus platillos no se peguen y se cocinen uniformemente. Perfecto para preparar desde papas fritas hasta deliciosas alitas.\n¡Disfruta de una cocina más saludable y sin complicaciones!\nSKU 1045",
-    "price": 14990,
+    "price": 15000,
     "originalPrice": 0,
     "category": "Tecnología",
     "images": [
@@ -112,9 +134,9 @@
   {
     "name": "Maleta antirrobo",
     "description": "Descripción\n¡Lleva tus aventuras al siguiente nivel con esta mochila innovadora que te mantiene conectado en todo momento! Con un puerto USB integrado, podrás cargar tu celular mientras exploras. Diseñada para la comodidad y la funcionalidad, esta mochila es perfecta para tus viajes diarios o escapadas de fin de semana.\nSKU 1041",
-    "price": 56990,
+    "price": 55000,
     "originalPrice": 0,
-    "category": "Accesorios",
+    "category": "Tecnología",
     "images": [
       "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/1041-maleta-antirrobo-1-3-64c49f4121a4a278ce17204563624842-480-0.webp"
     ],
@@ -123,9 +145,9 @@
   {
     "name": "Aspiradora de carro",
     "description": "Descripción\nUna potente aspiradora portátil con caja, ideal para mantener tu hogar impecable. Con un alto poder de succión, esta aspiradora te ayudará a limpiar fácilmente cualquier superficie. Compacta y fácil de transportar, es perfecta para mantener tu hogar limpio y ordenado en todo momento.\nSKU 1035",
-    "price": 34990,
+    "price": 35000,
     "originalPrice": 0,
-    "category": "Electrodomésticos",
+    "category": "Tecnología",
     "images": [
       "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/1035-aspiradora-de-carro-1-3-5a119f55d23ccd079c17204554825492-480-0.webp"
     ],
@@ -134,7 +156,7 @@
   {
     "name": "Mini máquina de coser",
     "description": "Descripción\nLa mini máquina de coser es perfecta para reparaciones rápidas y proyectos de costura en casa. Compacta y portátil, esta máquina es fácil de usar y transportar. Con funciones básicas de costura, es ideal para principiantes y expertos por igual. ¡Haz tus creaciones con facilidad y precisión!\nSKU 1007",
-    "price": 54990,
+    "price": 50000,
     "originalPrice": 0,
     "category": "Tecnología",
     "images": [
@@ -145,105 +167,237 @@
   {
     "name": "Bolso antirrobo",
     "description": "Descripción\nProtege tus pertenencias con este bolso antirrobo de alta calidad. Con cierres ocultos y materiales resistentes, podrás viajar con tranquilidad y seguridad. Ideal para llevar tus objetos de valor de forma discreta y protegida en cualquier situación.\nSKU 1005",
-    "price": 49990,
+    "price": 50000,
     "originalPrice": 0,
-    "category": "Accesorios",
+    "category": "Tecnología",
     "images": [
       "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/bolso-antirrobo-1-6-6cd063e2e0706d33e517195967442514-480-0.webp"
     ],
     "url": "https://disyvar.com.co/productos/bolso-antirrobo/"
   },
   {
+    "name": "CAJA DE LIMPIATIPOS PELIKAN X4 PIEZAS",
+    "description": "Descripción \nLa Caja de Limpiatipos Pelikan contiene 4 gomas moldeables de alta calidad, diseñadas específicamente para absorber tinta, grafito y suciedad de superficies delicadas sin dejar residuos ni virutas. Es la herramienta favorita tanto en oficinas como en estudios de arte por su versatilidad y limpieza.\nSKU 3153",
+    "price": 15500,
+    "originalPrice": 0,
+    "category": "Tecnología",
+    "images": [
+      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/caja-de-limpiatipos-pelikan-x4-piezas-9e2d871d1a03c49b5917702304997161-480-0.webp"
+    ],
+    "url": "https://disyvar.com.co/productos/caja-de-limpiatipos-pelikan-x4-piezas-1qn2n/"
+  },
+  {
+    "name": "BOLSA BASURA ROJA RIESGOS BIOLOGICOS 16X24",
+    "description": "Descripción \nLas bolsas rojas para residuos de riesgo biológico son un insumo de bioseguridad obligatorio para la gestión de desechos infecciosos. Esta presentación se vende por kilo y tiene un tamaño de 16x24 pulgadas, ideal para papeleras pequeñas o medianas en entornos sanitarios.\nSKU 3152",
+    "price": 25000,
+    "originalPrice": 0,
+    "category": "Tecnología",
+    "images": [
+      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/bolsa-basura-roja-riesgos-biologicos-16x24-84f71b399da28cab6017688618354014-480-0.webp"
+    ],
+    "url": "https://disyvar.com.co/productos/bolsa-basura-roja-riesgos-biologicos-16x24-1g2yg/"
+  },
+  {
+    "name": "TINTA PARA SELLOS GIGO COLOR NEGRO 30 ML",
+    "description": "Descripción \n \nLa tinta para sellos GIGO es un insumo de oficina esencial diseñado para recargar almohadillas de sellos manuales. Proporciona una impresión nítida, de secado rápido y de larga duración, ideal para uso administrativo, escolar o comercial. Color Negro Intenso, contenido de 30 ml\nSKU 3151",
+    "price": 4500,
+    "originalPrice": 0,
+    "category": "Tecnología",
+    "images": [
+      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/tinta-para-sellos-gigo-color-negro-30-ml-ab97b9cfe419f1463d17661750608699-480-0.webp"
+    ],
+    "url": "https://disyvar.com.co/productos/tinta-para-sellos-gigo-color-negro-30-ml-viwio/"
+  },
+  {
+    "name": "MICROPUNTA PELIKAN CAJA X 10 UNIDADES",
+    "description": "Descripción\n \nEl micropunta Pelikan es un bolígrafo de escritura fina diseñado para la precisión y el detalle.\n\nPunta: Cuenta con una punta delgada y precisa (típicamente de fibra o plástico), ideal para trazos finos, escritura detallada, dibujo técnico, o para subrayar y tomar notas en espacios reducidos.\nTinta: Utiliza una tinta a base de agua que generalmente ofrece colores vivos y un flujo suave.\nPresentación: Viene en una caja que contiene 10 unidades, lo que lo hace un paquete económico y práctico para estudiantes, artistas y profesionales que requieren un suministro constante de bolígrafos de punta fina.\n\nEs una herramienta esencial para trabajos que requieren exactitud y claridad en la escritura.\nSKU 3150\n3150-1 ROJO\n3150-2 NEGRO\n3150-3 AZUL",
+    "price": 19000,
+    "originalPrice": 0,
+    "category": "Tecnología",
+    "images": [
+      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/micropunta-pelikan-caja-x-10-unidades-1-d6e3744f15e9da302c17653156356665-480-0.webp"
+    ],
+    "url": "https://disyvar.com.co/productos/micropunta-pelikan-caja-x-10-unidades-0e8gx/"
+  },
+  {
+    "name": "CINTA DE ENMASCARAR 2”X20MT",
+    "description": "CINTA DE ENMASCARAR 2”X20MT - Producto disponible en Disyvar",
+    "price": 6800,
+    "originalPrice": 0,
+    "category": "Tecnología",
+    "images": [
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    ],
+    "url": "https://disyvar.com.co/productos/cinta-de-enmascarar-2x20mt-xegll/"
+  },
+  {
+    "name": "CINTA DE ENMASCARAR 1”X20MT",
+    "description": "CINTA DE ENMASCARAR 1”X20MT - Producto disponible en Disyvar",
+    "price": 4100,
+    "originalPrice": 0,
+    "category": "Tecnología",
+    "images": [
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    ],
+    "url": "https://disyvar.com.co/productos/cinta-de-enmascarar-1x20mt-98dp9/"
+  },
+  {
+    "name": "REPUESTO DE BISTURI GRANDE",
+    "description": "REPUESTO DE BISTURI GRANDE - Producto disponible en Disyvar",
+    "price": 3000,
+    "originalPrice": 0,
+    "category": "Tecnología",
+    "images": [
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    ],
+    "url": "https://disyvar.com.co/productos/repuesto-de-bisturi-grande-5vosi/"
+  },
+  {
+    "name": "MARCADOR PERMANENTE SHARPIE PUNTA DELGADA",
+    "description": "MARCADOR PERMANENTE SHARPIE PUNTA DELGADA - Producto disponible en Disyvar",
+    "price": 3800,
+    "originalPrice": 0,
+    "category": "Tecnología",
+    "images": [
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    ],
+    "url": "https://disyvar.com.co/productos/marcador-permanente-sharpie-punta-delgada-fhmla/"
+  },
+  {
+    "name": "MARCADOR PERMANENTE PELIKAN 420",
+    "description": "MARCADOR PERMANENTE PELIKAN 420 - Producto disponible en Disyvar",
+    "price": 2500,
+    "originalPrice": 0,
+    "category": "Tecnología",
+    "images": [
+      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/marcador-permanente-pelikan-420-5f584a1a563aceceae17649775170346-480-0.webp"
+    ],
+    "url": "https://disyvar.com.co/productos/marcador-permanente-pelikan-420-4x6qb/"
+  },
+  {
+    "name": "POST IT BANDERITAS",
+    "description": "POST IT BANDERITAS - Producto disponible en Disyvar",
+    "price": 2300,
+    "originalPrice": 0,
+    "category": "Tecnología",
+    "images": [
+      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/post-it-banderitas-bf3f604c2dc7597ca917649771135393-480-0.webp"
+    ],
+    "url": "https://disyvar.com.co/productos/post-it-banderitas-6kkhg/"
+  },
+  {
+    "name": "BANDA O CAUCHOS SILICONADOS COLOR AMARILLO PAQUETE X 250GR",
+    "description": "BANDA O CAUCHOS SILICONADOS COLOR AMARILLO PAQUETE X 250GR - Producto disponible en Disyvar",
+    "price": 18000,
+    "originalPrice": 0,
+    "category": "Tecnología",
+    "images": [
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    ],
+    "url": "https://disyvar.com.co/productos/banda-o-cauchos-siliconados-color-amarillo-paquete-x-250gr-alvp8/"
+  },
+  {
+    "name": "GORRO TIPO ORUGA (COFIA) PAQUETE X 100 UNIDADES",
+    "description": "GORRO TIPO ORUGA (COFIA) PAQUETE X 100 UNIDADES - Producto disponible en Disyvar",
+    "price": 18000,
+    "originalPrice": 0,
+    "category": "Tecnología",
+    "images": [
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    ],
+    "url": "https://disyvar.com.co/productos/gorro-tipo-oruga-cofia-paquete-x-100-unidades-b3lpo/"
+  },
+  {
+    "name": "FORRO DE NAVIDAD PARA SILLAS DE COMEDOR",
+    "description": "FORRO DE NAVIDAD PARA SILLAS DE COMEDOR - Producto disponible en Disyvar",
+    "price": 35000,
+    "originalPrice": 0,
+    "category": "Tecnología",
+    "images": [
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    ],
+    "url": "https://disyvar.com.co/productos/forro-de-navidad-para-sillas-de-comedor-wyuvr/"
+  },
+  {
+    "name": "FUNDA FORRO PUERTA DECORACIÓN NAVIDEÑA 2 METROS X 80 CM",
+    "description": "FUNDA FORRO PUERTA DECORACIÓN NAVIDEÑA 2 METROS X 80 CM - Producto disponible en Disyvar",
+    "price": 38000,
+    "originalPrice": 0,
+    "category": "Tecnología",
+    "images": [
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    ],
+    "url": "https://disyvar.com.co/productos/funda-forro-puerta-decoracion-navidena-2-metros-x-80-cm-0cxx2/"
+  },
+  {
     "name": "TOALLA MANOS ROLLO - NUBE",
-    "description": "Descripción \n \nToalla de Manos NUBE (2 Rollos)\nLa Toalla de Manos NUBE es un producto de papel desechable diseñado para el secado eficiente y la higiene de las manos en diversos entornos, como cocinas, oficinas o baños.\nSe presenta en un paquete que contiene 2 rollos grandes.\n\nMaterial: Generalmente fabricada con papel absorbente para un secado rápido.\nFormato: Viene en formato de rollo para ser utilizada en dispensadores apropiados o para dispensación manual, facilitando el control del consumo.\nFunción: Ofrece una solución higiénica al ser de un solo uso, ayudando a prevenir la propagación de gérmenes.\n\nEs una opción práctica y esencial para mantener la higiene de las manos.\nSKU 3140",
-    "price": 41500,
+    "description": "TOALLA MANOS ROLLO - NUBE - Producto disponible en Disyvar",
+    "price": 42000,
     "originalPrice": 0,
     "category": "Suministros",
     "images": [
-      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/toalla-manos-rollo-nube-3e030f703787dfd7e717616645701274-480-0.webp"
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
     ],
     "url": "https://disyvar.com.co/productos/toalla-manos-rollo-nube-f82dj/"
   },
   {
-    "name": "CEPILLO DE DIENTES HAPPY TOOTH PAQUETE X 12 UNIDADES",
-    "description": "Descripción \n \nEl Cepillo de Dientes Happy Tooth es un producto de higiene oral básico, práctico y económico, ideal para uso familiar, institucional o para reemplazar frecuentemente.\nSe presenta en un conveniente paquete que contiene 12 unidades.\n\nDiseño: Su diseño es funcional, generalmente con un mango ergonómico y cerdas de dureza media o suave para una limpieza efectiva y cómoda de dientes y encías.\nPresentación: Es común que el paquete contenga cepillos en colores surtidos para que cada usuario pueda identificar el suyo.\n\nEs una opción sencilla y funcional para el cuidado dental diario.\n \nSKU 3141",
-    "price": 18000,
-    "originalPrice": 0,
-    "category": "Cuidado Personal",
-    "images": [
-      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/cepillo-de-dientes-happy-tooth-paquete-x-12-unidades-29ab5d99e8522a417b17616632469429-480-0.webp"
-    ],
-    "url": "https://disyvar.com.co/productos/cepillo-de-dientes-happy-tooth-paquete-x-12-unidades-wtsgl/"
-  },
-  {
     "name": "DESENGRASANTE GL X 3750 CC ORION",
-    "description": "Descripción \n \nSu exclusiva formula 3 en 1 permite la eliminación rápida de toda la suciedad grasa de origen animal y vegetal que se pueda presentar en todo tipo de industrias.\nORION desarrolló su único producto para todo uso. Sirve para cocinas, ropa, acero\ninoxidable, parqueaderos, motores, etc.\n \nSKU 3139",
+    "description": "DESENGRASANTE GL X 3750 CC ORION - Producto disponible en Disyvar",
     "price": 39000,
     "originalPrice": 0,
     "category": "Tecnología",
     "images": [
-      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/desengrasante-gl-x-3750-cc-orion-81d480e7bac1680a9a17613275324591-480-0.webp"
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
     ],
     "url": "https://disyvar.com.co/productos/desengrasante-gl-x-3750-cc-orion/"
   },
   {
     "name": "LAPIZ CON BORRADOR CAJA X 12 UNIDES",
-    "description": "Descripción \n \nLápiz grafito con Borrador, para dibujo, oficina y la escuela. Caja x 12 unidades\n \nSKU 3138",
+    "description": "LAPIZ CON BORRADOR CAJA X 12 UNIDES - Producto disponible en Disyvar",
     "price": 9000,
     "originalPrice": 0,
     "category": "Tecnología",
     "images": [
-      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/lapiz-con-borrador-4235a3d211aa10af1e17610556578701-480-0.webp"
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
     ],
     "url": "https://disyvar.com.co/productos/lapiz-con-borrador-caja-x-12-unides/"
   },
   {
-    "name": "BORRADOR DE NATA PEQUEÑO",
-    "description": "Descripción \n \nBorrador de nata, pequeño Para borrar trazo de lápiz, \n \nSKU 3137",
-    "price": 500,
-    "originalPrice": 0,
-    "category": "Tecnología",
-    "images": [
-      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/borrador-de-nata-pequeno-232c4d181604d4f0ed17610549072498-480-0.webp"
-    ],
-    "url": "https://disyvar.com.co/productos/borrador-de-nata-pequeno/"
-  },
-  {
     "name": "STRECH TRANSPARENTE 50cmX500mts",
-    "description": "Descripción\n \nEl STRECH TRANSPARENTE 50cmX500mts es un aliado imprescindible para el embalaje y la protección de tus productos. Su diseño resistente y flexible permite envolver objetos de diversas formas, asegurando que se mantengan intactos durante el transporte. Con una longitud de 500 metros, tendrás suficiente para múltiples usos en tu negocio o para uso personal.¡Optimiza tu proceso de embalaje con este producto de alta calidad!\n \nSKU 3136",
+    "description": "STRECH TRANSPARENTE 50cmX500mts - Producto disponible en Disyvar",
     "price": 33000,
     "originalPrice": 0,
     "category": "Tecnología",
     "images": [
-      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/strech-transparente-50cmx500mts-1-2ff5a3953595a1e7de17610495505276-480-0.webp"
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
     ],
     "url": "https://disyvar.com.co/productos/strech-transparente-50cmx500mts/"
   },
   {
     "name": "COPA STAR 0.5 CON TAPA X 50 UN",
-    "description": "Descripción\nLa Copa Star 0.5 es un pequeño recipiente desechable de plástico diseñado para el servicio de porciones muy pequeñas, típicamente de 0.5 onzas (aproximadamente 15 ml).\nSon conocidas comúnmente como \"copas salseras\" o soufflé cups. Vienen con su tapa correspondiente para garantizar un cierre hermético.\nUso principal:\nSalsas y aderezos: Ideales para empacar y servir porciones individuales de aderezos, salsas picantes, ketchup o mostaza en servicios de comida para llevar (delivery) o restaurantes.\nMuestras y Tastings: Perfectas para degustaciones (tastings) o muestras de productos.\nControl de porciones: Útiles para organizar y medir ingredientes pequeños.\nSe presenta en un paquete que contiene 50 unidades (copas y tapas).\nSKU 3135",
+    "description": "COPA STAR 0.5 CON TAPA X 50 UN - Producto disponible en Disyvar",
     "price": 5000,
     "originalPrice": 0,
     "category": "Tecnología",
     "images": [
-      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/copa-star-0-5-con-tapa-x-50-un-1a3758df2828ed534117607392623641-480-0.webp"
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
     ],
     "url": "https://disyvar.com.co/productos/copa-star-0-5-con-tapa-x-50-un/"
   },
   {
     "name": "MOUSE ECONOMICO",
-    "description": "Descripción\nMouse Linea Economica\nSKU 5014",
+    "description": "MOUSE ECONOMICO - Producto disponible en Disyvar",
     "price": 14990,
     "originalPrice": 0,
     "category": "Tecnología",
     "images": [
-      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/mouse-economico-2469716c1bc877586017605723194561-480-0.webp"
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
     ],
     "url": "https://disyvar.com.co/productos/mouse-economico/"
   },
   {
     "name": "MOUSE OPTICO ALAMBRICO",
-    "description": "Descripción\nMouse Optico USB Alambrico Genius\nSKU 5013",
+    "description": "MOUSE OPTICO ALAMBRICO - Producto disponible en Disyvar",
     "price": 17990,
     "originalPrice": 0,
     "category": "Tecnología",
@@ -254,7 +408,7 @@
   },
   {
     "name": "BASE PARA PORTATIL",
-    "description": "Descripción\nBase Para Portatil 2 Ventiladores\n2 Puertos USB 4 Posicion\nSKU 5012",
+    "description": "BASE PARA PORTATIL - Producto disponible en Disyvar",
     "price": 45990,
     "originalPrice": 0,
     "category": "Tecnología",
@@ -264,68 +418,68 @@
     "url": "https://disyvar.com.co/productos/base-para-portatil/"
   },
   {
-    "name": "PAPEL HIGIENICO INSTITUCIONAL",
-    "description": "Descripción\nPapel Higienico Jumbo 250M Paca X 4 Sofi, es una opción altamente eficiente y económica para negocios con alto tráfico. Es suave al tacto, brindando comodidad a los usuarios, y a la vez resistente y duradero, evitando desintegración o rasgaduras.\nSKU 3134",
-    "price": 39490,
+    "name": "PAPEL HIGIENICO INSTITUCIONAL JUMBO 250M PACA X 4 ROLLOS (SOFI)",
+    "description": "PAPEL HIGIENICO INSTITUCIONAL JUMBO 250M PACA X 4 ROLLOS (SOFI) - Producto disponible en Disyvar",
+    "price": 39500,
     "originalPrice": 0,
-    "category": "Tecnología",
+    "category": "Suministros",
     "images": [
-      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/papel-higienico-institucional-582902eb8f4fa2464217605687113278-480-0.webp"
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
     ],
-    "url": "https://disyvar.com.co/productos/papel-higienico-institucional/"
+    "url": "https://disyvar.com.co/productos/papel-higienico-institucional-jumbo-250m-paca-x-4-rollos-sofi-lkh91/"
   },
   {
     "name": "MANILLA DE PAPEL TYVEK PARA EVENTOS",
-    "description": "Descripción\nManilla Tyvek para eventos paquete x 100 unidades.\nManillas para eventos de seguridad en papel Tyvek, especiales para eventos en parques, piscinas, termales, bares, hospitales, Centros de convenciones, entre otros.\ndesde 100 unidades sin marcar.\nSKU 3133",
+    "description": "MANILLA DE PAPEL TYVEK PARA EVENTOS - Producto disponible en Disyvar",
     "price": 55000,
     "originalPrice": 0,
     "category": "Tecnología",
     "images": [
-      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/manilla-de-papel-tyvek-para-eventos-50b258f394928e9f3317601111951284-480-0.webp"
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
     ],
     "url": "https://disyvar.com.co/productos/manilla-de-papel-tyvek-para-eventos/"
   },
   {
     "name": "PILA ALCALINA 9V MAXELL",
-    "description": "Descripción\n \nObtén la energía necesaria para tus dispositivos esenciales con la pila alcalina de 9V de Maxell.Ideal para controles remotos, detectores de humo, radios, juguetes y otros aparatos electrónicos, esta batería ofrece un rendimiento estable y confiable.Su tamaño compacto la hace fácil de almacenar y transportar, permitiéndote tener siempre energía disponible cuando la necesites.Con la tecnología alcalina de larga duración y la calidad japonesa de Maxell, puedes confiar en un funcionamiento eficiente y seguro en todo momento.\nSKU 3133",
+    "description": "PILA ALCALINA 9V MAXELL - Producto disponible en Disyvar",
     "price": 14990,
     "originalPrice": 0,
     "category": "Tecnología",
     "images": [
-      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/pila-alcalina-9v-maxell-b105bcde89b5d7b8c717585575943107-480-0.webp"
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
     ],
     "url": "https://disyvar.com.co/productos/pila-alcalina-9v-maxell/"
   },
   {
     "name": "MINI PARLANTE G63 SMART LIGHT",
-    "description": "El PARLANTE G63 SMART LIGHT es la elección perfecta para los amantes de la tecnología. Con una calidad excepcional y un precio inigualable, este parlante te brinda una experiencia auditiva inmersiva. Disfruta de un diseño moderno y funcional que se adapta a tu estilo de vida tecnológico. ¡Hazte con el tuyo hoy mismo y lleva tu experiencia musical al siguiente nivel! ¡No te lo pierdas!\nSKU 5010",
+    "description": "MINI PARLANTE G63 SMART LIGHT - Producto disponible en Disyvar",
     "price": 49990,
     "originalPrice": 0,
     "category": "Tecnología",
     "images": [
-      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/mini-parlante-g63-smart-light-3-eee24bf5d12b088af817585541220493-480-0.webp"
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
     ],
     "url": "https://disyvar.com.co/productos/mini-parlante-g63-smart-light1/"
   },
   {
     "name": "TINTA PARA SELLOS PELIKAN",
-    "description": "Descripción\n \nLa tinta para sellos Pelikan es un producto de alta calidad, diseñado para rellenar almohadillas de sellos. Su fórmula de secado rápido asegura impresiones limpias y nítidas en papel y cartón.\nEstá disponible en los colores más comunes y versátiles: negro, rojo y azul, 30ml, lo que te permite elegir el tono ideal para tus necesidades de oficina, papelería o manualidades.\nSKU 3132\n3132 -1 NEGRO\n3132-2 ROJO\n3132-3 AZUL",
+    "description": "TINTA PARA SELLOS PELIKAN - Producto disponible en Disyvar",
     "price": 8990,
     "originalPrice": 0,
     "category": "Tecnología",
     "images": [
-      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/tinta-para-sellos-pelikan-3-9e402a7b57525d9c1317582172296749-480-0.webp"
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
     ],
     "url": "https://disyvar.com.co/productos/tinta-para-sellos-pelikan/"
   },
   {
     "name": "CINTA TRANSPARENTE 2\"X 100MTS",
-    "description": "Descripción\nLa Cinta Ancha Transparente para sellar cajas 2\" x 100 Mts es la solución perfecta para asegurar tus envíos y mantener tus cajas bien cerradas. Su alta adhesión garantiza que tus paquetes permanezcan sellados durante el transporte, evitando cualquier apertura accidental. Con 100 metros de longitud, es ideal tanto para uso doméstico como profesional. ¡No te quedes sin esta herramienta esencial para tus proyectos de embalaje!\nSKU 3131",
+    "description": "CINTA TRANSPARENTE 2\"X 100MTS - Producto disponible en Disyvar",
     "price": 9900,
     "originalPrice": 0,
     "category": "Tecnología",
     "images": [
-      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/cinta-transparente-2p-x-100mts-c396837ef50add259617577746284009-480-0.webp"
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
     ],
     "url": "https://disyvar.com.co/productos/cinta-transparente-2x-100mts/"
   },
@@ -335,7 +489,9 @@
     "price": 27990,
     "originalPrice": 0,
     "category": "Tecnología",
-    "images": [],
+    "images": [
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    ],
     "url": "https://disyvar.com.co/productos/bascula-bluetooth/"
   },
   {
@@ -344,7 +500,9 @@
     "price": 26990,
     "originalPrice": 0,
     "category": "Tecnología",
-    "images": [],
+    "images": [
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    ],
     "url": "https://disyvar.com.co/productos/batidor-y-picador-electrico-recargable-2-en-1/"
   },
   {
@@ -353,7 +511,9 @@
     "price": 29990,
     "originalPrice": 0,
     "category": "Tecnología",
-    "images": [],
+    "images": [
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    ],
     "url": "https://disyvar.com.co/productos/portaminas-offi-esco-punta-0-7-mm-redondo-con-borrador-x-12/"
   },
   {
@@ -362,7 +522,9 @@
     "price": 38000,
     "originalPrice": 0,
     "category": "Tecnología",
-    "images": [],
+    "images": [
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    ],
     "url": "https://disyvar.com.co/productos/resaltador-pelikan-mark-2-caja-x-10-unidades/"
   },
   {
@@ -371,7 +533,9 @@
     "price": 15990,
     "originalPrice": 0,
     "category": "Tecnología",
-    "images": [],
+    "images": [
+      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/bozal-de-plastico-blando-canastilla-ajustable-para-mascotas-3-56f9fd95c42c43d47717573441979142-480-0.webp"
+    ],
     "url": "https://disyvar.com.co/productos/bozal-de-plastico-blando-canastilla-ajustable-para-mascotas/"
   },
   {
@@ -380,7 +544,9 @@
     "price": 34990,
     "originalPrice": 0,
     "category": "Tecnología",
-    "images": [],
+    "images": [
+      "https://dcdn-us.mitiendanube.com/stores/004/889/591/products/arnes-reata-perro-ajustable-mascotas-3-89e384979fdef5035b17569449645323-480-0.webp"
+    ],
     "url": "https://disyvar.com.co/productos/arnes-reata-perro-ajustable-mascotas/"
   },
   {
@@ -389,7 +555,9 @@
     "price": 2000,
     "originalPrice": 0,
     "category": "Tecnología",
-    "images": [],
+    "images": [
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    ],
     "url": "https://disyvar.com.co/productos/lapiz-corrector-offi-esco/"
   },
   {
@@ -398,7 +566,9 @@
     "price": 1500,
     "originalPrice": 0,
     "category": "Tecnología",
-    "images": [],
+    "images": [
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    ],
     "url": "https://disyvar.com.co/productos/silicona-en-barra-gruesa-por-unidad/"
   },
   {
@@ -407,7 +577,9 @@
     "price": 24990,
     "originalPrice": 0,
     "category": "Tecnología",
-    "images": [],
+    "images": [
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    ],
     "url": "https://disyvar.com.co/productos/funda-antichoque-armadura-para-celular-samsung-a13/"
   },
   {
@@ -416,7 +588,9 @@
     "price": 8990,
     "originalPrice": 0,
     "category": "Tecnología",
-    "images": [],
+    "images": [
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    ],
     "url": "https://disyvar.com.co/productos/audifonos-de-cable-samsung-akg/"
   },
   {
@@ -425,7 +599,9 @@
     "price": 39990,
     "originalPrice": 0,
     "category": "Tecnología",
-    "images": [],
+    "images": [
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    ],
     "url": "https://disyvar.com.co/productos/cargador-tipo-c-45w-carga-rapida/"
   },
   {
@@ -434,7 +610,9 @@
     "price": 15990,
     "originalPrice": 0,
     "category": "Tecnología",
-    "images": [],
+    "images": [
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    ],
     "url": "https://disyvar.com.co/productos/protector-de-pantalla-vidrio-templado-samsung-a06/"
   },
   {
@@ -443,7 +621,9 @@
     "price": 15990,
     "originalPrice": 0,
     "category": "Tecnología",
-    "images": [],
+    "images": [
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    ],
     "url": "https://disyvar.com.co/productos/protector-de-pantalla-vidrio-templado-samsung-a05/"
   },
   {
@@ -452,7 +632,9 @@
     "price": 24990,
     "originalPrice": 0,
     "category": "Tecnología",
-    "images": [],
+    "images": [
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    ],
     "url": "https://disyvar.com.co/productos/funda-antichoque-armadura-para-celular-samsung-a06/"
   },
   {
@@ -461,7 +643,9 @@
     "price": 19990,
     "originalPrice": 0,
     "category": "Tecnología",
-    "images": [],
+    "images": [
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    ],
     "url": "https://disyvar.com.co/productos/funda-en-silicona-para-celular-samsung-a06/"
   },
   {
@@ -470,133 +654,9 @@
     "price": 24990,
     "originalPrice": 0,
     "category": "Tecnología",
-    "images": [],
+    "images": [
+      "https://disyvar.com.codata:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    ],
     "url": "https://disyvar.com.co/productos/funda-antichoque-armadura-para-celular-samsung-a05/"
-  },
-  {
-    "name": "MARCADOR PERMANENTE DOBLE PUNTA GIGO GS 0082",
-    "description": "MARCADOR PERMANENTE DOBLE PUNTA GIGO GS 0082 - Producto disponible en Disyvar",
-    "price": 19990,
-    "originalPrice": 0,
-    "category": "Tecnología",
-    "images": [],
-    "url": "https://disyvar.com.co/productos/marcador-permanente-doble-punta-gigo-gs-0082/"
-  },
-  {
-    "name": "SILICONA ALTO BRILLO GALON (3.750 ML)",
-    "description": "SILICONA ALTO BRILLO GALON (3.750 ML) - Producto disponible en Disyvar",
-    "price": 67990,
-    "originalPrice": 0,
-    "category": "Tecnología",
-    "images": [],
-    "url": "https://disyvar.com.co/productos/silicona-alto-brillo-galon-3-750-ml/"
-  },
-  {
-    "name": "FUNDA EN SILICONA PARA CELULAR SAMSUNG A05",
-    "description": "FUNDA EN SILICONA PARA CELULAR SAMSUNG A05 - Producto disponible en Disyvar",
-    "price": 19990,
-    "originalPrice": 0,
-    "category": "Tecnología",
-    "images": [],
-    "url": "https://disyvar.com.co/productos/funda-en-silicona-para-celular-samsung-a05/"
-  },
-  {
-    "name": "ACETATO BOLSILLO GRUESO CARTA X 25",
-    "description": "ACETATO BOLSILLO GRUESO CARTA X 25 - Producto disponible en Disyvar",
-    "price": 13900,
-    "originalPrice": 0,
-    "category": "Tecnología",
-    "images": [],
-    "url": "https://disyvar.com.co/productos/acetato-bolsillo-grueso-carta-x-25/"
-  },
-  {
-    "name": "KILO BOLSA BASURA ROJA 16X24",
-    "description": "KILO BOLSA BASURA ROJA 16X24 - Producto disponible en Disyvar",
-    "price": 10600,
-    "originalPrice": 0,
-    "category": "Tecnología",
-    "images": [],
-    "url": "https://disyvar.com.co/productos/kilo-bolsa-basura-roja-16x24/"
-  },
-  {
-    "name": "BOLSA HERMETICA ZIPLOC 24X20 PAQUETE 100 UNIDADES",
-    "description": "BOLSA HERMETICA ZIPLOC 24X20 PAQUETE 100 UNIDADES - Producto disponible en Disyvar",
-    "price": 18500,
-    "originalPrice": 0,
-    "category": "Tecnología",
-    "images": [],
-    "url": "https://disyvar.com.co/productos/bolsa-hermetica-ziploc-24x20-paquete-100-unidades/"
-  },
-  {
-    "name": "ALCANCIA DEL SIN CARA (VIAJE DE CHIHIRO)",
-    "description": "ALCANCIA DEL SIN CARA (VIAJE DE CHIHIRO) - Producto disponible en Disyvar",
-    "price": 49990,
-    "originalPrice": 0,
-    "category": "Tecnología",
-    "images": [],
-    "url": "https://disyvar.com.co/productos/alcancia-del-sin-cara-viaje-de-chihiro/"
-  },
-  {
-    "name": "CHUPOS DE FRUTA",
-    "description": "CHUPOS DE FRUTA - Producto disponible en Disyvar",
-    "price": 7990,
-    "originalPrice": 0,
-    "category": "Tecnología",
-    "images": [],
-    "url": "https://disyvar.com.co/productos/chupos-de-fruta/"
-  },
-  {
-    "name": "ENCENDEDOR TIPO RASTRILLO X25 UNIDADES",
-    "description": "ENCENDEDOR TIPO RASTRILLO X25 UNIDADES - Producto disponible en Disyvar",
-    "price": 19990,
-    "originalPrice": 0,
-    "category": "Tecnología",
-    "images": [],
-    "url": "https://disyvar.com.co/productos/encendedor-tipo-rastrillo-x25-unidades/"
-  },
-  {
-    "name": "PAPEL DE LIJA NEGRO DE CARBURO DE SILICONA #180",
-    "description": "PAPEL DE LIJA NEGRO DE CARBURO DE SILICONA #180 - Producto disponible en Disyvar",
-    "price": 79990,
-    "originalPrice": 0,
-    "category": "Tecnología",
-    "images": [],
-    "url": "https://disyvar.com.co/productos/papel-de-lija-negro-de-carburo-de-silicona-180/"
-  },
-  {
-    "name": "ESCALERA DE BEBE BAÑO, CUATRO COLORES",
-    "description": "ESCALERA DE BEBE BAÑO, CUATRO COLORES - Producto disponible en Disyvar",
-    "price": 94990,
-    "originalPrice": 0,
-    "category": "Hogar",
-    "images": [],
-    "url": "https://disyvar.com.co/productos/escalera-de-bebe-bano-cuatro-colores/"
-  },
-  {
-    "name": "COMEDOR DE BEBE \"AZUL Y ROSA\"",
-    "description": "COMEDOR DE BEBE \"AZUL Y ROSA\" - Producto disponible en Disyvar",
-    "price": 54990,
-    "originalPrice": 0,
-    "category": "Tecnología",
-    "images": [],
-    "url": "https://disyvar.com.co/productos/comedor-de-bebe-azul-y-rosa/"
-  },
-  {
-    "name": "PLANTILLA ACTIVE GEL HOMBRE",
-    "description": "PLANTILLA ACTIVE GEL HOMBRE - Producto disponible en Disyvar",
-    "price": 15990,
-    "originalPrice": 0,
-    "category": "Tecnología",
-    "images": [],
-    "url": "https://disyvar.com.co/productos/plantilla-active-gel-hombre/"
-  },
-  {
-    "name": "PLANTILLA ACTIVE GEL DAMA",
-    "description": "PLANTILLA ACTIVE GEL DAMA - Producto disponible en Disyvar",
-    "price": 14990,
-    "originalPrice": 0,
-    "category": "Tecnología",
-    "images": [],
-    "url": "https://disyvar.com.co/productos/plantilla-active-gel-dama/"
   }
 ]

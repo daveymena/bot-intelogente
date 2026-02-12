@@ -57,13 +57,13 @@
       "id": 9,
       "pregunta": "¿Las clases son en vivo o grabadas?",
       "keywords": ["en vivo", "grabadas", "horario", "directo", "streaming"],
-      "respuesta": "Son clases grabadas en alta calidad, explicadas paso a paso. Así puedes pausar, retroceder y practicar cuando quieras, sin depender de horarios 🎬"
+      "respuesta": "Todas las clases son PREGRABADAS 🎬. Esto es genial porque te permite estudiar a tu propio ritmo, pausar, repetir y practicar en el horario que mejor te convenga, sin depender de transmisiones en vivo."
     },
     {
       "id": 10,
       "pregunta": "¿Recibiré algún certificado al finalizar?",
       "keywords": ["certificado", "diploma", "título", "acreditación"],
-      "respuesta": "Sí 🎓 Al completar el curso obtienes tu Certificado de Finalización, que puedes incluir en tu hoja de vida o portafolio musical."
+      "respuesta": "No. Este es un curso de formación personal y autogestionada para que aprendas a tocar el instrumento. No emitimos certificados ni diplomas académicos, ya que el enfoque es 100% práctico y recreativo 🎹"
     },
     {
       "id": 11,
@@ -127,14 +127,14 @@
     }
   ],
   "informacionAdicional": {
-    "lecciones": "76+ lecciones en video HD",
+    "lecciones": "76+ lecciones (Pregrabadas)",
     "duracion": "19 horas de contenido",
     "recursos": "157 recursos descargables",
     "articulos": "34 artículos complementarios",
     "acceso": "De por vida",
     "dispositivos": "Celular, tablet, TV, computadora",
     "garantia": "7 días de garantía total",
-    "certificado": "Sí, al finalizar",
+    "certificado": "No se emite certificado",
     "nivel": "Desde principiante hasta avanzado",
     "idioma": "Español",
     "actualizaciones": "Gratis de por vida"

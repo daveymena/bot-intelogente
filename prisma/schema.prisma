@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
@@ -61,8 +61,36 @@ model User {
   trainingData             TrainingData[]
   usageMetrics             UsageMetric[]
   whatsappConnection       WhatsAppConnection?
+  borrowers                Borrower[]
 
   @@map("users")
+}
+
+model Borrower {
+  id            String   @id @default(cuid())
+  userId        String?  // The "prestamista" (lender)
+  name          String
+  phone         String
+  email         String?
+  idNumber      String?  // Cédula / DNI
+  address       String?
+  
+  // Bank Info
+  country       String?  @default("Colombia")
+  bankName      String?
+  accountNumber String?
+  accountType   String?  // Ahorros / Corriente / Nequi / Daviplata
+  
+  // Metadata
+  status        String   @default("pending") // pending, active, rejected
+  notes         String?
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("borrowers")
 }
 
 model Product {
@@ -94,6 +122,9 @@ model Product {
   paymentLinkPayPal        String?
   paymentLinkCustom        String?
   landingPageContent       String?
+  tipo_producto             String         @default("simple") // simple, variable, curso, digital
+  tipo_entrega              String         @default("envio")  // local, envio, dropshipping, online
+  configurations            String?                       // JSON string for variable products details
   userId                   String
   createdAt                DateTime       @default(now())
   updatedAt                DateTime       @updatedAt
@@ -112,6 +143,7 @@ model Conversation {
   customerPhone       String
   customerName        String?
   status              ConversationStatus @default(ACTIVE)
+  currentStage        String             @default("saludo")
   lastMessageAt       DateTime           @default(now())
   userId              String
   productId           String?

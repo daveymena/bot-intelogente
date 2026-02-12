@@ -1,0 +1,46 @@
+﻿­ƒöÑ TEST INTENSIVO v2 (MOTOR REFINADO) ­ƒöÑ
+--------------------------------------------------
+
+TEST #1: "hola buenas"
+   > T├®rminos de b├║squeda: ""
+   > Resultado: NADA (Salto esperado) Ô£à
+
+TEST #2: "quiero aprender ingles"
+   > T├®rminos de b├║squeda: "ingles"
+   > Match: "Mega Pack 40: Educaci├│n" (11.2% Confianza)
+   > Estado: Ô£à CORRECTO
+
+TEST #3: "busco algo para cocina"
+   > T├®rminos de b├║squeda: "cocina"
+   > Match: "Mega Pack 40: Educaci├│n" (50.5% Confianza)
+   > Estado: Ô£à CORRECTO
+
+TEST #4: "tienes teclado?"
+   > T├®rminos de b├║squeda: "teclado"
+   > Match: "Teclado Mec├ínico Redragon Kumara" (95.2% Confianza)
+   > Estado: Ô£à CORRECTO
+
+TEST #5: "me interesa el curso de memoria"
+   > T├®rminos de b├║squeda: "interesa memoria"
+   > Match: "Curso de Memoria Poderosa" (28.9% Confianza)
+   > Estado: Ô£à CORRECTO
+
+TEST #6: "busco pino"
+   > T├®rminos de b├║squeda: "pino"
+   ÔØî ERROR: No encontr├│ nada para "Mega Pack 40: Educaci├│n"
+
+TEST #7: "mouse g502 precio"
+   > T├®rminos de b├║squeda: "mouse g502"
+   > Match: "Mouse Logitech G502 Hero" (32.0% Confianza)
+   > Estado: Ô£à CORRECTO
+
+TEST #8: "silla negra"
+   > T├®rminos de b├║squeda: "silla negra"
+   > Match: "Silla Ergon├│mica Ejecutiva" (44.3% Confianza)
+   > Estado: Ô£à CORRECTO
+
+TEST #9: "curso de ingenieria civil"
+   > T├®rminos de b├║squeda: "ingenieria civil"
+   > Resultado: NADA (Correcto, no existe) Ô£à
+
+--------------------------------------------------

@@ -1,192 +1,186 @@
-/**
- * 📚 SERVICIO DE FAQ DE PRODUCTOS
- * 
- * Responde preguntas frecuentes sobre productos usando base de conocimiento
- * Sin necesidad de usar IA para cada pregunta
- */
-
 import fs from 'fs';
 import path from 'path';
 
-interface FAQ {
-  id: number;
-  pregunta: string;
-  keywords: string[];
-  respuesta: string;
+export interface FAQ {
+    id: number;
+    pregunta: string;
+    keywords: string[];
+    respuesta: string;
 }
 
-interface ProductKnowledge {
-  producto: string;
-  productId: string;
-  categoria: string;
-  precio: number;
-  linkPago?: string;
-  faqs: FAQ[];
-  informacionAdicional?: Record<string, string>;
+export interface ProductKnowledge {
+    producto: string;
+    productId: string;
+    categoria: string;
+    precio: number;
+    linkPago?: string;
+    faqs: FAQ[];
+    informacionAdicional?: any;
 }
 
 export class ProductFAQService {
-  private static knowledgeBase: Map<string, ProductKnowledge> = new Map();
-  private static initialized = false;
+    private static knowledgeBase: ProductKnowledge[] = [];
+    private static isInitialized = false;
 
-  /**
-   * Inicializar base de conocimiento
-   */
-  static async initialize() {
-    if (this.initialized) return;
+    /**
+     * Inicializa el servicio cargando todos los archivos JSON de knowledge-base
+     */
+    static initialize() {
+        if (this.isInitialized) return;
 
-    try {
-      const knowledgeDir = path.join(process.cwd(), 'knowledge-base');
-      
-      if (!fs.existsSync(knowledgeDir)) {
-        console.log('[ProductFAQ] Directorio knowledge-base no existe');
-        return;
-      }
+        try {
+            const kbPath = path.join(process.cwd(), 'knowledge-base');
+            if (!fs.existsSync(kbPath)) {
+                console.log('[FAQ Service] ⚠️ Carpeta knowledge-base no existe');
+                return;
+            }
 
-      const files = fs.readdirSync(knowledgeDir).filter(f => f.endsWith('.json'));
+            const files = fs.readdirSync(kbPath).filter(file => file.endsWith('.json'));
+            
+            for (const file of files) {
+                const content = fs.readFileSync(path.join(kbPath, file), 'utf-8');
+                const knowledge = JSON.parse(content) as ProductKnowledge;
+                this.knowledgeBase.push(knowledge);
+                console.log(`[FAQ Service] ✅ Cargado conocimiento para: ${knowledge.producto}`);
+            }
 
-      for (const file of files) {
-        const filePath = path.join(knowledgeDir, file);
-        const content = fs.readFileSync(filePath, 'utf-8');
-        const knowledge: ProductKnowledge = JSON.parse(content);
+            this.isInitialized = true;
+        } catch (error) {
+            console.error('[FAQ Service] ❌ Error inicializando:', error);
+        }
+    }
+
+    /**
+     * Busca una respuesta en la base de conocimiento para una pregunta dada
+     */
+    static findAnswer(question: string, productName?: string): { 
+        found: boolean; 
+        answer?: string; 
+        confidence: number;
+        product?: ProductKnowledge;
+    } {
+        if (!this.isInitialized) this.initialize();
+
+        const questionLower = question.toLowerCase();
         
-        this.knowledgeBase.set(knowledge.productId.toLowerCase(), knowledge);
-        console.log(`[ProductFAQ] ✅ Cargado: ${knowledge.producto}`);
-      }
-
-      this.initialized = true;
-      console.log(`[ProductFAQ] ✅ Base de conocimiento inicializada con ${this.knowledgeBase.size} productos`);
-    } catch (error) {
-      console.error('[ProductFAQ] Error inicializando:', error);
-    }
-  }
-
-  /**
-   * Buscar respuesta en FAQ
-   */
-  static async findAnswer(
-    productId: string,
-    question: string
-  ): Promise<{ found: boolean; answer?: string; confidence: number }> {
-    await this.initialize();
-
-    const knowledge = this.knowledgeBase.get(productId.toLowerCase());
-    if (!knowledge) {
-      return { found: false, confidence: 0 };
-    }
-
-    const questionLower = question.toLowerCase();
-    let bestMatch: FAQ | null = null;
-    let bestScore = 0;
-
-    // Buscar en FAQs
-    for (const faq of knowledge.faqs) {
-      let score = 0;
-
-      // Verificar keywords
-      for (const keyword of faq.keywords) {
-        if (questionLower.includes(keyword.toLowerCase())) {
-          score += 2;
+        // 1. Filtrar productos si se especifica nombre
+        let candidateProducts = this.knowledgeBase;
+        
+        if (productName) {
+            candidateProducts = this.knowledgeBase.filter(p => 
+                p.producto.toLowerCase().includes(productName.toLowerCase()) ||
+                productName.toLowerCase().includes(p.producto.toLowerCase())
+            );
         }
-      }
 
-      // Verificar similitud con la pregunta
-      const preguntaWords = faq.pregunta.toLowerCase().split(' ');
-      for (const word of preguntaWords) {
-        if (word.length > 3 && questionLower.includes(word)) {
-          score += 1;
+        // 2. Buscar mejor coincidencia
+        let bestMatch = {
+            found: false,
+            answer: undefined as string | undefined,
+            confidence: 0,
+            product: undefined as ProductKnowledge | undefined
+        };
+
+        for (const product of candidateProducts) {
+            // Verificar si la pregunta es sobre este producto (si no se filtró por nombre)
+            if (!productName && !questionLower.includes(product.producto.toLowerCase())) {
+                continue;
+            }
+
+            console.log(`[FAQ Service] 🔍 Buscando en producto: ${product.producto}`);
+            
+            const questionNormalized = this.normalize(questionLower);
+
+            for (const faq of product.faqs) {
+                // Calcular coincidencia por keywords
+                const keywordMatches = faq.keywords.filter(k => {
+                    const keywordNormalized = this.normalize(k.toLowerCase());
+                    // Coincidencia exacta de frase o palabra clave
+                    return questionNormalized.includes(keywordNormalized);
+                });
+                
+                const matchCount = keywordMatches.length;
+                let confidence = 0;
+
+                if (matchCount > 0) {
+                     confidence = matchCount / faq.keywords.length;
+                     // Boost si hay múltiples coincidencias
+                     if (matchCount >= 2) confidence += 0.2;
+                     
+                     // Boost por coincidencia exacta de keyword fuerte
+                     if (matchCount === 1 && keywordMatches[0].length > 4) confidence += 0.3;
+                }
+
+                // Si encontramos una coincidencia aceptable (Bajamos umbral a 0.2 para ser más permisivos)
+                if (confidence >= 0.2 && confidence > bestMatch.confidence) {
+                    bestMatch = {
+                        found: true,
+                        answer: this.enrichAnswer(faq.respuesta, product),
+                        confidence,
+                        product
+                    };
+                }
+            }
         }
-      }
 
-      if (score > bestScore) {
-        bestScore = score;
-        bestMatch = faq;
-      }
+        return bestMatch;
     }
 
-    if (bestMatch && bestScore >= 2) {
-      return {
-        found: true,
-        answer: bestMatch.respuesta,
-        confidence: Math.min(bestScore / 5, 1)
-      };
+    /**
+     * Encuentra información de un producto por su nombre
+     */
+    static findProductByName(name: string): ProductKnowledge | undefined {
+        if (!this.isInitialized) this.initialize();
+        return this.knowledgeBase.find(p => 
+            p.producto.toLowerCase().includes(name.toLowerCase()) || 
+            name.toLowerCase().includes(p.producto.toLowerCase())
+        );
     }
 
-    return { found: false, confidence: 0 };
-  }
-
-  /**
-   * Obtener información adicional del producto
-   */
-  static async getProductInfo(productId: string): Promise<ProductKnowledge | null> {
-    await this.initialize();
-    return this.knowledgeBase.get(productId.toLowerCase()) || null;
-  }
-
-  /**
-   * Obtener todas las FAQs de un producto
-   */
-  static async getAllFAQs(productId: string): Promise<FAQ[]> {
-    await this.initialize();
-    const knowledge = this.knowledgeBase.get(productId.toLowerCase());
-    return knowledge?.faqs || [];
-  }
-
-  /**
-   * Buscar producto por nombre
-   */
-  static async findProductByName(productName: string): Promise<ProductKnowledge | null> {
-    await this.initialize();
-
-    const nameLower = productName.toLowerCase();
-    
-    for (const [, knowledge] of this.knowledgeBase) {
-      if (knowledge.producto.toLowerCase().includes(nameLower) ||
-          nameLower.includes(knowledge.producto.toLowerCase())) {
-        return knowledge;
-      }
+    static getProductInfo(name: string): ProductKnowledge | undefined {
+        return this.findProductByName(name);
     }
 
-    return null;
-  }
+    /**
+     * Enriquece la respuesta con información dinámica (links, precios)
+     */
+    private static enrichAnswer(answer: string, product: ProductKnowledge): string {
+        let enriched = answer;
+        
+        if (product.linkPago) {
+            enriched = enriched.replace('{linkPago}', product.linkPago);
+        }
+        
+        if (product.precio) {
+            enriched = enriched.replace('{precio}', `$${product.precio.toLocaleString('es-CO')}`);
+        }
 
-  /**
-   * Generar respuesta enriquecida con información del producto
-   */
-  static enrichAnswer(answer: string, knowledge: ProductKnowledge): string {
-    let enriched = answer;
-
-    // Agregar link de pago si la respuesta menciona pago
-    if (knowledge.linkPago && 
-        (answer.includes('pago') || answer.includes('comprar') || answer.includes('precio'))) {
-      if (!answer.includes(knowledge.linkPago)) {
-        enriched += `\n\n👉 Link de pago: ${knowledge.linkPago}`;
-      }
+        return enriched;
     }
 
-    return enriched;
-  }
+    /**
+     * Verifica si una pregunta es candidata para FAQ
+     */
+    static isFAQQuestion(text: string): boolean {
+        const faqKeywords = [
+            'precio', 'costo', 'valor', 'cuanto vale', 'cuanto cuesta',
+            'duracion', 'tiempo', 'largo',
+            'certificado', 'diploma', 'titulo',
+            'garantia', 'devolucion',
+            'pago', 'pagar', 'comprar',
+            'que incluye', 'contenido', 'temario',
+            'sirve', 'funciona', 'para que'
+        ];
 
-  /**
-   * Detectar si una pregunta es sobre FAQ
-   */
-  static isFAQQuestion(message: string): boolean {
-    const faqPatterns = [
-      /\b(cómo|como)\b/i,
-      /\b(qué|que)\b/i,
-      /\b(cuánto|cuanto)\b/i,
-      /\b(puedo|puede)\b/i,
-      /\b(necesito|necesita)\b/i,
-      /\b(tiene|tienen)\b/i,
-      /\b(incluye|incluyen)\b/i,
-      /\b(dura|duración)\b/i,
-      /\b(acceso)\b/i,
-      /\b(certificado)\b/i,
-      /\b(garantía|garantia)\b/i,
-      /\b(soporte|ayuda)\b/i,
-      /\?$/
-    ];
+        return faqKeywords.some(k => text.toLowerCase().includes(k));
+    }
 
-    return faqPatterns.some(pattern => pattern.test(message));
-  }
+    /**
+     * Normalizar texto para comparación
+     */
+    static normalize(text: string): string {
+        return text.toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
+    }
 }

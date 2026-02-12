@@ -1,0 +1,110 @@
+﻿­ƒÜÇ PROBANDO FLUJO MAESTRO - BOT VENDEDOR
+
+
+­ƒô▒ CLIENTE: "Hola" (ETAPA 1: Saludo inicial)
+[AgentRouter] Procesando mensaje de 573112223344
+[AgentRouter] Intenci├│n detectada: saludo (99%)
+[AgentRouter] Enrutando a agente: sales
+­ƒñû BOT:
+­ƒæï Hola, bienvenido.
+┬┐En qu├® puedo ayudarte hoy?
+
+1´©ÅÔâú Ver productos
+2´©ÅÔâú Consultar precio
+3´©ÅÔâú Soporte
+4´©ÅÔâú Hablar con asesor
+
+­ƒæë Puedes escribirme el nombre del producto que buscas directamente.
+----------------------------------------------------------------------
+
+­ƒô▒ CLIENTE: "impresora brother" (ETAPA 2/3: Detecci├│n y Card)
+[AgentRouter] Procesando mensaje de 573112223344
+[AgentRouter] Intenci├│n detectada: consulta_precio (80%)
+[AgentRouter] Enrutando a agente: sales
+­ƒñû BOT:
+­ƒôª *Impresora Brother Multifuncional MFC-T4500DW*
+
+­ƒÆ░ Precio: $3.049.900 COP
+­ƒôª Stock: Disponible
+­ƒÜÜ Entrega: Env├¡o a domicilio
+ÔÅ▒ Tiempo: 2-4 d├¡as h├íbiles
+
+­ƒôï Impresora Brother Multifuncional MFC-T4500DW. Producto original con garant├¡a. Env├¡o a toda Colombia.
+
+┬┐Deseas saber algo espec├¡fico? Puedes preguntarme:
+ÔÇó Caracter├¡sticas
+ÔÇó Garant├¡a
+ÔÇó M├®todos de pago
+ÔÇó Tiempo de entrega
+ÔÇó C├│mo comprar
+----------------------------------------------------------------------
+
+­ƒô▒ CLIENTE: "┬┐cuanto tarda el envio?" (ETAPA 5: Dudas con Prompt Maestro)
+[AgentRouter] Procesando mensaje de 573112223344
+[AgentRouter] Intenci├│n detectada: informacion_envio (90%)
+[AgentRouter] Enrutando a agente: sales
+­ƒñû BOT:
+El tiempo estimado de entrega es de 2 a 4 d├¡as h├íbiles.
+----------------------------------------------------------------------
+
+­ƒô▒ CLIENTE: "me interesa comprarla" (ETAPA 6: Intenci├│n de compra)
+[AgentRouter] Procesando mensaje de 573112223344
+[AgentRouter] Intenci├│n detectada: compra (90%)
+[AgentRouter] Enrutando a agente: sales
+­ƒñû BOT:
+Perfecto ­ƒæì
+
+┬┐Deseas que te env├¡e las opciones de pago disponibles para el *Impresora Brother Multifuncional MFC-T4500DW*?
+----------------------------------------------------------------------
+
+­ƒô▒ CLIENTE: "si, enviame los pagos" (ETAPA 7: M├®todos de pago)
+[AgentRouter] Procesando mensaje de 573112223344
+[AgentRouter] Intenci├│n detectada: informacion_pago (90%)
+[AgentRouter] Enrutando a agente: sales
+­ƒñû BOT:
+­ƒÆ│ *Opciones de pago disponibles:*
+
+ÔÇó Transferencia (Bancolombia/Nequi)
+ÔÇó Tarjeta de Cr├®dito/D├®bito
+ÔÇó Contra entrega (aplica solo para algunas ciudades)
+
+┬┐Con cu├íl deseas pagar?
+----------------------------------------------------------------------
+
+­ƒô▒ CLIENTE: "transferencia" (ETAPA 8: Entrega)
+[AgentRouter] Procesando mensaje de 573112223344
+[AgentRouter] Intenci├│n detectada: informacion_pago (80%)
+[AgentRouter] Enrutando a agente: sales
+­ƒñû BOT:
+­ƒôª *Informaci├│n de Entrega*
+
+Realizamos env├¡os a domicilio en toda Colombia.
+
+Por favor, ind├¡came tu *Ciudad* y *Barrio* para programar el despacho.
+----------------------------------------------------------------------
+
+­ƒô▒ CLIENTE: "Cali, Barrio El Refugio" (ETAPA 9: Confirmaci├│n)
+[AgentRouter] Procesando mensaje de 573112223344
+[AgentRouter] Intenci├│n detectada: otro (80%)
+[AgentRouter] Enrutando a agente: sales
+­ƒñû BOT:
+­ƒôØ *Resumen de tu pedido:*
+
+Producto: Impresora Brother Multifuncional MFC-T4500DW
+Entrega: Cali, Barrio El Refugio
+Estado: Procesando
+
+┬┐Confirmas que los datos son correctos? (S├¡ / No)
+----------------------------------------------------------------------
+
+­ƒô▒ CLIENTE: "si" (ETAPA 10: Cierre)
+[AgentRouter] Procesando mensaje de 573112223344
+[AgentRouter] Intenci├│n detectada: otro (80%)
+[AgentRouter] Enrutando a agente: sales
+­ƒñû BOT:
+Ô£à *Pedido registrado.*
+
+En breve recibir├ís confirmaci├│n y gu├¡a de env├¡o por este medio.
+
+Gracias por tu compra con Tecnovariedades D&S ­ƒñØ
+----------------------------------------------------------------------
