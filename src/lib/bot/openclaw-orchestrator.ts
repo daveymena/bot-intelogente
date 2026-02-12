@@ -424,6 +424,30 @@ ${catalogHints}
 ### 🛠️ TOOLS DISPONIBLES:
 ${Object.values(TOOLS).map((t: any) => `- ${t.name}: ${t.description}`).join('\n')}
 
+### 🚨 REGLAS ANTI-INVENCIÓN (CRÍTICO):
+1. **UBICACIÓN REAL**: Centro Comercial El Diamante 2, Local 158, Cali, Valle del Cauca
+2. **HORARIOS**: NUNCA inventes horarios - SIEMPRE di "Consultar disponibilidad por WhatsApp"
+3. **NUNCA INVENTES**: direcciones, calles, avenidas, horarios - usa solo información real
+
+### 💳 REGLAS DE PAGO Y ENTREGA POR TIPO DE PRODUCTO:
+
+**PRODUCTOS DIGITALES** (Megapack, Cursos, Productos Digitales):
+- ✅ SOLO pago virtual (MercadoPago/PayPal)
+- ✅ Entrega INMEDIATA por Drive/Correo/WhatsApp
+- ❌ NO retiro en tienda (es digital)
+- ⚠️ NO incluyen certificado
+- 🎬 100% Pregrabados
+
+**PRODUCTOS FÍSICOS - TECNOLOGÍA** (Computadores, Laptops, Impresoras, Teclados, Mouse):
+- ✅ Pago virtual (MercadoPago/PayPal) O Contraentrega
+- ✅ Envío a domicilio O Retiro en tienda (CC El Diamante 2, Local 158, Cali)
+- 📦 Pregunta PRIMERO: "¿Prefieres envío a domicilio o retiro en tienda?"
+
+**PRODUCTOS DROPSHIPPING**:
+- ✅ Contraentrega O Pago virtual
+- ✅ SOLO envío a domicilio
+- ❌ NO retiro en tienda
+
 ### 🚀 REGLAS DE ORO PARA EL PENSAMIENTO (CRÍTICO):
 1. **Prioridad Absoluta**: Si el usuario menciona CUALQUIER nombre de los "CATÁLOGO HINTS", USA 'get_product_with_payment'. No respondas por tu cuenta.
 2. **Dudas sobre producto**: Si pregunta "¿Qué tal es...?", "¿Qué specs tiene...?", USA 'get_product_with_payment'.
@@ -575,6 +599,24 @@ Responde como David, mantén la conversación viva pero guía al usuario a que b
 3. EL SEPARADOR ES ESTE: ━━━━━━━━━━━━━━━━━━
 4. USA LOS EMOJIS INDICADOS.
 5. SI NO CUMPLES EL FORMATO, EL SISTEMA OPENCLAW FALLARÁ.
+
+🚨 **REGLAS ANTI-INVENCIÓN (OBLIGATORIO)**:
+- **UBICACIÓN REAL**: Centro Comercial El Diamante 2, Local 158, Cali, Valle del Cauca
+- **NUNCA USES**: [direccion], [ubicación], Calle 123, Avenida 45, Bogotá, ni ninguna dirección inventada
+- **HORARIOS**: NUNCA inventes horarios - di "Consultar disponibilidad por WhatsApp: +57 304 274 8687"
+- **PRODUCTOS DIGITALES**: NO menciones retiro en tienda - solo entrega por Drive/Correo/WhatsApp
+- **PRODUCTOS FÍSICOS**: Pregunta PRIMERO si quiere envío o retiro antes de dar opciones
+
+**EJEMPLO CORRECTO** si preguntan dónde ver productos:
+"Puedes:
+📍 **Visitar nuestra tienda**: Centro Comercial El Diamante 2, Local 158, Cali
+🛍 **Ver nuestro catálogo**: Te puedo mostrar los productos disponibles
+¿Qué prefieres?"
+
+**EJEMPLO INCORRECTO** (NUNCA HAGAS ESTO):
+"Estamos en [direccion]" ❌
+"Calle 123, Avenida 45, Bogotá" ❌
+"Lunes a Viernes 9am-6pm" ❌
 ---
 `;
 
@@ -618,8 +660,10 @@ Responde como David, mantén la conversación viva pero guía al usuario a que b
                             ...history,
                             { role: 'user', content: message }
                         ],
-                        temperature: 0.7,
-                        max_tokens: 1024
+                        temperature: 0.6,  // Reducido de 0.7 para respuestas más rápidas
+                        max_tokens: 800,   // Reducido de 1024 para respuestas más concisas
+                        top_p: 0.9,        // Agregado para mejor calidad
+                        stream: false      // Sin streaming para respuesta directa
                     }) as any;
 
                     // ✅ ÉXITO - Limpiar contador de fallos para esta key

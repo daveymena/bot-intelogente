@@ -84,11 +84,19 @@ export default function ModernDesign({
       >
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            <Link href="/tienda" className="flex items-center space-x-2">
+            <Link href="/tienda" className="flex items-center space-x-2 flex-shrink-0">
               {settings?.logo ? (
                 <div className="flex items-center gap-2">
-                  <Image src={settings.logo} alt={settings.storeName} width={40} height={40} className="h-8 w-8 object-contain rounded-lg" />
-                  <span className="font-bold text-base hidden sm:block">{settings?.storeName || 'Smart Sales Bot'}</span>
+                  <div className="relative h-8 w-8 flex-shrink-0">
+                    <Image 
+                      src={settings.logo} 
+                      alt={settings.storeName} 
+                      fill
+                      className="object-contain rounded-lg" 
+                      sizes="32px"
+                    />
+                  </div>
+                  <span className="font-bold text-base hidden sm:block truncate">{settings?.storeName || 'Smart Sales Bot'}</span>
                 </div>
               ) : (
                 <span className="font-bold text-base">{settings?.storeName || 'Smart Sales Bot'}</span>

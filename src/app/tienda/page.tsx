@@ -166,7 +166,7 @@ export default function TiendaPage() {
     return CurrencyService.formatPrice(usd, 'USD')
   }
 
-  if (loading || !storeSettings) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-50">
         <div className="relative">
@@ -179,12 +179,33 @@ export default function TiendaPage() {
     )
   }
 
+  // Si no hay settings, usar valores por defecto
+  const defaultSettings: StoreSettings = {
+    storeName: 'Tecnovariedades D&S',
+    storeSlogan: 'Tu tienda de confianza',
+    description: 'Productos de calidad',
+    primaryColor: '#1f2937',
+    secondaryColor: '#000000',
+    accentColor: '#3b82f6',
+    logo: '',
+    logoSquare: '',
+    email: 'contacto@tienda.com',
+    phone: '',
+    whatsapp: '',
+    facebook: '',
+    instagram: '',
+    twitter: '',
+    tiktok: ''
+  }
+
+  const finalSettings = storeSettings || defaultSettings
+
   // Renderizar el diseño seleccionado
-  if (storeSettings.layoutTemplate === 'smartjoys') {
+  if (finalSettings.layoutTemplate === 'smartjoys') {
     return (
       <SmartJoysDesign 
         products={products}
-        settings={storeSettings}
+        settings={finalSettings}
         userCurrency={userCurrency}
         cartCount={cartCount}
         formatPrice={formatPrice}
@@ -197,7 +218,7 @@ export default function TiendaPage() {
   return (
     <ModernDesign 
       products={products}
-      settings={storeSettings}
+      settings={finalSettings}
       userCurrency={userCurrency}
       cartCount={cartCount}
       formatPrice={formatPrice}

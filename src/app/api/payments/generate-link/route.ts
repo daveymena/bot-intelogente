@@ -28,195 +28,60 @@ export async function POST(request: NextRequest) {
 
 async function generateMercadoPagoLink(productId: string, productName: string, amount: number, quantity: number, userId: string) {
   try {
-    console.log('[MercadoPago] Iniciando generación de link para userId:', userId)
+    console.log('[MercadoPago] Usando servicio dinámico para producto:', productId)
     
-    // Obtener credenciales del usuario
-    const { db } = await import('@/lib/db')
-    const integration = await db.paymentIntegration.findUnique({
-      where: { userId }
-    })
-
-    console.log('[MercadoPago] Integración encontrada:', integration ? 'Sí' : 'No')
-
-    const MERCADOPAGO_ACCESS_TOKEN = integration?.mercadopagoAccessToken || 
-                                     process.env.MERCADOPAGO_ACCESS_TOKEN || 
-                                     process.env.MERCADO_PAGO_ACCESS_TOKEN
-
-    if (!MERCADOPAGO_ACCESS_TOKEN) {
-      console.error('[MercadoPago] No se encontró token de acceso')
-      return NextResponse.json({ 
-        success: false, 
-        error: 'MercadoPago no configurado. Por favor configura tus credenciales en el dashboard.' 
-      }, { status: 400 })
-    }
-
-    console.log('[MercadoPago] Token encontrado, longitud:', MERCADOPAGO_ACCESS_TOKEN.length)
-
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000'
-
-    const preference = {
-      items: [
-        {
-          title: productName,
-          quantity: quantity,
-          unit_price: Math.round(amount / quantity),
-          currency_id: 'COP'
-        }
-      ],
-      back_urls: {
-        success: `${baseUrl}/payment/success`,
-        failure: `${baseUrl}/payment/failure`,
-        pending: `${baseUrl}/payment/pending`
-      },
-      auto_return: 'approved',
-      notification_url: `${baseUrl}/api/payments/webhook`,
-      external_reference: JSON.stringify({
-        productId,
-        quantity,
-        type: 'product_purchase'
-      })
-    }
-
-    console.log('[MercadoPago] Creando preferencia:', JSON.stringify(preference, null, 2))
-
-    const response = await fetch('https://api.mercadopago.com/checkout/preferences', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${MERCADOPAGO_ACCESS_TOKEN}`
-      },
-      body: JSON.stringify(preference)
-    })
-
-    const data = await response.json()
-    console.log('[MercadoPago] Respuesta de API:', JSON.stringify(data, null, 2))
-
-    if (!response.ok) {
-      console.error('[MercadoPago] Error en respuesta:', data)
-      
-      // Extraer mensaje de error más descriptivo
-      let errorMessage = 'Error creando preferencia en MercadoPago'
-      if (data.message) {
-        errorMessage = data.message
-      } else if (data.error) {
-        errorMessage = typeof data.error === 'string' ? data.error : JSON.stringify(data.error)
-      } else if (data.cause && data.cause.length > 0) {
-        errorMessage = data.cause.map((c: any) => c.description || c.code).join(', ')
-      }
-      
-      return NextResponse.json({ 
-        success: false, 
-        error: errorMessage,
-        details: data
-      }, { status: response.status })
-    }
-
-    if (data.init_point) {
-      console.log('[MercadoPago] Link generado exitosamente:', data.init_point)
+    // Usar el servicio existente que ya maneja toda la lógica
+    const { MercadoPagoDynamicService } = await import('@/lib/mercadopago-dynamic-service')
+    const result = await MercadoPagoDynamicService.generatePaymentLink(productId, userId)
+    
+    if (result.success && result.paymentUrl) {
+      console.log('[MercadoPago] ✅ Link generado exitosamente')
       return NextResponse.json({
         success: true,
-        paymentUrl: data.init_point,
-        preferenceId: data.id
+        paymentUrl: result.paymentUrl
       })
     }
-
-    console.error('[MercadoPago] No se recibió init_point:', data)
+    
+    console.error('[MercadoPago] ❌ Error:', result.error)
     return NextResponse.json({ 
       success: false, 
-      error: 'No se pudo generar el link de pago. Verifica tu configuración de MercadoPago.',
-      details: data
-    }, { status: 500 })
+      error: result.error || 'Error generando link de MercadoPago'
+    }, { status: 400 })
   } catch (error) {
-    console.error('[MercadoPago] Error:', error)
+    console.error('[MercadoPago] ❌ Error:', error)
     return NextResponse.json({ 
       success: false, 
-      error: error instanceof Error ? error.message : 'Error con MercadoPago. Verifica tu Access Token.',
-      details: error instanceof Error ? error.stack : String(error)
+      error: error instanceof Error ? error.message : 'Error con MercadoPago'
     }, { status: 500 })
   }
 }
 
 async function generatePayPalLink(productId: string, productName: string, amount: number, quantity: number, userId: string) {
   try {
-    // Obtener credenciales del usuario
-    const { db } = await import('@/lib/db')
-    const integration = await db.paymentIntegration.findUnique({
-      where: { userId }
-    })
-
-    const PAYPAL_CLIENT_ID = integration?.paypalClientId || process.env.PAYPAL_CLIENT_ID
-    const PAYPAL_CLIENT_SECRET = integration?.paypalClientSecret || process.env.PAYPAL_CLIENT_SECRET
-
-    if (!PAYPAL_CLIENT_ID || !PAYPAL_CLIENT_SECRET) {
-      return NextResponse.json({ 
-        success: false, 
-        error: 'PayPal no configurado. Por favor configura tus credenciales en el dashboard.' 
-      }, { status: 500 })
-    }
-
-    // Obtener access token
-    const auth = Buffer.from(`${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`).toString('base64')
-    const tokenResponse = await fetch('https://api-m.paypal.com/v1/oauth2/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: `Basic ${auth}`
-      },
-      body: 'grant_type=client_credentials'
-    })
-
-    const { access_token } = await tokenResponse.json()
-
-    // Convertir COP a USD
-    const priceUSD = (amount / 4000).toFixed(2)
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000'
-
-    // Crear orden
-    const orderResponse = await fetch('https://api-m.paypal.com/v2/checkout/orders', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${access_token}`
-      },
-      body: JSON.stringify({
-        intent: 'CAPTURE',
-        purchase_units: [
-          {
-            description: productName,
-            amount: {
-              currency_code: 'USD',
-              value: priceUSD
-            },
-            custom_id: JSON.stringify({
-              productId,
-              quantity,
-              type: 'product_purchase'
-            })
-          }
-        ],
-        application_context: {
-          return_url: `${baseUrl}/payment/success`,
-          cancel_url: `${baseUrl}/payment/failure`,
-          brand_name: 'Smart Sales Bot',
-          user_action: 'PAY_NOW'
-        }
-      })
-    })
-
-    const orderData = await orderResponse.json()
-    const approveUrl = orderData.links?.find((link: any) => link.rel === 'approve')?.href
-
-    if (approveUrl) {
+    console.log('[PayPal] Usando servicio existente para producto:', productId)
+    
+    // Usar el servicio existente que ya maneja toda la lógica
+    const { getOrCreatePayPalLink } = await import('@/lib/paypal-service')
+    const paymentUrl = await getOrCreatePayPalLink(productId, true) // true = forzar nuevo link
+    
+    if (paymentUrl) {
+      console.log('[PayPal] ✅ Link generado exitosamente')
       return NextResponse.json({
         success: true,
-        paymentUrl: approveUrl,
-        orderId: orderData.id
+        paymentUrl
       })
     }
-
-    return NextResponse.json({ success: false, error: 'Error creando orden' }, { status: 500 })
+    
+    console.error('[PayPal] ❌ No se pudo generar el link')
+    return NextResponse.json({ 
+      success: false, 
+      error: 'PayPal no configurado. Por favor configura tus credenciales en el dashboard.' 
+    }, { status: 400 })
   } catch (error) {
-    console.error('[PayPal] Error:', error)
-    return NextResponse.json({ success: false, error: 'Error con PayPal' }, { status: 500 })
+    console.error('[PayPal] ❌ Error:', error)
+    return NextResponse.json({ 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Error con PayPal'
+    }, { status: 500 })
   }
 }

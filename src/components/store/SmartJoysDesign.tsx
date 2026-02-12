@@ -86,7 +86,15 @@ export default function SmartJoysDesign({
           {/* Logo */}
           <Link href="/tienda" className="flex-shrink-0">
             {settings.logo ? (
-              <Image src={settings.logo} alt={settings.storeName} width={180} height={45} className="h-10 w-auto object-contain invert" />
+              <div className="relative h-10 w-auto max-w-[180px]">
+                <Image 
+                  src={settings.logo} 
+                  alt={settings.storeName} 
+                  fill
+                  className="object-contain invert" 
+                  sizes="180px"
+                />
+              </div>
             ) : (
               <span className="text-2xl font-black italic tracking-tighter text-white">SMART<span className="text-red-600">JOYS</span></span>
             )}
