@@ -612,6 +612,12 @@ class OpenClawOrchestrator {
                     toolData = result.data;
                     console.log(`[Architect] ✅ Skill completado con éxito`);
                     
+                    // 💾 Guardar producto activo en contexto para get_payment_info
+                    if (analysis.toolToUse === 'get_product_with_payment' && toolData) {
+                        context.activeProduct = toolData;
+                        console.log(`[Architect] 💾 Producto activo guardado: ${toolData.name}`);
+                    }
+                    
                     // Transiciones automáticas
                     if (analysis.toolToUse === 'get_product_with_payment') nextStage = 'viendo_producto';
                     if (analysis.toolToUse === 'list_products_by_category') nextStage = 'buscando_producto';
@@ -794,7 +800,13 @@ class OpenClawOrchestrator {
       ✅ "Laptop Asus Vivobook" → get_product_with_payment (productId: "Laptop Asus Vivobook")
 
     **🎯 PASO 2: Otras herramientas**
-    - **Pagos**: Si pregunta cómo pagar → 'get_payment_info'
+    - **Pagos**: Si pregunta sobre métodos de pago, cuentas bancarias, Nequi, cómo pagar, formas de pago → 'get_payment_info'
+      Ejemplos que SIEMPRE usan get_payment_info:
+      ✅ "método de pago?" → get_payment_info
+      ✅ "cómo puedo pagar?" → get_payment_info
+      ✅ "cuál es la cuenta?" → get_payment_info
+      ✅ "formas de pago?" → get_payment_info
+      ✅ "dame el nequi" → get_payment_info
     - **Chat simple**: Solo saludos/despedidas → toolToUse: null
 
     **🧠 FLUJO DE HERRAMIENTAS SEMÁNTICAS:**
