@@ -7,6 +7,7 @@ import { Groq } from 'groq-sdk';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
+import { ConversationContextService } from '../conversation-context-service';
 
 dotenv.config();
 
@@ -421,14 +422,15 @@ export const TOOLS: any = {
 };
 
 class OpenClawOrchestrator {
-    conversationHistory: Map<string, any[]>;
+    // Ya no necesitamos Map interno - usamos ConversationContextService
+    // conversationHistory: Map<string, any[]>;  // ❌ ELIMINADO
     maxHistory: number;
     apiKeys: string[];
     currentKeyIndex: number;
     keyFailures: Map<string, { count: number; lastFail: number }>;
 
     constructor() {
-        this.conversationHistory = new Map();
+        // this.conversationHistory = new Map();  // ❌ ELIMINADO
         this.maxHistory = 20;
         
         // 🔑 SISTEMA DE ROTACIÓN DE API KEYS
@@ -444,6 +446,7 @@ class OpenClawOrchestrator {
         this.keyFailures = new Map(); // Rastrear fallos por key
         
         console.log(`[OpenClaw] 🔑 ${this.apiKeys.length} API keys disponibles para rotación`);
+        console.log(`[OpenClaw] 💾 Usando memoria persistente (ConversationContextService)`);
     }
     
     /**
@@ -497,10 +500,22 @@ class OpenClawOrchestrator {
         console.log(`[Architect] 🧠 Iniciando Modo Ultra Inteligente para ${from}...`);
         
         const currentStage = context.currentStage || 'saludo';
-        if (!this.conversationHistory.has(from)) {
-            this.conversationHistory.set(from, []);
-        }
-        const history = this.conversationHistory.get(from)!;
+        
+        // ✅ CARGAR HISTORIAL DESDE SERVICIO PERSISTENTE (DB + RAM)
+        console.log(`[Architect] 💾 Cargando historial persistente para ${from}...`);
+        const historyMessages = await ConversationContextService.getMessageHistory(
+            from,
+            context.userId,
+            this.maxHistory
+        );
+        
+        // Convertir al formato esperado por OpenClaw
+        const history = historyMessages.map(msg => ({
+            role: msg.role,
+            content: msg.content
+        }));
+        
+        console.log(`[Architect] 📚 Historial cargado: ${history.length} mensajes`);
 
         // 1. Cargar Cerebro
         let brainContext = '';
@@ -571,12 +586,10 @@ class OpenClawOrchestrator {
         // 🎯 NUEVA LÓGICA: Si hay respuesta sugerida (preguntas de calificación), usarla directamente
         if (analysis.suggestedResponse) {
             console.log('[Architect] 💬 Usando respuesta conversacional sugerida (AIDA)');
-            history.push({ role: 'user', content: messageText });
-            history.push({ role: 'assistant', content: analysis.suggestedResponse });
             
-            if (history.length > this.maxHistory * 2) {
-                this.conversationHistory.set(from, history.slice(-this.maxHistory * 2));
-            }
+            // ✅ GUARDAR EN SERVICIO PERSISTENTE
+            await ConversationContextService.addMessage(from, context.userId, 'user', messageText);
+            await ConversationContextService.addMessage(from, context.userId, 'assistant', analysis.suggestedResponse);
 
             return {
                 text: analysis.suggestedResponse,
@@ -614,17 +627,13 @@ class OpenClawOrchestrator {
         if (msg.includes('comprar') || msg.includes('interesa') || msg.includes('lo quiero')) nextStage = 'interes_compra';
         if (msg.includes('gracias') || msg.includes('listo')) nextStage = 'cerrado';
 
-        // 💾 4. ACTUALIZAR HISTORIAL
-        history.push({ role: 'user', content: messageText });
-        
         // 4. Generatriz de Respuesta
         let response = await this._generateResponse(messageText, history, brainContext, toolData, nextStage);
         
-        // Guardar respuesta en historial
-        history.push({ role: 'assistant', content: response });
-        if (history.length > this.maxHistory * 2) {
-            this.conversationHistory.set(from, history.slice(-this.maxHistory * 2));
-        }
+        // ✅ GUARDAR EN SERVICIO PERSISTENTE (DB + RAM)
+        console.log(`[Architect] 💾 Guardando conversación en memoria persistente...`);
+        await ConversationContextService.addMessage(from, context.userId, 'user', messageText);
+        await ConversationContextService.addMessage(from, context.userId, 'assistant', response);
 
         // 🛠️ REEMPLAZO FORZADO (Seguridad OpenClaw)
         // Esto asegura que si la IA dejó un placeholder por error, lo llenamos nosotros con los datos reales

@@ -81,3 +81,13 @@ test-output.log
 debug_*.txt
 *.local.js
 *.local.ts
+
+# ========================================
+# DOCUMENTACIÓN CON KEYS (NO SUBIR)
+# ========================================
+CONEXION_BD.md
+CONFIGURACION_EASYPANEL.md
+GUIA_PRUEBA_LOCAL.md
+RESUMEN_FINAL.md
+*_KEYS.md
+*_CREDENTIALS.md

@@ -80,6 +80,26 @@ stream: false     // Respuesta directa sin streaming
 
 ---
 
+### 6. 🔍 FIX DE BÚSQUEDA DE PRODUCTOS ⭐ NUEVO
+
+**Problema Resuelto:** Usuario preguntaba "Cursos digitales?" y bot enviaba UN SOLO curso sin saber cuál necesitaba.
+
+**Solución Implementada:**
+- Mejorado prompt en `_think()` con reglas más claras
+- Búsquedas generales → Muestra LISTA de opciones
+- Búsquedas específicas → Muestra producto individual
+
+**Ejemplos:**
+```
+Usuario: "Cursos digitales?" → Lista de 3-5 cursos ✅
+Usuario: "Mega Pack 11" → Detalles del producto ✅
+Usuario: "Laptops?" → Lista de laptops ✅
+```
+
+**Resultado:** Mejor experiencia de compra, usuario ve todas las opciones disponibles.
+
+---
+
 ## 🎯 DECISIÓN ESTRATÉGICA FINAL
 
 ### OPENCLAW MANEJA EL 100% DE CONVERSACIONES ✅
@@ -115,6 +135,7 @@ stream: false     // Respuesta directa sin streaming
 - `test-conversation-system.ts` - Tests del sistema conversacional
 - `test-openclaw-memory.ts` - Tests de memoria de OpenClaw
 - `test-api-key-rotation.ts` - Tests de rotación de keys
+- `test-product-search-logic.ts` - Tests de búsqueda de productos ⭐ NUEVO
 
 ---
 

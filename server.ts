@@ -61,6 +61,15 @@ async function createCustomServer() {
       console.log(`> Ready on http://${hostname}:${currentPort}`);
       console.log(`> Socket.IO server running at ws://${hostname}:${currentPort}/api/socketio`);
       
+      // 💾 Inicializar servicio de contexto conversacional
+      try {
+        const { ConversationContextService } = await import('./src/lib/conversation-context-service');
+        ConversationContextService.initialize();
+        console.log('> ConversationContextService inicializado (memoria persistente 24h)');
+      } catch (error) {
+        console.error('> Error initializing ConversationContextService:', error);
+      }
+      
       // Inicializar Baileys automáticamente
       try {
         const { SessionManager } = await import('./src/lib/session-manager');
