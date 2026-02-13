@@ -41,10 +41,10 @@ coverage
 *.log
 logs
 
-# Documentation (IMPORTANTE: Reduce mucho el tamaño)
-*.md
-!README.md
-docs/
+# # Documentation (IMPORTANTE: Reduce mucho el tamaño)
+# *.md
+# !README.md
+# docs/
 
 # WhatsApp sessions (pueden ser grandes)
 whatsapp-sessions/
@@ -76,24 +76,24 @@ botexperimento/
 *.example.json
 test-data/
 
-# Scripts de desarrollo (no necesarios en producción)
-scripts/scraper-*.js
-scripts/test-*.ts
-scripts/verificar-*.ts
-scripts/diagnosticar-*.ts
-scripts/probar-*.ts
-scripts/limpiar-*.ts
-scripts/arreglar-*.ts
-scripts/crear-*.ts
-scripts/importar-*.ts
-scripts/exportar-*.ts
-scripts/actualizar-*.ts
-scripts/corregir-*.ts
-scripts/manipular-*.ts
-scripts/mostrar-*.ts
-scripts/resumen-*.ts
-scripts/resolver-*.ts
-scripts/detectar-*.ts
+# # Scripts de desarrollo (no necesarios en producción)
+# scripts/scraper-*.js
+# scripts/test-*.ts
+# scripts/verificar-*.ts
+# scripts/diagnosticar-*.ts
+# scripts/probar-*.ts
+# scripts/limpiar-*.ts
+# scripts/arreglar-*.ts
+# scripts/crear-*.ts
+# scripts/importar-*.ts
+# scripts/exportar-*.ts
+# scripts/actualizar-*.ts
+# scripts/corregir-*.ts
+# scripts/manipular-*.ts
+# scripts/mostrar-*.ts
+# scripts/resumen-*.ts
+# scripts/resolver-*.ts
+# scripts/detectar-*.ts
 
 # Archivos de configuración de desarrollo
 .editorconfig
