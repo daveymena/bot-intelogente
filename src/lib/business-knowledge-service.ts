@@ -126,7 +126,7 @@ export class BusinessKnowledgeService {
       const productsInfo = {
         total: products.length,
         byCategory: productsByCategory,
-        featured: products.slice(0, 80) // Top 80 productos para visibilidad inmediata
+        featured: products.slice(0, 10) // Solo top 10 para no saturar el prompt de sistema
       };
 
       // 5. Personalidad del bot (desde SOUL.md si existe)

@@ -799,14 +799,24 @@ class OpenClawOrchestrator {
       ✅ "Mega Pack 11" → get_product_with_payment (productId: "Mega Pack 11")
       ✅ "Laptop Asus Vivobook" → get_product_with_payment (productId: "Laptop Asus Vivobook")
 
-    **🎯 PASO 2: Otras herramientas**
-    - **Pagos**: Si pregunta sobre métodos de pago, cuentas bancarias, Nequi, cómo pagar, formas de pago → 'get_payment_info'
-      Ejemplos que SIEMPRE usan get_payment_info:
-      ✅ "método de pago?" → get_payment_info
-      ✅ "cómo puedo pagar?" → get_payment_info
-      ✅ "cuál es la cuenta?" → get_payment_info
-      ✅ "formas de pago?" → get_payment_info
-      ✅ "dame el nequi" → get_payment_info
+    **🎯 PASO 2: Otras herramientas (PRIORIDAD ALTA)**
+    
+    **⚠️ REGLA CRÍTICA - PAGOS (VERIFICAR PRIMERO):**
+    Si el mensaje contiene CUALQUIERA de estas palabras/frases, SIEMPRE usar 'get_payment_info':
+    - "pago", "pagos", "pagar", "método", "metodo", "forma", "formas"
+    - "cuenta", "cuentas", "bancaria", "banco", "nequi", "daviplata"
+    - "transferencia", "consignación", "deposito"
+    - "cómo compro", "como compro", "cómo adquiero"
+    
+    Ejemplos que SIEMPRE usan get_payment_info:
+    ✅ "método de pago?" → get_payment_info
+    ✅ "Metodo de pago cual es?" → get_payment_info
+    ✅ "cómo puedo pagar?" → get_payment_info
+    ✅ "cuál es la cuenta?" → get_payment_info
+    ✅ "formas de pago?" → get_payment_info
+    ✅ "dame el nequi" → get_payment_info
+    ✅ "cómo compro?" → get_payment_info
+    
     - **Chat simple**: Solo saludos/despedidas → toolToUse: null
 
     **🧠 FLUJO DE HERRAMIENTAS SEMÁNTICAS:**
@@ -977,30 +987,14 @@ Responde como David, mantén la conversación viva pero guía al usuario a que b
 
         systemPrompt += `
 ---
-🚀 **ULTIMÁTUM DE FORMATO PARA DAVID (CRÍTICO)**:
-1. SI HAY DATOS DE PRODUCTO (toolData), DEBES USAR LA CARD CON SEPARADORES OBLIGATORIAMENTE.
-2. NO ESCRIBAS INTRODUCCIONES. EMPIEZA DIRECTO CON LA CARD O EL SALUDO CORTO.
-3. EL SEPARADOR ES ESTE: ━━━━━━━━━━━━━━━━━━
-4. USA LOS EMOJIS INDICADOS.
-5. SI NO CUMPLES EL FORMATO, EL SISTEMA OPENCLAW FALLARÁ.
-
-🚨 **REGLAS ANTI-INVENCIÓN (OBLIGATORIO)**:
-- **UBICACIÓN REAL**: Centro Comercial El Diamante 2, Local 158, Cali, Valle del Cauca
-- **NUNCA USES**: [direccion], [ubicación], Calle 123, Avenida 45, Bogotá, ni ninguna dirección inventada
-- **HORARIOS**: NUNCA inventes horarios - di "Consultar disponibilidad por WhatsApp: +57 304 274 8687"
-- **PRODUCTOS DIGITALES**: NO menciones retiro en tienda - solo entrega por Drive/Correo/WhatsApp
-- **PRODUCTOS FÍSICOS**: Pregunta PRIMERO si quiere envío o retiro antes de dar opciones
-
-**EJEMPLO CORRECTO** si preguntan dónde ver productos:
-"Puedes:
-📍 **Visitar nuestra tienda**: Centro Comercial El Diamante 2, Local 158, Cali
-🛍 **Ver nuestro catálogo**: Te puedo mostrar los productos disponibles
-¿Qué prefieres?"
-
-**EJEMPLO INCORRECTO** (NUNCA HAGAS ESTO):
-"Estamos en [direccion]" ❌
-"Calle 123, Avenida 45, Bogotá" ❌
-"Lunes a Viernes 9am-6pm" ❌
+🚀 **INSTRUCCIONES DE DAVID (Smart Sales Bot)**:
+1. **Identidad**: Eres David. Profesional, empático y comercial.
+2. **Formato**: Si muestras un producto, usa la CARD con separadores ━━━━━━━━━━━━━━━━━━.
+3. **Ubicación Real**: Centro Comercial El Diamante 2, Local 158, Cali. NUNCA inventes otra.
+4. **Pagos**: Aceptamos MercadoPago, PayPal, Nequi y BBVA.
+5. **Horarios**: Di siempre "Consultar disponibilidad por WhatsApp: +57 304 274 8687".
+6. **No Inventar**: Si no conoces un dato técnico, admítelo y ofrece consultar.
+7. **Flujo**: Pregunta antes de dar el siguiente paso (¿quieres envío o retiro?).
 ---
 `;
 
@@ -1021,11 +1015,11 @@ Responde como David, mantén la conversación viva pero guía al usuario a que b
     }
 
     async _callAI(systemPrompt: string, history: any[], message: string) {
-        // Lista de modelos en orden de preferencia (del más potente al más económico)
+        // Lista de modelos en orden de preferencia (70b primero para máxima coherencia)
         const models = [
-            'llama-3.1-8b-instant',     // Más rápido y económico
-            'llama-3.3-70b-versatile',  // Más potente pero consume más tokens
-            'mixtral-8x7b-32768'        // Alternativa si los otros fallan
+            'llama-3.3-70b-versatile',  // Máxima potencia y coherencia siguiendo reglas
+            'llama-3.1-8b-instant',      // Rápido si el anterior falla
+            'mixtral-8x7b-32768'         // Alternativa final
         ];
         
         // Intentar con cada modelo
