@@ -2,32 +2,44 @@
 # STAGE 1: Dependencies
 # ============================================
 FROM node:20-alpine AS deps
-RUN apk add --no-cache libc6-compat python3 make g++ git
+
+# Instalar dependencias del sistema necesarias
+RUN apk add --no-cache \
+    libc6-compat \
+    python3 \
+    make \
+    g++ \
+    git \
+    curl
+
 WORKDIR /app
 
-# Configurar variables de entorno para npm
+# Configurar npm para mejor estabilidad
 ENV NODE_OPTIONS="--max-old-space-size=4096"
-ENV NPM_CONFIG_LOGLEVEL=verbose
+ENV NPM_CONFIG_LOGLEVEL=info
+ENV NPM_CONFIG_FETCH_RETRY_MAXTIMEOUT=120000
+ENV NPM_CONFIG_FETCH_RETRY_MINTIMEOUT=10000
+ENV NPM_CONFIG_FETCH_RETRIES=5
 
 # Copiar archivos de dependencias
-COPY package*.json ./
+COPY package.json package-lock.json* ./
 COPY prisma ./prisma/
 
-# Instalar dependencias con mejor manejo de errores
-RUN npm config set fetch-retry-maxtimeout 120000 && \
-    npm config set fetch-retry-mintimeout 10000 && \
-    npm config set fetch-retries 5 && \
-    npm install --legacy-peer-deps --verbose || \
-    (echo "First install attempt failed, retrying..." && \
-     npm cache clean --force && \
-     npm install --legacy-peer-deps --verbose) && \
+# Instalar dependencias con reintentos automáticos
+RUN set -ex; \
+    npm ci --legacy-peer-deps --prefer-offline --no-audit || \
+    (echo "CI install failed, trying regular install..." && \
+     rm -rf node_modules package-lock.json && \
+     npm install --legacy-peer-deps --no-audit) && \
     npm cache clean --force
 
 # ============================================
 # STAGE 2: Builder
 # ============================================
 FROM node:20-alpine AS builder
+
 RUN apk add --no-cache libc6-compat python3 make g++
+
 WORKDIR /app
 
 # Copiar dependencias del stage anterior
@@ -38,14 +50,17 @@ COPY . .
 RUN npx prisma generate
 
 # Build Next.js
-ENV NEXT_TELEMETRY_DISABLED 1
-ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+
 RUN npm run build
 
 # ============================================
 # STAGE 3: Runner (Producción)
 # ============================================
 FROM node:20-alpine AS runner
+
 WORKDIR /app
 
 # Instalar dependencias del sistema
@@ -62,24 +77,26 @@ RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
 # Configurar variables de entorno
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
 # Copiar archivos necesarios
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/package.json ./package.json
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 
-# Copiar archivos de OpenClaw
-COPY --from=builder /app/.openclaw-workspace ./.openclaw-workspace
+# Copiar archivos de OpenClaw si existen
+COPY --from=builder --chown=nextjs:nodejs /app/.openclaw-workspace ./.openclaw-workspace 2>/dev/null || true
 
 # Copiar script de entrypoint
-COPY --from=builder /app/scripts/docker-entrypoint.sh /usr/local/bin/
+COPY --from=builder /app/scripts/docker-entrypoint.sh /usr/local/bin/ 2>/dev/null || \
+    echo '#!/bin/sh\nset -e\necho "Starting application..."\nexec "$@"' > /usr/local/bin/docker-entrypoint.sh
+
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Crear directorios necesarios con permisos
