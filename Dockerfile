@@ -30,6 +30,22 @@ FROM node:20-alpine AS builder
 RUN apk add --no-cache libc6-compat python3 make g++
 WORKDIR /app
 
+# Capturar ARGs de EasyPanel para el build
+ARG DATABASE_URL
+ARG NEXTAUTH_URL
+ARG NEXTAUTH_SECRET
+ARG JWT_SECRET
+ARG NEXT_PUBLIC_APP_URL
+
+# Establecer variables de entorno para el build
+ENV DATABASE_URL=$DATABASE_URL
+ENV NEXTAUTH_URL=$NEXTAUTH_URL
+ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+ENV JWT_SECRET=$JWT_SECRET
+ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
+ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV production
+
 # Copiar dependencias del stage anterior
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -38,8 +54,6 @@ COPY . .
 RUN npx prisma generate
 
 # Build Next.js
-ENV NEXT_TELEMETRY_DISABLED 1
-ENV NODE_ENV production
 RUN npm run build
 
 # ============================================
