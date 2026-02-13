@@ -27,7 +27,7 @@ RUN npm config set fetch-retry-maxtimeout 120000 && \
 # STAGE 2: Builder
 # ============================================
 FROM node:20-alpine AS builder
-RUN apk add --no-cache libc6-compat python3 make g++
+RUN apk add --no-cache libc6-compat python3 make g++ git
 WORKDIR /app
 
 # Capturar ARGs de EasyPanel para el build
