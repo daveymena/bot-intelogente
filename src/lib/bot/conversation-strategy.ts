@@ -6,6 +6,7 @@
 export interface ConversationStrategy {
     shouldAskQuestions: boolean;
     suggestedQuestions?: string[];
+    suggestedResponse?: string;
     toolToUse: string | null;
     reasoning: string;
 }
@@ -30,44 +31,18 @@ export class ConversationStrategyService {
 
         // 1️⃣ DETECTAR SALUDOS Y DESPEDIDAS
         if (this.isGreetingOrFarewell(messageLower)) {
+            const isFarewell = this.isFarewell(messageLower);
             return {
                 shouldAskQuestions: false,
                 toolToUse: null,
-                reasoning: 'Saludo o despedida detectado. Respuesta conversacional simple.'
+                reasoning: isFarewell ? 'Despedida detectada.' : 'Saludo detectado.',
+                suggestedResponse: isFarewell 
+                    ? '¡De nada! Ha sido un gusto ayudarte. Si necesitas algo más, aquí estaré. ¡Que tengas un excelente día! 😊'
+                    : '¡Hola! soy David, tu asesor virtual de TecnoVariedades D&S. 👋 ¿En qué puedo ayudarte hoy? ¿Buscas algún producto en especial?'
             };
         }
 
-        // 2️⃣ DETECTAR INTENCIÓN DE COMPRA
-        if (this.isPurchaseIntent(messageLower)) {
-            return {
-                shouldAskQuestions: false,
-                toolToUse: 'get_payment_info',
-                reasoning: 'Intención de compra clara detectada. Mostrar información de pago.'
-            };
-        }
-
-        // 3️⃣ DETECTAR RECHAZO Y SOLICITUD DE ALTERNATIVAS
-        if (this.isRequestingAlternatives(messageLower)) {
-            // Si pide alternativas de productos VARIABLES, hacer preguntas
-            const productType = this.detectProductType(messageLower);
-            if (productType === 'variable') {
-                return {
-                    shouldAskQuestions: true,
-                    suggestedQuestions: this.getQuestionsForCategory(messageLower),
-                    toolToUse: null,
-                    reasoning: 'Cliente rechazó opción y pide alternativas de producto variable. Hacer preguntas para entender necesidades.'
-                };
-            }
-            
-            // Para productos digitales/simples, mostrar lista
-            return {
-                shouldAskQuestions: false,
-                toolToUse: 'list_products_by_category',
-                reasoning: 'Cliente rechazó opción actual y pide alternativas. Mostrar lista.'
-            };
-        }
-
-        // 4️⃣ DETECTAR BÚSQUEDA ESPECÍFICA (nombre completo de producto)
+        // 2️⃣ DETECTAR BÚSQUEDA ESPECÍFICA (nombre completo de producto)
         const specificProduct = this.findSpecificProduct(messageLower, products);
         if (specificProduct) {
             return {
@@ -77,33 +52,81 @@ export class ConversationStrategyService {
             };
         }
 
-        // 5️⃣ DETECTAR TIPO DE PRODUCTO BUSCADO
-        const productType = this.detectProductType(messageLower);
-
-        // 🎯 FIX: Para productos VARIABLES, mostrar LISTA directamente (sin preguntas)
-        // El cliente debe ver todas las opciones disponibles para elegir según sus necesidades
-        if (productType === 'variable') {
+        // 3️⃣ DETECTAR INTENCIÓN DE COMPRA O PAGO
+        if (this.isPurchaseIntent(messageLower)) {
             return {
                 shouldAskQuestions: false,
-                toolToUse: 'list_products_by_category',
-                reasoning: 'Producto variable detectado. Mostrar LISTA de opciones para que el cliente elija según marca, precio y características.'
+                toolToUse: 'get_payment_info',
+                reasoning: 'Intención de compra o consulta de pago detectada.'
             };
         }
 
-        // Para productos SIMPLES/DIGITALES, mostrar lista directamente
+        // 4️⃣ DETECTAR RECHAZO Y SOLICITUD DE ALTERNATIVAS
+        if (this.isRequestingAlternatives(messageLower)) {
+            const productType = this.detectProductType(messageLower);
+            if (productType === 'variable') {
+                return {
+                    shouldAskQuestions: true,
+                    suggestedQuestions: this.getQuestionsForCategory(messageLower),
+                    toolToUse: null,
+                    reasoning: 'Cliente rechazó opción y pide alternativas de producto variable.'
+                };
+            }
+            return {
+                shouldAskQuestions: false,
+                toolToUse: 'list_products_by_category',
+                reasoning: 'Cliente rechazó opción actual y pide alternativas.'
+            };
+        }
+
+        // 5️⃣ DETECTAR DUDAS DE NEGOCIO (Problem Solving)
+        if (this.isBusinessInquiry(messageLower)) {
+            return {
+                shouldAskQuestions: false,
+                toolToUse: null,
+                reasoning: 'Duda sobre el negocio detectada (ubicación, envíos, horarios).'
+            };
+        }
+
+        // 6️⃣ DETECTAR TIPO DE PRODUCTO BUSCADO
+        const productType = this.detectProductType(messageLower);
+
+        // 🎯 INTELIGENCIA DE VENTAS: Para productos VARIABLES, calificar ANTES de mostrar lista
+        // (A menos que el mensaje ya tenga especificaciones o sea una petición de "opciones")
+        if (productType === 'variable') {
+            const hasSpecs = this.hasClientRequirements([ { role: 'user', content: message } ]);
+            const isAskingForOptions = messageLower.includes('opciones') || messageLower.includes('lista') || messageLower.includes('qué tienes');
+            
+            if (!hasSpecs && !isAskingForOptions) {
+                return {
+                    shouldAskQuestions: true,
+                    suggestedQuestions: this.getQuestionsForCategory(messageLower),
+                    toolToUse: null,
+                    reasoning: 'Producto variable detectado sin especificaciones. Iniciando fase de CALIFICACIÓN para asesorar mejor.'
+                };
+            }
+
+            return {
+                shouldAskQuestions: false,
+                toolToUse: 'list_products_by_category',
+                reasoning: 'Producto variable detectado con especificaciones o petición de lista. Mostrando opciones filtradas.'
+            };
+        }
+
+        // Para productos SIMPLES/DIGITALES, mostrar lista directamente (AIDA rápido)
         if (productType === 'simple' || productType === 'digital') {
             return {
                 shouldAskQuestions: false,
                 toolToUse: 'list_products_by_category',
-                reasoning: 'Producto simple/digital. Mostrar opciones directamente con descripciones atractivas (AIDA completo en una respuesta)'
+                reasoning: 'Producto simple/digital. Mostrando opciones directamente para agilizar la venta.'
             };
         }
 
-        // Búsqueda general sin categoría clara
+        // Búsqueda general sin categoría clara: Usar analyze_intent del orquestador (fallback)
         return {
             shouldAskQuestions: false,
-            toolToUse: 'list_products_by_category',
-            reasoning: 'Búsqueda general. Mostrar opciones disponibles'
+            toolToUse: 'list_products_by_category', // Por defecto intentar listar si hay keywords
+            reasoning: 'Búsqueda general. Intentando mostrar catálogo relevante.'
         };
     }
 
@@ -112,38 +135,46 @@ export class ConversationStrategyService {
      */
     private static isGreetingOrFarewell(messageLower: string): boolean {
         const greetings = [
-            'hola', 'buenos días', 'buenas tardes', 'buenas noches', 'buen día',
-            'saludos', 'qué tal', 'cómo estás', 'hey', 'holi'
+            'hola', 'buenos días', 'buenos dias', 'buenas tardes', 'buenas noches', 'buen día', 'buen dia',
+            'saludos', 'qué tal', 'que tal', 'cómo estás', 'como estas', 'como esta', 'cómo esta', 'hey', 'holi', 'así'
         ];
         
+        const wordCount = messageLower.replace(/[?¿!¡.,]/g, '').split(' ').filter(w => w.length > 0).length;
+        
+        // Si el mensaje es solo un saludo de la lista
+        const isBasicGreeting = greetings.some(g => messageLower === g || messageLower.startsWith(g + ' '));
+        
+        if (isBasicGreeting && wordCount <= 5) return true;
+
+        return this.isFarewell(messageLower);
+    }
+
+    private static isFarewell(messageLower: string): boolean {
         const farewells = [
-            'gracias', 'muchas gracias', 'adiós', 'hasta luego', 'chao', 'bye',
+            'gracias', 'muchas gracias', 'adiós', 'adios', 'hasta luego', 'chao', 'bye',
             'nos vemos', 'hasta pronto', 'ok gracias', 'perfecto gracias', 'listo gracias'
         ];
-
-        // Mensaje corto (máximo 4 palabras) que es solo saludo/despedida
         const wordCount = messageLower.replace(/[?¿!¡.,]/g, '').split(' ').filter(w => w.length > 0).length;
-        if (wordCount > 4) return false;
-
-        return greetings.some(g => messageLower.includes(g)) || 
-               farewells.some(f => messageLower.includes(f));
+        return farewells.some(f => messageLower.includes(f)) && wordCount <= 4;
     }
 
     /**
-     * Detecta intención clara de compra
+     * Detecta intención clara de compra o duda sobre pago
      */
     private static isPurchaseIntent(messageLower: string): boolean {
         // "me interesa" puede ser ambiguo si está en contexto de rechazo
-        // Ejemplo: "Pero me interesan otros cursos" NO es intención de compra
         if (this.isRequestingAlternatives(messageLower)) {
             return false;
         }
 
         const purchaseKeywords = [
-            'lo quiero', 'cómo pago', 'métodos de pago', 'formas de pago',
-            'dale', 'comprar', 'comprarlo', 'adquirir', 'cómo compro', 'quiero comprarlo',
+            'lo quiero', 'cómo pago', 'como pago', 'donde pago', 'dónde pago',
+            'métodos de pago', 'metodos de pago', 'formas de pago', 'forma de pago',
+            'medios de pago', 'medio de pago', 'cómo compro', 'como compro',
+            'cómo adquiro', 'como adquiero', 'quiero comprarlo', 'comprar',
             'me lo llevo', 'proceder con la compra', 'realizar el pago', 'pagar',
-            'cuenta bancaria', 'nequi', 'transferencia', 'datos de pago'
+            'cuenta bancaria', 'nequi', 'daviplata', 'transferencia', 'datos de pago',
+            'datos para el pago', 'link de pago', 'link para pagar'
         ];
 
         // "me interesa" solo si NO está con "otros" o "pero"
@@ -153,13 +184,20 @@ export class ConversationStrategyService {
             return true;
         }
 
-        // "sí" solo es intención de compra (necesita contexto conversacional)
-        // Por ahora lo tratamos como búsqueda general
-        if (messageLower === 'sí' || messageLower === 'si') {
-            return false; // Requiere contexto, mejor dejar que AI decida
-        }
-
         return purchaseKeywords.some(keyword => messageLower.includes(keyword));
+    }
+
+    /**
+     * Detecta dudas sobre el negocio (Ubicación, Envíos, Horarios)
+     */
+    private static isBusinessInquiry(messageLower: string): boolean {
+        const businessKeywords = [
+            'donde estan', 'donde queda', 'ubicacion', 'dirección', 'direccion', 'local',
+            'donde encuentro', 'ciudad', 'envio', 'domicilio', 'cuanto vale el envio',
+            'llega a mi ciudad', 'horario', 'abierto', 'cierran', 'atienden'
+        ];
+        
+        return businessKeywords.some(keyword => messageLower.includes(keyword));
     }
 
     /**

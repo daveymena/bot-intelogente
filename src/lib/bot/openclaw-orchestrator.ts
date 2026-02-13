@@ -634,10 +634,20 @@ class OpenClawOrchestrator {
             } catch (e: any) { console.error(`[Architect] ❌ Error en skill:`, e.message); }
         }
 
-        // Reglas de Oro KENNETH
+        // Reglas de Oro KENNETH (Transiciones basadas en palabras clave)
         const msg = messageText.toLowerCase();
-        if (msg.includes('comprar') || msg.includes('interesa') || msg.includes('lo quiero')) nextStage = 'interes_compra';
-        if (msg.includes('gracias') || msg.includes('listo')) nextStage = 'cerrado';
+        
+        // Evitar sobrescribir estados avanzados (pago, confirmacion, cerrado) con estados iniciales
+        const advanceStages = ['pago', 'confirmacion', 'cerrado'];
+        if (!advanceStages.includes(nextStage)) {
+            if (msg.includes('comprar') || msg.includes('interesa') || msg.includes('lo quiero')) {
+                nextStage = 'interes_compra';
+            }
+        }
+        
+        if (msg.includes('gracias') || msg.includes('listo')) {
+            nextStage = 'cerrado';
+        }
 
         // 4. Generatriz de Respuesta
         let response = await this._generateResponse(messageText, history, brainContext, toolData, nextStage);
@@ -648,22 +658,30 @@ class OpenClawOrchestrator {
         await ConversationContextService.addMessage(from, context.userId, 'assistant', response);
 
         // 🛠️ REEMPLAZO FORZADO (Seguridad OpenClaw)
-        // Esto asegura que si la IA dejó un placeholder por error, lo llenamos nosotros con los datos reales
-        if (toolData && (toolData.id || toolData.name)) {
-            const specs = toolData.configurations || 'Ver descripción';
-            // Safe safe check for price
-            const price = typeof toolData.price === 'number' 
-                ? toolData.price.toLocaleString('es-CO', { style: 'currency', currency: 'COP' }) 
-                : toolData.price;
+        // 🛠️ REEMPLAZO FORZADO (Seguridad OpenClaw)
+        if (toolData) {
+            const finalName = toolData.name || toolData.productName || 'Producto';
+            const priceVal = toolData.price || toolData.productPrice;
+            const price = typeof priceVal === 'number' 
+                ? priceVal.toLocaleString('es-CO', { style: 'currency', currency: 'COP' }) 
+                : (priceVal || '');
+            
+            const specs = toolData.configurations || toolData.specs || 'Consultar';
             
             response = response
-                .replace(/{name}/g, toolData.name || 'Producto')
-                .replace(/{price}/g, price || 'Consultar')
+                .replace(/{name}/g, finalName)
+                .replace(/{price}/g, price)
                 .replace(/{description}/g, toolData.description || '')
-                .replace(/{configurations}/g, specs)
+                .replace(/{configurations}/g, typeof specs === 'string' ? specs : JSON.stringify(specs))
                 .replace(/{tipo_entrega}/g, toolData.tipo_entrega || 'Envío a domicilio')
-                .replace(/{paymentLink}/g, toolData.paymentLink ? `🔗 MercadoPago: ${toolData.paymentLink}` : '💳 MercadoPago: Consultar')
+                .replace(/{paymentLink}/g, toolData.paymentLink ? `🔗 MercadoPago: ${toolData.paymentLink}` : '💳 MercadoPago: Link no disponible (Solicitar a asesor)')
                 .replace(/{payPalLink}/g, toolData.payPalLink ? `🔗 PayPal/Internacional: ${toolData.payPalLink}` : '');
+        }
+
+        // 🛡️ SALVAGUARDA: Si por alguna razón la respuesta está vacía, dar una por defecto
+        if (!response || response.trim().length === 0) {
+            console.error('[Architect] ❌ Respuesta generada VACÍA. Usando fallback.');
+            response = "¡Hola! Soy David. Estoy aquí para asesorarte con lo que necesites. ¿En qué puedo ayudarte hoy? 😊";
         }
 
         // 5. Multimedia
@@ -708,6 +726,15 @@ class OpenClawOrchestrator {
             context.products || [],
             history
         );
+
+        // Si la estrategia ya tiene una respuesta sugerida (ej. saludos o despedidas)
+        if (strategy.suggestedResponse) {
+            return {
+                reasoning: strategy.reasoning,
+                toolToUse: strategy.toolToUse,
+                suggestedResponse: strategy.suggestedResponse
+            };
+        }
 
         // Si la estrategia dice que debemos hacer preguntas primero
         if (strategy.shouldAskQuestions && strategy.suggestedQuestions) {
@@ -865,7 +892,7 @@ class OpenClawOrchestrator {
         try {
             soul = fs.readFileSync(path.join(process.cwd(), '.openclaw-workspace', 'SOUL.md'), 'utf-8');
         } catch (e) {
-            soul = 'Eres David, un asistente de ventas profesional y amable.';
+            soul = 'Eres David, un asesor de ventas experto en tecnología y educación digital.';
         }
         
         const isProductList = toolData && toolData.products && Array.isArray(toolData.products);
@@ -876,63 +903,61 @@ ${soul}
 ### 🏠 ESTADO ACTUAL: ${stage}
 ${this._getStageInstruction(stage)}
 
-### 🏢 CONTEXTO:
+### 🏢 CONTEXTO DEL NEGOCIO:
 ${brainContext}
+
+### 🎨 GUÍA DE FORMATO PROFESIONAL (OBLIGATORIO)
+Usa SIEMPRE esta estructura para tus respuestas:
+1. Breve introducción empática (1 línea).
+2. Separador: ━━━━━━━━━━━━━━━━━━
+3. Cuerpo del mensaje (información útil, cards de producto, o respuestas a dudas).
+4. Separador: ━━━━━━━━━━━━━━━━━━
+5. Pregunta de cierre (CTA) para mantener la venta viva.
+
+EMOJIS CLAVE: 💻 (Tech), 🎹 (Cursos), 💰 (Precio), 📦 (Stock), 🚚 (Envío), ✅ (Ventaja), ⚠️ (Nota), 🎯 (Recomendación), 💳 (Pago).
 `;
 
         if (isProductList) {
             const productCount = toolData.products.length;
-            const productsToShow = toolData.products.slice(0, 5); // Mostrar hasta 5 productos
+            const productsToShow = toolData.products.slice(0, 5);
             
             systemPrompt += `
-### asesorando_producto (MODO LISTA DE OPCIONES):
-El cliente preguntó por una CATEGORÍA GENERAL. Debes mostrar una LISTA de opciones para que elija.
+### MODO LISTA DE OPCIONES:
+El cliente busca opciones generales. Debes mostrar una lista clara.
 
-PRODUCTOS ENCONTRADOS (${productCount} total):
-${toolData.products.map((p: any, i: number) => {
-    const price = typeof p.price === 'number' ? p.price.toLocaleString('es-CO', { style: 'currency', currency: 'COP' }) : `$${p.price}`;
-    return `${i+1}. ${p.name} - ${price}`;
-}).join('\n')}
-
-FORMATO OBLIGATORIO (USA ESTE EXACTO):
-¡Claro! Tenemos ${productCount} opciones disponibles:
+FORMATO OBLIGATORIO:
+¡Claro! Encontré estas ${productCount} excelentes opciones para ti:
 
 ━━━━━━━━━━━━━━━━━━
 ${productsToShow.map((p: any, i: number) => {
-    const price = typeof p.price === 'number' ? p.price.toLocaleString('es-CO', { style: 'currency', currency: 'COP' }) : `$${p.price}`;
+    const priceVal = p.price;
+    const price = typeof priceVal === 'number' ? priceVal.toLocaleString('es-CO', { style: 'currency', currency: 'COP' }) : `$${priceVal}`;
     return `${i+1}️⃣ *${p.name}*\n   💰 ${price}`;
 }).join('\n\n')}
 ━━━━━━━━━━━━━━━━━━
 
-¿Cuál te interesa más? Puedo darte todos los detalles 🦞🔥
-
-REGLAS CRÍTICAS:
-- NO inventes productos que no están en la lista
-- NO des detalles de UN solo producto, muestra la LISTA completa
-- USA los separadores ━━━━━━━━━━━━━━━━━━
-- Mantén el formato con números y emojis
-- Si el cliente elige uno, ENTONCES usa get_product_with_payment
+¿Cuál de estos te llama más la atención para darte todos los detalles? 🦞🔥
 `;
         } else if (toolData && (toolData.id || toolData.name)) {
             const isDigital = toolData.category === 'DIGITAL' || toolData.tipo_producto === 'digital' || toolData.tipo_producto === 'curso';
             
             systemPrompt += `
-### viendo_producto (CARD PROFESIONAL):
-REGLA HARD-ENFORCED: TU RESPUESTA DEBE SER ÚNICAMENTE LA CARD. NO ESCRIBAS INTRODUCCIÓN NI CONCLUSIÓN. EMPIEZA DIRECTO CON EL EMOJI.
+### MODO CARD DE PRODUCTO (VISTA DETALLADA):
+Muestra los detalles del producto real usando separadores.
 
-DATOS DEL PRODUCTO REAL:
-${JSON.stringify(toolData, null, 2)}
+DATOS: ${JSON.stringify(toolData)}
 
----
+FORMATO OBLIGATORIO:
 ${isDigital ? `
-OBLIGATORIO (FORMATO DIGITAL/MEGAPACK/CURSO):
-🎹 *{name}*
-💰 Precio: {price}
-🎬 Formato: 100% Pregrabado / Drive
-📲 Entrega: Correo / WhatsApp
-⚠️ Diploma: No incluye certificado
+¡Excelente elección! Este curso es de los más solicitados:
 
 ━━━━━━━━━━━━━━━━━━
+🎹 *{name}*
+💰 Precio: {price}
+🎬 Formato: 100% Pregrabado / Acceso de por vida
+📲 Entrega: Inmediata por Correo/WhatsApp
+🛡️ Garantía: 7 días de Satisfacción
+
 📋 *Descripción*
 {description}
 ━━━━━━━━━━━━━━━━━━
@@ -940,33 +965,32 @@ OBLIGATORIO (FORMATO DIGITAL/MEGAPACK/CURSO):
 {paymentLink}
 {payPalLink}
 
-🛡️ Garantía: 7 días de Satisfacción | 📦 Entrega: Link de Acceso
-📩 ¿Deseas comprarlo y recibir el acceso ahora mismo?
+📩 ¿Deseas inscribirte ahora mismo y empezar hoy?
 ` : `
-OBLIGATORIO (FORMATO TECNOLOGÍA/FÍSICO):
-💻 *{name}*
-💰 Precio: {price}
-📦 Stock: Disponible | 🚚 Entrega: {tipo_entrega}
-⚙️ Specs: {configurations}
+¡Buenísima elección! Aquí tienes los detalles técnicos:
 
 ━━━━━━━━━━━━━━━━━━
+💻 *{name}*
+💰 Precio: {price}
+⚙️ Specs: {configurations}
+📦 Stock: Disponible | 🚚 Entrega: {tipo_entrega}
+
 📋 *Descripción*
 {description}
 ━━━━━━━━━━━━━━━━━━
 
-📩 ¿Te lo envío ya mismo o tienes alguna duda?
+📩 ¿Te gustaría que lo apartemos para envío o prefieres pasar al local?
 `}
 `;
         } else if (stage === 'pago' && toolData) {
             systemPrompt += `
-### pago (CIERRE):
-REGLA HARD-ENFORCED: TU RESPUESTA DEBE SER ÚNICAMENTE LA CARD. NO ESCRIBAS PÁRRAFOS LARGOS.
+### MODO CIERRE / PAGO:
+Proporciona los datos de pago de forma clara y profesional.
 
-DATOS:
-${JSON.stringify(toolData, null, 2)}
+DATOS: ${JSON.stringify(toolData)}
 
 FORMATO OBLIGATORIO:
-¡Excelente elección! Aquí tienes los datos para concretar tu pedido:
+¡Perfecto! Aquí tienes los datos para concretar tu compra ahora mismo:
 
 ━━━━━━━━━━━━━━━━━━
 🏦 *Transferencia Bancaria*
@@ -977,30 +1001,34 @@ Titular: TecnoVariedades D&S
 📱 *Nequi / Daviplata*
 Número: 3136174267
 
-💰 *Links de Pago*
+💳 *Pagos Digitales*
 {paymentLink}
 {payPalLink}
 ━━━━━━━━━━━━━━━━━━
 
-¿Me confirmas cuando realices el pago para procesar tu envío de inmediato? 🦞🔥
+¿Me confirmas cuando realices el pago para procesar tu pedido de inmediato? 🦞🔥
 `;
         } else {
             systemPrompt += `
-### 💬 CHARLA GENERAL:
-Responde como David, mantén la conversación viva pero guía al usuario a que busque algo. NO INVENTES SPECS. SI QUIERE COMPRAR ALGO, PIDE QUE TE DIGA EL NOMBRE DEL PRODUCTO.
+### MODO CONVERSACIONAL / ASESORÍA:
+Responde como David, el experto. Resuelve dudas, objeciones y problemas.
+
+REGLAS:
+- Si el cliente tiene una duda sobre envío, explica que enviamos a todo el país.
+- Si duda del precio, resalta la garantía y calidad.
+- Si pregunta por la ubicación, di: Centro Comercial El Diamante 2, Local 158, Cali.
+- SIEMPRE usa los separadores ━━━━━━━━━━━━━━━━━━ si estás dando información estructurada.
+- Termina siempre con una pregunta persuasiva.
 `;
         }
 
         systemPrompt += `
 ---
-🚀 **INSTRUCCIONES DE DAVID (Smart Sales Bot)**:
-1. **Identidad**: Eres David. Profesional, empático y comercial.
-2. **Formato**: Si muestras un producto, usa la CARD con separadores ━━━━━━━━━━━━━━━━━━.
-3. **Ubicación Real**: Centro Comercial El Diamante 2, Local 158, Cali. NUNCA inventes otra.
-4. **Pagos**: Aceptamos MercadoPago, PayPal, Nequi y BBVA.
-5. **Horarios**: Di siempre "Consultar disponibilidad por WhatsApp: +57 304 274 8687".
-6. **No Inventar**: Si no conoces un dato técnico, admítelo y ofrece consultar.
-7. **Flujo**: Pregunta antes de dar el siguiente paso (¿quieres envío o retiro?).
+🚀 **INSTRUCCIONES FINALES PARA DAVID**:
+1. Eres un ASESOR EXPERTO, no un loro. Piensa antes de responder.
+2. Si el usuario pregunta algo técnico que no sabes, di que consultarás con bodega.
+3. El tono debe ser profesional pero muy cercano (colombiano respetuoso).
+4. JAMÁS inventes datos que no están en el CONTEXTO o en toolData.
 ---
 `;
 
@@ -1127,7 +1155,7 @@ Responde como David, mantén la conversación viva pero guía al usuario a que b
         
         // Si llegamos aquí, todos los modelos, API keys y Ollama fallaron
         console.error('[OpenClaw] ❌ Todos los recursos (Groq + Ollama) agotados');
-        return "David: El sistema está un poco saturado ahora mismo, pero no te preocupes. Escríbeme de nuevo en unos minutos o déjame tu consulta y te responderé en cuanto se libere. 😊";
+        return "David: ¡Hola! Soy el asesor virtual de la tienda. He tenido un pequeño retraso técnico, pero ya estoy aquí. ¿En qué te puedo ayudar hoy? 😊";
     }
 }
 

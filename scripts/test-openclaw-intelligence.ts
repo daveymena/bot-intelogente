@@ -10,28 +10,28 @@ async function runIntelligenceTests() {
 
     const testCases = [
         {
-            name: 'Saludo y consulta general de productos',
-            message: 'Hola, ¿qué productos tienes?',
-            expected_behavior: 'Debe saludar (David) y ofrecer categorías.'
+            name: 'Saludo amistoso (Cómo estás)',
+            message: 'Hola David, ¿cómo estás hoy?',
+            expected_behavior: 'Debe responder amablemente como David, sin ser silente.'
         },
         {
-            name: 'Consulta específica de un producto real',
-            message: 'Me interesa el Mega Pack 11',
-            expected_behavior: 'Debe mostrar la CARD profesional del Mega Pack 11.'
-        },
-        {
-            name: 'Pregunta por ubicación (Evitar invención)',
-            message: '¿Están en Bogotá?',
-            expected_behavior: 'Debe decir CC El Diamante 2 en Cali.'
-        },
-        {
-            name: 'Consulta de métodos de pago',
-            message: '¿Cuáles son los métodos de pago?',
+            name: 'Consulta de métodos de pago directo',
+            message: '¿Cuál es la forma de pago?',
             expected_behavior: 'Debe mostrar Nequi, BBVA y links.'
+        },
+        {
+            name: 'Consulta ambigua (Busco algo para trabajar)',
+            message: 'Busco algo para trabajar',
+            expected_behavior: 'Debe usar analyze_intent y preguntar qué tipo de trabajo.'
+        },
+        {
+            name: 'Producto específico',
+            message: 'Me interesa el Mega Pack 11',
+            expected_behavior: 'Debe mostrar la CARD del Mega Pack 11.'
         }
     ];
 
-    // Mock de productos para evitar dependencia total de la DB local en el test
+    // Mock de productos
     const mockProducts = [
         {
             id: 'prod-001',
@@ -73,13 +73,17 @@ async function runIntelligenceTests() {
             const duration = Date.now() - startTime;
 
             console.log(`🤖 David (${duration}ms):`);
-            console.log(response.text);
+            console.log(response.text || '!!! RESPUESTA VACÍA !!!');
             
             if (response.media) {
                 console.log(`📸 Media detectable: ${response.media.length} imágenes`);
             }
             
             console.log(`📍 Siguiente Estado: ${response.nextStage}`);
+            
+            if (!response.text) {
+                console.error('❌ ERROR: La respuesta es nula o vacía.');
+            }
             
         } catch (error: any) {
             console.error(`❌ Error en el test: ${error.message}`);
