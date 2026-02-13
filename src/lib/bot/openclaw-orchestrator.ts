@@ -147,15 +147,18 @@ export const TOOLS: any = {
 
                 console.log(`[Skill] ✅ Encontrados ${results.length} productos para: "${searchTerm}"`);
 
-                const products = results.map(r => ({
-                    id: r.item.id,
-                    name: r.item.name,
-                    price: r.item.price,
-                    description: r.item.description,
-                    category: r.item.category,
-                    images: r.item.images,
-                    match: Math.round((1 - r.score!) * 100)
-                }));
+                const products = results.map(r => {
+                    const item = r.item as any;
+                    return {
+                        id: item.id,
+                        name: item.name,
+                        price: item.price,
+                        description: item.description,
+                        category: item.category,
+                        images: item.images,
+                        match: Math.round((1 - r.score!) * 100)
+                    };
+                });
 
                 return {
                     success: true,
@@ -574,7 +577,10 @@ class OpenClawOrchestrator {
                 } else {
                     // Para búsquedas específicas, mostrar productos individuales
                     catalogHints = `🎯 PRODUCTOS ESPECÍFICOS ENCONTRADOS:\n` + 
-                        hints.map(h => `• ID: ${h.item.id} | NOMBRE: ${h.item.name} | TIPO: ${h.item.tipo_producto || 'N/A'}`).join('\n');
+                        hints.map(h => {
+                            const item = h.item as any;
+                            return `• ID: ${item.id} | NOMBRE: ${item.name} | TIPO: ${item.tipo_producto || 'N/A'}`;
+                        }).join('\n');
                 }
             }
         } catch (e) { /* silent */ }
