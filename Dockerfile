@@ -31,6 +31,7 @@ COPY prisma ./prisma/
 
 # Instalar dependencias (solo producción para reducir tamaño)
 # Usamos --ignore-scripts para evitar que node-llama-cpp intente compilarse
+# Usamos --ignore-scripts para evitar que node-llama-cpp intente compilarse (FIX CRITICO)
 RUN npm ci --only=production --prefer-offline --no-audit --ignore-scripts
 
 # Copiar código fuente
