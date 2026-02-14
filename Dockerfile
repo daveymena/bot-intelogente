@@ -10,7 +10,10 @@ RUN apk add --no-cache \
     ca-certificates \
     ttf-freefont \
     git \
-    openssl
+    openssl \
+    make \
+    g++ \
+    python3
 
 # Variables de entorno para optimización
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
