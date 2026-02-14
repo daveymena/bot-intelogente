@@ -35,15 +35,43 @@ export async function routeMessage(
   userId: string,
   customerPhone: string,
   message: string,
-  conversationId?: string
+  options?: { 
+    conversationId?: string;
+    hasImage?: boolean;
+    isAdmin?: boolean;
+  }
 ): Promise<AgentResponse> {
   try {
     console.log(`[AgentRouter] 🦞 Procesando con OpenClaw para ${customerPhone}`);
     fs.appendFileSync('debug_router.log', `[${new Date().toISOString()}] MSG: ${customerPhone} -> ${message}\n`);
     
+    // 0. LÓGICA DE ADMINISTRADOR (Escalación de compra)
+    if (customerPhone.includes('3136174267')) {
+      const msg = message.toLowerCase();
+      if (msg.includes('aprobar') || msg.includes('confirma') || msg.includes('envía') || msg.includes('envia')) {
+        console.log(`[AgentRouter] 👨‍💼 Administrador aprobando pago...`);
+        // Buscar conversación más reciente que esté en validación
+        const pendingConv = await prisma.conversation.findFirst({
+          where: { status: 'ACTIVE', currentStage: 'pago_validando' },
+          orderBy: { lastMessageAt: 'desc' }
+        });
+
+        if (pendingConv) {
+          console.log(`[AgentRouter] ✅ Pago aprobado para ${pendingConv.customerPhone}`);
+          await prisma.conversation.update({
+            where: { id: pendingConv.id },
+            data: { currentStage: 'confirmacion', needsHumanAttention: false }
+          });
+          return {
+            text: `¡Hola! He validado tu pago con éxito. 🎉 David ya tiene la orden para proceder. ¿Me confirmas tu nombre completo y dirección para el envío?`
+          };
+        }
+      }
+    }
+
     // 1. Guardar mensaje entrante
-    let conversation = conversationId
-      ? await prisma.conversation.findUnique({ where: { id: conversationId }, include: { product: true } })
+    let conversation = options?.conversationId
+      ? await prisma.conversation.findUnique({ where: { id: options.conversationId }, include: { product: true } })
       : await prisma.conversation.findFirst({
           where: { customerPhone, userId, status: 'ACTIVE' },
           include: { product: true }
@@ -74,13 +102,26 @@ export async function routeMessage(
     try {
       const openClaw = await getOpenClaw();
       
-      // Obtener productos del usuario
-      const products = await prisma.product.findMany({
-        where: { 
-          userId,
-          status: 'AVAILABLE'
+      // 🚀 OBTENER PRODUCTOS (Prioridad: Supabase -> Fallback: Prisma)
+      let products = [];
+      try {
+        const { SupabaseProductService } = await import('../openclaw-supabase-products');
+        products = await SupabaseProductService.getAvailableProducts(userId);
+        
+        if (products.length > 0) {
+          console.log(`[AgentRouter] ✅ ${products.length} productos cargados desde SUPABASE (Profesional)`);
+        } else {
+          console.log(`[AgentRouter] ⚠️ Supabase no devolvió productos, usando PRISMA como fallback`);
+          products = await prisma.product.findMany({
+            where: { userId, status: 'AVAILABLE' }
+          });
         }
-      });
+      } catch (e) {
+        console.error(`[AgentRouter] ❌ Error cargando productos desde Supabase:`, e);
+        products = await prisma.product.findMany({
+          where: { userId, status: 'AVAILABLE' }
+        });
+      }
 
       // Contexto para OpenClaw
       const context = {
@@ -92,7 +133,16 @@ export async function routeMessage(
       };
 
       // Procesar con OpenClaw
-      const openClawResponse = await openClaw.processMessage(message, customerPhone, context);
+      const openClawResponse = await openClaw.processMessage(message, customerPhone, context, options?.hasImage);
+
+      // Si pasa a validación, marcar para atención humana (Admin verá esto)
+      if (openClawResponse.nextStage === 'pago_validando') {
+        console.log(`[AgentRouter] 🚨 Escalando a admin para validación de pago: ${customerPhone}`);
+        await prisma.conversation.update({
+          where: { id: conversation.id },
+          data: { needsHumanAttention: true, escalationReason: 'Validación de pago requerida' }
+        });
+      }
       
       console.log(`[AgentRouter] ✅ OpenClaw respondió (Estado: ${openClawResponse.nextStage})`);
 

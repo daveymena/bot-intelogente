@@ -33,12 +33,36 @@ interface BaileysSession {
   lastDisconnect: Date | null
 }
 
+// Redirigir consola a archivo para depuración remota
+let originalLog = console.log;
+let originalError = console.error;
+
+if (typeof fs !== 'undefined' && typeof process !== 'undefined') {
+  try {
+    const logFile = fs.createWriteStream(path.join(process.cwd(), 'debug_console.log'), { flags: 'a' });
+
+    console.log = (...args) => {
+      const msg = `[${new Date().toISOString()}] LOG: ${args.map(a => typeof a === 'object' ? (a instanceof Error ? a.stack : JSON.stringify(a)) : a).join(' ')}\n`;
+      logFile.write(msg);
+      originalLog.apply(console, args);
+    };
+
+    console.error = (...args) => {
+      const msg = `[${new Date().toISOString()}] ERROR: ${args.map(a => typeof a === 'object' ? (a instanceof Error ? a.stack : JSON.stringify(a)) : a).join(' ')}\n`;
+      logFile.write(msg);
+      originalError.apply(console, args);
+    };
+  } catch (e) {
+    // Silence fs error but keep original loggers
+  }
+}
+
 export class BaileysStableService {
   // Cache de Productos para optimización de velocidad
   private static productsCache: any[] | null = null
   private static lastCacheUpdate: number = 0
 
-  private static sessions: Map<string, any> = new Map()
+  private static sessions: Map<string, BaileysSession> = new Map()
   private static qrCallbacks: Map<string, (qr: string) => void> = new Map()
   private static reconnectTimers: Map<string, NodeJS.Timeout> = new Map()
   private static connectionLocks: Map<string, number> = new Map() // 🔒 Bloqueo de conexiones con timestamp
@@ -51,10 +75,6 @@ export class BaileysStableService {
   private static logger = pino({ level: 'silent' })
 
   /**
-   * Inicializar conexión de WhatsApp con Baileys
-   */
-
-  /**
    * Inicializar sistema híbrido
    */
   static async initializeConnection(userId: string): Promise<{ success: boolean; qr?: string; error?: string }> {
@@ -63,16 +83,13 @@ export class BaileysStableService {
       const existingLock = this.connectionLocks.get(userId)
       if (existingLock) {
         const lockTime = Date.now() - existingLock
-        // Si el lock tiene más de 2 minutos, permitir nueva conexión
         if (lockTime < 120000) {
           console.log(`[Baileys] ⚠️ Ya hay una conexión en proceso para ${userId} (${Math.round(lockTime/1000)}s), ignorando...`)
           return { success: false, error: 'Conexión ya en proceso' }
-        } else {
-          console.log(`[Baileys] 🔓 Lock expirado para ${userId}, permitiendo nueva conexión`)
         }
       }
 
-      // 🔒 Bloquear nuevas conexiones con timestamp
+      // 🔒 Bloquear nuevas conexiones INMEDIATAMENTE
       this.connectionLocks.set(userId, Date.now())
 
       console.log(`[Baileys] 🚀 Inicializando conexión para usuario: ${userId}`)
@@ -86,17 +103,9 @@ export class BaileysStableService {
         fs.mkdirSync(authDir, { recursive: true })
       }
 
-      console.log(`[Baileys] 📁 Directorio de sesión: ${authDir}`)
-
-      // Cargar estado de autenticación
       const { state, saveCreds } = await useMultiFileAuthState(authDir)
-      console.log(`[Baileys] ✅ Estado de autenticación cargado`)
-
-      // Obtener versión más reciente de Baileys
       const { version } = await fetchLatestBaileysVersion()
-      console.log(`[Baileys] 📦 Versión de Baileys: ${version.join('.')}`)
 
-      // Crear socket de WhatsApp
       const socket = makeWASocket({
         version,
         logger: this.logger,
@@ -108,9 +117,6 @@ export class BaileysStableService {
         generateHighQualityLinkPreview: true
       })
 
-      console.log(`[Baileys] ✅ Socket creado`)
-
-      // Crear sesión
       const session: BaileysSession = {
         socket,
         qr: null,
@@ -122,19 +128,14 @@ export class BaileysStableService {
       }
       this.sessions.set(userId, session)
 
-      // Actualizar estado en DB
       await this.updateConnectionStatus(userId, 'CONNECTING')
-
-      // Configurar manejadores de eventos
       await this.setupEventHandlers(socket, session, saveCreds, userId)
-
-      console.log(`[Baileys] ✅ Manejadores de eventos configurados`)
 
       return { success: true }
     } catch (error) {
       console.error('[Baileys] ❌ Error inicializando conexión:', error)
       await this.updateConnectionStatus(userId, 'DISCONNECTED', error instanceof Error ? error.message : 'Error desconocido')
-      this.connectionLocks.delete(userId) // 🔓 Desbloquear en caso de error
+      this.connectionLocks.delete(userId)
       return { success: false, error: error instanceof Error ? error.message : 'Error desconocido' }
     }
   }
@@ -148,347 +149,146 @@ export class BaileysStableService {
     saveCreds: () => Promise<void>,
     userId: string
   ) {
-    const { userId: sessionUserId } = session
-
-    // Manejar actualización de credenciales
     socket.ev.on('creds.update', saveCreds)
 
-    // Manejar actualización de conexión
     socket.ev.on('connection.update', async (update) => {
       const { connection, lastDisconnect, qr } = update
 
-      console.log(`[Baileys] 🔄 Actualización de conexión:`, {
-        connection,
-        hasQr: !!qr,
-        hasLastDisconnect: !!lastDisconnect
-      })
+      console.log(`[Baileys] 🔄 Actualización de conexión para ${userId}:`, JSON.stringify(update));
 
-      // Manejar QR
       if (qr) {
-        console.log(`[Baileys] 📱 QR recibido para usuario: ${userId}`)
-
         try {
-          const qrDataURL = await QRCode.toDataURL(qr, {
-            width: 300,
-            margin: 2,
-            color: {
-              dark: '#25D366',
-              light: '#FFFFFF'
-            }
-          })
-
+          const qrDataURL = await QRCode.toDataURL(qr, { width: 300 })
           session.qr = qrDataURL
           session.status = 'QR_PENDING'
-
-          // Guardar en DB
-          await db.whatsAppConnection.upsert({
-            where: { userId },
-            create: {
-              userId,
-              phoneNumber: 'pending',
-              status: 'QR_PENDING',
-              qrCode: qrDataURL,
-              qrExpiresAt: new Date(Date.now() + 60000)
-            },
-            update: {
-              status: 'QR_PENDING',
-              qrCode: qrDataURL,
-              qrExpiresAt: new Date(Date.now() + 60000)
-            }
-          })
-
-          console.log(`[Baileys] ✅ QR guardado en DB`)
-
-          // Llamar callback si existe
+          await this.updateConnectionStatus(userId, 'QR_PENDING', undefined, qrDataURL)
+          
           const callback = this.qrCallbacks.get(userId)
-          if (callback) {
-            callback(qrDataURL)
-          }
+          if (callback) callback(qrDataURL)
         } catch (error) {
           console.error('[Baileys] ❌ Error generando QR:', error)
         }
       }
 
-      // Manejar conexión abierta
       if (connection === 'open') {
-        console.log(`[Baileys] ✅ Conexión establecida para usuario: ${userId}`)
-
+        console.log(`[Baileys] ✅ Conexión establecida para: ${userId}`)
         session.status = 'CONNECTED'
         session.qr = null
         session.isReady = true
         session.reconnectAttempts = 0
 
-        // Obtener info del usuario
         const phoneNumber = socket.user?.id.split(':')[0] || 'unknown'
-        console.log(`[Baileys] 📱 Número de WhatsApp: ${phoneNumber}`)
-
         await db.whatsAppConnection.upsert({
           where: { userId },
-          create: {
-            userId,
-            phoneNumber,
-            status: 'CONNECTED',
-            isConnected: true,
-            lastConnectedAt: new Date(),
-            qrCode: null,
-            qrExpiresAt: null
-          },
-          update: {
-            phoneNumber,
-            status: 'CONNECTED',
-            isConnected: true,
-            lastConnectedAt: new Date(),
-            qrCode: null,
-            qrExpiresAt: null,
-            connectionAttempts: 0,
-            lastError: null
-          }
+          create: { userId, phoneNumber, status: 'CONNECTED', isConnected: true, lastConnectedAt: new Date() },
+          update: { phoneNumber, status: 'CONNECTED', isConnected: true, lastConnectedAt: new Date(), connectionAttempts: 0, lastError: null }
         })
 
-        console.log(`[Baileys] ✅ Conexión registrada en base de datos`)
-
-        // 🔓 Desbloquear conexión exitosa
         this.connectionLocks.delete(userId)
-
-        // 💓 Iniciar keep-alive para mantener conexión activa
         this.startKeepAlive(socket, userId)
-
-        // Configurar manejador de mensajes
         this.setupMessageHandler(socket, userId)
       }
 
-      // Manejar cierre de conexión
       if (connection === 'close') {
-        session.lastDisconnect = new Date()
-        
-        // Determinar si debe reconectar basado en el motivo de desconexión
         const statusCode = (lastDisconnect?.error as Boom)?.output?.statusCode
-        
-        // 🚫 Código 440 = Conflicto de sesión (múltiples conexiones)
-        // NO reconectar automáticamente, esperar a que el sistema se estabilice
-        if (statusCode === 440) {
-          console.log(`[Baileys] ⚠️ Conflicto de sesión detectado (440), limpiando y esperando...`)
-          session.status = 'DISCONNECTED'
-          await this.updateConnectionStatus(userId, 'DISCONNECTED', 'Conflicto de sesión - múltiples conexiones')
-          this.stopKeepAlive(userId)
-          this.sessions.delete(userId)
-          this.connectionLocks.delete(userId)
-          return
-        }
-        
         const shouldReconnect = statusCode !== DisconnectReason.loggedOut
-        
-        console.log(`[Baileys] 🔌 Conexión cerrada. Código: ${statusCode}, Reconectar: ${shouldReconnect}`)
 
         if (shouldReconnect) {
-          // 🛡️ Registrar desconexión en SafeReconnectManager
           SafeReconnectManager.recordDisconnect(userId)
           session.reconnectAttempts++
 
-          // 🛡️ Verificar si puede reconectar (protección anti-ban)
           if (!SafeReconnectManager.canReconnect(userId)) {
-            console.log(`[Baileys] ❌ Máximo de reintentos alcanzado (protección anti-ban)`)
-            session.status = 'DISCONNECTED'
-            await this.updateConnectionStatus(userId, 'DISCONNECTED', 'Máximo de reintentos alcanzado')
-            this.stopKeepAlive(userId)
-            this.sessions.delete(userId)
-            this.connectionLocks.delete(userId)
+            console.log(`[Baileys] ❌ Protección anti-ban activada para ${userId}`)
+            await this.cleanupSession(userId)
+            await this.updateConnectionStatus(userId, 'DISCONNECTED', 'Protección anti-ban activa')
             return
           }
 
-          console.log(`[Baileys] 🔄 Intento de reconexión #${session.reconnectAttempts}`)
-
-          // 🔓 Desbloquear antes de reconectar
           this.connectionLocks.delete(userId)
-
-          // 🛡️ Usar SafeReconnectManager para reconexión segura
-          const success = await SafeReconnectManager.startReconnect(userId, async () => {
-            console.log(`[Baileys] 🔄 Reconectando con protección anti-ban...`)
+          await SafeReconnectManager.startReconnect(userId, async () => {
             await this.initializeConnection(userId)
           })
-
-          if (!success) {
-            console.log(`[Baileys] ❌ Reconexión fallida`)
-            session.status = 'DISCONNECTED'
-            await this.updateConnectionStatus(userId, 'DISCONNECTED', 'Reconexión fallida')
-            this.stopKeepAlive(userId)
-            this.sessions.delete(userId)
-            this.connectionLocks.delete(userId)
-          }
         } else {
-          console.log(`[Baileys] 🚪 Usuario cerró sesión (logged out), no reconectar`)
-          session.status = 'DISCONNECTED'
-          await this.updateConnectionStatus(userId, 'DISCONNECTED', 'Usuario cerró sesión')
-          this.stopKeepAlive(userId) // 💓 Detener keep-alive
-          this.sessions.delete(userId)
-          this.connectionLocks.delete(userId) // 🔓 Desbloquear
+          await this.cleanupSession(userId)
+          await this.updateConnectionStatus(userId, 'DISCONNECTED', 'Sesión cerrada por usuario')
         }
       }
     })
-
-    console.log(`[Baileys] ✅ Event handlers configurados`)
   }
 
   /**
    * Configurar manejador de mensajes
    */
   private static setupMessageHandler(socket: WASocket, userId: string) {
-    // 🛡️ PREVENIR DUPLICADOS: Verificar si ya hay un handler configurado
-    const handlerKey = `${userId}-${socket.user?.id || 'unknown'}`
+    const botId = socket.user?.id || 'unknown';
+    console.log(`[Baileys] 🎯 Configurando manejador para ${userId} (Bot ID: ${botId})`);
     
-    if (this.messageHandlersConfigured.get(handlerKey)) {
-      console.log(`[Baileys] ⚠️ Handler ya configurado para ${userId}, ignorando duplicado`)
-      return
-    }
-    
-    console.log(`[Baileys] 🎯 Configurando manejador de mensajes para usuario: ${userId}`)
-    
-    // Marcar como configurado
-    this.messageHandlersConfigured.set(handlerKey, true)
+    socket.ev.process(async (events) => {
+      if (events['messages.upsert']) {
+        const { messages, type } = events['messages.upsert'];
+        if (type !== 'notify') return;
 
-    socket.ev.on('messages.upsert', async ({ messages, type }) => {
-      if (type !== 'notify') return
+        for (const message of messages) {
+          if (message.key.fromMe) continue;
 
-      for (const message of messages) {
-        // Ignorar mensajes propios
-        if (message.key.fromMe) continue
-
-        try {
-          const from = message.key.remoteJid
-          if (!from) continue
-
-          // Extraer texto del mensaje
-          let messageText = message.message?.conversation ||
-            message.message?.extendedTextMessage?.text ||
-            ''
-
-          // 🎤 Procesar audio
-          if (message.message?.audioMessage) {
-            console.log(`[Baileys] 🎤 Audio recibido de ${from}`)
-            try {
-              const { AudioTranscriptionService } = await import('./audio-transcription-service')
-              const audioService = new AudioTranscriptionService()
-
-              // Descargar audio
-              const buffer = await downloadMediaMessage(
-                message,
-                'buffer',
-                {},
-                {
-                  logger: pino({ level: 'silent' }),
-                  reuploadRequest: socket.updateMediaMessage
-                }
-              )
-
-              // Guardar temporalmente y transcribir
-              const tempPath = path.join(process.cwd(), 'temp-audio', `audio_${Date.now()}.ogg`)
-              await fs.promises.mkdir(path.dirname(tempPath), { recursive: true })
-              await fs.promises.writeFile(tempPath, buffer as Buffer)
-
-              messageText = await audioService.transcribeWithGroq(tempPath)
-              console.log(`[Baileys] ✅ Audio transcrito: "${messageText}"`)
-
-              // Limpiar
-              await fs.promises.unlink(tempPath).catch(() => { })
-            } catch (error: any) {
-              console.error(`[Baileys] ❌ Error transcribiendo audio:`, error.message)
-              messageText = '[Audio recibido - Error en transcripción]'
-            }
-          }
-
-          // 📸 Procesar imagen
-          if (message.message?.imageMessage) {
-            console.log(`[Baileys] 📸 Imagen recibida de ${from}`)
-            const caption = message.message.imageMessage.caption || ''
-            messageText = caption || 'Me envías fotos para verlo'
-          }
-
-          if (!messageText) continue
-
-          console.log(`[Baileys] 📨 Mensaje procesado de ${from}: ${messageText.substring(0, 100)}`)
-
-          // Guardar mensaje en DB
-          const conversation = await this.saveIncomingMessage(userId, from, messageText)
-
-          // ❌ DESACTIVADO: Sistema antiguo de pagos (ahora lo maneja clean-bot)
-          // const paymentDetected = await this.detectAndHandlePayment(socket, userId, from, messageText, conversation.id)
-          // if (paymentDetected) {
-          //   console.log('[Baileys] Solicitud de pago manejada')
-          //   continue
-          // }
-
-          // LOG DE MENSAJE RECIBIDO
-          console.log(`[Baileys] 📩 Mensaje de ${from}: ${messageText.slice(0, 50)}...`);
-          fs.appendFileSync('debug_baileys.log', `[${new Date().toISOString()}] FROM: ${from} MSG: ${messageText}\n`);
-          // 🎯 SISTEMA AGENT ROUTER (Venta con Datos Reales)
-          console.log('[Baileys] 🧠 Procesando con AgentRouter (Real Data Logic)...')
-          
           try {
-            const result = await routeMessage(userId, from, messageText);
+            const from = message.key.remoteJid;
+            if (!from) continue;
+
+            let messageText = message.message?.conversation ||
+              message.message?.extendedTextMessage?.text ||
+              '';
+
+            let hasImage = !!message.message?.imageMessage;
+            if (hasImage) {
+              const caption = message.message?.imageMessage?.caption || '';
+              messageText = caption || 'Comprobante enviado';
+            }
+
+            if (!messageText && !hasImage) continue;
+
+            console.log(`[Baileys] 📩 Mensaje de ${from}: "${messageText.slice(0, 50)}"`);
+            fs.appendFileSync('debug_baileys.log', `[${new Date().toISOString()}] FROM: ${from} MSG: ${messageText}\n`);
+
+            // Guardar en DB
+            const conversation = await this.saveIncomingMessage(userId, from, messageText);
             
-            // 🎨 FORMATO CARD MODE (Aplicar formato profesional)
+            console.log('[Baileys] 🧠 Procesando con AgentRouter...');
+            const isAdmin = from.includes('3136174267');
+            const result = await routeMessage(userId, from, messageText, { hasImage, isAdmin, conversationId: conversation.id });
+            
             const formattedText = ProfessionalResponseFormatter.cleanOldFormat(result.text);
 
-            console.log(`[Baileys] ✅ Respuesta generada por AgentRouter`);
-            
-            // ⏳ SIMULAR ESCRITURA
+            // Delay humano
             try {
+              const delay = Math.min(4000, Math.max(1200, (formattedText.length * 20) + 500));
               await socket.sendPresenceUpdate('composing', from);
-              await new Promise(resolve => setTimeout(resolve, 1500));
+              await new Promise(r => setTimeout(r, delay));
               await socket.sendPresenceUpdate('paused', from);
-            } catch (e) { /* ignore */ }
-            
-            // 📸 GESTIÓN DE ENVÍO (Imagen con Caption de Card)
+            } catch (e) {}
+
+            // Enviar respuesta
             if (result.media && result.media.length > 0) {
-                console.log(`[Baileys] 📸 Enviando Card Visual (Imagen + Texto)...`);
-                const mainImage = result.media[0];
-                
-                if (mainImage && typeof mainImage === 'string') {
-                    try {
-                        // Enviar la imagen con TODO el texto de la card como caption
-                        await socket.sendMessage(from, { 
-                            image: { url: mainImage },
-                            caption: formattedText
-                        });
-                        
-                        // Si hay más fotos, enviarlas después (sin duplicar el texto)
-                        if (result.media.length > 1) {
-                            const additionalImages = result.media.slice(1, 3);
-                            for (const imageUrl of additionalImages) {
-                                if (!imageUrl || typeof imageUrl !== 'string') continue;
-                                try {
-                                    await socket.sendMessage(from, { image: { url: imageUrl } });
-                                } catch (e) { }
-                            }
-                        }
-                        
-                        console.log(`[Baileys] ✅ Card visual enviada exitosamente`);
-                        return; // 🛑 Salir para no enviar el texto solo abajo
-                    } catch (e) {
-                        console.error('[Baileys] Error enviando card visual, reintentando solo texto:', e);
-                    }
-                }
+              console.log(`[Baileys] 📸 Enviando media...`);
+              await socket.sendMessage(from, { 
+                image: { url: result.media[0] }, 
+                caption: formattedText 
+              });
+            } else {
+              await socket.sendMessage(from, { text: formattedText });
             }
             
-            // 📝 Enviar solo Texto (si no hay imagen o falló el envío visual)
-            await socket.sendMessage(from, { text: formattedText });
-            
-            // Nota: El router ya guarda los mensajes en la DB (INCOMING y OUTGOING)
-            
-          } catch (handlerError: any) {
-            console.error('[Baileys] ❌ Error en AgentRouter:', handlerError.message)
-            try {
-                await socket.sendMessage(from, { text: '😅 David: Tuve un pequeño contratiempo. ¿Qué necesitas?' })
-            } catch (e) { }
-          }
+            console.log(`[Baileys] ✅ Respuesta enviada a ${from}`);
 
-        } catch (error) {
-          console.error('[Baileys] ❌ Error procesando mensaje:', error)
+            // Guardar saliente
+            await this.saveOutgoingMessage(userId, from, formattedText, conversation.id);
+
+          } catch (err: any) {
+            console.error(`[Baileys] ❌ Error en ciclo de mensaje:`, err.message);
+          }
         }
       }
-    })
-
-    console.log(`[Baileys] ✅ Manejador de mensajes configurado`)
+    });
   }
 
   /**
@@ -526,81 +326,31 @@ export class BaileysStableService {
       ? await db.conversation.findUnique({ where: { id: conversationId } })
       : await db.conversation.findFirst({ where: { userId, customerPhone: to } })
 
-    if (!conversation) {
-      const customerName = `Cliente ${to.split('@')[0].slice(-4)}`
-      conversation = await db.conversation.create({
-        data: { userId, customerPhone: to, customerName, status: 'ACTIVE' }
-      })
-    }
+    if (!conversation) return null
 
     await db.message.create({
       data: { conversationId: conversation.id, content, direction: 'OUTGOING', type: 'TEXT' }
-    })
-
-    await db.conversation.update({
-      where: { id: conversation.id },
-      data: { lastMessageAt: new Date() }
     })
 
     return conversation
   }
 
   /**
-   * 🛡️ Enviar mensaje de forma segura (con protección anti-ban)
+   * 🛡️ Enviar mensaje de forma segura
    */
   static async sendMessage(userId: string, to: string, content: string): Promise<boolean> {
     try {
       const session = this.sessions.get(userId)
+      if (!session || !session.socket || session.status !== 'CONNECTED') return false
 
-      if (!session || !session.socket || session.status !== 'CONNECTED') {
-        console.error('[Baileys] ❌ No hay sesión activa')
-        return false
-      }
-
-      // Usar SafeBaileysSender para protección anti-ban
       const success = await SafeBaileysSender.sendText(session.socket, {
-        userId,
-        recipient: to,
-        message: content,
-        forceHumanize: true
+        userId, recipient: to, message: content, forceHumanize: true
       })
-
-      if (success) {
-        console.log(`[Baileys] ✅ Mensaje enviado de forma segura a ${to}`)
-      } else {
-        console.log(`[Baileys] ⚠️ Mensaje bloqueado por protección anti-ban`)
-      }
-
+      
+      if (success) await this.saveOutgoingMessage(userId, to, content)
       return success
     } catch (error) {
-      console.error('[Baileys] ❌ Error enviando mensaje:', error)
-      return false
-    }
-  }
-
-  /**
-   * 🛡️ Enviar mensaje directo (sin humanización, para casos especiales)
-   */
-  static async sendMessageDirect(userId: string, to: string, content: string): Promise<boolean> {
-    try {
-      const session = this.sessions.get(userId)
-
-      if (!session || !session.socket || session.status !== 'CONNECTED') {
-        console.error('[Baileys] ❌ No hay sesión activa')
-        return false
-      }
-
-      // Usar SafeBaileysSender sin humanización
-      const success = await SafeBaileysSender.sendText(session.socket, {
-        userId,
-        recipient: to,
-        message: content,
-        forceHumanize: false
-      })
-
-      return success
-    } catch (error) {
-      console.error('[Baileys] ❌ Error enviando mensaje directo:', error)
+      console.error('[Baileys] ❌ Error:', error)
       return false
     }
   }
@@ -610,23 +360,12 @@ export class BaileysStableService {
    */
   static async disconnect(userId: string): Promise<boolean> {
     try {
-      console.log(`[Baileys] 🔌 Desconectando usuario ${userId}...`)
-
       const session = this.sessions.get(userId)
-      if (session?.socket) {
-        await session.socket.logout()
-      }
-
-      // Limpiar sesión
+      if (session?.socket) await session.socket.logout()
       await this.cleanupSession(userId)
-
-      // Actualizar DB
       await this.updateConnectionStatus(userId, 'DISCONNECTED')
-
-      console.log(`[Baileys] ✅ Usuario ${userId} desconectado`)
       return true
     } catch (error) {
-      console.error('[Baileys] ❌ Error desconectando:', error)
       return false
     }
   }
@@ -635,232 +374,51 @@ export class BaileysStableService {
    * Limpiar sesión
    */
   private static async cleanupSession(userId: string) {
-    // Cancelar timer de reconexión
     const timer = this.reconnectTimers.get(userId)
-    if (timer) {
-      clearTimeout(timer)
-      this.reconnectTimers.delete(userId)
-    }
-
-    // 🎯 Limpiar flags de handlers configurados para este usuario
-    // Esto permite que se configure un nuevo handler en la próxima conexión
-    for (const key of this.messageHandlersConfigured.keys()) {
-      if (key.startsWith(`${userId}-`)) {
-        this.messageHandlersConfigured.delete(key)
-        console.log(`[Baileys] 🧹 Handler flag limpiado: ${key}`)
-      }
-    }
-
-    // Eliminar sesión
+    if (timer) clearTimeout(timer)
+    this.reconnectTimers.delete(userId)
+    
+    this.stopKeepAlive(userId)
     this.sessions.delete(userId)
     this.qrCallbacks.delete(userId)
+    this.messageHandlersConfigured.delete(userId)
   }
 
-  /**
-   * Obtener estado de conexión
-   */
-  static getConnectionStatus(userId: string): BaileysSession | null {
-    return this.sessions.get(userId) || null
+  private static startKeepAlive(socket: WASocket, userId: string) {
+    this.stopKeepAlive(userId)
+    const interval = setInterval(async () => {
+      try {
+        await socket.sendPresenceUpdate('available')
+      } catch (e) {
+        this.stopKeepAlive(userId)
+      }
+    }, 60000)
+    this.keepAliveTimers.set(userId, interval)
   }
 
-  /**
-   * Registrar callback para QR
-   */
+  private static stopKeepAlive(userId: string) {
+    const interval = this.keepAliveTimers.get(userId)
+    if (interval) clearInterval(interval)
+    this.keepAliveTimers.delete(userId)
+  }
+
   static onQRCode(userId: string, callback: (qr: string) => void) {
     this.qrCallbacks.set(userId, callback)
   }
 
-  /**
-   * Actualizar estado en DB
-   */
-  private static async updateConnectionStatus(
-    userId: string,
-    status: 'DISCONNECTED' | 'CONNECTING' | 'CONNECTED' | 'QR_PENDING',
-    error?: string
-  ) {
+  static getConnectionStatus(userId: string): BaileysSession | null {
+    return this.sessions.get(userId) || null
+  }
+
+  private static async updateConnectionStatus(userId: string, status: any, error?: string, qrCode?: string) {
     try {
       await db.whatsAppConnection.upsert({
         where: { userId },
-        create: {
-          userId,
-          phoneNumber: 'pending',
-          status,
-          isConnected: status === 'CONNECTED',
-          lastError: error,
-          lastErrorAt: error ? new Date() : null
-        },
-        update: {
-          status,
-          isConnected: status === 'CONNECTED',
-          lastError: error,
-          lastErrorAt: error ? new Date() : null
-        }
+        create: { userId, status, isConnected: status === 'CONNECTED', lastError: error, qrCode, phoneNumber: 'pending' },
+        update: { status, isConnected: status === 'CONNECTED', lastError: error, qrCode }
       })
-    } catch (error) {
-      console.error('[Baileys] ❌ Error actualizando estado en DB:', error)
-    }
-  }
-
-  /**
-   * 💓 Iniciar keep-alive para mantener la conexión activa
-   * Envía presencia cada 30 segundos para evitar que el servidor cierre la conexión
-   */
-  private static startKeepAlive(socket: WASocket, userId: string): void {
-    // Detener keep-alive anterior si existe
-    this.stopKeepAlive(userId)
-
-    console.log(`[Baileys] 💓 Iniciando keep-alive para ${userId}`)
-
-    const keepAliveInterval = setInterval(async () => {
-      try {
-        const session = this.sessions.get(userId)
-
-        if (!session || session.status !== 'CONNECTED' || !session.isReady) {
-          console.log(`[Baileys] 💓 Keep-alive detenido: sesión no activa`)
-          this.stopKeepAlive(userId)
-          return
-        }
-
-        // Verificar que el socket sigue conectado
-        if (!socket || !socket.user) {
-          console.log(`[Baileys] 💓 Socket desconectado, deteniendo keep-alive`)
-          this.stopKeepAlive(userId)
-          return
-        }
-
-        // Enviar presencia para mantener conexión activa
-        await socket.sendPresenceUpdate('available')
-        console.log(`[Baileys] 💓 Keep-alive enviado para ${userId}`)
-
-      } catch (error) {
-        console.error(`[Baileys] ❌ Error en keep-alive:`, error)
-        // Si hay error, puede ser que la conexión se cayó
-        // Intentar una vez más, si falla detener keep-alive
-        const session = this.sessions.get(userId)
-        if (session) {
-          session.reconnectAttempts = (session.reconnectAttempts || 0) + 1
-          if (session.reconnectAttempts > 3) {
-            console.log(`[Baileys] 💓 Demasiados errores en keep-alive, deteniendo`)
-            this.stopKeepAlive(userId)
-          }
-        }
-      }
-    }, 30 * 1000) // Cada 30 segundos (más frecuente para mejor estabilidad)
-
-    this.keepAliveTimers.set(userId, keepAliveInterval)
-    console.log(`[Baileys] ✅ Keep-alive configurado (cada 30s)`)
-  }
-
-  /**
-   * Detener keep-alive
-   */
-  private static stopKeepAlive(userId: string): void {
-    const timer = this.keepAliveTimers.get(userId)
-    if (timer) {
-      clearInterval(timer)
-      this.keepAliveTimers.delete(userId)
-      console.log(`[Baileys] 💓 Keep-alive detenido para ${userId}`)
-    }
-  }
-
-  /**
-   * 🚀 NUEVO SISTEMA CONVERSACIONAL MODULAR
-   * Maneja mensajes con el nuevo sistema que incluye:
-   * - Ahorro de tokens (60-80%)
-   * - Razonamiento profundo
-   * - Pagos dinámicos
-   * - Envío de fotos
-   * - Transcripción de audio
-   */
-  private static async handleNewConversationalSystem(
-    socket: WASocket,
-    userId: string,
-    from: string,
-    messageText: string,
-    conversationId: string,
-    message: WAMessage
-  ) {
-    console.log(`[Baileys] 🚀 Usando NUEVO SISTEMA CONVERSACIONAL MODULAR`)
-
-    try {
-      // Importar el nuevo módulo conversacional
-      const { procesarMensaje } = await import('../conversational-module')
-
-      // Preparar opciones según el tipo de mensaje
-      const opciones: any = {}
-
-      // 🎤 Audio
-      if (message.message?.audioMessage) {
-        const buffer = await downloadMediaMessage(
-          message,
-          'buffer',
-          {},
-          {
-            logger: pino({ level: 'silent' }),
-            reuploadRequest: socket.updateMediaMessage
-          }
-        )
-        opciones.esAudio = true
-        opciones.audioBuffer = buffer as Buffer
-      }
-
-      // 📸 Imagen
-      if (message.message?.imageMessage) {
-        opciones.tieneImagen = true
-      }
-
-      // 🤖 Procesar con el nuevo sistema
-      const respuesta = await procesarMensaje(from, messageText, {
-        ...opciones,
-        botUserId: userId // 🔑 CLAVE: Pasar el ID del dueño del bot para SaaS
-      })
-
-      // 📤 Enviar respuesta de texto
-      if (respuesta.texto) {
-        await socket.sendMessage(from, { text: respuesta.texto })
-        console.log(`[Baileys] ✅ Respuesta enviada`)
-
-        // Guardar en BD
-        await db.message.create({
-          data: {
-            conversationId,
-            content: respuesta.texto,
-            direction: 'OUTGOING',
-            type: 'TEXT'
-          }
-        })
-      }
-
-      // 📸 Enviar fotos si hay
-      if (respuesta.fotos && respuesta.fotos.length > 0) {
-        console.log(`[Baileys] 📸 Enviando ${respuesta.fotos.length} foto(s)`)
-        for (const foto of respuesta.fotos) {
-          await socket.sendMessage(from, {
-            image: { url: foto.url },
-            caption: foto.caption
-          })
-        }
-      }
-
-      // 💳 Enviar links de pago si hay
-      if (respuesta.linksPago) {
-        console.log(`[Baileys] 💳 Enviando información de pago`)
-        // Los links ya están formateados en el texto de respuesta
-      }
-
-      // Actualizar última actividad
-      await db.conversation.update({
-        where: { id: conversationId },
-        data: { lastMessageAt: new Date() }
-      })
-
-    } catch (error) {
-      console.error('[Baileys] ❌ Error en nuevo sistema conversacional:', error)
-      
-      // Fallback: respuesta genérica
-      await socket.sendMessage(from, {
-        text: 'Disculpa, tuve un problema al procesar tu mensaje. ¿Podrías intentar de nuevo? 🙏'
-      })
+    } catch (e) {
+      console.error('[Baileys] Error actualizando DB:', e)
     }
   }
 }

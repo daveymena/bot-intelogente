@@ -11,6 +11,27 @@ import { ConversationContextService } from '../conversation-context-service';
 
 dotenv.config();
 
+/**
+ * 🔧 Función auxiliar para timeout en operaciones asíncronas
+ * Evita que el bot se quede "pegado" esperando respuestas lentas
+ */
+const withTimeout = async <T>(
+    promise: Promise<T>,
+    timeoutMs: number,
+    fallbackValue: T,
+    operationName: string = 'Operation'
+): Promise<T> => {
+    return Promise.race([
+        promise,
+        new Promise<T>((resolve) => {
+            setTimeout(() => {
+                console.log(`[OpenClaw] ⏱️ Timeout en ${operationName} (${timeoutMs}ms) - usando fallback`);
+                resolve(fallbackValue);
+            }, timeoutMs);
+        })
+    ]);
+};
+
 // Función auxiliar para formatear resultados de productos
 const formatProductResult = async (product: any, userId: string) => {
     // Dynamic imports for services
@@ -64,7 +85,42 @@ export const TOOLS: any = {
 
                 const searchTerm = params.searchTerm.toLowerCase();
                 
-                // 🎯 FILTRO CONTEXTUAL: Excluir productos digitales cuando se buscan periféricos físicos
+                // 🚀 BÚSQUEDA PROFESIONAL CON SUPABASE (Prioridad) + TIMEOUT
+                try {
+                  const { SupabaseProductService } = await import('../openclaw-supabase-products');
+                  
+                  // ⏱️ Timeout de 3 segundos para evitar que el bot se quede pegado
+                  const supabaseResults = await withTimeout(
+                      SupabaseProductService.searchProducts(context.userId, searchTerm),
+                      3000, // 3 segundos máximo
+                      [], // Si falla, retornar array vacío
+                      'Supabase Product Search'
+                  );
+                  
+                  if (supabaseResults.length > 0) {
+                      console.log(`[Skill] 🚀 Supabase Professional Search encontró ${supabaseResults.length} resultados`);
+                      return {
+                          success: true,
+                          data: {
+                              searchTerm,
+                              count: supabaseResults.length,
+                              products: supabaseResults.map(p => ({
+                                  id: p.id,
+                                  name: p.name,
+                                  price: p.price,
+                                  description: p.description,
+                                  category: p.category,
+                                  images: p.images,
+                                  match: 100 // Supabase FTS es preciso
+                              }))
+                          }
+                      };
+                  }
+                } catch (e) {
+                  console.error('[Skill] Supabase search failed, falling back to local search');
+                }
+
+                // 🎯 FALLBACK: Lógica local (Fuse + Filtros)
                 const peripheralKeywords = ['teclado', 'mouse', 'monitor', 'auriculares', 'audífonos', 'webcam', 'micrófono'];
                 const isPeripheralSearch = peripheralKeywords.some(kw => searchTerm.includes(kw));
                 
@@ -217,7 +273,38 @@ export const TOOLS: any = {
                 if (!searchId) return { success: false, message: 'No se envió término de búsqueda' };
                 console.log(`[Skill] 🔍 Buscando producto específico para: "${searchId}"`);
 
-                // 🎯 1. Intento de búsqueda directa por ID (Súper rápido)
+                // 🚀 0. INTENTO CON SUPABASE (Profesional)
+                try {
+                    const { supabase } = await import('../supabase');
+                    
+                    // Búsqueda con timeout manual
+                    const timeoutPromise = new Promise((_, reject) => 
+                        setTimeout(() => reject(new Error('Timeout')), 2000)
+                    );
+                    
+                    const searchPromise = supabase
+                        .from('products')
+                        .select('*')
+                        .or(`id.eq.${searchId},name.ilike.${searchId}`)
+                        .eq('userId', context.userId)
+                        .single();
+                    
+                    const { data: sbProduct, error } = await Promise.race([
+                        searchPromise,
+                        timeoutPromise
+                    ]).catch(() => ({ data: null, error: new Error('Timeout') })) as any;
+                    
+                    if (sbProduct && !error) {
+                        console.log(`[Skill] ✅ Encontrado en SUPABASE: ${sbProduct.name}`);
+                        return await formatProductResult(sbProduct, context.userId);
+                    } else if (error) {
+                        console.log(`[Skill] ⏱️ Supabase timeout o error, usando fallback local`);
+                    }
+                } catch (e) {
+                    console.error('[Skill] Supabase direct match failed, usando fallback local');
+                }
+
+                // 🎯 1. Intento de búsqueda directa por ID (Local Fallback)
                 const directMatch = context.products.find((p: any) => p.id === searchId);
                 if (directMatch) {
                     console.log(`[Skill] ✅ Encontrado por ID directo: ${directMatch.name}`);
@@ -499,7 +586,7 @@ class OpenClawOrchestrator {
         console.log(`[OpenClaw] 🔄 Rotando a key ${this.currentKeyIndex + 1}/${this.apiKeys.length}`);
     }
 
-    async processMessage(messageText: string, from: string, context: any) {
+    async processMessage(messageText: string, from: string, context: any, hasImage: boolean = false) {
         console.log(`[Architect] 🧠 Iniciando Modo Ultra Inteligente para ${from}...`);
         
         const currentStage = context.currentStage || 'saludo';
@@ -535,6 +622,21 @@ class OpenClawOrchestrator {
             categoryMap = await CategoryManagementService.generateCategoryMapForPrompt(context.userId);
         } catch (e) { /* ignore */ }
 
+        // 🎨 BUSCAR PLANTILLA COMO EJEMPLO DE ESTILO (SÓLO REFERENCIA)
+        let styleExample = null;
+        try {
+            const { ConversationMatcher } = await import('./conversation-matcher');
+            const { TemplateRenderer } = await import('./template-renderer');
+            const match = ConversationMatcher.findBestMatch(messageText);
+            if (match && match.confidence > 0.6) {
+                styleExample = await TemplateRenderer.render(match.template, {
+                    userId: context.userId,
+                    productId: context.activeProduct?.id || context.productId
+                });
+                console.log(`[Architect] 🎨 Plantilla de estilo encontrada: ${match.template.id} (${Math.round(match.confidence * 100)}%)`);
+            }
+        } catch (te) { /* ignore */ }
+
         // 2. Pre-búsqueda INTELIGENTE
         let catalogHints = 'No hay coincidencias.';
         let isGeneralSearch = false;
@@ -567,7 +669,8 @@ class OpenClawOrchestrator {
                     // Para búsquedas generales, mostrar categorías Y cantidad de productos
                     const categoryCount: any = {};
                     hints.forEach(h => {
-                        const cat = h.item.tipo_producto || h.item.category || 'Sin categoría';
+                        const item = h.item as any;
+                        const cat = item.tipo_producto || item.category || 'Sin categoría';
                         categoryCount[cat] = (categoryCount[cat] || 0) + 1;
                     });
                     const categoryInfo = Object.entries(categoryCount)
@@ -590,24 +693,12 @@ class OpenClawOrchestrator {
         console.log(`[Architect] 💡 Análisis: ${analysis.reasoning}`);
         
         // 🎯 NUEVA LÓGICA: Si hay respuesta sugerida (preguntas de calificación), usarla directamente
-        if (analysis.suggestedResponse) {
-            console.log('[Architect] 💬 Usando respuesta conversacional sugerida (AIDA)');
-            
-            // ✅ GUARDAR EN SERVICIO PERSISTENTE
-            await ConversationContextService.addMessage(from, context.userId, 'user', messageText);
-            await ConversationContextService.addMessage(from, context.userId, 'assistant', analysis.suggestedResponse);
-
-            return {
-                text: analysis.suggestedResponse,
-                success: true,
-                media: null,
-                toolData: null,
-                isSpecific: false,
-                nextStage: 'calificando_necesidades' // Nuevo stage para tracking
-            };
+        let toolData: any = null;
+        if (analysis.suggestedResponse && !analysis.toolToUse) {
+            console.log('[Architect] � Incorporando sugerencia conversacional como draft');
+            toolData = { suggestedDraft: analysis.suggestedResponse };
         }
         
-        let toolData: any = null;
         let nextStage = currentStage;
 
         if (analysis.toolToUse && TOOLS[analysis.toolToUse]) {
@@ -637,20 +728,36 @@ class OpenClawOrchestrator {
         // Reglas de Oro KENNETH (Transiciones basadas en palabras clave)
         const msg = messageText.toLowerCase();
         
-        // Evitar sobrescribir estados avanzados (pago, confirmacion, cerrado) con estados iniciales
-        const advanceStages = ['pago', 'confirmacion', 'cerrado'];
+        // Evitar sobrescribir estados avanzados con estados iniciales
+        const advanceStages = ['pago', 'pago_pendiente', 'pago_validando', 'confirmacion', 'cerrado'];
         if (!advanceStages.includes(nextStage)) {
             if (msg.includes('comprar') || msg.includes('interesa') || msg.includes('lo quiero')) {
                 nextStage = 'interes_compra';
             }
         }
         
-        if (msg.includes('gracias') || msg.includes('listo')) {
+        // 🚨 LÓGICA RÍGIDA DE PAGO (Evita confirmaciones falsas)
+        const inPaymentFlow = currentStage === 'pago' || currentStage === 'pago_pendiente' || currentStage === 'pago_validando';
+        
+        if (inPaymentFlow) {
+            const confirmedKeywords = ['si', 'listo', 'ya', 'pagado', 'pague', 'hecho', 'confirmar'];
+            const isConfirming = confirmedKeywords.some(kw => msg === kw || msg.includes(kw));
+            
+            if (hasImage) {
+                console.log('[Architect] 📸 Imagen de pago detectada. Pasando a VALIDACIÓN.');
+                nextStage = 'pago_validando';
+            } else if (isConfirming) {
+                console.log('[Architect] ⚠️ Confirmación sin imagen. Pasando a PAGO PENDIENTE.');
+                nextStage = 'pago_pendiente';
+            }
+        }
+
+        if (msg.includes('gracias') && currentStage === 'cerrado') {
             nextStage = 'cerrado';
         }
 
         // 4. Generatriz de Respuesta
-        let response = await this._generateResponse(messageText, history, brainContext, toolData, nextStage);
+        let response = await this._generateResponse(messageText, history, brainContext, { ...toolData, styleExample }, nextStage);
         
         // ✅ GUARDAR EN SERVICIO PERSISTENTE (DB + RAM)
         console.log(`[Architect] 💾 Guardando conversación en memoria persistente...`);
@@ -906,26 +1013,34 @@ ${this._getStageInstruction(stage)}
 ### 🏢 CONTEXTO DEL NEGOCIO:
 ${brainContext}
 
-### 🎨 GUÍA DE FORMATO PROFESIONAL (OBLIGATORIO)
-Usa SIEMPRE esta estructura para tus respuestas:
+### 🎨 GUÍA DE ESTILO Y FORMATO (AUTONOMÍA TOTAL)
+Eres libre de estructurar tu respuesta como prefieras para ser más persuasivo, pero David suele seguir estas mejores prácticas:
 1. Breve introducción empática (1 línea).
 2. Separador: ━━━━━━━━━━━━━━━━━━
-3. Cuerpo del mensaje (información útil, cards de producto, o respuestas a dudas).
+3. Cuerpo del mensaje (información útil, cards de producto, o asesoría técnica).
 4. Separador: ━━━━━━━━━━━━━━━━━━
-5. Pregunta de cierre (CTA) para mantener la venta viva.
+5. Pregunta de cierre (CTA) clara y directa.
 
 EMOJIS CLAVE: 💻 (Tech), 🎹 (Cursos), 💰 (Precio), 📦 (Stock), 🚚 (Envío), ✅ (Ventaja), ⚠️ (Nota), 🎯 (Recomendación), 💳 (Pago).
 `;
+
+        if (toolData?.styleExample) {
+            systemPrompt += `
+### 🎨 EJEMPLO DE ESTILO "DAVID" (SÓLO COMO REFERENCIA):
+Este es un ejemplo de cómo David suele responder en esta situación. Tienes autonomía total para ajustarlo, mejorarlo o ignorarlo si crees que hay una mejor forma de cerrar la venta:
+━━━━━━━━━━━━━━━━━━
+${toolData.styleExample}
+━━━━━━━━━━━━━━━━━━
+`;
+        }
 
         if (isProductList) {
             const productCount = toolData.products.length;
             const productsToShow = toolData.products.slice(0, 5);
             
             systemPrompt += `
-### MODO LISTA DE OPCIONES:
-El cliente busca opciones generales. Debes mostrar una lista clara.
-
-FORMATO OBLIGATORIO:
+### SUGERENCIA: MODO LISTA DE OPCIONES
+El cliente busca opciones generales. Aquí tienes un ejemplo de cómo David muestra listas:
 ¡Claro! Encontré estas ${productCount} excelentes opciones para ti:
 
 ━━━━━━━━━━━━━━━━━━
@@ -942,12 +1057,10 @@ ${productsToShow.map((p: any, i: number) => {
             const isDigital = toolData.category === 'DIGITAL' || toolData.tipo_producto === 'digital' || toolData.tipo_producto === 'curso';
             
             systemPrompt += `
-### MODO CARD DE PRODUCTO (VISTA DETALLADA):
-Muestra los detalles del producto real usando separadores.
+### SUGERENCIA: CARD DE PRODUCTO (VISTA DETALLADA)
+Cuando el cliente se interesa en un producto específico, David usa este formato de alto impacto:
 
-DATOS: ${JSON.stringify(toolData)}
-
-FORMATO OBLIGATORIO:
+DATOS DEL PRODUCTO: ${JSON.stringify(toolData)}
 ${isDigital ? `
 ¡Excelente elección! Este curso es de los más solicitados:
 
@@ -985,11 +1098,9 @@ ${isDigital ? `
         } else if (stage === 'pago' && toolData) {
             systemPrompt += `
 ### MODO CIERRE / PAGO:
-Proporciona los datos de pago de forma clara y profesional.
+Proporciona los datos de pago de forma clara. David siempre usa separadores aquí:
 
 DATOS: ${JSON.stringify(toolData)}
-
-FORMATO OBLIGATORIO:
 ¡Perfecto! Aquí tienes los datos para concretar tu compra ahora mismo:
 
 ━━━━━━━━━━━━━━━━━━
@@ -1006,29 +1117,46 @@ Número: 3136174267
 {payPalLink}
 ━━━━━━━━━━━━━━━━━━
 
-¿Me confirmas cuando realices el pago para procesar tu pedido de inmediato? 🦞🔥
+¿Me confirmas cuando realices el pago enviando el comprobante por aquí para procesar tu pedido de inmediato? 🦞🔥
+`;
+        } else if (stage === 'pago_pendiente') {
+            systemPrompt += `
+### MODO: ESPERANDO COMPROBANTE
+El cliente dice que ya pagó o quiere pagar, pero NO ha enviado la foto del recibo.
+TU MISIÓN: Pide amablemente el comprobante. NUNCA digas que el pago fue procesado con éxito todavía.
+EJEMPLO: "¡Excelente! Por favor, envíame una foto o captura de pantalla del comprobante de pago por aquí mismo para validarlo y procesar tu entrega de inmediato. 😊"
+`;
+        } else if (stage === 'pago_validando') {
+            systemPrompt += `
+### MODO: VALIDACIÓN HUMANA (ADMIN)
+El cliente ya envió la foto. 
+TU MISIÓN: Dile que el pago está siendo validado por el supervisor.
+EJEMPLO: "¡Recibido! 🎉 He pasado tu comprobante a validación con nuestro supervisor. En cuanto me den el 'visto bueno' aquí mismo, procederemos con tu entrega. ¡Gracias por tu compra!"
 `;
         } else {
             systemPrompt += `
-### MODO CONVERSACIONAL / ASESORÍA:
-Responde como David, el experto. Resuelve dudas, objeciones y problemas.
+### MODO CONVERSACIONAL / ASESORÍA EXPERTA:
+TU MISIÓN: Responder con una lógica impecable basada en los datos reales. No des respuestas genéricas.
 
-REGLAS:
-- Si el cliente tiene una duda sobre envío, explica que enviamos a todo el país.
-- Si duda del precio, resalta la garantía y calidad.
-- Si pregunta por la ubicación, di: Centro Comercial El Diamante 2, Local 158, Cali.
-- SIEMPRE usa los separadores ━━━━━━━━━━━━━━━━━━ si estás dando información estructurada.
-- Termina siempre con una pregunta persuasiva.
+🧠 **LÓGICA DE VENTAS "DAVID"**:
+1. **Deducción Técnica**: Si el cliente pregunta por "qué es mejor", compara especificaciones de los HINTS del catálogo.
+2. **Manejo de Objeciones**: Si el precio parece alto, explica POR QUÉ (memoria RAM superior, procesador de última generación, garantía extendida en Cali).
+3. **Validación de Datos**: Si el cliente menciona una dirección o ciudad, confirma que llegamos allí (Envío nacional incluido en digitales, coordinado en físicos).
+4. **Contexto Local**: Reafirma que estamos en el CC El Diamante 2, Local 158, Cali, para generar confianza de negocio físico real.
+
+GUÍA DE RESPUESTA:
+- Usa el historial para no repetir información.
+- Si el cliente está confundido, simplifica los términos técnicos.
+- Termina siempre guiando al siguiente paso de venta o resolviendo la duda con autoridad.
 `;
         }
 
         systemPrompt += `
 ---
-🚀 **INSTRUCCIONES FINALES PARA DAVID**:
-1. Eres un ASESOR EXPERTO, no un loro. Piensa antes de responder.
-2. Si el usuario pregunta algo técnico que no sabes, di que consultarás con bodega.
-3. El tono debe ser profesional pero muy cercano (colombiano respetuoso).
-4. JAMÁS inventes datos que no están en el CONTEXTO o en toolData.
+🚀 **INSTRUCCIONES FINALES DE PENSAMIENTO LÓGICO**:
+1. **Analiza vs Inventa**: Antes de escribir, verifica si el dato está en el CONTEXTO. Si no está, usa la lógica de "consultar con soporte/bodega".
+2. **Coherencia**: Mantén una narrativa lógica. Si ofreciste un curso antes, no ofrezcas una laptop ahora a menos que el usuario lo pida.
+3. **Identidad**: Eres David, el estratega de TecnoVariedades D&S. Tu tono es profesional, inteligente y persuasivo.
 ---
 `;
 
@@ -1041,7 +1169,9 @@ REGLAS:
             'buscando_producto': 'Muestra opciones y ayuda a filtrar. No satures, sé un asesor.',
             'viendo_producto': 'Vende los beneficios del producto actual. Usa la CARD profesional.',
             'interes_compra': 'El cliente quiere comprar. Confirma su interés y menciona que enviarás métodos de pago.',
-            'pago': 'Muestra las cuentas bancarias y links de pago. Guíalo al cierre.',
+            'pago': 'Muestra las cuentas bancarias y links de pago. Dile que DEBE enviar el comprobante.',
+            'pago_pendiente': '⚠️ REGLA: Pide amablemente el comprobante de pago (físico/captura). NO confirmes la venta aún.',
+            'pago_validando': '✅ Recibiste el comprobante. Dile que lo estás validando con el supervisor y confirmarás en breve.',
             'confirmacion': 'Pide datos de envío: Ciudad, Dirección, Nombre y Teléfono.',
             'cerrado': 'Agradece la compra y confirma que el pedido está en proceso.'
         };

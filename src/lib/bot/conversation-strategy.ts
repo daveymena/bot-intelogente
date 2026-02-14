@@ -169,12 +169,15 @@ export class ConversationStrategyService {
 
         const purchaseKeywords = [
             'lo quiero', 'cómo pago', 'como pago', 'donde pago', 'dónde pago',
-            'métodos de pago', 'metodos de pago', 'formas de pago', 'forma de pago',
-            'medios de pago', 'medio de pago', 'cómo compro', 'como compro',
-            'cómo adquiro', 'como adquiero', 'quiero comprarlo', 'comprar',
-            'me lo llevo', 'proceder con la compra', 'realizar el pago', 'pagar',
-            'cuenta bancaria', 'nequi', 'daviplata', 'transferencia', 'datos de pago',
-            'datos para el pago', 'link de pago', 'link para pagar'
+            'métodos de pago', 'metodos de pago', 'método de pago', 'metodo de pago',
+            'formas de pago', 'forma de pago', 'medios de pago', 'medio de pago',
+            'cómo compro', 'como compro', 'cómo adquiro', 'como adquiero',
+            'quiero comprarlo', 'comprar', 'me lo llevo', 'proceder con la compra',
+            'realizar el pago', 'pagar', 'cuenta bancaria', 'nequi', 'daviplata',
+            'transferencia', 'datos de pago', 'datos para el pago',
+            'link de pago', 'link para pagar', 'método', 'metodo',
+            'cual es la cuenta', 'cuál es la cuenta', 'dame la cuenta',
+            'info de pago', 'información de pago', 'informacion de pago'
         ];
 
         // "me interesa" solo si NO está con "otros" o "pero"
