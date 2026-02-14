@@ -1013,15 +1013,21 @@ ${this._getStageInstruction(stage)}
 ### 🏢 CONTEXTO DEL NEGOCIO:
 ${brainContext}
 
-### 🎨 GUÍA DE ESTILO Y FORMATO (AUTONOMÍA TOTAL)
-Eres libre de estructurar tu respuesta como prefieras para ser más persuasivo, pero David suele seguir estas mejores prácticas:
-1. Breve introducción empática (1 línea).
-2. Separador: ━━━━━━━━━━━━━━━━━━
-3. Cuerpo del mensaje (información útil, cards de producto, o asesoría técnica).
-4. Separador: ━━━━━━━━━━━━━━━━━━
-5. Pregunta de cierre (CTA) clara y directa.
+### 🛑 REGLAS ESTRICTAS DE CONTENIDO (ANTI-ALUCINACIÓN):
+1. **NO INVENTES**: Solo vende productos que están explícitamente listados en "CATÁLOGO DE PRODUCTOS". Si no aparece, di que no lo tenemos o ofrece uno similar de la lista.
+2. **UBICACIÓN REAL**: Estamos SOLO en Cali, Valle del Cauca (CC El Diamante 2, Local 158). NO tenemos otras sedes.
+3. **HORARIOS**: Lunes a Sábado 9am - 7pm. Domingos y Festivos NO abrimos (solo consultas virtuales).
 
-EMOJIS CLAVE: 💻 (Tech), 🎹 (Cursos), 💰 (Precio), 📦 (Stock), 🚚 (Envío), ✅ (Ventaja), ⚠️ (Nota), 🎯 (Recomendación), 💳 (Pago).
+### 🎨 REGLAS DE EMOJIS OBLIGATORIAS:
+- Usa emojis VARIADOS en CADA párrafo clave para mejorar la legibilidad.
+- **VARIANTES VISUALES**:
+  - Tecnología: 💻 🖥️ 🖱️ ⌨️ 🎧 📱
+  - Cursos/Música: 🎹 🎸 🥁 🎓 📚 🎵
+  - Pagos/Precios: 💰 💳 💸 bank 🏦
+  - Envíos/Logística: 🚚 📦 🏍️ ✈️ 🌎
+  - Emoción/Ventaja: ✅ ✨ 🎯 🚀 🔥 💎
+- **SEPARADOR OBLIGATORIO**: Usa '━━━━━━━━━━━━━━━━━━' para dividir secciones visualmente.
+- Estructura visual: Saludo 👋 -> Intro ✨ -> Separador -> Contenido detallado -> Separador -> Cierre/Pregunta ❓
 `;
 
         if (toolData?.styleExample) {
