@@ -1195,7 +1195,7 @@ GUÍA DE RESPUESTA:
                 try {
                     const groq = new Groq({ apiKey: key });
                     
-                    const response = await groq.chat.completions.create({
+                    const completionPromise = groq.chat.completions.create({
                         model: model,
                         messages: [
                             { role: 'system', content: systemPrompt },
@@ -1206,7 +1206,17 @@ GUÍA DE RESPUESTA:
                         max_tokens: 800,   // Reducido de 1024 para respuestas más concisas
                         top_p: 0.9,        // Agregado para mejor calidad
                         stream: false      // Sin streaming para respuesta directa
-                    }) as any;
+                    });
+
+                    // 🛡️ TIMEOUT PROTECTION: 15s max per AI call
+                    const response = await withTimeout(
+                        completionPromise,
+                        15000,
+                        null,
+                        `Groq AI (${model})`
+                    ) as any;
+
+                    if (!response) throw new Error('Timeout esperando respuesta de Groq API');
 
                     // ✅ ÉXITO - Limpiar contador de fallos para esta key
                     if (this.keyFailures.has(key)) {
