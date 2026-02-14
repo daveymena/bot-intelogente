@@ -30,7 +30,8 @@ COPY package*.json ./
 COPY prisma ./prisma/
 
 # Instalar dependencias (solo producción para reducir tamaño)
-RUN npm ci --only=production --prefer-offline --no-audit
+# Usamos --ignore-scripts para evitar que node-llama-cpp intente compilarse
+RUN npm ci --only=production --prefer-offline --no-audit --ignore-scripts
 
 # Copiar código fuente
 COPY . .
