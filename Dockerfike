@@ -1,27 +1,29 @@
-# Dockerfile optimizado para Easypanel
-FROM node:20-alpine
+# Dockerfile optimizado para Easypanel (Debian Bullseye)
+# Usamos imagen completa node:20 para evitar problemas con librerías nativas (glibc vs musl)
+FROM node:20
 
-# Instalar dependencias del sistema
-RUN apk add --no-cache \
+# Instalar dependencias del sistema (Chromium para Puppeteer, build tools)
+RUN apt-get update && apt-get install -y \
     chromium \
-    nss \
-    freetype \
-    harfbuzz \
+    libnss3 \
+    libfreetype6 \
+    libharfbuzz-bin \
     ca-certificates \
-    ttf-freefont \
+    fonts-freefont-ttf \
     git \
     openssl \
     make \
     g++ \
-    python3
+    python3 \
+    && rm -rf /var/lib/apt/lists/*
 
 # Variables de entorno para optimización
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium \
     NODE_ENV=production \
     PORT=3000 \
     NEXT_TELEMETRY_DISABLED=1 \
-    NODE_OPTIONS="--max-old-space-size=2048"
+    NODE_OPTIONS="--max-old-space-size=4096"
 
 WORKDIR /app
 
@@ -29,10 +31,9 @@ WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Instalar dependencias (solo producción para reducir tamaño)
-# Usamos --ignore-scripts para evitar que node-llama-cpp intente compilarse
-# Usamos --ignore-scripts para evitar que node-llama-cpp intente compilarse (FIX CRITICO)
-RUN npm ci --only=production --prefer-offline --no-audit --ignore-scripts
+# Instalar dependencias (SIN --ignore-scripts para permitir postinstall de Next/Tailwind)
+# En Debian, node-llama-cpp debería compilar correctamente.
+RUN npm ci --only=production --prefer-offline --no-audit
 
 # Copiar código fuente
 COPY . .
