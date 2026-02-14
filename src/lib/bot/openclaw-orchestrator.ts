@@ -820,6 +820,14 @@ class OpenClawOrchestrator {
             if (toolData.id) isSpecific = true;
         }
 
+        // 🧠 TRIGGER COGNITIVE REFLECTION (Fire & Forget)
+        if (nextStage === 'cerrado' && currentStage !== 'cerrado') {
+            import('./cognitive-system/reflection-engine').then(({ ReflectionEngine }) => {
+                console.log('[Architect] 🧠 Disparando reflexión post-venta...');
+                ReflectionEngine.selfReflect(context.conversationId || 'unknown', context.userId).catch(e => console.error('[Cognitive] Error:', e));
+            });
+        }
+
         return { text: response, success: true, media, toolData, isSpecific, nextStage };
     }
 
@@ -1004,6 +1012,23 @@ class OpenClawOrchestrator {
         
         const isProductList = toolData && toolData.products && Array.isArray(toolData.products);
         
+// 🧠 COGNITIVE SYSTEM INTEGRATION (Dynamic Import)
+        let cognitiveContext = '';
+        try {
+            const { LearningManager } = await import('./cognitive-system/learning-manager');
+            const { HumanVariabilityEngine } = await import('./cognitive-system/human-variability');
+            
+            const bestPractices = LearningManager.getBestPractices(userMessage);
+            const mood = HumanVariabilityEngine.getContextualMood();
+            
+            if (bestPractices) cognitiveContext += `\n${bestPractices}\n`;
+            if (mood) cognitiveContext += `\n### 🎭 MOOD CONTEXTUAL:\n${mood}\n`;
+            
+            console.log(`[Cognitive] 🧠 Contexto inyectado en prompt`);
+        } catch (e) {
+            console.warn('[Cognitive] ⚠️ No se pudo cargar sistema cognitivo:', e);
+        }
+
         let systemPrompt = `
 ${soul}
 
@@ -1012,6 +1037,8 @@ ${this._getStageInstruction(stage)}
 
 ### 🏢 CONTEXTO DEL NEGOCIO:
 ${brainContext}
+
+${cognitiveContext}
 
 ### 🛑 REGLAS ESTRICTAS DE CONTENIDO (ANTI-ALUCINACIÓN):
 1. **NO INVENTES**: Solo vende productos que están explícitamente listados en "CATÁLOGO DE PRODUCTOS". Si no aparece, di que no lo tenemos o ofrece uno similar de la lista.
