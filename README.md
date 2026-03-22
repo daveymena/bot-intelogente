@@ -1,44 +1,49 @@
-# 🤖 Smart Sales Bot Pro
+# 🤖 Smart Sales Bot Pro - Versión Profesional Refactorizada
 
-Sistema completo de automatización de ventas por WhatsApp con inteligencia artificial avanzada para **Tecnovariedades D&S**.
+**Sistema de automatización de ventas por WhatsApp con IA avanzada**, rediseñado completamente para conversaciones naturales, humanas y persuasivas.
 
-## 🌟 Características Principales
+> 🎉 **VERSIÓN MEJORADA:** Se ha realizado una transformación integral con arquitectura moderna, interfaz empresarial y pipeline de ventas completo.
+
+## ⭐ Lo Que Ha Cambiado (Mejoras v2.0)
+
+### ✨ Motor Conversacional Inteligente (NUEVO)
+- **Conversaciones naturales y humanas** - No suena como robot
+- **Detección automática de intenciones** - Entiende qué quiere realmente el cliente
+- **Análisis de sentimientos** - Adapta respuestas según el estado emocional
+- **Manejo contextual de objeciones** - Responde con empatía y datos
+- **Respuestas persuasivas pero auténticas** - Vende sin parecer vendedor
+
+### 🏪 Pipeline de Ventas Automático (NUEVO)
+- **7 etapas estructuradas**: Saludo → Análisis → Descubrimiento → Objeciones → Precios → Cierre → Post-venta
+- **Transiciones automáticas** basadas en contexto
+- **Probabilidad de conversión en tiempo real**
+- **Recomendaciones inteligentes de productos**
+- **Cierre automático con links de pago dinámicos**
+
+### 🎨 Interfaz Premium Rediseñada (NUEVO)
+- **Diseño WhatsApp-style profesional** - Verde corporativo #25D366
+- **Información empresarial prominente** - Nombre, teléfono, dirección, calificación
+- **Chat moderno con animaciones suaves**
+- **Tarjeta de negocio integrada**
+- **Responsive y optimizado para móvil**
 
 ### 🧠 Inteligencia Artificial Multinúcleo
-- **Múltiples modelos**: Groq (Llama 3.1), GPT-4, Claude, Gemini y Mistral
-- **Detección de intenciones**: Reconoce automáticamente qué quiere el cliente
-- **Respuestas naturales**: Con emojis y estilo conversacional
-- **Modo espera inteligente**: No responde impulsivamente si el cliente duda
+- **Groq (Recomendado)**: Llama 3.1 - Rápido y eficiente
+- **Fallback inteligente**: Groq → Ollama → Respuestas locales
+- **Múltiples modelos**: GPT-4, Claude, Gemini, Mistral (opcionales)
+- **Razonamiento profundo** - Analiza contexto completo
+- **Sin alucinaciones** - Protección contra datos inventados
 
-### 📱 Bot de WhatsApp Inteligente
-- **Respuestas automáticas personalizadas** según palabra clave o intención
-- **Sistema de prompts configurables** para diferentes tipos de consultas
-- **Integración con productos** para respuestas precisas
-- **Gestión de conversaciones** con historial completo
+### 🎯 Características Principales
 
-### 🏪 Gestión de Productos
-- **Productos físicos y digitales** (motos, laptops, cursos, etc.)
-- **Sistema de imágenes** con soporte para múltiples fotos por producto
-- **Gestión de stock** para productos físicos
-- **Etiquetas y respuestas predefinidas** por producto
-- **Importación/Exportación CSV** para gestión masiva
-
-### 📊 Dashboard Web Moderno
-- **Diseño inspirado en WhatsApp** con tonos verdes (#25D366)
-- **Navegación lateral intuitiva** con todas las secciones
-- **Métricas en tiempo real**: mensajes, usuarios, ventas, tasa de respuesta
-- **Interfaz responsive** para móviles y desktop
-
-### 🎯 Módulos Principales
-
-1. **Dashboard**: Vista general con estadísticas y actividad reciente
-2. **Productos**: Gestión completa del catálogo con imágenes y precios
-3. **Prompts IA**: Editor visual para personalizar respuestas del bot
-4. **Simulador**: Prueba el funcionamiento del bot en tiempo real
-5. **Import/Export**: Gestión masiva mediante archivos CSV/JSON
-6. **Conversaciones**: Historial completo de interacciones con clientes
-7. **Métricas**: Análisis detallado del rendimiento
-8. **Configuración**: Ajustes de API keys y parámetros del bot
+1. **Dashboard Ejecutivo**: Métricas en tiempo real, conversiones, ROI
+2. **Productos**: Gestión inteligente con búsqueda semántica
+3. **Conversaciones**: Historial completo con análisis
+4. **Segmentación**: Clasificación automática de clientes
+5. **Ventas**: Seguimiento del pipeline completo
+6. **Reportes**: Análisis profundo de rendimiento
+7. **Configuración**: Multi-canal, multi-proveedor IA
+8. **API**: Endpoints modernos y escalables
 
 ## 🎥 Video Demostración
 
