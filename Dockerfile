@@ -27,20 +27,21 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
 
 WORKDIR /app
 
-# Copiar dependencias
+# Copiar package files primero
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Instalar dependencias
-# Debian DEBERÍA compilar node-llama-cpp si es necesario (ya tenemos cmake/make/g++).
-# Y postinstall funcionará para lightningcss/Next.js
-RUN npm ci --only=production --prefer-offline --no-audit
+# Instalar TODAS las dependencias (no solo production) para construir módulos nativos
+RUN npm ci
 
 # Copiar código fuente
 COPY . .
 
 # Generar Prisma
 RUN npx prisma generate
+
+# Rebuild de lightningcss para asegurar compatibilidad con linux-x64-gnu
+RUN npm rebuild lightningcss 2>/dev/null || npm install lightningcss --save-dev
 
 # Build de Next.js
 RUN npm run build
