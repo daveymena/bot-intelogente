@@ -1,4 +1,4 @@
-# Dockerfile optimizado para Easypanel
+# Dockerfile optimizado para Easypanel con Next.js + Custom Server
 FROM node:20
 
 # Instalar dependencias del sistema
@@ -17,34 +17,30 @@ RUN apt-get update && apt-get install -y \
     python3 \
     && rm -rf /var/lib/apt/lists/*
 
-# Limpiar variables de entorno que pueden interferir con npm
+# Variables de entorno
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium \
     NODE_ENV=production \
     PORT=3000 \
     NEXT_TELEMETRY_DISABLED=1 \
-    NODE_OPTIONS="--max-old-space-size=4096" \
-    npm_config_fetch_retry_mintimeout=120000 \
-    npm_config_fetch_retry_maxtimeout=300000 \
-    npm_config_fetch_timeout=300000
+    NODE_OPTIONS="--max-old-space-size=4096"
 
 WORKDIR /app
 
-# Copiar package files primero
-COPY package*.json ./
+# Copiar package files
+COPY package.json package-lock.json* ./
 COPY prisma ./prisma/
 
-# Instalar dependencias (usar npm install en lugar de ci para mayor tolerancia)
-RUN npm install --prefer-offline --no-audit 2>/dev/null || npm install --no-audit || true
+# Instalar dependencias
+RUN npm install --legacy-peer-deps --prefer-offline --no-audit || \
+    npm install --legacy-peer-deps --no-audit || \
+    npm install --no-audit
 
 # Copiar código fuente
 COPY . .
 
 # Generar Prisma
 RUN npx prisma generate
-
-# Rebuild de lightningcss para asegurar compatibilidad
-RUN npm rebuild lightningcss 2>/dev/null || true
 
 # Build de Next.js
 RUN npm run build
@@ -54,4 +50,5 @@ RUN mkdir -p /app/auth_sessions /app/whatsapp-sessions /app/public/fotos
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "PORT=3000 npx prisma generate && npx prisma db push --accept-data-loss || true && npm start"]
+# Usar el server.js custom con tsx para producción
+CMD ["sh", "-c", "PORT=3000 npx tsx server.js"]
